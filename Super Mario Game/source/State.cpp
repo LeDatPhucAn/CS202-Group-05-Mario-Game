@@ -2,73 +2,94 @@
 #include "../header/Character.hpp" 
 
 // ---------- Base State ----------
-State::State() : numFrames(0), delay(0), character(nullptr), frameRec({ 0 }) {}
+State::State() : delay(0), character(nullptr) {}
 
-State::State(int _numFrames, Character* _character, int _delay)
-    : numFrames(_numFrames), delay(_delay), character(_character) {
-    frameRec = { 0, 0, (float)character->frameWidth, (float)character->frameHeight};
+State::State(Character* _character, int _delay) : delay(_delay), character(_character) {
+    delayCounter = delay;
 }
 
 void State::animate() {
     delayCounter++;
     if (delayCounter > delay) {
         delayCounter = 0;
-        frameIndex = (frameIndex + 1) % numFrames;
-        frameRec.x = character->frameHeight * frameIndex;
+        frameIndex++;
+        frameIndex %= numFrames;
+        int x = character->sprite.StartEndFrames[type].x;
+        int y = character->sprite.StartEndFrames[type].y;
+        if (x <= y) {
+            frameRec = character->sprite.frameRecs[x + frameIndex];
+        }
+        else {
+            frameRec = character->sprite.frameRecs[x - frameIndex];
+        }
     }
 }
+void State::updateState() {
+    animate();
+    character->movement.pos = Vector2Add(character->movement.pos, character->movement.velocity);
+    handleInput();
 
+}
 // ---------- IdleState ----------
 IdleState::IdleState() : State() {}
 
-IdleState::IdleState(int _numFrames, Character* _character, int _delay)
-    : State(_numFrames, _character, _delay) {
+IdleState::IdleState(Character* _character, int _delay)
+    : State( _character, _delay) {
+    type = IDLE;
+    numFrames = abs(character->sprite.StartEndFrames[type].y - character->sprite.StartEndFrames[type].x) + 1;
+    frameRec = character->sprite.frameRecs[character->sprite.StartEndFrames[type].x];
 }
 void IdleState::handleInput() {
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
-        character->changeState(new WalkState(character->stateFrames[WALK], character));
+        character->changeState(new WalkState(character));
     }
     else {
-        character->velocity.x = 0;
+        character->movement.velocity.x = 0;
     }
 }
 
-void IdleState::updateState() {
-    handleInput();
-    animate();
-    character->pos = Vector2Add(character->pos, character->velocity);
-}
+//void IdleState::updateState() {
+//    animate();
+//    character->movement.pos = Vector2Add(character->movement.pos, character->movement.velocity);
+//    handleInput();
+//}
 
 void IdleState::displayState() {
-    DrawTextureRec(character->sprite, frameRec, character->pos, WHITE);
+    DrawTextureRec(character->sprite.texture, frameRec, character->movement.pos, WHITE);
 }
 
 // ---------- WalkState ----------
 WalkState::WalkState() : State() {}
 
-WalkState::WalkState(int _numFrames, Character* _character, int _delay)
-    : State(_numFrames, _character, _delay) {
+WalkState::WalkState(Character* _character, int _delay)
+    : State(_character, _delay) {
+    type = WALK;
+    numFrames = abs(character->sprite.StartEndFrames[type].y - character->sprite.StartEndFrames[type].x) + 1; 
+    frameRec = character->sprite.frameRecs[character->sprite.StartEndFrames[type].x];
 }
 
 void WalkState::handleInput() {
     if (IsKeyDown(KEY_RIGHT)) {
-        character->velocity.x = character->speed;
+        if (frameRec.width < 0) frameRec.width *= -1;
+        character->movement.velocity.x = character->movement.speed;
     }
     else if (IsKeyDown(KEY_LEFT)) {
-        character->velocity.x = -character->speed;
+        if (frameRec.width > 0) frameRec.width *= -1;
+        character->movement.velocity.x = -character->movement.speed;
     }
     else {
-        character->changeState(new IdleState(character->stateFrames[IDLE], character));
+        character->changeState(new IdleState(character));
     }
 }
 
-void WalkState::updateState() {
-    handleInput();
-    animate();
-    character->pos = Vector2Add(character->pos, character->velocity);
-}
+//void WalkState::updateState() {
+//    animate();
+//    character->movement.pos = Vector2Add(character->movement.pos, character->movement.velocity);
+//    handleInput();
+//
+//}
 
 void WalkState::displayState() {
-    DrawTextureRec(character->sprite, frameRec, character->pos, WHITE);
+    DrawTextureRec(character->sprite.texture, frameRec, character->movement.pos, WHITE);
 }
 

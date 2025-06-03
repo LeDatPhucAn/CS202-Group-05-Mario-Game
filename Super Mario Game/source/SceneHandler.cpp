@@ -9,6 +9,7 @@ SceneHandler::SceneHandler() {
     UI::screenWidth = GetScreenWidth();
     UI::screenHeight = GetScreenHeight();
 
+    // intialize scenes
     scenes.push_back(new Menu(this));
     scenes.push_back(new Game());
 
@@ -26,25 +27,24 @@ SceneHandler::~SceneHandler() {
 
 void SceneHandler::initButtons() {
 
-    // menu button 0
     Button* MenuButton = new TextBox("Menu", UI::screenWidth / 100, UI::screenHeight / 100);
+
     MenuButton->onClick = [this]() {
         this->changeScene(MENU);
         };
-    //MenuButton->animation = new RectMoveXAnim(dynamic_cast<RectButton*>(MenuButton), 0.5);
+
+
     SceneButtons.push_back(MenuButton);
     
-    //SetSpeed->animation = new RectMoveXAnim(SetSpeed, (float)UI::screenWidth, 0.5f);
 }
 
 int SceneHandler::getCurrentScene() {
     return currentSceneObject->CurrentScene;
 }
 
-void SceneHandler::changeScene(Scene newScene) {
+void SceneHandler::changeScene(sceneType newScene) {
     Button::resetButtonsAnimations<Button>(SceneButtons);
 
-    if (currentSceneObject) currentSceneObject->resetAnimations();
     currentSceneObject = scenes[newScene];
     currentSceneObject->CurrentScene = newScene;
 }
@@ -86,20 +86,14 @@ void SceneHandler::updateCurrentScene() {
         // update The Positions of all Scenes when there is a Window Resize
         if (UI::lastScreenWidth != UI::screenWidth || UI::lastScreenHeight != UI::screenHeight) {
             
-            //////// reposition 
 
             // Menu Button
-            //dynamic_cast<RectButton*>(SceneButtons[0])->setPosition(UI::screenWidth / 100, UI::screenHeight / 100);
+            dynamic_cast<RectButton*>(SceneButtons[0])->setPosition(UI::screenWidth / 100, UI::screenHeight / 100);
             
            
 
             Button::resetButtonsAnimations<Button>(SceneButtons);
 
-
-
-            for (int i = 1; i < 5; i++) {
-                scenes[i]->updateButtonPositions();
-            }
 
             UI::lastScreenWidth = UI::screenWidth;
             UI::lastScreenHeight = UI::screenHeight;
@@ -127,7 +121,9 @@ void SceneHandler::displayCurrentScene() {
 
         //apply camera to data structures
         if (getCurrentScene() != MENU) {
+
             BeginMode2D(camera);
+
             // Draw the 3d grid, rotated 90 degrees and centered around 0,0 
             // just so we have something in the XY plane
             rlPushMatrix();
@@ -139,14 +135,9 @@ void SceneHandler::displayCurrentScene() {
 
             EndMode2D();
 
+
+            // Draw the buttons that will be on every scene
             Button::drawButtons<Button>(SceneButtons);
-        }
-        else {
-            UI::drawBackground();
-
-            UI::drawLogo();
-
-            
         }
 
         

@@ -14,7 +14,6 @@ int main()
 	SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
 	SetTargetFPS(60);
 	UI ui;
-	ui.initTextures();
 	SceneHandler scenehandler;
 
 	/// main functions
@@ -44,5 +43,4 @@ int main()
 
 	}
 	CloseWindow();
-	ui.cleanup();
 }

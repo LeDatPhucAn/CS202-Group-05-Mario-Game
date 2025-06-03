@@ -32,9 +32,10 @@
     <ClInclude Include="header\Button.hpp" />
     <ClInclude Include="header\Character.hpp" />
     <ClInclude Include="header\Game.hpp" />
+    <ClInclude Include="header\json.hpp" />
     <ClInclude Include="header\Menu.hpp" />
     <ClInclude Include="header\SceneHandler.hpp" />
-    <ClInclude Include="header\SceneManager.hpp" />
+    <ClInclude Include="header\Scene.hpp" />
     <ClInclude Include="header\State.hpp" />
     <ClInclude Include="header\UI.hpp" />
   </ItemGroup>

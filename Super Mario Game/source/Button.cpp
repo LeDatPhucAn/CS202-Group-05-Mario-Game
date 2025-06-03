@@ -6,7 +6,6 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-
 bool Button::isCollision = false;
 bool Button::isClicking = false;
 const int RectButton::padding = UI::fontSize;

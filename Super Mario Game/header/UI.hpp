@@ -6,24 +6,33 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <unordered_map>
+#include <fstream>
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 using namespace std;
 
 class UI {
 public:
+
+	UI();
+	~UI();
+
 	static Font font;
 	static constexpr float spacing = 2.0f;
 	static constexpr float fontSize = 30.0f;
-	UI();
 
 	static int screenWidth;
 	static int screenHeight;
 	static int lastScreenWidth;
 	static int lastScreenHeight;
-	static vector <Texture2D> Icons;
-	static vector <Texture2D> Buttons;
-	static vector<Texture2D> selectedButtons;
-	void initTextures();
 
+	static unordered_map<string, json> jsonMap;
+	static unordered_map<string, Texture2D> textureMap;
+
+	static vector<Rectangle> JsonToRectangleVector(const json& Json);
 	static void drawBackground();
 	static void drawLogo();
 	static void drawtext2(string message, int X, int Y, Color color);
@@ -51,9 +60,10 @@ public:
 		color.b = (unsigned char)(color.b + amount > 255 ? 255 : color.b + amount);
 	}
 
-	void cleanup();
 
 private:
+	void initTextures();
+	void initJson();
 	void UnLoadAllTextures();
 
 };

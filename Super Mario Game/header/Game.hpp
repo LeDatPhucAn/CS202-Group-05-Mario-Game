@@ -1,21 +1,25 @@
 #pragma once
-#include "SceneManager.hpp"
+#include "Scene.hpp"
 #include "SceneHandler.hpp"
-#include "Button.hpp"
 #include "Character.hpp"
-class Game : public SceneManager {
+
+class Game : public Scene {
 protected:
     Character Mario;
 public:
+    
+    // initialize
     Game();
     void init() override;
-    void initButtons() override;
-    void updateButtonPositions() {};
 
+    // update
     void updateScene() override;
     void updateSceneInCamera(Camera2D cam) {};
-    void resetAnimations() {};
 
+    // display
     void displayScene() override;
     void displaySceneInCamera() override;
+    
+    ~Game() = default;
+
 };

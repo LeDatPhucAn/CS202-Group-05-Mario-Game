@@ -1,16 +1,23 @@
 #include "../header/UI.hpp"
+
+
+// initialize static members
 Font UI::font = { 0 };
 int UI::screenWidth = 1600;
 int UI::screenHeight = 900;
 int UI::lastScreenWidth = 1600;
 int UI::lastScreenHeight = 900;
+unordered_map<string, Texture2D> UI::textureMap;
+unordered_map<string, json> UI::jsonMap;
 
-vector<Texture2D> UI::Icons;
-vector<Texture2D> UI::Buttons;
-vector<Texture2D> UI::selectedButtons;
 UI::UI() {
+	initJson();
+	initTextures();
+	
 	font = LoadFont("assets/Fonts/JetBrainsMono-Regular.ttf");
+	
 	SetTextureFilter(font.texture, TEXTURE_FILTER_BILINEAR);
+	
 	if (font.texture.id == 0) {
 		cout << "didnt get da font";
 		font = GetFontDefault();
@@ -18,45 +25,72 @@ UI::UI() {
 
 }
 
+UI::~UI() {
+	UnLoadAllTextures();
+}
+
+vector<Rectangle> UI::JsonToRectangleVector(const json& Json) {
+	vector<Rectangle> rectangle;
+	for (const auto& Rect : Json) {
+		rectangle.push_back({ Rect["x"], Rect["y"], Rect["width"], Rect["height"] });
+	}
+	return rectangle;
+}
 void UI::drawBackground() {
 	Rectangle screen = { 0, 0, static_cast<float>(screenWidth), static_cast<float>(screenHeight)};
 	Rectangle source = { 1300, 300,static_cast<float>(screenWidth), static_cast<float>(screenHeight)};
-	DrawTexturePro(UI::Icons[0], source, screen, { 0,0 }, 0, LIGHTGRAY);
+
+	DrawTexturePro(UI::textureMap["TitleScreen"], source, screen, {0,0}, 0, LIGHTGRAY);
 }
 
 void UI::drawLogo() {
+	Texture2D t = UI::textureMap["Logo"];
 	Rectangle logo = { 
-		screenWidth / 2 - static_cast<float>(UI::Icons[1].width) / 2,
+		screenWidth / 2 - static_cast<float>(t.width) / 2,
 		static_cast<float> (screenHeight) / 64,
-		static_cast<float> (UI::Icons[1].width), 
-		static_cast<float> (UI::Icons[1].height) };
-	DrawTexturePro(UI::Icons[1], { 0,0,(float)UI::Icons[1].width,(float)UI::Icons[1].height }, logo, { 0,0 }, 0, RAYWHITE);
+		static_cast<float> (t.width), 
+		static_cast<float> (t.height) };
+	DrawTexturePro(t, { 0,0,(float)t.width,(float)t.height }, logo, { 0,0 }, 0, RAYWHITE);
 }
 
 void UI::initTextures() {
 
-	//// Buttons
-	//Buttons.push_back(LoadTexture("assets/Buttons/SinglyLinkedList.png"));
-	//Buttons.push_back(LoadTexture("assets/Buttons/HashTable.png"));
-	//Buttons.push_back(LoadTexture("assets/Buttons/Treap.png"));
-	//Buttons.push_back(LoadTexture("assets/Buttons/Graph.png"));
+	std::unordered_map<std::string, std::string> texturePaths = {
+		{"TitleScreen", "assets/Backgrounds/TitleScreen.jpg"},
+		{"Logo", "assets/Backgrounds/logo.png"},
+		{"Mario", "assets/Sprites/mario.png"}
+		// Add the rest...
+	};
 
-	//// Selected Buttons
-	//selectedButtons.push_back(LoadTexture("assets/Buttons/SinglyLinkedListSelected.png"));
-	//selectedButtons.push_back(LoadTexture("assets/Buttons/HashTableSelected.png"));
-	//selectedButtons.push_back(LoadTexture("assets/Buttons/TreapSelected.png"));
-	//selectedButtons.push_back(LoadTexture("assets/Buttons/GraphSelected.png"));
+	for (const auto& KeyAndPath : texturePaths) {
+		textureMap[KeyAndPath.first] = LoadTexture(KeyAndPath.second.c_str());
+	}
+}
+void UI::initJson() {
 
+	std::unordered_map<std::string, std::string> jsonPaths = {
+		{"Mario", "assets/Json/mario.json"}
+		// Add the rest...
+	};
 
-	//// Icons
-	Icons.push_back(LoadTexture("assets/Backgrounds/TitleScreen.jpg"));	// Icons[0]
-	Icons.push_back(LoadTexture("assets/Backgrounds/logo.png"));		// Icons[1]
+	ifstream file;
+	for (const auto& KeyAndPath : jsonPaths) {
+		file.open(KeyAndPath.second);
+		file >> jsonMap[KeyAndPath.first];
+		for (const auto& sprite : jsonMap[KeyAndPath.first]) {
+			std::string name = sprite["name"];
+			int x = sprite["x"];
+			int y = sprite["y"];
+			int width = sprite["width"];
+			int height = sprite["height"];
+
+			std::cout << name << ": (" << x << ", " << y << "), "
+				<< width << "x" << height << "\n";
+		}
+		file.close();
+	}
 }
 
-
-/// <summary>
-/// Draw functions
-/// </summary>
 
 void UI::drawtext2(string message, int X, int Y, Color color) {
 	const char* messageStr = message.c_str();
@@ -67,25 +101,11 @@ void UI::drawtext2(string message, int X, int Y, Color color) {
 
 }
 
-
-
-/// <summary>
-/// Cleanup functions
-/// </summary>
-
 void UI::UnLoadAllTextures() {
-	for (const auto& texture : Icons) {
-		UnloadTexture(texture);
+	for (const auto& texture : textureMap) {
+		UnloadTexture(texture.second);
 	}
-	Icons.clear();
-
-	for (const auto& texture : Buttons) {
-		UnloadTexture(texture);
-	}
-	Buttons.clear();
 }
 
-void UI::cleanup() {
-	UnLoadAllTextures();
-}
+
 

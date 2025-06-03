@@ -2,40 +2,70 @@
 #include "State.hpp"
 #include <raylib.h>
 #include <vector>
+#include "UI.hpp"
 using namespace std;
+
+struct Sprite {
+    vector<Vector2> StartEndFrames;
+    vector<Rectangle> frameRecs;
+	Texture2D texture;	
+};
+
+struct Movement {
+	int speed = 0;
+	Vector2 pos = { 0,0 };
+	Vector2 velocity = { 0,0 };
+	Vector2 acceleration = { 0,0 };
+};
 
 class State;
 class Character {
 protected:
-	int maxFrames = 0;
-	int numStates = 0;
-	int frameWidth = 0;
-	int frameHeight = 0;
-	int speed = 0;
-	Vector2 velocity = { 0,0 };
-	Vector2 pos = { 0,0 };
-	State* currentState = nullptr;
+    Sprite sprite;
+    Movement movement;
+    State* currentState = nullptr;
 
-	Texture2D sprite;
-	vector<int> stateFrames;
 public:
+    friend class State;
+    friend class IdleState;
+    friend class WalkState;
 
-	friend class State;
-	friend class IdleState;
-	friend class WalkState;
+    struct Builder {
+        Sprite sprite;
+        Movement movement;
+        State* state = nullptr;
+        Builder& setSprite(vector<Vector2> StartEndFrames, json Json, Texture2D texture) {
+            sprite.StartEndFrames = StartEndFrames;
+            sprite.texture = texture;
+            sprite.frameRecs = UI::JsonToRectangleVector(Json);
+            return *this;
+        }
+        Builder& setMovement(int speed, Vector2 pos, Vector2 velocity, Vector2 acceleration) {
+            movement.speed = speed;
+            movement.pos = pos;
+            movement.velocity = velocity;
+            movement.acceleration = acceleration;
+            return *this;
+        }
+        Builder& setState(State* initialState) {
+            state = initialState;
+            return *this;
+        }
+        Character build() {
+            return Character(sprite, movement,state);
+        }
+    };
+    Character() {}
 
-	Character(){}
-	Character(int _speed, int _numStates, int _maxFrames, Vector2 _velocity, Vector2 _pos, Texture2D _sprite, const vector<int>& _stateFrames)
-		: numStates(_numStates), maxFrames(_maxFrames), speed(_speed), velocity(_velocity), pos(_pos), sprite(_sprite), stateFrames(_stateFrames) {
-		frameHeight = sprite.height / numStates;
-		frameWidth = sprite.width / maxFrames;
-		currentState = new IdleState(stateFrames[IDLE], this);
-	}
-	~Character() {
-		if (currentState) delete currentState;
-	}
-	void changeState(State* newState);
+    Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
+        : sprite(_sprite), movement(_movement), currentState(_initialState) {
+    }
 
-	void update();
-	void draw();
+    ~Character() {
+        if (currentState) delete currentState;
+    }
+
+    void changeState(State* newState);
+    void update();
+    void draw();
 };

@@ -9,5 +9,7 @@ void Character::update() {
 	}
 }
 void Character::draw() {
-	currentState->displayState();
+	if (currentState) {
+		currentState->displayState();
+	}
 }

@@ -1,23 +1,27 @@
 #include "../header/Game.hpp"
+#include "../header/UI.hpp"
 Game::Game() 
-    : Mario(14, 5, 4, { 0, 0 }, { 100, 200 }, LoadTexture("assets/Sprites/mario.png"), { 1, 3 }){}
-
+    : Mario(
+        Character::Builder()
+        .setSprite({ {6, 6}, {7, 9} }, UI::jsonMap["Mario"], UI::textureMap["Mario"])
+        .setMovement(2, { 100, 100 }, { 0, 0 }, {0,0})   // speed = 2
+        .build()
+    )
+{
+    init();
+}
 
 void Game::updateScene() {
     Mario.update();
 }
-
-void Game::displayScene() {
-    //Mario.draw();
-}
-
 void Game::displaySceneInCamera() {
     Mario.draw();
 }
-void Game::init() {
-    initButtons();
+void Game::displayScene() {
+
 }
 
-void Game::initButtons() {
 
+void Game::init() {
+    Mario.changeState(new IdleState(&Mario));
 }

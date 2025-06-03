@@ -50,7 +50,7 @@
     <ClInclude Include="header\SceneHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="header\SceneManager.hpp">
+    <ClInclude Include="header\Scene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="header\Menu.hpp">
@@ -63,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="header\State.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
