@@ -21,6 +21,8 @@ struct Movement {
 class State;
 class Character {
 protected:
+    bool isGrounded = false;
+    bool facingRight = true;
     Sprite sprite;
     Movement movement;
     State* currentState = nullptr;
@@ -29,7 +31,8 @@ public:
     friend class State;
     friend class IdleState;
     friend class WalkState;
-
+    friend class JumpState;
+    friend class FallState;
     struct Builder {
         Sprite sprite;
         Movement movement;

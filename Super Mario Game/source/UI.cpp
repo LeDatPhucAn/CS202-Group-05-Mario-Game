@@ -11,6 +11,7 @@ unordered_map<string, Texture2D> UI::textureMap;
 unordered_map<string, json> UI::jsonMap;
 
 UI::UI() {
+
 	initJson();
 	initTextures();
 	
@@ -58,7 +59,9 @@ void UI::initTextures() {
 	std::unordered_map<std::string, std::string> texturePaths = {
 		{"TitleScreen", "assets/Backgrounds/TitleScreen.jpg"},
 		{"Logo", "assets/Backgrounds/logo.png"},
-		{"Mario", "assets/Sprites/mario.png"}
+		{"Mario", "assets/Sprites/mario.png"},
+		{"Mario2D", "assets/Sprites/mario2D.png"},
+		{"Mario3D", "assets/Sprites/mario3D.png"}
 		// Add the rest...
 	};
 
@@ -69,7 +72,9 @@ void UI::initTextures() {
 void UI::initJson() {
 
 	std::unordered_map<std::string, std::string> jsonPaths = {
-		{"Mario", "assets/Json/mario.json"}
+		{"Mario", "assets/Json/mario.json"},
+		{"Mario2D", "assets/Json/mario2D.json"},
+		{"Mario3D", "assets/Json/mario3D.json"}
 		// Add the rest...
 	};
 
@@ -77,16 +82,6 @@ void UI::initJson() {
 	for (const auto& KeyAndPath : jsonPaths) {
 		file.open(KeyAndPath.second);
 		file >> jsonMap[KeyAndPath.first];
-		for (const auto& sprite : jsonMap[KeyAndPath.first]) {
-			std::string name = sprite["name"];
-			int x = sprite["x"];
-			int y = sprite["y"];
-			int width = sprite["width"];
-			int height = sprite["height"];
-
-			std::cout << name << ": (" << x << ", " << y << "), "
-				<< width << "x" << height << "\n";
-		}
 		file.close();
 	}
 }
