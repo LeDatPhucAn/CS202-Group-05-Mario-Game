@@ -81,22 +81,17 @@ void WalkState::handleInput() {
     }
     else if (IsKeyDown(KEY_RIGHT)) {
         character->facingRight = true;
-        if (frameRec.width < 0) {
-            frameRec.width *= -1;
-        }
+        frameRec.width = abs(frameRec.width);
         character->movement.velocity.x = character->movement.speed;
     }
     else if (IsKeyDown(KEY_LEFT)) {
         character->facingRight = false;
-        if (frameRec.width > 0) {
-            frameRec.width *= -1;
-        }
+        frameRec.width = -abs(frameRec.width);
         character->movement.velocity.x = -character->movement.speed;
     }
     else {
         character->changeState(new IdleState(character));
     }
-
     
 }
 
@@ -109,16 +104,17 @@ JumpState::JumpState(Character* _character, int _delay)
 }
 
 void JumpState::handleInput() {
-    if (IsKeyDown(KEY_UP) && character->isGrounded) {
+    if (!character->isGrounded) {
+    character->changeState(new FallState(character));
+    }
+    else if (IsKeyDown(KEY_UP) && character->isGrounded) {
         if (!character->facingRight) {
             frameRec.width = -abs(frameRec.width);
         }
         character->isGrounded = false;
         character->movement.velocity.y = -4 * character->movement.speed;
     }
-    else if (!character->isGrounded) {
-        character->changeState(new FallState(character));
-    }
+
     else {
         character->changeState(new IdleState(character));
     }
@@ -130,27 +126,29 @@ FallState::FallState(Character* _character, int _delay)
     : State(FALL,_character, _delay) {
 }
 
+
 void FallState::handleInput() {
+    if (character->isGrounded) {
+        character->changeState(new IdleState(character));
+        return;
+    }
+
+    if (!character->facingRight) {
+        frameRec.width = -abs(frameRec.width);
+    }
+
     if (IsKeyDown(KEY_RIGHT)) {
         character->facingRight = true;
-        if (frameRec.width < 0) {
-            frameRec.width *= -1;
-        }
+        frameRec.width = abs(frameRec.width);
         character->movement.velocity.x = character->movement.speed;
-        if (character->isGrounded)character->changeState(new WalkState(character));
-
     }
     else if (IsKeyDown(KEY_LEFT)) {
         character->facingRight = false;
-        if (frameRec.width > 0) {
-            frameRec.width *= -1;
-        }
+        frameRec.width = -abs(frameRec.width);
         character->movement.velocity.x = -character->movement.speed;
-        if (character->isGrounded)character->changeState(new WalkState(character));
-
     }
     else {
-        character->changeState(new IdleState(character));
+        character->movement.velocity.x = 0;
     }
 }
 
