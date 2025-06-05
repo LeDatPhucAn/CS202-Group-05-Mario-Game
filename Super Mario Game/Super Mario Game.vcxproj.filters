@@ -68,5 +68,8 @@
     <ClInclude Include="header\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\ProcessJson.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -31,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="header\Button.hpp" />
     <ClInclude Include="header\Character.hpp" />
+    <ClInclude Include="header\ProcessJson.hpp" />
     <ClInclude Include="header\Game.hpp" />
     <ClInclude Include="header\json.hpp" />
     <ClInclude Include="header\Menu.hpp" />
@@ -139,12 +140,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>stdc++fs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

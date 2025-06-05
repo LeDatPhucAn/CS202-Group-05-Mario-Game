@@ -1,5 +1,5 @@
 #include "../header/UI.hpp"
-
+#include "../header/ProcessJson.hpp"
 
 // initialize static members
 Font UI::font = { 0 };
@@ -32,6 +32,7 @@ UI::~UI() {
 
 vector<Rectangle> UI::JsonToRectangleVector(const json& Json) {
 	vector<Rectangle> rectangle;
+	Json.size();
 	for (const auto& Rect : Json) {
 		rectangle.push_back({ Rect["x"], Rect["y"], Rect["width"], Rect["height"] });
 	}
@@ -59,7 +60,6 @@ void UI::initTextures() {
 	std::unordered_map<std::string, std::string> texturePaths = {
 		{"TitleScreen", "assets/Backgrounds/TitleScreen.jpg"},
 		{"Logo", "assets/Backgrounds/logo.png"},
-		{"Mario", "assets/Sprites/mario.png"},
 		{"Mario2D", "assets/Sprites/mario2D.png"},
 		{"Mario3D", "assets/Sprites/mario3D.png"}
 		// Add the rest...
@@ -72,7 +72,6 @@ void UI::initTextures() {
 void UI::initJson() {
 
 	std::unordered_map<std::string, std::string> jsonPaths = {
-		{"Mario", "assets/Json/mario.json"},
 		{"Mario2D", "assets/Json/mario2D.json"},
 		{"Mario3D", "assets/Json/mario3D.json"}
 		// Add the rest...
@@ -80,9 +79,7 @@ void UI::initJson() {
 
 	ifstream file;
 	for (const auto& KeyAndPath : jsonPaths) {
-		file.open(KeyAndPath.second);
-		file >> jsonMap[KeyAndPath.first];
-		file.close();
+		jsonMap[KeyAndPath.first] = getProcessedSpriteJson(KeyAndPath.second);
 	}
 }
 
