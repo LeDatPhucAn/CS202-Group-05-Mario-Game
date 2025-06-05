@@ -7,8 +7,9 @@ State::State() : delay(0), character(nullptr) {}
 State::State(stateType Type, Character* _character, int _delay) : delay(_delay), character(_character) {
     delayCounter = delay;
     type = Type;
-    numFrames = abs(character->sprite.StartEndFrames[Type].y - character->sprite.StartEndFrames[Type].x) + 1;
-    frameRec = character->sprite.frameRecs[character->sprite.StartEndFrames[Type].x];
+    StartEndFrame se = character->sprite.StartEndFrames[Type];
+    numFrames = abs(se.end - se.start) + 1;
+    frameRec = character->sprite.frameRecs[se.start];
 }
 
 void State::animate() {
@@ -17,14 +18,14 @@ void State::animate() {
         delayCounter = 0;
         frameIndex++;
         frameIndex %= numFrames;
-        int x = character->sprite.StartEndFrames[type].x;
-        int y = character->sprite.StartEndFrames[type].y;
-        if (x <= y) {
-            frameRec = character->sprite.frameRecs[x + frameIndex];
+        StartEndFrame se = character->sprite.StartEndFrames[type];
+        if (se.start <= se.end) {
+            frameRec = character->sprite.frameRecs[se.start + frameIndex];
         }
         else {
-            frameRec = character->sprite.frameRecs[x - frameIndex];
+            frameRec = character->sprite.frameRecs[se.start - frameIndex];
         }
+
     }
 }
 void State::updateState() {

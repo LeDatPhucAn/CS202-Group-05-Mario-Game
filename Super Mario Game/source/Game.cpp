@@ -3,18 +3,21 @@
 Game::Game() 
     : Mario(
         Character::Builder()
-        .setSprite(
-            { {13, 13}, {16, 14}, {18, 18}, {18, 18} },
-            UI::jsonMap["Mario2D"], UI::textureMap["Mario2D"]
-            )
-
-        .setMovement(6, { 100, 100 }, { 0, 0 }, {0,0})   // speed = 6
+        .setIdleFrames(13,13)
+        .setWalkFrames(16,14)
+        .setJumpFrames(18,18)
+        .setFallFrames(18,18)
+        .setJsonAndTexture("Mario2D")
+        .setSpeed(6)
+        .setPos({100,100})
         .build()
     )
 {
     init();
 }
-
+void Game::init() {
+    Mario.changeState(new IdleState(&Mario));
+}
 void Game::updateScene() {
     Mario.update();
 }
@@ -26,6 +29,4 @@ void Game::displayScene() {
 }
 
 
-void Game::init() {
-    Mario.changeState(new IdleState(&Mario));
-}
+
