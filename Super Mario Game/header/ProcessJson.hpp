@@ -91,21 +91,11 @@ void saveJson(const string& path, const json& j) {
     out << j.dump(4);
 }
 
-bool isAlreadyProcessed(const std::string& processedPath) {
-    std::ifstream f(processedPath);
-    return f.good();
-}
-
 json getProcessedSpriteJson(const string& inputPath) {
-    if (isAlreadyProcessed(inputPath)) {
-        cout << "Using pre-processed sprite JSON.\n";
-        return loadJson(inputPath);
-    }
-
-    cout << "Processing sprite JSON for the first time...\n";
+    cout << "Processing sprite JSON...\n";
     json original = loadJson(inputPath);
     json reordered = reorderJsonByRow(original);
     saveJson(inputPath, reordered);
-
     return reordered;
 }
+
