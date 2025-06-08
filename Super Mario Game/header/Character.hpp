@@ -27,10 +27,32 @@ class State;
 class Character {
 protected:
     bool isGrounded = false;
-    bool facingRight = true;
+    Direction direction = RIGHT;
     Sprite sprite;
     Movement movement;
     State* currentState = nullptr;
+
+public:
+    friend class State;
+    friend class RunState;
+    friend class IdleState;
+    friend class WalkState;
+    friend class JumpState;
+    friend class FallState;
+    friend class SkidState;
+    Character() {}
+
+    Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
+        : sprite(_sprite), movement(_movement), currentState(_initialState) {
+    }
+
+    ~Character() {
+        if (currentState) delete currentState;
+    }
+
+    void changeState(State* newState);
+    void update();
+    void draw();
 
 public:
     struct Builder {
@@ -56,6 +78,14 @@ public:
 
         Builder& setFallFrames(int start, int end) {
             sprite.StartEndFrames[FALL] = { start,end };
+            return *this;
+        }
+        Builder& setSkidFrames(int start, int end) {
+            sprite.StartEndFrames[SKID] = { start,end };
+            return *this;
+        }
+        Builder& setRunFrames(int start, int end) {
+            sprite.StartEndFrames[RUN] = { start,end };
             return *this;
         }
 
@@ -98,25 +128,5 @@ public:
         }
 
     };
-    
-public:
-    friend class State;
-    friend class IdleState;
-    friend class WalkState;
-    friend class JumpState;
-    friend class FallState;
 
-    Character() {}
-
-    Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
-        : sprite(_sprite), movement(_movement), currentState(_initialState) {
-    }
-
-    ~Character() {
-        if (currentState) delete currentState;
-    }
-
-    void changeState(State* newState);
-    void update();
-    void draw();
 };

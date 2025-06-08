@@ -60,6 +60,7 @@ void UI::initTextures() {
 	std::unordered_map<std::string, std::string> texturePaths = {
 		{"TitleScreen", "assets/Backgrounds/TitleScreen.jpg"},
 		{"Logo", "assets/Backgrounds/logo.png"},
+		{"1-1", "assets/Backgrounds/1-1.png"},
 		{"Mario2D", "assets/Sprites/mario2D.png"},
 		{"Mario3D", "assets/Sprites/mario3D.png"}
 		// Add the rest...
