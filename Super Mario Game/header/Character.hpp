@@ -10,7 +10,7 @@ struct StartEndFrame {
     int end = 0;
 };
 struct Sprite {
-    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(10);
+    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(15);
     vector<Rectangle> frameRecs;
 	Texture2D texture;	
 };
@@ -40,6 +40,8 @@ public:
     friend class JumpState;
     friend class FallState;
     friend class SkidState;
+    friend class GrowState;
+    friend class UnGrowState;
     Character() {}
 
     Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
@@ -49,7 +51,27 @@ public:
     ~Character() {
         if (currentState) delete currentState;
     }
+    Character(const Character& other) {
+        sprite = other.sprite;
+        movement = other.movement;
+        isGrounded = other.isGrounded;
+        direction = other.direction;
+        currentState = new IdleState(this);
+    }
+    
+    Character& operator=(const Character& other) {
+        if (this == &other)return *this;
+        // Clean up existing state
+        if (currentState) delete currentState;
 
+        sprite = other.sprite;
+        movement = other.movement;
+        isGrounded = other.isGrounded;
+        direction = other.direction;
+
+        currentState = new IdleState(this);  
+        return *this;
+    }
     void changeState(State* newState);
     void update();
     void draw();
@@ -61,34 +83,10 @@ public:
         State* state = nullptr;
 
         // --- Sprite setters ---
-        Builder& setIdleFrames(int start, int end) {
-            sprite.StartEndFrames[IDLE] = { start,end };
+        Builder& setFrames(stateType type, int start, int end) {
+            sprite.StartEndFrames[type] = { start,end };
             return *this;
         }
-
-        Builder& setWalkFrames(int start, int end) {
-            sprite.StartEndFrames[WALK] = { start,end };
-            return *this;
-        }
-
-        Builder& setJumpFrames(int start, int end) {
-            sprite.StartEndFrames[JUMP] = { start,end };
-            return *this;
-        }
-
-        Builder& setFallFrames(int start, int end) {
-            sprite.StartEndFrames[FALL] = { start,end };
-            return *this;
-        }
-        Builder& setSkidFrames(int start, int end) {
-            sprite.StartEndFrames[SKID] = { start,end };
-            return *this;
-        }
-        Builder& setRunFrames(int start, int end) {
-            sprite.StartEndFrames[RUN] = { start,end };
-            return *this;
-        }
-
         Builder& setJsonAndTexture(string name) {
             sprite.texture = UI::textureMap[name];
             sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap[name]);

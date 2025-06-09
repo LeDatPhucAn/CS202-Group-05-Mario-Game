@@ -7,7 +7,9 @@ enum stateType {
     RUN,
     JUMP,
     FALL,
-    SKID
+    SKID,
+    GROW,
+    UNGROW
 };
 enum Direction {
     LEFT = -1,
@@ -20,7 +22,7 @@ protected:
 
     // pos
     const float maxHeight = 72.0f;
-    const float GroundPosY = 192.0f;
+    const float GroundPosY = 208.0f;
     // Speeds (px/sec)
     const float walkSpeed = 90.0f;
     const float runSpeed = 157.5f;
@@ -91,5 +93,17 @@ class SkidState : public State {
 public:
     SkidState();
     SkidState(Character* _character, int _delay=5);
+    void handleInput() override;
+};
+class GrowState : public State {
+public:
+    GrowState();
+    GrowState(Character* _character, int _delay=5);
+    void handleInput() override;
+};
+class UnGrowState : public State {
+public:
+    UnGrowState();
+    UnGrowState(Character* _character, int _delay=3);
     void handleInput() override;
 };
