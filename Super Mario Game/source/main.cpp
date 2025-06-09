@@ -15,7 +15,6 @@ int main()
 	SetTargetFPS(60);
 	UI ui;
 	SceneHandler scenehandler;
-
 	/// main functions
 	while (!WindowShouldClose()) {
 

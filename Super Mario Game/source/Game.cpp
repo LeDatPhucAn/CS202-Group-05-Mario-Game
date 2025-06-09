@@ -1,15 +1,18 @@
 #include "../header/Game.hpp"
 #include "../header/UI.hpp"
-Game::Game() 
+Game::Game()
     : Mario(
         Character::Builder()
-        .setIdleFrames(0,0)
-        .setWalkFrames(1,3)
-        .setJumpFrames(5,5)
-        .setFallFrames(5,5)
+        .setFrames(IDLE, 0, 0)
+        .setFrames(WALK, 1, 3)
+        .setFrames(JUMP, 5, 5)
+        .setFrames(FALL, 5, 5)
+        .setFrames(SKID, 4, 4)
+        .setFrames(RUN, 1, 3)
+        .setFrames(GROW, 44, 50)
+        .setFrames(UNGROW, 50, 44)
         .setJsonAndTexture("Mario2D")
-        .setSpeed(6)
-        .setPos({100,100})
+        .setPos({ 100,0 })
         .build()
     )
 {
@@ -22,10 +25,12 @@ void Game::updateScene() {
     Mario.update();
 }
 void Game::displaySceneInCamera() {
+    Rectangle rect = { 0,0,textureMap["1-1"].width, textureMap["1-1"].height };
+    DrawTexturePro(textureMap["1-1"], rect, rect, { 0,0 }, 0, WHITE);
     Mario.draw();
 }
 void Game::displayScene() {
-
+    
 }
 
 
