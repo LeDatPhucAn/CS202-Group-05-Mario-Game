@@ -29,6 +29,7 @@ void State::updateState() {
     applyPhysics(GetFrameTime());
     frameRec.width = character->direction * abs(frameRec.width);
     handleInput();
+
 }
 string stateTypeToString(stateType state) {
     switch (state) {
@@ -45,7 +46,7 @@ string stateTypeToString(stateType state) {
 void State::applyPhysics(float deltaTime) {
     if (!character->isGrounded) {
         if (character->movement.velocity.y < 0) { // Going up
-            if (IsKeyDown(KEY_UP) && character->movement.pos.y > GroundPosY - maxHeight) {
+            if (IsKeyDown(KEY_UP) && character->movement.pos.y > GroundPosY - maxHeight - frameRec.height) {
                 character->movement.acceleration.y = jumpGravity;
             }
             else {
@@ -241,19 +242,19 @@ void SkidState::handleInput() {
     }
     if (IsKeyDown(KEY_RIGHT)) {
         character->direction = RIGHT;
-        character->movement.acceleration.x = skidDecel;
+        character->movement.acceleration.x = (character->movement.velocity.x > 0) ? -skidDecel : skidDecel;
     }
     else if (IsKeyDown(KEY_LEFT)) {
         character->direction = LEFT;
-        character->movement.acceleration.x = -skidDecel;
+        character->movement.acceleration.x = (character->movement.velocity.x > 0) ? -skidDecel : skidDecel;
     }
     else {
-        character->movement.acceleration.x = character->direction * friction;
+
+        character->movement.acceleration.x = (character->movement.velocity.x > 0) ? -friction*2 : friction*2;
+
     }
-    if (abs(character->movement.velocity.x) > 170) {
-        character->changeState(new WalkState(character));
-        return;
-    }
+
+
 }
 
 // ---------- RunState ----------
