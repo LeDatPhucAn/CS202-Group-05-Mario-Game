@@ -1,0 +1,43 @@
+{
+  "height": 15,
+  "width": 200,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "layers": [
+    {
+      "type": "tilelayer",
+      "name": "Background",
+      "visible": true,
+      "opacity": 1,
+      "data": [
+        0,0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0,0,0,0,
+        … (tổng cộng 200 × 15 = 3000 phần tử, mỗi số là chỉ số tile trong tileset) …
+      ]
+    },
+    {
+      "type": "tilelayer",
+      "name": "Collision",
+      "visible": true,
+      "opacity": 1,
+      "data": [
+        0,0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0,0,0,0,
+        … (tổng cộng 3000 phần tử: 1 nếu ô đó có va chạm, 0 nếu không) …
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "SMB Stage 1-1",
+      "image": "https://www.mariouniverse.com/wp-content/img/sprites/snes/smb/stage-1-1.png",
+      "imagewidth": 1024,
+      "imageheight": 240,
+      "tilewidth": 16,
+      "tileheight": 16,
+      "columns": 64,
+      "tilecount": 960
+    }
+  ]
+}

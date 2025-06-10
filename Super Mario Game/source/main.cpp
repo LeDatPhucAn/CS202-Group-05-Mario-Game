@@ -6,6 +6,7 @@
 #include "../header/SceneHandler.hpp"
 #include "../header/Button.hpp"
 #include "../header/UI.hpp"
+#include "../source/Map/Map.hpp"
 using namespace std;
 
 int main()
@@ -16,31 +17,26 @@ int main()
 	UI ui;
 	SceneHandler scenehandler;
 
-	/// main functions
-	while (!WindowShouldClose()) {
+	Map gameMap;
+    if (!gameMap.loadFromFile("assets/Json/stage-1-1.json")) {
+        std::cerr << "Failed to load map\n";
+        return 1;
+    }
 
-		// Get screen values
+	while (!WindowShouldClose()) {
 		UI::screenWidth = GetScreenWidth();
 		UI::screenHeight = GetScreenHeight();
 
-		// Update
-		//----------------------------------------------------------------------------------
 		scenehandler.updateCurrentScene();
 
-		//----------------------------------------------------------------------------------
-
-
-		// Draw
-		//----------------------------------------------------------------------------------
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 
+		gameMap.draw();
 		scenehandler.displayCurrentScene();
 		
 		
 		EndDrawing();
-		//----------------------------------------------------------------------------------
-
 	}
 	CloseWindow();
 }
