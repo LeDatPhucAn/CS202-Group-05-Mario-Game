@@ -2,7 +2,7 @@
 #include "../header/Character.hpp" 
 
 // ---------- Base State ----------
-State::State() : delay(0), character(nullptr), delayCounter(0), frameIndex(0), type(IDLE), numFrames(0) {}
+State::State() : delay(0), character(nullptr), delayCounter(0), frameIndex(0), type(IDLE), numFrames(0)  {}
 
 State::State(stateType Type, Character* _character, int _delay)
     : delay(_delay), character(_character), delayCounter(_delay), type(Type), frameIndex(0) {
@@ -40,6 +40,7 @@ string stateTypeToString(stateType state) {
     case stateType::FALL: return "FALL";
     case stateType::SKID: return "SKID";
     case stateType::GROW: return "GROW";
+    case stateType::UNGROW: return "UNGROW";
     default: return "UNKNOWN";
     }
 }
@@ -314,15 +315,13 @@ GrowState::GrowState(Character* _character, int _delay)
 void GrowState::handleInput() {
     StartEndFrame se = character->sprite.StartEndFrames[type];
     character->movement.pos.y = GroundPosY - frameRec.height;
+    if (character->form == FIRE) {
+        character->changeState(new IdleState(character));
+        return;
+    }
     if (se.start + frameIndex == se.end ) {
-        character->sprite.StartEndFrames[IDLE] = { 13, 13 };
-        character->sprite.StartEndFrames[WALK] = { 16, 14 };
-        character->sprite.StartEndFrames[JUMP] = { 18, 18 };
-        character->sprite.StartEndFrames[FALL] = { 18, 18 };
-        character->sprite.StartEndFrames[SKID] = { 17, 17 };
-        character->sprite.StartEndFrames[RUN] = { 16, 14 };
-        character->sprite.StartEndFrames[GROW] = { 44, 50 };
-        character->sprite.StartEndFrames[UNGROW] = { 50, 44 };
+        character->form = static_cast<MarioForm>((character->form + 1) % 3);
+        character->changeForm(character->form);
 
         Vector2 newpos = character->movement.pos;
         newpos.y = GroundPosY - frameRec.height;
@@ -342,17 +341,14 @@ UnGrowState::UnGrowState(Character* _character, int _delay)
 void UnGrowState::handleInput() {
     StartEndFrame se = character->sprite.StartEndFrames[type];
     character->movement.pos.y = GroundPosY - frameRec.height;
-
+    if (character->form == SMALL) {
+        character->changeState(new IdleState(character));
+        return;
+    }
     if (se.start - frameIndex == se.end ) {
-        character->sprite.StartEndFrames[IDLE] = { 0, 0 };
-        character->sprite.StartEndFrames[WALK] = { 1, 3 };
-        character->sprite.StartEndFrames[JUMP] = { 5, 5 };
-        character->sprite.StartEndFrames[FALL] = { 5, 5 };
-        character->sprite.StartEndFrames[SKID] = { 4, 4 };
-        character->sprite.StartEndFrames[RUN] = { 1, 3 };
-        character->sprite.StartEndFrames[GROW] = { 44, 50 };
-        character->sprite.StartEndFrames[UNGROW] = { 50, 44 };
-
+        character->form = static_cast<MarioForm>((character->form - 1 + FORM_COUNT) % FORM_COUNT);
+        character->changeForm(character->form);
+        
         Vector2 newpos = character->movement.pos;
         newpos.y = GroundPosY - frameRec.height;
 
@@ -361,4 +357,5 @@ void UnGrowState::handleInput() {
         character->changeState(new IdleState(character));
         return;
     }
+    
 }
