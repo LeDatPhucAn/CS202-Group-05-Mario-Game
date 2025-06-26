@@ -1,6 +1,12 @@
 #pragma once
 #include "raylib.h"
 #include "raymath.h"
+enum MarioForm {
+    SMALL = 0,
+    BIG = 1,
+    FIRE,
+	FORM_COUNT
+}; 
 enum stateType {
     IDLE,
     WALK,
@@ -37,7 +43,6 @@ protected:
     const float fallGravity = 1462.5f;  // Letting go / falling
     const float friction = 225.0f;
     const float skidDecel = 900.0f;
-
 
 
     int numFrames = 0;

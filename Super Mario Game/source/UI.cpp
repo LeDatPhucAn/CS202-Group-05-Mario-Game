@@ -32,6 +32,7 @@ UI::~UI() {
 
 vector<Rectangle> UI::JsonToRectangleVector(const json& Json) {
 	vector<Rectangle> rectangle;
+
 	Json.size();
 	for (const auto& Rect : Json) {
 		rectangle.push_back({ Rect["x"], Rect["y"], Rect["width"], Rect["height"] });
