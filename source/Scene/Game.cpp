@@ -1,9 +1,8 @@
 #include "Game.hpp"
-#include "../../header/UI.hpp"
+#include "UI.hpp"
 
 
-Game::Game()
-    : Mario(
+Game::Game(): Mario(
         Character::Builder()
         .setFrames(IDLE, 0, 0)
         .setFrames(WALK, 1, 3)
@@ -22,21 +21,17 @@ Game::Game()
     init();
 }
 void Game::init() {
-     map = LoadTiled("assets/Map/map1.json");
-
+    //Load assets
+    //Load Mari
+    current_Map = "map1";
     Mario.changeState(new IdleState(&Mario));
 }
 void Game::updateScene() {
     Mario.update();
 }
 void Game::displaySceneInCamera() {
-    DrawTiled(map, 0, 0, WHITE);
-
-
+    DrawTiled(UI::gameMap[current_Map], 0, 0, WHITE);
     Mario.display();
 }
 void Game::displayScene() {
 }
-
-
-

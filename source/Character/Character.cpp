@@ -1,4 +1,4 @@
-#include "../../header/Character.hpp"
+#include "Character.hpp"
 void Character::changeState(State* newState) {
 	if (currentState)delete currentState;
 	currentState = newState;

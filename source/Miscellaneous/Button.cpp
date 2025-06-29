@@ -1,5 +1,5 @@
-#include "../../header/Button.hpp"
-#include "../../header/Program.hpp"
+#include "Button.hpp"
+#include "Program.hpp"
 #include <memory>
 #include <vector>
 #include <string>

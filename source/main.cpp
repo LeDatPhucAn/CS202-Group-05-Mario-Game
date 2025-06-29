@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "../header/Program.hpp"
+#include "Program.hpp"
 using namespace std;
 
 int main()
@@ -14,6 +14,7 @@ int main()
     SetTargetFPS(60);
 
     // run program
+    UI ui;
     Program program;
 	program.run();
 }

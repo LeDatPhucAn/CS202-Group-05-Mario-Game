@@ -1349,7 +1349,7 @@ namespace tson
 //
 // Created by robin on 16.01.2021.
 //
-//#include "../../extras/pocketlzma.hpp"
+//#include "extras/pocketlzma.hpp"
 #ifdef POCKETLZMA_POCKETLZMA_H
 
 #ifndef TILESON_LZMA_HPP
@@ -1821,7 +1821,7 @@ namespace tson
 
 /*** End of inlined file: Vector2.hpp ***/
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 /*** Start of inlined file: IJson.hpp ***/
 //
@@ -2568,7 +2568,7 @@ namespace tson
 
 /*** End of inlined file: PicoJson.hpp ***/
 
-//#include "../json/Gason.hpp" //Unsupported
+//#include "json/Gason.hpp" //Unsupported
 
 /*** Start of inlined file: Json11.hpp ***/
 //
@@ -2920,7 +2920,7 @@ namespace tson
 #define TILESON_LAYER_HPP
 
 #include <set>
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 
 /*** Start of inlined file: Chunk.hpp ***/
@@ -2931,7 +2931,7 @@ namespace tson
 #ifndef TILESON_CHUNK_HPP
 #define TILESON_CHUNK_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {
@@ -3041,7 +3041,7 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 #ifndef TILESON_OBJECT_HPP
 #define TILESON_OBJECT_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 
 /*** Start of inlined file: PropertyCollection.hpp ***/
@@ -3061,7 +3061,7 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 #ifndef TILESON_PROPERTY_HPP
 #define TILESON_PROPERTY_HPP
 
-//#include "../../TilesonConfig.h"
+//#include "TilesonConfig.h"
 
 //#if USE_CPP17_FILESYSTEM
 
@@ -3381,7 +3381,7 @@ namespace tson
 /*** End of inlined file: Enums.hpp ***/
 
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {
@@ -3552,7 +3552,7 @@ const std::string &tson::Property::getPropertyType() const
 
 /*** End of inlined file: Property.hpp ***/
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 #include <map>
 
 namespace tson
@@ -4916,7 +4916,7 @@ const std::string &tson::Layer::getClassType() const
 #ifndef TILESON_TILESET_HPP
 #define TILESON_TILESET_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 
 /*** Start of inlined file: Transformations.hpp ***/
@@ -5013,7 +5013,7 @@ namespace tson
 #ifndef TILESON_WANGSET_HPP
 #define TILESON_WANGSET_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 /*** Start of inlined file: WangColor.hpp ***/
 //
@@ -5023,7 +5023,7 @@ namespace tson
 #ifndef TILESON_WANGCOLOR_HPP
 #define TILESON_WANGCOLOR_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {
@@ -5177,7 +5177,7 @@ const std::string &tson::WangColor::getClassType() const
 #ifndef TILESON_WANGTILE_HPP
 #define TILESON_WANGTILE_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {
@@ -5517,7 +5517,7 @@ const std::string &tson::WangSet::getClassType() const
 #ifndef TILESON_TILE_HPP
 #define TILESON_TILE_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 
 /*** Start of inlined file: Frame.hpp ***/
@@ -5528,7 +5528,7 @@ const std::string &tson::WangSet::getClassType() const
 #ifndef TILESON_FRAME_HPP
 #define TILESON_FRAME_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {
@@ -6039,7 +6039,7 @@ const tson::Rect &tson::Tile::getSubRectangle() const
 #ifndef TILESON_TERRAIN_HPP
 #define TILESON_TERRAIN_HPP
 
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {
@@ -6158,7 +6158,7 @@ tson::Property *tson::Terrain::getProp(const std::string &name)
 #define TILESON_GRID_HPP
 
 #include <string>
-//#include "../external/json.hpp"
+//#include "external/json.hpp"
 
 namespace tson
 {

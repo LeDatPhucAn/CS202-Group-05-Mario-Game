@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <fstream>
 #include "json.hpp"
+#include "tileson.hpp"
+#include "raylib-tileson.h"
 
 using json = nlohmann::json;
 
@@ -32,7 +34,7 @@ public:
 
 	static unordered_map<string, json> jsonMap;
 	static unordered_map<string, Texture2D> textureMap;
-
+	static unordered_map<string, Map> gameMap;
 	static vector<Rectangle> JsonToRectangleVector(const json& Json);
 	static void drawBackground();
 	static void drawLogo();
@@ -65,6 +67,7 @@ public:
 private:
 	void initTextures();
 	void initJson();
+	void initGameMaps();
 	void UnLoadAllTextures();
 
 };

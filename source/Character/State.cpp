@@ -1,5 +1,5 @@
-﻿#include "../../header/State.hpp"
-#include "../../header/Character.hpp" 
+﻿#include "State.hpp"
+#include "Character.hpp" 
 
 // ---------- Base State ----------
 State::State() : delay(0), character(nullptr), delayCounter(0), frameIndex(0), type(IDLE), numFrames(0)  {}
@@ -77,6 +77,7 @@ void State::applyPhysics(float deltaTime) {
         << character->movement.velocity.y << " "
         << stateTypeToString(type)
         << ((character->direction == RIGHT) ? " RIGHT\n" : " LEFT\n");
+        
     // Ground collision
     if (character->movement.pos.y >= GroundPosY -frameRec.height) {
         character->movement.pos.y = GroundPosY - frameRec.height;

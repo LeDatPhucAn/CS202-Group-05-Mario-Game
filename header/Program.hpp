@@ -1,7 +1,12 @@
 #pragma once
 #include "Scene.hpp"
+#include "raylib-tileson.h"
+#include "Character.hpp"
+
+class Character;
 class Button;
-class Program : public UI {
+
+class Program {
 private:
     vector<Button*>SceneButtons;
     vector<Scene*> scenes;
@@ -11,19 +16,23 @@ private:
         0.0f,  
         0.0f
     };
+
 public:
     Scene* currentSceneObject;
     static Vector2 mouseWorldPos;
-
-    // Basic methods
+    
+    // Basic methods 
     Program();
     void updateCurrentScene();
     void displayCurrentScene();
     void run();
 
     ~Program();
+
+    //Scene
     int getCurrentScene();
+    void changeScene(sceneType newScene);
+    
     void initButtons();
     void updateCamera();
-    void changeScene(sceneType newScene);
 };

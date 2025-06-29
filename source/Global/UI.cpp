@@ -1,5 +1,6 @@
-#include "../../header/UI.hpp"
-#include "../../header/ProcessJson.hpp"
+#include "UI.hpp"
+#include "ProcessJson.hpp"
+#include "raylib-tileson.h"
 
 // initialize static members
 Font UI::font = { 0 };
@@ -9,12 +10,13 @@ int UI::lastScreenWidth = 1600;
 int UI::lastScreenHeight = 900;
 unordered_map<string, Texture2D> UI::textureMap;
 unordered_map<string, json> UI::jsonMap;
-
+unordered_map<string, Map> UI::gameMap; 
 UI::UI() {
 
 	initJson();
 	initTextures();
-	
+	initGameMaps();
+
 	font = LoadFont("assets/Fonts/JetBrainsMono-Regular.ttf");
 	
 	SetTextureFilter(font.texture, TEXTURE_FILTER_BILINEAR);
@@ -56,6 +58,7 @@ void UI::drawLogo() {
 	DrawTexturePro(t, { 0,0,(float)t.width,(float)t.height }, logo, { 0,0 }, 0, RAYWHITE);
 }
 
+
 void UI::initTextures() {
 
 	std::unordered_map<std::string, std::string> texturePaths = {
@@ -76,17 +79,28 @@ void UI::initJson() {
 
 	std::unordered_map<std::string, std::string> jsonPaths = {
 		{"Mario2D", "assets/Json/mario2D.json"},
-		{"Mario3D", "assets/Json/mario3D.json"}
+		{"Mario3D", "assets/Json/mario3D.json"}		
 		// Add the rest...
 	};
-
+	
 	ifstream file;
 	for (const auto& KeyAndPath : jsonPaths) {
 		jsonMap[KeyAndPath.first] = getProcessedSpriteJson(KeyAndPath.second);
 	}
+
 }
 
-
+void UI::initGameMaps() {
+	std::unordered_map<std::string, std::string> mapPaths = {
+		{"map1", "assets/Map/map1.json"},
+		// Add the rest...
+	};
+	
+	for (const auto& KeyAndPath : mapPaths) {
+		gameMap[KeyAndPath.first] = LoadTiled(KeyAndPath.second.c_str());
+	}
+	
+}
 void UI::drawtext2(string message, int X, int Y, Color color) {
 	const char* messageStr = message.c_str();
 
@@ -99,6 +113,9 @@ void UI::drawtext2(string message, int X, int Y, Color color) {
 void UI::UnLoadAllTextures() {
 	for (const auto& texture : textureMap) {
 		UnloadTexture(texture.second);
+	}
+	for(const auto &x : gameMap){
+		UnloadMap(x.second);
 	}
 }
 

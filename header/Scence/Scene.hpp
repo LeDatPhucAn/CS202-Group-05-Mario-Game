@@ -5,7 +5,7 @@ typedef enum sceneType {
 	GAME
 } sceneType;
 
-class Scene : public UI{
+class Scene {
 public:
 	sceneType CurrentScene;
 	

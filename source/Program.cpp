@@ -1,15 +1,13 @@
-#include "../header/Program.hpp"
-#include "../header/Menu.hpp"
-#include "../header/Game.hpp"
-#include "../header/UI.hpp"
-#include "raylib-tileson.h"
-
+#include "Program.hpp"
+#include "Menu.hpp"
+#include "Game.hpp"
+#include "UI.hpp"
+#include "Character.hpp"
 Vector2 Program::mouseWorldPos = { 0, 0 };
 
-Program::Program() {
-	
-
-
+Program::Program()
+{
+    
     camera.zoom = 1.0f;
     UI::screenWidth = GetScreenWidth();
     UI::screenHeight = GetScreenHeight();
@@ -36,7 +34,7 @@ void Program::initButtons() {
 
     MenuButton->onClick = [this]() {
         this->changeScene(MENU);
-        };
+    };
 
 
     SceneButtons.push_back(MenuButton);
@@ -83,16 +81,13 @@ void Program::updateCamera() {
 void Program::updateCurrentScene() {
     if (currentSceneObject) {
 
-
         // update font size
         // update The Positions of all Scenes when there is a Window Resize
         if (UI::lastScreenWidth != UI::screenWidth || UI::lastScreenHeight != UI::screenHeight) {
             
 
             // Menu Button
-            dynamic_cast<RectButton*>(SceneButtons[0])->setPosition(UI::screenWidth / 100, UI::screenHeight / 100);
-            
-           
+            dynamic_cast<RectButton*>(SceneButtons[0])->setPosition(UI::screenWidth / 100, UI::screenHeight / 100);         
 
             Button::resetButtonsAnimations<Button>(SceneButtons);
 
@@ -124,10 +119,9 @@ void Program::displayCurrentScene() {
     if (currentSceneObject) {
 
         //apply camera to data structures
-        if (getCurrentScene() != MENU) {
+        if (getCurrentScene() == GAME) {
 
             BeginMode2D(camera);
-
             // Draw the 3d grid, rotated 90 degrees and centered around 0,0 
             // just so we have something in the XY plane
             rlPushMatrix();
@@ -136,52 +130,37 @@ void Program::displayCurrentScene() {
             DrawGrid(1000, 100);
             rlPopMatrix();
             currentSceneObject->displaySceneInCamera();
-
             EndMode2D();
-
 
             // Draw the buttons that will be on every scene
             Button::drawButtons<Button>(SceneButtons);
-        }
-
-        
+        }     
         // display permanent objects
         currentSceneObject->displayScene();
     }
+    
 
     // Draw mouse reference
     DrawCircleV(GetMousePosition(), 4, DARKGRAY);
     DrawTextEx(GetFontDefault(), TextFormat("[%i, %i]", GetMouseX(), GetMouseY()),
     Vector2Add(GetMousePosition(), { -44, -24 }), 20, 2, BLACK);
 }
+
+
 void Program::run() {
     /// main functions
-
-
     while (!WindowShouldClose()) {
-
         // Get screen values
         UI::screenWidth = GetScreenWidth();
         UI::screenHeight = GetScreenHeight();
 
         // Update
-        //----------------------------------------------------------------------------------
-        updateCurrentScene();
-
-        //----------------------------------------------------------------------------------
-
-
+       updateCurrentScene();
         // Draw
-        //----------------------------------------------------------------------------------
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-        displayCurrentScene();
-
-        
+         BeginDrawing();
+            ClearBackground(RAYWHITE);
+            displayCurrentScene();
         EndDrawing();
-        //----------------------------------------------------------------------------------
-
     }
     CloseWindow();
 }

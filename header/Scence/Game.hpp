@@ -7,11 +7,13 @@
 class Game : public Scene {
 protected:
     Character Mario;
-    Map map;
+    string current_Map;
+    vector<Map> Maps;
 public:
     
     // initialize
     Game();
+    
     void init() override;
 
     // update
