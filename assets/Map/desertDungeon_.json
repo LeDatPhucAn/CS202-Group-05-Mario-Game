@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"fourSeasonsPlatformer_ assets\/background_\/desertDungeon_.png",
+ "imageheight":144,
+ "imagewidth":96,
+ "margin":0,
+ "name":"desertDungeon_",
+ "spacing":0,
+ "tilecount":54,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}
