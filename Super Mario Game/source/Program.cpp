@@ -1,9 +1,11 @@
-#include "../header/SceneHandler.hpp"
+#include "../header/Program.hpp"
 #include "../header/Menu.hpp"
 #include "../header/Game.hpp"
+#include "../header/UI.hpp"
+Vector2 Program::mouseWorldPos = { 0, 0 };
 
-Vector2 SceneHandler::mouseWorldPos = { 0, 0 };
-SceneHandler::SceneHandler() {
+Program::Program() {
+	
 
     camera.zoom = 1.0f;
     UI::screenWidth = GetScreenWidth();
@@ -12,20 +14,20 @@ SceneHandler::SceneHandler() {
     // intialize scenes
     scenes.push_back(new Menu(this));
     scenes.push_back(new Game());
-
+    
     // initialize Scene Buttons
     changeScene(MENU);
     initButtons();
 }
 
-SceneHandler::~SceneHandler() {
+Program::~Program() {
     for (int i = 0; i < scenes.size(); i++) {
         delete scenes[i];
     }
     Button::deleteButtons<Button>(SceneButtons);
 }
 
-void SceneHandler::initButtons() {
+void Program::initButtons() {
 
     Button* MenuButton = new TextBox("Menu", UI::screenWidth / 100, UI::screenHeight / 100);
 
@@ -38,18 +40,18 @@ void SceneHandler::initButtons() {
     
 }
 
-int SceneHandler::getCurrentScene() {
+int Program::getCurrentScene() {
     return currentSceneObject->CurrentScene;
 }
 
-void SceneHandler::changeScene(sceneType newScene) {
+void Program::changeScene(sceneType newScene) {
     Button::resetButtonsAnimations<Button>(SceneButtons);
 
     currentSceneObject = scenes[newScene];
     currentSceneObject->CurrentScene = newScene;
 }
 
-void SceneHandler::updateCamera() {
+void Program::updateCamera() {
     // Move camera with drag
     if (!Button::isClicking && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 delta = GetMouseDelta();
@@ -60,9 +62,9 @@ void SceneHandler::updateCamera() {
     // Handle zoom with scroll wheel
     float wheel = GetMouseWheelMove();
     if (wheel != 0) {
-        SceneHandler::mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera); // update position
+        Program::mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera); // update position
         camera.offset = GetMousePosition();
-        camera.target = SceneHandler::mouseWorldPos;
+        camera.target = Program::mouseWorldPos;
 
         float scaleFactor = 1.0f + (0.25f * fabsf(wheel));
         if (wheel < 0) scaleFactor = 1.0f / scaleFactor;
@@ -70,17 +72,14 @@ void SceneHandler::updateCamera() {
     }
 
     // Always keep it up-to-date, even without zoom
-    SceneHandler::mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+    Program::mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 }
 
 
 
-void SceneHandler::updateCurrentScene() {
+void Program::updateCurrentScene() {
     if (currentSceneObject) {
 
-        if (getCurrentScene() != MENU) {
-            updateCamera();  
-        }
 
         // update font size
         // update The Positions of all Scenes when there is a Window Resize
@@ -104,19 +103,21 @@ void SceneHandler::updateCurrentScene() {
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
             Button::isClicking = false;
         }
+
+
+
         if (getCurrentScene() != MENU) {
             updateCamera();
             currentSceneObject->updateSceneInCamera(camera);
 
         }
-
-       
+        
         currentSceneObject->updateScene();
 
     }
 }
 
-void SceneHandler::displayCurrentScene() {
+void Program::displayCurrentScene() {
     if (currentSceneObject) {
 
         //apply camera to data structures
@@ -149,4 +150,33 @@ void SceneHandler::displayCurrentScene() {
     DrawCircleV(GetMousePosition(), 4, DARKGRAY);
     DrawTextEx(GetFontDefault(), TextFormat("[%i, %i]", GetMouseX(), GetMouseY()),
     Vector2Add(GetMousePosition(), { -44, -24 }), 20, 2, BLACK);
+}
+void Program::run() {
+    /// main functions
+    while (!WindowShouldClose()) {
+
+        // Get screen values
+        UI::screenWidth = GetScreenWidth();
+        UI::screenHeight = GetScreenHeight();
+
+        // Update
+        //----------------------------------------------------------------------------------
+        updateCurrentScene();
+
+        //----------------------------------------------------------------------------------
+
+
+        // Draw
+        //----------------------------------------------------------------------------------
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        displayCurrentScene();
+
+
+        EndDrawing();
+        //----------------------------------------------------------------------------------
+
+    }
+    CloseWindow();
 }

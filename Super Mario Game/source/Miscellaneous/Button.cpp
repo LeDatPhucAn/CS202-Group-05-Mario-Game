@@ -1,11 +1,11 @@
-#include "../header/Button.hpp"
-//#include "../header/Animation.h"
-#include "../header/SceneHandler.hpp"
+#include "../../header/Button.hpp"
+#include "../../header/Program.hpp"
 #include <memory>
 #include <vector>
 #include <string>
 #include <sstream>
 #include <iostream>
+
 bool Button::isCollision = false;
 bool Button::isClicking = false;
 const int RectButton::padding = UI::fontSize;
@@ -532,10 +532,10 @@ void InputCircle::draw() {
     }
 }
 
-Vector2 NumberInputBoxInCamera::getMousePos() const { return SceneHandler::mouseWorldPos; }
-Vector2 NumberInputCircleInCamera::getMousePos() const { return SceneHandler::mouseWorldPos; }
-Vector2 TextBoxInCamera::getMousePos() const { return SceneHandler::mouseWorldPos; }
-Vector2 DelayNumberInputBoxInCamera::getMousePos() const { return SceneHandler::mouseWorldPos; }
+Vector2 NumberInputBoxInCamera::getMousePos() const { return Program::mouseWorldPos; }
+Vector2 NumberInputCircleInCamera::getMousePos() const { return Program::mouseWorldPos; }
+Vector2 TextBoxInCamera::getMousePos() const { return Program::mouseWorldPos; }
+Vector2 DelayNumberInputBoxInCamera::getMousePos() const { return Program::mouseWorldPos; }
 
 void NumberInputCircleInCamera::Indicate(string Text){
     UI::drawtext2(Text, center.x, center.y + radius + 20, RED);

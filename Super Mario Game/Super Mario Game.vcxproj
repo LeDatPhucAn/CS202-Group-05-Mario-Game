@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Button.cpp" />
-    <ClCompile Include="source\Character.cpp" />
-    <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\Character\Character.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\Menu.cpp" />
-    <ClCompile Include="source\SceneHandler.cpp" />
-    <ClCompile Include="source\State.cpp" />
-    <ClCompile Include="source\UI.cpp" />
+    <ClCompile Include="source\Miscellaneous\Button.cpp" />
+    <ClCompile Include="source\Program.cpp" />
+    <ClCompile Include="source\Scene\Game.cpp" />
+    <ClCompile Include="source\Scene\Menu.cpp" />
+    <ClCompile Include="source\Character\State.cpp" />
+    <ClCompile Include="source\Global\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Button.hpp" />
@@ -35,10 +35,47 @@
     <ClInclude Include="header\Game.hpp" />
     <ClInclude Include="header\json.hpp" />
     <ClInclude Include="header\Menu.hpp" />
-    <ClInclude Include="header\SceneHandler.hpp" />
+    <ClInclude Include="header\Program.hpp" />
     <ClInclude Include="header\Scene.hpp" />
     <ClInclude Include="header\State.hpp" />
     <ClInclude Include="header\UI.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="x64\Debug\Button.obj" />
+    <Object Include="x64\Debug\Character.obj" />
+    <Object Include="x64\Debug\Game.obj" />
+    <Object Include="x64\Debug\main.obj" />
+    <Object Include="x64\Debug\Menu.obj" />
+    <Object Include="x64\Debug\Program.obj" />
+    <Object Include="x64\Debug\State.obj" />
+    <Object Include="x64\Debug\UI.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="assets\Json\mario2D.json" />
+    <None Include="assets\Json\mario3D.json" />
+    <None Include="run.bat" />
+    <None Include="x64\Debug\Super Mario Game.exe.recipe" />
+    <None Include="x64\Debug\Super Mario Game.ilk" />
+    <None Include="x64\Debug\vc143.idb" />
+    <None Include="x64\Debug\vc143.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="x64\Debug\Super Mario Game.log" />
+    <Text Include="x64\Debug\Super Mario Game.vcxproj.FileListAbsolute.txt" />
+    <Text Include="x64\Debug\vcpkg.applocal.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\Backgrounds\1-1.png" />
+    <Image Include="assets\Backgrounds\logo.png" />
+    <Image Include="assets\Backgrounds\TitleScreen.jpg" />
+    <Image Include="assets\Sprites\mario2D.png" />
+    <Image Include="assets\Sprites\mario3D.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\Fonts\JetBrainsMono-BoldItalic.ttf" />
+    <Font Include="assets\Fonts\JetBrainsMono-Regular.ttf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
