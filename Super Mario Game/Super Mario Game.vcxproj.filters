@@ -18,25 +18,28 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\UI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Button.cpp">
+    <ClCompile Include="source\Global\UI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Menu.cpp">
+    <ClCompile Include="source\Character\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Character.cpp">
+    <ClCompile Include="source\Character\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Game.cpp">
+    <ClCompile Include="source\Miscellaneous\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\State.cpp">
+    <ClCompile Include="source\Scene\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,5 +74,57 @@
     <ClInclude Include="header\ProcessJson.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\Program.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="x64\Debug\Button.obj" />
+    <Object Include="x64\Debug\Character.obj" />
+    <Object Include="x64\Debug\Game.obj" />
+    <Object Include="x64\Debug\main.obj" />
+    <Object Include="x64\Debug\Menu.obj" />
+    <Object Include="x64\Debug\State.obj" />
+    <Object Include="x64\Debug\SceneHandler.obj" />
+    <Object Include="x64\Debug\UI.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="x64\Debug\Super Mario Game.exe.recipe" />
+    <None Include="x64\Debug\Super Mario Game.ilk" />
+    <None Include="x64\Debug\vc143.idb" />
+    <None Include="x64\Debug\vc143.pdb" />
+    <None Include=".gitignore" />
+    <None Include="run.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="assets\Json\mario2D.json" />
+    <None Include="assets\Json\mario3D.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="x64\Debug\Super Mario Game.log" />
+    <Text Include="x64\Debug\Super Mario Game.vcxproj.FileListAbsolute.txt" />
+    <Text Include="x64\Debug\vcpkg.applocal.log" />
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\Sprites\mario2D.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Sprites\mario3D.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Backgrounds\1-1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Backgrounds\logo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Backgrounds\TitleScreen.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\Fonts\JetBrainsMono-BoldItalic.ttf" />
+    <Font Include="assets\Fonts\JetBrainsMono-Regular.ttf" />
   </ItemGroup>
 </Project>

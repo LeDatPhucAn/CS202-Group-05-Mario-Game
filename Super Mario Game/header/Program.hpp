@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.hpp"
-#include "Button.hpp"
-class SceneHandler : public UI {
+class Button;
+class Program : public UI {
 private:
     vector<Button*>SceneButtons;
     vector<Scene*> scenes;
@@ -14,12 +14,16 @@ private:
 public:
     Scene* currentSceneObject;
     static Vector2 mouseWorldPos;
-    SceneHandler();
-    ~SceneHandler();
+
+    // Basic methods
+    Program();
+    void updateCurrentScene();
+    void displayCurrentScene();
+    void run();
+
+    ~Program();
     int getCurrentScene();
     void initButtons();
     void updateCamera();
     void changeScene(sceneType newScene);
-    void updateCurrentScene();
-    void displayCurrentScene();
 };

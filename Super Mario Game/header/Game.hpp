@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene.hpp"
-#include "SceneHandler.hpp"
+#include "Program.hpp"
 #include "Character.hpp"
 
 class Game : public Scene {

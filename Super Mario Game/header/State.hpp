@@ -14,6 +14,7 @@ enum stateType {
     JUMP,
     FALL,
     SKID,
+    CROUCH,
     GROW,
     UNGROW
 };
@@ -110,5 +111,11 @@ class UnGrowState : public State {
 public:
     UnGrowState();
     UnGrowState(Character* _character, int _delay=3);
+    void handleInput() override;
+};
+class CrouchState : public State {
+    public:
+    CrouchState();
+    CrouchState(Character* _character, int _delay=5);
     void handleInput() override;
 };

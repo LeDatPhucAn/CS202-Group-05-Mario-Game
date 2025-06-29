@@ -1,5 +1,5 @@
-#include "../header/Menu.hpp"
-#include "../header/SceneHandler.hpp"
+#include "../../header/Menu.hpp"
+#include "../../header/Program.hpp"
 
 
 void Menu::updateScene() {

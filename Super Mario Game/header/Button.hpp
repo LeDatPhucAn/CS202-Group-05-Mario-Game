@@ -558,12 +558,12 @@ public:
 };
 
 // CircleButton with texture
-class SceneHandler;
+class Program;
 class PlayButton : public TextureCircle {
 private:
-    SceneHandler* scenehandler;
+    Program* scenehandler;
 public:
-    PlayButton(SceneHandler* obj, Texture2D t, Vector2 cent = { 0, 0 }, float r = 50.0f,
+    PlayButton(Program* obj, Texture2D t, Vector2 cent = { 0, 0 }, float r = 50.0f,
         Color tc = RAYWHITE, Color fc = ORANGE, Color rc = RED)
         : TextureCircle(t,cent, r, tc, fc, rc), scenehandler(obj){
     }

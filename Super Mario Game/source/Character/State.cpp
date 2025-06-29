@@ -1,5 +1,5 @@
-﻿#include "../header/State.hpp"
-#include "../header/Character.hpp" 
+﻿#include "../../header/State.hpp"
+#include "../../header/Character.hpp" 
 
 // ---------- Base State ----------
 State::State() : delay(0), character(nullptr), delayCounter(0), frameIndex(0), type(IDLE), numFrames(0)  {}
@@ -10,6 +10,8 @@ State::State(stateType Type, Character* _character, int _delay)
     numFrames = abs(se.end - se.start) + 1;
     frameRec = character->sprite.frameRecs[se.start];
     frameRec.width = character->direction * abs(frameRec.width);
+    if(character->isGrounded)character->movement.pos.y = GroundPosY - frameRec.height;
+
 }
 
 void State::animate() {
@@ -39,6 +41,7 @@ string stateTypeToString(stateType state) {
     case stateType::JUMP: return "JUMP";
     case stateType::FALL: return "FALL";
     case stateType::SKID: return "SKID";
+    case stateType::CROUCH: return "CROUCH";
     case stateType::GROW: return "GROW";
     case stateType::UNGROW: return "UNGROW";
     default: return "UNKNOWN";
@@ -105,6 +108,9 @@ void IdleState::handleInput() {
     if (IsKeyPressed(KEY_UP) && character->isGrounded) {
         character->changeState(new JumpState(character));
     }
+    else if (IsKeyDown(KEY_DOWN) && character->form != SMALL) {
+        character->changeState(new CrouchState(character));
+	}
     else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
         character->changeState(new WalkState(character));
     }
@@ -130,7 +136,10 @@ void WalkState::handleInput() {
         character->changeState(new RunState(character));
         return;
     }
-
+    else if (IsKeyDown(KEY_DOWN) && character->form != SMALL) {
+        character->changeState(new CrouchState(character));
+        return;
+	}
     if (IsKeyDown(KEY_RIGHT)) {
         if (character->direction == LEFT && abs(character->movement.velocity.x) > 20.0f) {
             character->changeState(new SkidState(character));
@@ -275,7 +284,10 @@ void RunState::handleInput() {
         character->changeState(new JumpState(character));
         return;
     }
-
+    if (IsKeyDown(KEY_DOWN) && character->form != SMALL) {
+        character->changeState(new CrouchState(character));
+        return;
+    }
     if (IsKeyDown(KEY_RIGHT)) {
         if (character->direction == LEFT && abs(character->movement.velocity.x) > 20.0f) {
             character->changeState(new SkidState(character));
@@ -306,6 +318,32 @@ void RunState::handleInput() {
         character->movement.velocity.x = runSpeed * character->direction;
     }
 }
+
+// ---------- CrouchState ----------
+CrouchState::CrouchState() : State() {}
+CrouchState::CrouchState(Character* _character, int _delay)
+    : State(CROUCH, _character, _delay) {
+}
+void CrouchState::handleInput() {
+
+    if(!IsKeyDown(KEY_DOWN)) {
+        if (abs(character->movement.velocity.x) < 20.0f) character->changeState(new IdleState(character));
+		else character->changeState(new WalkState(character));
+        return;
+	}
+    if (IsKeyPressed(KEY_UP)) {
+        character->changeState(new JumpState(character));
+        return;
+    }
+    character->movement.acceleration.x = character->direction * (-friction);
+    if (abs(character->movement.velocity.x) < 20.0f) {
+		character->movement.velocity.x = 0;
+		character->movement.acceleration.x = 0;
+        return;
+    }
+}
+
+// ---------- GrowState ----------
 GrowState::GrowState() : State() {}
 
 GrowState::GrowState(Character* _character, int _delay)
@@ -359,3 +397,4 @@ void UnGrowState::handleInput() {
     }
     
 }
+

@@ -3,43 +3,17 @@
 
 #include <iostream>
 #include <string>
-#include "../header/SceneHandler.hpp"
-#include "../header/Button.hpp"
-#include "../header/UI.hpp"
+#include "../header/Program.hpp"
 using namespace std;
 
 int main()
 {
-	InitWindow(UI::screenWidth, UI::screenHeight, "Bruh");
-	SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
-	SetTargetFPS(60);
-	UI ui;
-	SceneHandler scenehandler;
-	/// main functions
-	while (!WindowShouldClose()) {
+    // Initialize window
+    InitWindow(UI::screenWidth, UI::screenHeight, "Bruh");
+    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
+    SetTargetFPS(60);
 
-		// Get screen values
-		UI::screenWidth = GetScreenWidth();
-		UI::screenHeight = GetScreenHeight();
-
-		// Update
-		//----------------------------------------------------------------------------------
-		scenehandler.updateCurrentScene();
-
-		//----------------------------------------------------------------------------------
-
-
-		// Draw
-		//----------------------------------------------------------------------------------
-		BeginDrawing();
-		ClearBackground(RAYWHITE);
-
-		scenehandler.displayCurrentScene();
-		
-		
-		EndDrawing();
-		//----------------------------------------------------------------------------------
-
-	}
-	CloseWindow();
+    // run program
+    Program program;
+	program.run();
 }

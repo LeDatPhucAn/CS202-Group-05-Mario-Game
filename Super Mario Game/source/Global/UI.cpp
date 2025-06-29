@@ -1,5 +1,5 @@
-#include "../header/UI.hpp"
-#include "../header/ProcessJson.hpp"
+#include "../../header/UI.hpp"
+#include "../../header/ProcessJson.hpp"
 
 // initialize static members
 Font UI::font = { 0 };
@@ -70,6 +70,7 @@ void UI::initTextures() {
 	for (const auto& KeyAndPath : texturePaths) {
 		textureMap[KeyAndPath.first] = LoadTexture(KeyAndPath.second.c_str());
 	}
+
 }
 void UI::initJson() {
 
