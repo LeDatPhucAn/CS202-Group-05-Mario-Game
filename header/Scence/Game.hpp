@@ -1,14 +1,14 @@
 #pragma once
-#include "Scene.hpp"
-#include "Program.hpp"
 #include "Character.hpp"
+#include "MyMap.hpp"
+#include "Scene.hpp"
 #include "raylib-tileson.h"
 
 class Game : public Scene {
 protected:
     Character Mario;
     string current_Map;
-    vector<Map> Maps;
+    MyMap map;
 public:
     
     // initialize

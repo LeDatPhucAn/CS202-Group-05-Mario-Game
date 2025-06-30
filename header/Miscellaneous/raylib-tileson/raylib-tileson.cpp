@@ -3,9 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "json.hpp"   // thư viện JSON
+#include <fstream> 
 #include "raylib.h"
 #include "raylib-tileson.h"
 #include "tileson.hpp"
+
 
 // TODO: Add World support with LoadTiledWorld()
 
@@ -332,7 +335,55 @@ void DrawObjectLayer(tson::Layer &layer, RaylibTilesonData* data, int posX, int 
         DrawTextureRec(tex, src, dst, tint);
     }
 }
+
+bool getVisible(const RaylibTilesonData* data, tson::Layer &layer)
+{
+    // Try to open the JSON file
+    std::ifstream inFile(data->jsonFilePath);
+    if (!inFile.is_open())
+    {
+        TraceLog(LOG_WARNING,
+                 "TILESON: Could not open JSON file '%s', defaulting visible = true",
+                 data->jsonFilePath.c_str());
+        return true;
+    }
+
+    // Parse
+    nlohmann::json jsonData;
+    try
+    {
+        inFile >> jsonData;
+    }
+    catch (const std::exception &e)
+    {
+        TraceLog(LOG_WARNING,
+                 "TILESON: JSON parse error in '%s': %s, defaulting visible = true",
+                 data->jsonFilePath.c_str(), e.what());
+        return true;
+    }
+
+    // Look for layers array
+    if (jsonData.contains("layers") && jsonData["layers"].is_array())
+    {
+        for (auto &layerJson : jsonData["layers"])
+        {
+            // Match by name (you can switch to "id" if you prefer)
+            if (layerJson.value("name", "") == layer.getName())
+            {
+                // Return the explicit "visible" value, or true if it's missing
+                return layerJson.value("visible", true);
+            }
+        }
+    }
+
+    // If we didn’t find a matching entry, default to visible
+    return true;
+}
+
 void DrawLayer(tson::Layer &layer, RaylibTilesonData* data, int posX, int posY, Color tint) {
+      if (!getVisible(data, layer))
+        return;
+
     switch (layer.getType()) {
         case tson::LayerType::TileLayer:
             DrawTileLayer(layer, data, posX, posY, tint);

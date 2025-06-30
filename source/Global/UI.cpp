@@ -92,7 +92,7 @@ void UI::initJson() {
 
 void UI::initGameMaps() {
 	std::unordered_map<std::string, std::string> mapPaths = {
-		{"map1", "assets/Map/map1.json"},
+		{"map1", "assets/Map/Map1.1.json"},
 		// Add the rest...
 	};
 	

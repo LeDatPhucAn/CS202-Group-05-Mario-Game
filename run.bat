@@ -1,5 +1,6 @@
 @echo off
 ::rmdir /s /q build
+::rmdir /s /q VSCode
 cmake -G "MinGW Makefiles" -S . -B VSCode/build
 cd VSCode/build
 cmake --build .

@@ -24,13 +24,15 @@ void Game::init() {
     //Load assets
     //Load Mari
     current_Map = "map1";
+    map.Init();
+
     Mario.changeState(new IdleState(&Mario));
 }
 void Game::updateScene() {
     Mario.update();
 }
 void Game::displaySceneInCamera() {
-    DrawTiled(UI::gameMap[current_Map], 0, 0, WHITE);
+    map.Display(current_Map);
     Mario.display();
 }
 void Game::displayScene() {
