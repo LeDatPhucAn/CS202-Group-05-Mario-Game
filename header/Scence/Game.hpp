@@ -7,8 +7,10 @@
 class Game : public Scene {
 protected:
     Character Mario;
+
+    std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
-    MyMap map;
+    MyMap curMap;
 public:
     
     // initialize

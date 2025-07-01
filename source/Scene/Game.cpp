@@ -18,13 +18,17 @@ Game::Game(): Mario(
         .build()
     )
 {
+    mapPaths = {
+		{"map1", "assets/Map/Map1.1.json"},
+		// Add the rest...
+	};
     init();
 }
 void Game::init() {
     //Load assets
     //Load Mari
     current_Map = "map1";
-    map.Init();
+    curMap.choose(mapPaths[current_Map]);
 
     Mario.changeState(new IdleState(&Mario));
 }
@@ -32,7 +36,7 @@ void Game::updateScene() {
     Mario.update();
 }
 void Game::displaySceneInCamera() {
-    map.Display(current_Map);
+    curMap.display();
     Mario.display();
 }
 void Game::displayScene() {
