@@ -25,14 +25,7 @@ struct Movement {
 class State;
 
 class Character {
-protected:
-    bool isGrounded = false;
-    Direction direction = RIGHT;
-    Sprite sprite;
-    Movement movement;
-    State* currentState = nullptr;
-    MarioForm form = SMALL;
-public:
+private:
     friend class State;
     friend class RunState;
     friend class IdleState;
@@ -43,6 +36,16 @@ public:
 	friend class CrouchState;
     friend class GrowState;
     friend class UnGrowState;
+    MarioForm form = SMALL;
+    void changeForm(MarioForm form);
+protected:
+    bool isGrounded = false;
+    Direction direction = RIGHT;
+    Sprite sprite;
+    Movement movement;
+    State* currentState = nullptr;
+public:
+
     Character() {}
 
     Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
@@ -73,7 +76,6 @@ public:
         currentState = new IdleState(this);  
         return *this;
     }
-    void changeForm(MarioForm form);
     void changeState(State* newState);
     void update();
     void display();

@@ -1,7 +1,8 @@
 #include "UI.hpp"
 #include "ProcessJson.hpp"
 #include "raylib-tileson.h"
-
+#include <filesystem>
+namespace fs = std::filesystem;
 // initialize static members
 Font UI::font = { 0 };
 int UI::screenWidth = 1600;
@@ -12,11 +13,10 @@ unordered_map<string, Texture2D> UI::textureMap;
 unordered_map<string, json> UI::jsonMap;
 unordered_map<string, Map> UI::gameMap; 
 UI::UI() {
-
-	initJson();
-	initTextures();
+	cout<<"UI CONSTRUCTOR\n";
 	initGameMaps();
-
+	initSprites();
+	initBackgrounds();
 	font = LoadFont("assets/Fonts/JetBrainsMono-Regular.ttf");
 	
 	SetTextureFilter(font.texture, TEXTURE_FILTER_BILINEAR);
@@ -29,7 +29,7 @@ UI::UI() {
 }
 
 UI::~UI() {
-	UnLoadAllTextures();
+	UnLoadAllResources();
 }
 
 vector<Rectangle> UI::JsonToRectangleVector(const json& Json) {
@@ -59,48 +59,40 @@ void UI::drawLogo() {
 }
 
 
-void UI::initTextures() {
+void UI::initBackgrounds() {
+	const string backgroundPath = "assets/Backgrounds/";
 
-	std::unordered_map<std::string, std::string> texturePaths = {
-		{"TitleScreen", "assets/Backgrounds/TitleScreen.jpg"},
-		{"Logo", "assets/Backgrounds/logo.png"},
-		{"1-1", "assets/Backgrounds/1-1.png"},
-		{"Mario2D", "assets/Sprites/mario2D.png"},
-		{"Mario3D", "assets/Sprites/mario3D.png"}
-		// Add the rest...
-	};
-
-	for (const auto& KeyAndPath : texturePaths) {
-		textureMap[KeyAndPath.first] = LoadTexture(KeyAndPath.second.c_str());
+	for (const auto& entry : fs::directory_iterator(backgroundPath)) {
+		textureMap[entry.path().stem().string()] = LoadTexture(entry.path().string().c_str());
 	}
-
 }
-void UI::initJson() {
 
-	std::unordered_map<std::string, std::string> jsonPaths = {
-		{"Mario2D", "assets/Json/mario2D.json"},
-		{"Mario3D", "assets/Json/mario3D.json"}		
-		// Add the rest...
-	};
-	
-	ifstream file;
-	for (const auto& KeyAndPath : jsonPaths) {
-		jsonMap[KeyAndPath.first] = getProcessedSpriteJson(KeyAndPath.second);
+void UI::initSprites() {
+	const std::string spritePath = "assets/Sprites/";
+
+	for (const auto& entry : fs::directory_iterator(spritePath)) {
+		if (entry.path().extension() == ".json") {
+			std::string name = entry.path().stem().string(); // e.g., "Mario2D"
+			fs::path pngFile = spritePath + name + ".png";
+
+			if (fs::exists(pngFile)) {
+				jsonMap[name] = getProcessedSpriteJson(entry.path().string());
+				textureMap[name] = LoadTexture(pngFile.string().c_str());
+			}
+		}
 	}
-
 }
 
 void UI::initGameMaps() {
-	std::unordered_map<std::string, std::string> mapPaths = {
-		{"map1", "assets/Map/Map1.1.json"},
-		// Add the rest...
-	};
-	
-	for (const auto& KeyAndPath : mapPaths) {
-		gameMap[KeyAndPath.first] = LoadTiled(KeyAndPath.second.c_str());
-	}
-	
+	// const std::string mapPath = "assets/Map/";
+
+	// for (const auto& entry : fs::directory_iterator(mapPath)) {
+	// 	if (entry.path().extension() == ".json") {
+	// 		gameMap[entry.path().stem().string()] = LoadTiled(entry.path().string().c_str());
+	// 	}
+	// }
 }
+
 void UI::drawtext2(string message, int X, int Y, Color color) {
 	const char* messageStr = message.c_str();
 
@@ -110,7 +102,7 @@ void UI::drawtext2(string message, int X, int Y, Color color) {
 
 }
 
-void UI::UnLoadAllTextures() {
+void UI::UnLoadAllResources() {
 	for (const auto& texture : textureMap) {
 		UnloadTexture(texture.second);
 	}

@@ -73,10 +73,10 @@ void State::applyPhysics(float deltaTime) {
 
     character->movement.pos += character->movement.velocity * deltaTime;
 
-    cout << character->movement.velocity.x << " "
-        << character->movement.velocity.y << " "
-        << stateTypeToString(type)
-        << ((character->direction == RIGHT) ? " RIGHT\n" : " LEFT\n");
+    // cout << character->movement.velocity.x << " "
+    //     << character->movement.velocity.y << " "
+    //     << stateTypeToString(type)
+    //     << ((character->direction == RIGHT) ? " RIGHT\n" : " LEFT\n");
         
     // Ground collision
     if (character->movement.pos.y >= GroundPosY -frameRec.height) {
@@ -199,7 +199,6 @@ void JumpState::handleInput() {
     }
     else {
         character->movement.acceleration.x = character->direction * accel/8;
-
     }
 }
 
@@ -237,6 +236,7 @@ void FallState::handleInput() {
         character->direction = LEFT;
         character->movement.acceleration.x = -accel;
     }
+
 }
 
 // ---------- SkidState ----------
@@ -326,6 +326,7 @@ CrouchState::CrouchState(Character* _character, int _delay)
     : State(CROUCH, _character, _delay) {
 }
 void CrouchState::handleInput() {
+    character->movement.acceleration.x = character->direction * (-friction);
 
     if(!IsKeyDown(KEY_DOWN)) {
         if (abs(character->movement.velocity.x) < 20.0f) character->changeState(new IdleState(character));
@@ -336,7 +337,6 @@ void CrouchState::handleInput() {
         character->changeState(new JumpState(character));
         return;
     }
-    character->movement.acceleration.x = character->direction * (-friction);
     if (abs(character->movement.velocity.x) < 20.0f) {
 		character->movement.velocity.x = 0;
 		character->movement.acceleration.x = 0;

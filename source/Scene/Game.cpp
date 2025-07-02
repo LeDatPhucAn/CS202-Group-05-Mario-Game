@@ -1,7 +1,6 @@
 #include "Game.hpp"
 #include "UI.hpp"
 
-
 Game::Game(): Mario(
         Character::Builder()
         .setFrames(IDLE, 0, 0)
@@ -16,24 +15,41 @@ Game::Game(): Mario(
         .setJsonAndTexture("Mario2D")
         .setPos({ 100,0 })
         .build()
+    ),
+    Goomba(
+        Enemy::Builder()
+        .setJsonAndTexture("Enemies2D")
+        .setFrames(IDLE, 0, 0)
+        .setFrames(WALK, 0, 1)
+        .setFrames(JUMP, 0, 0)
+        .setFrames(FALL, 0, 1)
+        .setPos({ 150,0 })
+        .build()
     )
 {
+    mapPaths = {
+		{"Map1.1", "assets/Map/Map1.1.json"},
+		// Add the rest...
+	};
     init();
 }
 void Game::init() {
     //Load assets
     //Load Mari
-    current_Map = "map1";
-    map.Init();
+    current_Map = "Map1.1";
+    curMap.choose(mapPaths[current_Map]);
 
     Mario.changeState(new IdleState(&Mario));
+    Goomba.changeState(new IdleState(&Goomba));
 }
 void Game::updateScene() {
     Mario.update();
+    Goomba.update();
 }
 void Game::displaySceneInCamera() {
-    map.Display(current_Map);
+    curMap.display();
     Mario.display();
+    Goomba.display();
 }
 void Game::displayScene() {
 }

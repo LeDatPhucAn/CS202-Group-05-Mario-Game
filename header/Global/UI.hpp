@@ -65,9 +65,9 @@ public:
 
 
 private:
-	void initTextures();
-	void initJson();
+	void initBackgrounds();
+	void initSprites();
 	void initGameMaps();
-	void UnLoadAllTextures();
+	void UnLoadAllResources();
 
 };
