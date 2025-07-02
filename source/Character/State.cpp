@@ -27,9 +27,10 @@ void State::animate() {
 }
 
 void State::updateState() {
+
     animate();
     applyPhysics(GetFrameTime());
-    frameRec.width = character->direction * abs(frameRec.width);
+    frameRec.width = character->direction * abs(frameRec.width); // change character direction
     handleInput();
 
 }
@@ -48,6 +49,8 @@ string stateTypeToString(stateType state) {
     }
 }
 void State::applyPhysics(float deltaTime) {
+    
+    // apply gravity
     if (!character->isGrounded) {
         if (character->movement.velocity.y < 0) { // Going up
             if (IsKeyDown(KEY_UP) && character->movement.pos.y > GroundPosY - maxHeight - frameRec.height) {
@@ -79,6 +82,7 @@ void State::applyPhysics(float deltaTime) {
     //     << ((character->direction == RIGHT) ? " RIGHT\n" : " LEFT\n");
         
     // Ground collision
+    // ask from map
     if (character->movement.pos.y >= GroundPosY -frameRec.height) {
         character->movement.pos.y = GroundPosY - frameRec.height;
         character->movement.velocity.y = 0;
@@ -354,12 +358,14 @@ GrowState::GrowState(Character* _character, int _delay)
 void GrowState::handleInput() {
     StartEndFrame se = character->sprite.StartEndFrames[type];
     character->movement.pos.y = GroundPosY - frameRec.height;
+
     if (character->form == FIRE) {
         character->changeState(new IdleState(character));
         return;
     }
+
     if (se.start + frameIndex == se.end ) {
-        character->form = static_cast<MarioForm>((character->form + 1) % 3);
+        character->form = static_cast<MarioForm>((character->form + 1) % FORM_COUNT);
         character->changeForm(character->form);
 
         Vector2 newpos = character->movement.pos;

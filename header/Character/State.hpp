@@ -36,7 +36,7 @@ protected:
     const float fallSpeedCap = 240.0f;
     const float jumpVel = -390.0f;
 
-    // Accelerations (px/sec²)
+    // Accelerations (px/secï¿½)
     const float walkAccel = 225.0f;
     const float airAccel = 112.5f;
     const float runAccel = 337.5f;
@@ -45,7 +45,7 @@ protected:
     const float friction = 225.0f;
     const float skidDecel = 900.0f;
 
-
+    // basic parameters
     int numFrames = 0;
     int frameIndex = 0;
     int delay = 0;
@@ -56,11 +56,18 @@ protected:
 public:
     State();
     State(stateType Type, Character* _character, int _delay);
-    virtual void animate();
-    virtual void applyPhysics(float deltaTime);
+
+    // salient 
     virtual void updateState();
     virtual void displayState();
     virtual void handleInput() = 0;
+
+    // constantly changing frames to run sprite
+    virtual void animate();
+
+    // manage gravity and movements
+    virtual void applyPhysics(float deltaTime);
+    
 
 };
 
