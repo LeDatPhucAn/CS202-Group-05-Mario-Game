@@ -1,4 +1,5 @@
 #include "Character.hpp"
+#include "MarioState.hpp"
 void Character::changeState(State* newState) {
 	if (currentState)delete currentState;
 	currentState = newState;
@@ -14,6 +15,7 @@ void Character::display() {
 	}
 }
 void Character::changeForm(MarioForm form) {
+
     switch (form) {
     case SMALL:
         sprite.StartEndFrames[IDLE] = { 0, 0 };
@@ -51,4 +53,24 @@ void Character::changeForm(MarioForm form) {
     default:
         break;
     }
+}
+Character::Character(const Character& other) {
+    movement = other.movement;
+    isGrounded = other.isGrounded;
+    direction = other.direction;
+    currentState = new IdleState(this);
+    sprite = other.sprite;
+}
+    
+Character& Character::operator=(const Character& other) {
+    if (this == &other)return *this;
+    // Clean up existing state
+    if (currentState) delete currentState;
+
+    sprite = other.sprite;
+    movement = other.movement;
+    isGrounded = other.isGrounded;
+    direction = other.direction;
+    currentState = new IdleState(this);  
+    return *this;
 }

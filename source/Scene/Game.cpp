@@ -1,6 +1,6 @@
 #include "Game.hpp"
 #include "UI.hpp"
-
+#include "MarioState.hpp"
 Game::Game(): Mario(
         Character::Builder()
         .setFrames(IDLE, 0, 0)

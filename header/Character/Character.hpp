@@ -22,6 +22,7 @@ struct Movement {
 	Vector2 acceleration = { 0,0 };
 };
 
+
 class State;
 
 class Character {
@@ -55,27 +56,9 @@ public:
     ~Character() {
         if (currentState) delete currentState;
     }
-    Character(const Character& other) {
-        sprite = other.sprite;
-        movement = other.movement;
-        isGrounded = other.isGrounded;
-        direction = other.direction;
-        currentState = new IdleState(this);
-    }
+    Character(const Character& other);
     
-    Character& operator=(const Character& other) {
-        if (this == &other)return *this;
-        // Clean up existing state
-        if (currentState) delete currentState;
-
-        sprite = other.sprite;
-        movement = other.movement;
-        isGrounded = other.isGrounded;
-        direction = other.direction;
-
-        currentState = new IdleState(this);  
-        return *this;
-    }
+    Character& operator=(const Character& other);
     void changeState(State* newState);
     void update();
     void display();
