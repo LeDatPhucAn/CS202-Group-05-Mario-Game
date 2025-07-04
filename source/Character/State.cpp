@@ -27,10 +27,14 @@ void State::animate() {
 }
 
 void State::updateState() {
-
+    //Set frame 
     animate();
+
+    //Movement 
     applyPhysics(GetFrameTime());
     frameRec.width = character->direction * abs(frameRec.width); // change character direction
+    
+    //Change State when pressing
     handleInput();
 
 }
