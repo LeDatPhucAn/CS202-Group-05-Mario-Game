@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <vector>
 #include "UI.hpp"
+#include "MarioState.hpp"
 using namespace std;
 
 struct StartEndFrame {
@@ -21,7 +22,6 @@ struct Movement {
 	Vector2 velocity = { 0,0 };
 	Vector2 acceleration = { 0,0 };
 };
-
 
 class State;
 

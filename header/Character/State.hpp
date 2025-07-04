@@ -48,7 +48,7 @@ protected:
     // const float skidDecel = 900.0f;
 
     // Global
-    const float GroundPosY = 208.0f; // Get from Map
+    const float GroundPosY = 192.0f; // Get from Map
     const float fallSpeedCap = 240.0f; 
     // basic parameters
     int numFrames = 0;

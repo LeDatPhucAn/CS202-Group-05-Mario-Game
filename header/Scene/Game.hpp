@@ -1,6 +1,6 @@
 #pragma once
-#include "Character.hpp"
 #include "MyMap.hpp"
+#include "Character.hpp"
 #include "Scene.hpp"
 #include "raylib-tileson.h"
 #include "Enemy.hpp"
