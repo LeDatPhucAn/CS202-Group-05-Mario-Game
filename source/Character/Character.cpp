@@ -1,6 +1,6 @@
 #include "Character.hpp"
 void Character::changeState(State* newState) {
-	if (currentState)delete currentState;
+	if (currentState) delete currentState;
 	currentState = newState;
 }
 void Character::update() {
@@ -52,4 +52,17 @@ void Character::changeForm(MarioForm form) {
     default:
         break;
     }
+}
+
+void Character::updateCollision(GameObject* other) {
+    // Kiểm tra xem other có phải Block không
+    Block* block = dynamic_cast<Block*>(other);
+    if (!block) return;
+
+    // Lấy bounding boxes
+    Rectangle charBounds = getBounds();
+    Rectangle blockBounds = block->getBounds();
+
+    movement.pos.y = blockBounds.y - this->size.y;
+    pos = movement.pos;
 }

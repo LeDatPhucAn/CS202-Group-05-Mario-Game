@@ -1,29 +1,26 @@
 #pragma once
 
 #include "GameObject.hpp"
-#include "tileson.hpp"    // để dùng tson::Object
+#include "tileson.hpp"
 
 // Enum chứa loại item mà Question Block có thể chứa
 enum class Contains { None = 0, Coin, Mushroom, FireFlower, Star, OneUp };
 
 class Block : public GameObject {
 public:
-    // === Thông tin cơ bản ===
     int       gid;        // Global tile ID
-    Texture2D texture;    // Texture atlas
-    Rectangle srcRec;     // Phần hình trong atlas
+    Texture2D texture;    // Texture trong sprite
+    Rectangle srcRec;     // Khu vực cắt trong sprite
 
-    // === Flags game-specific ===
-    bool      isSolid        = true;
-    bool      isBreakable    = false;
-    bool      isQuestion     = false;
-    bool      isInvisible    = false;
-    bool      isUsed         = false;
-    Contains  contains       = Contains::None;
-    bool      isPipeEntrance = false;
-    bool      isFlagPole     = false;
+    bool      isSolid        = true;    //Có thể đi xuyên k (Mario đứng lên, va chạm)
+    bool      isBreakable    = false;   //Có thể phá vỡ được (bricks, question block)
+    bool      isQuestion     = false;   //Là ô dấu hỏi? hay ko
+    bool      isInvisible    = false;   //true thì không vẽ (ví dụ Coin đã ăn rồi thì bật true)
+    bool      isUsed         = false;   //Đã chạm vào chưa (Coin)
+    Contains  contains       = Contains::None;  //Trong ô question chứa những thứ gì (Coin, Mushroom, Star,..)
+    bool      isPipeEntrance = false;   //Đánh dấu nếu ống nước có đường bí mật
+    bool      isFlagPole     = false;   //Đánh dấu cây cờ
 
-    // Constructor thô (không đọc property)
     Block(int _gid, Vector2 _pos, Vector2 _size,
           Texture2D _tex, Rectangle _src)
       : GameObject(_pos, _size)
@@ -41,9 +38,7 @@ public:
       , texture(_tex)
       , srcRec(_src)
     {
-        
-        // Dùng trực tiếp obj.get<T>(name, default) từ Tileson
-        
+        // Dùng obj.get<T>(name, default) từ Tileson
         isSolid        = obj.get<bool>("isSolid");
         isBreakable    = obj.get<bool>("isBreakable");
         isQuestion     = obj.get<bool>("isQuestion");
@@ -59,10 +54,9 @@ public:
         isPipeEntrance = obj.get<bool>("isPipeEntrance");
         isFlagPole     = obj.get<bool>("isFlagPole");
     }
-
-    // Cập nhật logic (animation, v.v.)
+    
     void update() override {
-        // ví dụ blink animation cho Question Block
+        
     }
 
     // Vẽ block
@@ -71,22 +65,7 @@ public:
         DrawTextureRec(texture, srcRec, getPosition(), WHITE);
     }
 
-    // Xử lý va chạm (như với Mario)
     void updateCollision(GameObject* other) override {
-        // có thể kiểm tra hitFromBelow và gọi onHitFromBelow()
-    }
-
-    // Khi hit từ dưới
-    bool onHitFromBelow() {
-        if (isBreakable) {
-            // spawn debris, xóa block
-            return true;
-        }
-        if (isQuestion && !isUsed) {
-            isUsed = true;
-            // spawn item theo contains
-            return true;
-        }
-        return false;
+        
     }
 };

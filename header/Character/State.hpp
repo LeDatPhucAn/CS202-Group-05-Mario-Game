@@ -29,7 +29,7 @@ protected:
 
     // pos
     const float maxHeight = 72.0f;
-    const float GroundPosY = 208.0f;
+    const float GroundPosY = 250.0f;
     // Speeds (px/sec)
     const float walkSpeed = 90.0f;
     const float runSpeed = 157.5f;
@@ -50,6 +50,7 @@ protected:
     int frameIndex = 0;
     int delay = 0;
     int delayCounter = 0;
+
     stateType type;
     Rectangle frameRec;
     Character* character = nullptr;
@@ -68,7 +69,6 @@ public:
     // manage gravity and movements
     virtual void applyPhysics(float deltaTime);
     
-
 };
 
 class IdleState : public State {

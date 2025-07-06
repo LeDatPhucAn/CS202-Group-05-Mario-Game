@@ -55,6 +55,7 @@ public:
 
     Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
         : sprite(_sprite), movement(_movement), currentState(_initialState) {
+            pos = movement.pos;
     }
 
     ~Character() {
@@ -65,6 +66,9 @@ public:
         movement = other.movement;
         isGrounded = other.isGrounded;
         direction = other.direction;
+        
+        pos = movement.pos;
+        
         currentState = new IdleState(this);
     }
     
@@ -77,6 +81,7 @@ public:
         movement = other.movement;
         isGrounded = other.isGrounded;
         direction = other.direction;
+        pos = movement.pos;
 
         currentState = new IdleState(this);  
         return *this;
@@ -86,18 +91,7 @@ public:
     void display() override;
 
     //Collision
-    void updateCollision(GameObject* other) override {
-     // Kiểm tra xem other có phải Block không
-        Block* block = dynamic_cast<Block*>(other);
-        if (!block) return;
-
-        // Lấy bounding boxes
-        Rectangle charBounds = getBounds();
-        Rectangle blockBounds = block->getBounds();
-
-        pos.y = movement.pos.y = blockBounds.y - blockBounds.height;
-
-    }
+    void updateCollision(GameObject* other) override;
 
 public:
     struct Builder {

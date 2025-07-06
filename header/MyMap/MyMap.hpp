@@ -19,7 +19,6 @@ public:
     // Load JSON, cache tileset textures, then create Block* per layer
     void choose(const std::string &jsonPath) {
         clearAll();
-
         // 1) Parse JSON via Tileson
         tson::Tileson parser;
         auto parsed = parser.parse(jsonPath);
@@ -146,7 +145,9 @@ private:
         for (auto *b : imageBlocks ) delete b;
         for (auto *b : tileBlocks  ) delete b;
         for (auto *b : objectBlocks) delete b;
-        imageBlocks.clear(); tileBlocks.clear(); objectBlocks.clear();
+        imageBlocks.clear(); 
+        tileBlocks.clear(); 
+        objectBlocks.clear();
         for (auto &kv : tilesetCache) UnloadTexture(kv.second);
         tilesetCache.clear();
     }

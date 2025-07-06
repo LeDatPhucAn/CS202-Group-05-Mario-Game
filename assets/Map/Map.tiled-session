@@ -8,16 +8,19 @@
         "."
     ],
     "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
         "8415.tsj": {
             "scaleInDock": 1,
             "scaleInEditor": 2
         },
         "Map1.1.json": {
-            "scale": 1,
+            "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 221,
-                "y": 230
+                "x": 198,
+                "y": 235.33333333333331
             }
         },
         "muilti_tileset.json": {

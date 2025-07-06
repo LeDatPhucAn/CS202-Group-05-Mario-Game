@@ -17,7 +17,7 @@ Program::Program()
     scenes.push_back(new Game());
     
     // initialize Scene Buttons
-    changeScene(MENU);
+    changeScene(GAME);
     initButtons();
 }
 
