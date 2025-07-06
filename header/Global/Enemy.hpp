@@ -31,8 +31,8 @@ public:
             return *this;
         }
 
-        Builder& setPos(Vector2 pos) {
-            movement.pos = pos;
+        Builder& setPos(Vector2 _pos) {
+            movement.pos = _pos;
             return *this;
         }
 

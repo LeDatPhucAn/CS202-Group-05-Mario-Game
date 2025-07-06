@@ -9,6 +9,8 @@ class Game : public Scene {
 protected:
     Character Mario;
     Enemy Goomba;
+
+    Character* MarioPointer = nullptr;
     
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;

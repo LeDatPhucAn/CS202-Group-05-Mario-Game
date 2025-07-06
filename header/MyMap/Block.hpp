@@ -61,18 +61,18 @@ public:
     }
 
     // Cập nhật logic (animation, v.v.)
-    void update(float deltaTime) override {
+    void update() override {
         // ví dụ blink animation cho Question Block
     }
 
     // Vẽ block
-    void display() const override {
+    void display() override {
         if (isInvisible && !isUsed) return;
         DrawTextureRec(texture, srcRec, getPosition(), WHITE);
     }
 
     // Xử lý va chạm (như với Mario)
-    void onCollision(GameObject* other) override {
+    void updateCollision(GameObject* other) override {
         // có thể kiểm tra hitFromBelow và gọi onHitFromBelow()
     }
 

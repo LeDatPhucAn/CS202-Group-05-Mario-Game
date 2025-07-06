@@ -32,6 +32,8 @@ Game::Game(): Mario(
 		// Add the rest...
 	};
     init();
+
+    MarioPointer = &Mario;
 }
 void Game::init() {
     //Load assets
@@ -43,8 +45,36 @@ void Game::init() {
     Goomba.changeState(new IdleState(&Goomba));
 }
 void Game::updateScene() {
+    
     Mario.update();
     Goomba.update();
+    curMap.update();
+    //Check Collision
+
+    //Mario with Map
+    for(auto &x : curMap.tileBlocks) {
+        if(MarioPointer->checkCollision(x)) {
+            cout << "Collision Mario-Blocks" << endl;
+            MarioPointer->updateCollision(x);
+            x->updateCollision(MarioPointer);
+        }
+    }
+    
+
+    // //Blocks with Blocks
+    // for(int i = 0; i < curMap.tileBlocks.size(); i++) {
+    //     for(int j = 0; j < curMap.tileBlocks.size(); j++) {
+    //         if(i != j) {
+    //             Block* a = curMap.tileBlocks[i];
+    //             Block* b = curMap.tileBlocks[j];
+    //             if(a->checkCollision(b)) {
+    //                 a->updateCollision(b);
+    //                 b->updateCollision(a);
+    //             }
+    //         }
+    //     }
+    // }
+
 }
 void Game::displaySceneInCamera() {
     curMap.display();

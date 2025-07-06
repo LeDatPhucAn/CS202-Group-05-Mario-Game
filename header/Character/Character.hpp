@@ -1,5 +1,8 @@
 #pragma once
+
+#include <algorithm>
 #include "State.hpp"
+#include "Block.hpp"
 #include <raylib.h>
 #include <vector>
 #include "UI.hpp"
@@ -22,9 +25,10 @@ struct Movement {
 	Vector2 acceleration = { 0,0 };
 };
 
+class Block;
 class State;
 
-class Character {
+class Character : public GameObject {
 private:
     friend class State;
     friend class RunState;
@@ -39,6 +43,7 @@ private:
     MarioForm form = SMALL;
     void changeForm(MarioForm form);
 protected:
+
     bool isGrounded = false;
     Direction direction = RIGHT;
     Sprite sprite;
@@ -77,8 +82,22 @@ public:
         return *this;
     }
     void changeState(State* newState);
-    void update();
-    void display();
+    void update() override;
+    void display() override;
+
+    //Collision
+    void updateCollision(GameObject* other) override {
+     // Kiểm tra xem other có phải Block không
+        Block* block = dynamic_cast<Block*>(other);
+        if (!block) return;
+
+        // Lấy bounding boxes
+        Rectangle charBounds = getBounds();
+        Rectangle blockBounds = block->getBounds();
+
+        pos.y = movement.pos.y = blockBounds.y - blockBounds.height;
+
+    }
 
 public:
     struct Builder {
