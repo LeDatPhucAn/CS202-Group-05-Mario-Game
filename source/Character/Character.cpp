@@ -54,15 +54,3 @@ void Character::changeForm(MarioForm form) {
     }
 }
 
-void Character::updateCollision(GameObject* other) {
-    // Kiểm tra xem other có phải Block không
-    Block* block = dynamic_cast<Block*>(other);
-    if (!block) return;
-
-    // Lấy bounding boxes
-    Rectangle charBounds = getBounds();
-    Rectangle blockBounds = block->getBounds();
-
-    movement.pos.y = blockBounds.y - this->size.y;
-    pos = movement.pos;
-}

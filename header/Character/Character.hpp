@@ -91,7 +91,18 @@ public:
     void display() override;
 
     //Collision
-    void updateCollision(GameObject* other) override;
+    void updateCollision(GameObject* other) override {
+        // Kiểm tra xem other có phải Block không
+        Block* block = dynamic_cast<Block*>(other);
+        if (!block) return;
+
+        // Lấy bounding boxes
+        Rectangle charBounds = getBounds();
+        Rectangle blockBounds = block->getBounds();
+
+        movement.pos.y = blockBounds.y - this->size.y;
+        pos = movement.pos;
+    };
 
 public:
     struct Builder {
