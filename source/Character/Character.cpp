@@ -7,7 +7,6 @@ void Character::update() {
 	if (currentState) {
 		currentState->updateState();
 	}
-    pos = movement.pos;
 }
 void Character::display() {
 	if (currentState) {

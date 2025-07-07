@@ -5,8 +5,8 @@ class Enemy : public Character {
 public:
     Enemy() : Character() {}
 
-    Enemy(const Sprite& _sprite, const Movement& _movement, State* _initialState)
-        : Character(_sprite, _movement, _initialState) {}
+    Enemy(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos)
+        : Character(_sprite, _movement, _initialState, _pos) {}
     Enemy(const Enemy& other) : Character(other) {
     }
 public:
@@ -14,6 +14,7 @@ public:
         Sprite sprite;
         Movement movement;
         State* state = nullptr;
+        Vector2 pos = {100, 0}; //GetStarting Point from Map
 
         Builder& setFrames(stateType type, int start, int end) {
             sprite.StartEndFrames[type] = { start, end };
@@ -31,10 +32,10 @@ public:
             return *this;
         }
 
-        Builder& setPos(Vector2 _pos) {
-            movement.pos = _pos;
-            return *this;
-        }
+        // Builder& setPos(Vector2 _pos) {
+        //     pos = _pos;
+        //     return *this;
+        // }
 
         Builder& setVelocity(Vector2 velocity) {
             movement.velocity = velocity;
@@ -52,7 +53,7 @@ public:
         }
 
         Enemy build() {
-            return Enemy(sprite, movement, state);
+            return Enemy(sprite, movement, state, pos);
         }
     };
 };

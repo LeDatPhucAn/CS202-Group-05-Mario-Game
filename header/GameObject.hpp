@@ -3,7 +3,6 @@
 #include <vector>
 #include "raylib.h"
 
-
 class GameObject {
 public:
     GameObject() = default;
@@ -40,7 +39,6 @@ public:
 protected:
     //Góc trái trên của Rec
     Vector2 pos;
-
     //Size Rectangle
     Vector2 size;
 

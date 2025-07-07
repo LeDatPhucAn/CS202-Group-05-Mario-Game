@@ -15,7 +15,7 @@ Game::Game(): Mario(
         .setFrames(GROW, 44, 50)
         .setFrames(UNGROW, 50, 44)
         .setJsonAndTexture("Mario2D")
-        .setPos({ 100,0 })
+        //.setPos({ 100,0 })
         .build()
     ),
     Goomba(
@@ -25,7 +25,7 @@ Game::Game(): Mario(
         .setFrames(WALK, 0, 1)
         .setFrames(JUMP, 0, 0)
         .setFrames(FALL, 0, 1)
-        .setPos({ 150,0 })
+        //.setPos({ 150,0 })
         .build()
     )
 {
@@ -61,6 +61,10 @@ void Game::updateScene() {
             break;
         }
     }
+
+    //Block with Block
+
+
 
 }
 void Game::displaySceneInCamera() {

@@ -10,7 +10,7 @@ State::State(stateType Type, Character* _character, int _delay)
     numFrames = abs(se.end - se.start) + 1;
     frameRec = character->sprite.frameRecs[se.start];
     frameRec.width = character->direction * abs(frameRec.width);
-    if(character->isGrounded)character->movement.pos.y = GroundPosY - frameRec.height;
+    if(character->isGrounded)character->pos.y = GroundPosY - frameRec.height;
 
 }
 
@@ -57,7 +57,7 @@ void State::applyPhysics(float deltaTime) {
     // apply gravity
     if (!character->isGrounded) {
         if (character->movement.velocity.y < 0) { // Going up
-            if (IsKeyDown(KEY_UP) && character->movement.pos.y > GroundPosY - maxHeight - frameRec.height) {
+            if (IsKeyDown(KEY_UP) && character->pos.y > GroundPosY - maxHeight - frameRec.height) {
                 character->movement.acceleration.y = jumpGravity;
             }
             else {
@@ -78,7 +78,7 @@ void State::applyPhysics(float deltaTime) {
     if (character->movement.velocity.y > fallSpeedCap)
         character->movement.velocity.y = fallSpeedCap;
 
-    character->movement.pos += character->movement.velocity * deltaTime;
+    character->pos += character->movement.velocity * deltaTime;
 
     // cout << character->movement.velocity.x << " "
     //     << character->movement.velocity.y << " "
@@ -87,15 +87,15 @@ void State::applyPhysics(float deltaTime) {
         
     // Ground collision
     // ask from map
-    if (character->movement.pos.y >= GroundPosY -frameRec.height) {
-        character->movement.pos.y = GroundPosY - frameRec.height;
+    if (character->pos.y >= GroundPosY -frameRec.height) {
+        character->pos.y = GroundPosY - frameRec.height;
         character->movement.velocity.y = 0;
         character->isGrounded = true;
     }
 }
 
 void State::displayState() {
-    DrawTextureRec(character->sprite.texture, frameRec, character->movement.pos, WHITE);
+    DrawTextureRec(character->sprite.texture, frameRec, character->pos, WHITE);
 }
 
 // ---------- IdleState ----------
@@ -361,7 +361,7 @@ GrowState::GrowState(Character* _character, int _delay)
 
 void GrowState::handleInput() {
     StartEndFrame se = character->sprite.StartEndFrames[type];
-    character->movement.pos.y = GroundPosY - frameRec.height;
+    character->pos.y = GroundPosY - frameRec.height;
 
     if (character->form == FIRE) {
         character->changeState(new IdleState(character));
@@ -372,10 +372,10 @@ void GrowState::handleInput() {
         character->form = static_cast<MarioForm>((character->form + 1) % FORM_COUNT);
         character->changeForm(character->form);
 
-        Vector2 newpos = character->movement.pos;
+        Vector2 newpos = character->pos;
         newpos.y = GroundPosY - frameRec.height;
 
-        character->movement.pos = newpos;
+        character->pos = newpos;
 
         character->changeState(new IdleState(character));
         return;
@@ -389,7 +389,7 @@ UnGrowState::UnGrowState(Character* _character, int _delay)
 
 void UnGrowState::handleInput() {
     StartEndFrame se = character->sprite.StartEndFrames[type];
-    character->movement.pos.y = GroundPosY - frameRec.height;
+    character->pos.y = GroundPosY - frameRec.height;
     if (character->form == SMALL) {
         character->changeState(new IdleState(character));
         return;
@@ -398,10 +398,10 @@ void UnGrowState::handleInput() {
         character->form = static_cast<MarioForm>((character->form - 1 + FORM_COUNT) % FORM_COUNT);
         character->changeForm(character->form);
         
-        Vector2 newpos = character->movement.pos;
+        Vector2 newpos = character->pos;
         newpos.y = GroundPosY - frameRec.height;
 
-        character->movement.pos = newpos;
+        character->pos = newpos;
 
         character->changeState(new IdleState(character));
         return;

@@ -20,7 +20,6 @@ struct Sprite {
 
 struct Movement {
 	int speed = 0;
-	Vector2 pos = { 0,0 };
 	Vector2 velocity = { 0,0 };
 	Vector2 acceleration = { 0,0 };
 };
@@ -53,9 +52,8 @@ public:
 
     Character() {}
 
-    Character(const Sprite& _sprite, const Movement& _movement, State* _initialState)
-        : sprite(_sprite), movement(_movement), currentState(_initialState) {
-            pos = movement.pos;
+    Character(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos)
+        : GameObject(_pos, {0,0}), sprite(_sprite), movement(_movement), currentState(_initialState) {
     }
 
     ~Character() {
@@ -66,9 +64,8 @@ public:
         movement = other.movement;
         isGrounded = other.isGrounded;
         direction = other.direction;
-        
-        pos = movement.pos;
-        
+        pos = other.pos;
+
         currentState = new IdleState(this);
     }
     
@@ -81,7 +78,7 @@ public:
         movement = other.movement;
         isGrounded = other.isGrounded;
         direction = other.direction;
-        pos = movement.pos;
+        pos = other.pos;
 
         currentState = new IdleState(this);  
         return *this;
@@ -100,8 +97,7 @@ public:
         Rectangle charBounds = getBounds();
         Rectangle blockBounds = block->getBounds();
 
-        movement.pos.y = blockBounds.y - this->size.y;
-        pos = movement.pos;
+        pos.y = blockBounds.y - this->size.y;
     };
 
 public:
@@ -109,6 +105,7 @@ public:
         Sprite sprite;
         Movement movement;
         State* state = nullptr;
+        Vector2 pos = {100, 0}; //GetStarting Point from Map
 
         // --- Sprite setters ---
         Builder& setFrames(stateType type, int start, int end) {
@@ -127,10 +124,10 @@ public:
             return *this;
         }
 
-        Builder& setPos(Vector2 pos) {
-            movement.pos = pos;
-            return *this;
-        }
+        // Builder& setPos(Vector2 _pos) {
+        //     pos = _pos;
+        //     return *this;
+        // }
 
         Builder& setVelocity(Vector2 velocity) {
             movement.velocity = velocity;
@@ -150,7 +147,7 @@ public:
 
         // --- Final build ---
         Character build() {
-            return Character(sprite, movement, state);
+            return Character(sprite, movement, state, pos);
         }
 
     };
