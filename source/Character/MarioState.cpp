@@ -366,30 +366,41 @@ void CrouchState::handleInput()
 GrowState::GrowState(Character *_character, int _delay)
     : MarioState(GROW, _character, _delay)
 {
+    if (character->isGrounded)
+        character->pos.y = character->groundPosY - frameRec.height;
 }
 
 void GrowState::handleInput()
 {
-    StartEndFrame se = character->sprite.StartEndFrames[type];
-
     if (character->form == FIRE)
     {
         character->changeState(new IdleState(character));
         return;
     }
+    StartEndFrame se = character->sprite.StartEndFrames[type];
 
+    cout << frameIndex << " " << frameRec.height << boolalpha << character->isGrounded << "\n";
     if (se.start + frameIndex == se.end)
     {
         character->form = static_cast<MarioForm>((character->form + 1) % FORM_COUNT);
         character->changeForm(character->form);
-
-        character->changeState(new IdleState(character));
+        if (character->isGrounded)
+        {
+            character->pos.y = character->groundPosY - frameRec.height;
+            character->changeState(new IdleState(character));
+        }
+        else
+        {
+            character->changeState(new FallState(character));
+        }
         return;
     }
 }
 UnGrowState::UnGrowState(Character *_character, int _delay)
     : MarioState(UNGROW, _character, _delay)
 {
+    if (character->isGrounded)
+        character->pos.y = character->groundPosY - frameRec.height;
 }
 
 void UnGrowState::handleInput()
@@ -400,12 +411,22 @@ void UnGrowState::handleInput()
         character->changeState(new IdleState(character));
         return;
     }
+    if (character->isGrounded)
+        character->pos.y = character->groundPosY - frameRec.height;
+
     if (se.start - frameIndex == se.end)
     {
         character->form = static_cast<MarioForm>((character->form - 1 + FORM_COUNT) % FORM_COUNT);
         character->changeForm(character->form);
-
-        character->changeState(new IdleState(character));
+        if (character->isGrounded)
+        {
+            character->pos.y = character->groundPosY - frameRec.height;
+            character->changeState(new IdleState(character));
+        }
+        else
+        {
+            character->changeState(new FallState(character));
+        }
         return;
     }
 }

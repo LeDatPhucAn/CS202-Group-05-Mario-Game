@@ -10,25 +10,27 @@
 
 using namespace std;
 
-struct StartEndFrame {
+struct StartEndFrame
+{
     int start = 0;
     int end = 0;
 };
-struct Sprite {
+struct Sprite
+{
     vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(15);
     vector<Rectangle> frameRecs;
-	Texture2D texture;	
+    Texture2D texture;
 };
 
-struct Movement {
-	int speed = 0;
-	Vector2 velocity = { 0,0 };
-	Vector2 acceleration = { 0,0 };
+struct Movement
+{
+    int speed = 0;
+    Vector2 velocity = {0, 0};
+    Vector2 acceleration = {0, 0};
 };
 
-class Block;
-
-class Character : public GameObject {
+class Character : public GameObject
+{
 private:
     friend class CollisionManager;
     friend class State;
@@ -38,30 +40,41 @@ private:
     friend class JumpState;
     friend class FallState;
     friend class SkidState;
-	friend class CrouchState;
+    friend class CrouchState;
     friend class GrowState;
     friend class UnGrowState;
     MarioForm form = SMALL;
     void changeForm(MarioForm form);
 protected:
+    const float maxJumpHeight = 72.0f;
+    const float jumpGravity = 1056.25f; // While holding jump
+    const float fallGravity = 1462.5f;  // Letting go / falling
+    const float fallSpeedCap = 240.0f;
 
+    float maxHeight = 72.0f;
+protected:
     bool isGrounded = false;
+    float groundPosY = 0;
     Direction direction = RIGHT;
     Sprite sprite;
     Movement movement;
-    State* currentState = nullptr;
-public:
+    State *currentState = nullptr;
 
+public:
     Character() {}
 
-    Character(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos)
-        : GameObject(_pos, {0,0}), sprite(_sprite), movement(_movement), currentState(_initialState) {
+    Character(const Sprite &_sprite, const Movement &_movement, State *_initialState, Vector2 _pos)
+        : GameObject(_pos, {0, 0}), sprite(_sprite), movement(_movement), currentState(_initialState)
+    {
     }
 
-    ~Character() {
-        if (currentState) delete currentState;
+    ~Character()
+    {
+        if (currentState)
+            delete currentState;
     }
-    Character(const Character& other) {
+    Character(const Character &other)
+    {
         sprite = other.sprite;
         movement = other.movement;
         isGrounded = other.isGrounded;
@@ -70,11 +83,14 @@ public:
 
         currentState = new IdleState(this);
     }
-    
-    Character& operator=(const Character& other) {
-        if (this == &other)return *this;
+
+    Character &operator=(const Character &other)
+    {
+        if (this == &other)
+            return *this;
         // Clean up existing state
-        if (currentState) delete currentState;
+        if (currentState)
+            delete currentState;
 
         sprite = other.sprite;
         movement = other.movement;
@@ -82,82 +98,79 @@ public:
         direction = other.direction;
         pos = other.pos;
 
-        currentState = new IdleState(this);  
+        currentState = new IdleState(this);
         return *this;
     }
-    void changeState(State* newState);
+    void changeState(State *newState);
     void update() override;
     void display() override;
 
-    //Collision
-    void updateCollision(GameObject* other) override; 
-    // {
-    //     // Kiểm tra xem other có phải Block không
-    //     Block* block = dynamic_cast<Block*>(other);
-    //     if (!block) return;
+    // Collision
+    void updateCollision(GameObject *other) override;
 
-    //     // Lấy bounding boxes
-    //     Rectangle charBounds = getBounds();
-    //     Rectangle blockBounds = block->getBounds();
-
-    //     pos.y = blockBounds.y - this->size.y;
-    // };
     Rectangle getBounds() const override;
     Rectangle getFeet() const override;
     Rectangle getHead() const override;
     Rectangle getLeftSide() const override;
     Rectangle getRightSide() const override;
-    
+
 public:
-    struct Builder {
+    struct Builder
+    {
         Sprite sprite;
         Movement movement;
-        State* state = nullptr;
+        State *state = nullptr;
         Vector2 pos = {0, 0};
 
         // --- Sprite setters ---
-        Builder& setFrames(stateType type, int start, int end) {
-            sprite.StartEndFrames[type] = { start,end };
+        Builder &setFrames(stateType type, int start, int end)
+        {
+            sprite.StartEndFrames[type] = {start, end};
             return *this;
         }
-        Builder& setJsonAndTexture(string name) {
+        Builder &setJsonAndTexture(string name)
+        {
             sprite.texture = UI::textureMap[name];
             sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap[name]);
             return *this;
         }
 
         // --- Movement setters ---
-        Builder& setSpeed(int speed) {
+        Builder &setSpeed(int speed)
+        {
             movement.speed = speed;
             return *this;
         }
 
-        Builder& setPos(Vector2 _pos) {
+        Builder &setPos(Vector2 _pos)
+        {
             pos = _pos;
             return *this;
         }
 
-        Builder& setVelocity(Vector2 velocity) {
+        Builder &setVelocity(Vector2 velocity)
+        {
             movement.velocity = velocity;
             return *this;
         }
 
-        Builder& setAcceleration(Vector2 acceleration) {
+        Builder &setAcceleration(Vector2 acceleration)
+        {
             movement.acceleration = acceleration;
             return *this;
         }
 
         // --- State ---
-        Builder& setState(State* initialState) {
+        Builder &setState(State *initialState)
+        {
             state = initialState;
             return *this;
         }
 
         // --- Final build ---
-        Character build() {
+        Character build()
+        {
             return Character(sprite, movement, state, pos);
         }
-
     };
-
 };

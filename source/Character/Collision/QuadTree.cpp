@@ -15,8 +15,6 @@ void QuadTree::clear()
 
 void QuadTree::split()
 {
-    std::cout << "Splitting QuadTree at level " << level << " with bounds: "
-         << bounds.x << ", " << bounds.y << ", " << bounds.width << ", " << bounds.height << "\n";
     float subWidth = bounds.width / 2.0f;
     float subHeight = bounds.height / 2.0f;
     float x = bounds.x;
@@ -28,32 +26,42 @@ void QuadTree::split()
     nodes[3] = std::make_unique<QuadTree>(level + 1, Rectangle{x + subWidth, y + subHeight, subWidth, subHeight});
 }
 
-int QuadTree::getIndex(const Rectangle& rect) {
-    float verticalMidpoint   = bounds.x + bounds.width / 2.0f;
+int QuadTree::getIndex(GameObject *rect)
+{
+    Vector2 pos = rect->getPosition();
+    Vector2 size = rect->getSize();
+    float verticalMidpoint = bounds.x + bounds.width / 2.0f;
     float horizontalMidpoint = bounds.y + bounds.height / 2.0f;
 
     // Object can completely fit within the top quadrants
-    bool top = (rect.y + rect.height) < horizontalMidpoint;
+    bool top = (pos.y + size.y) < horizontalMidpoint;
     // Object can completely fit within the bottom quadrants
-    bool bottom = rect.y > horizontalMidpoint;
+    bool bottom = pos.y > horizontalMidpoint;
 
     // Object can completely fit within the left quadrants
-    bool left = (rect.x + rect.width) < verticalMidpoint;
+    bool left = (pos.x + size.x) < verticalMidpoint;
     // Object can completely fit within the right quadrants
-    bool right = rect.x > verticalMidpoint;
+    bool right = pos.x > verticalMidpoint;
 
-    if (left) {
-        if (top) return 1; // top-left
-        else if (bottom) return 2; // bottom-left
-    } else if (right) {
-        if (top) return 0; // top-right
-        else if (bottom) return 3; // bottom-right
+    if (left)
+    {
+        if (top)
+            return 1; // top-left
+        else if (bottom)
+            return 2; // bottom-left
+    }
+    else if (right)
+    {
+        if (top)
+            return 0; // top-right
+        else if (bottom)
+            return 3; // bottom-right
     }
 
     return -1; // Doesn't fully fit in any quadrant
 }
 
-void QuadTree::insert(const Rectangle &rect)
+void QuadTree::insert(GameObject *rect)
 {
     if (nodes[0] != nullptr)
     {
@@ -89,11 +97,14 @@ void QuadTree::insert(const Rectangle &rect)
     }
 }
 
-void QuadTree::retrieve(std::vector<Rectangle> &returnObjects, const Rectangle &rect)
+void QuadTree::retrieve(std::vector<GameObject *> &returnObjects, GameObject *rect)
 {
-    if (nodes[0]) {
-        for (int i = 0; i < 4; ++i) {
-            if (CheckCollisionRecs(rect, nodes[i]->bounds)) {
+    if (nodes[0])
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            if (CheckCollisionRecs(rect->getBounds(), nodes[i]->bounds))
+            {
                 nodes[i]->retrieve(returnObjects, rect);
             }
         }
@@ -106,5 +117,4 @@ void QuadTree::retrieve(std::vector<Rectangle> &returnObjects, const Rectangle &
 void QuadTree::setBounds(Rectangle pBounds)
 {
     bounds = pBounds;
-    bounds.width = 1104;
 }

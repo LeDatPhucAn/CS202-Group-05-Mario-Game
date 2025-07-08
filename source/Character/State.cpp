@@ -57,23 +57,19 @@ void State::updateState()
 {
     // Set frame
     animate();
-    // cout << "Before " << stateTypeToString(type) << " Physics: " << character->pos.x << " " << character->pos.y << " "
-    //      << frameRec.width << " " << frameRec.height << " " << boolalpha << character->isGrounded << "\n";
 
     float deltaTime = GetFrameTime();
     // Movement
     applyPhysics(deltaTime);
-
-    // collision
-    Game::collisionManager.ManageCollision(character, deltaTime);
 
     // change character direction accordingly
     frameRec.width = character->direction * abs(frameRec.width);
 
     // Change State when pressing
     handleInput();
-    // cout << "After " << stateTypeToString(type) << " handleInput: " << bounds.x << " " << bounds.y << " "
-    //      << bounds.width << " " << bounds.height << " " << boolalpha << character->isGrounded << "\n";
+
+    
+
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         character->pos = Program::mouseWorldPos;
@@ -105,23 +101,13 @@ void State::applyPhysics(float deltaTime)
     {
         character->movement.acceleration.y = 0;
     }
+
     character->movement.velocity += character->movement.acceleration * deltaTime;
 
     if (character->movement.velocity.y > fallSpeedCap)
         character->movement.velocity.y = fallSpeedCap;
 
     character->pos += character->movement.velocity * deltaTime;
-    // Apply Collision and physics
-
-    // cout << "pos: " << character->pos.x << " "
-    //      << character->pos.y << "; velocity: "
-    //      << character->movement.velocity.x << " "
-    //      << character->movement.velocity.y << "; "
-    //      << "pos change: " << character->movement.velocity.x * deltaTime << " "
-    //      << character->movement.velocity.y * deltaTime << "; "
-    // cout << stateTypeToString(type) << "\n";
-    //      << ((character->direction == RIGHT) ? " RIGHT " : " LEFT ")
-    //      << ((character->isGrounded) ? "Grounded\n" : "Not Grounded\n");
 }
 
 void State::displayState()
