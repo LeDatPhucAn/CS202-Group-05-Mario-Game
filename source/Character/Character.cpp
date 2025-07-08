@@ -63,7 +63,7 @@ void Character::changeForm(MarioForm form)
 
 void Character::updateCollision(GameObject *other)
 {
-    Rectangle bounds = getBounds();
+    Rectangle bounds = getActualBounds();
     Vector2 posObj = other->getPosition();
     Vector2 sizeObj = other->getSize();
 
@@ -101,6 +101,15 @@ Rectangle Character::getBounds() const
         return {0, 0, 0, 0};
     }
     return currentState->Bounds();
+}
+Rectangle Character::getActualBounds() const
+{
+    if (!currentState)
+    {
+        cerr << "Error: getBounds called on null currentState\n";
+        return {0, 0, 0, 0};
+    }
+    return currentState->ActualBounds();
 }
 Rectangle Character::getFeet() const
 {

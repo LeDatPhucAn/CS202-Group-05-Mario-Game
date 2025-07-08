@@ -9,10 +9,11 @@ class CollisionManager
 {
 private:
     QuadTree quadTree;
+    vector<GameObject *> allObjects;
 
 public:
     CollisionManager() = default;
 
-    void init(MyMap *map);
-    void ManageCollision(Character *character);
+    void init(MyMap *map, vector<Character *> characters);
+    void ManageCollision();
 };

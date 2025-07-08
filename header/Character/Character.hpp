@@ -45,6 +45,7 @@ private:
     friend class UnGrowState;
     MarioForm form = SMALL;
     void changeForm(MarioForm form);
+
 protected:
     const float maxJumpHeight = 72.0f;
     const float jumpGravity = 1056.25f; // While holding jump
@@ -52,6 +53,7 @@ protected:
     const float fallSpeedCap = 240.0f;
 
     float maxHeight = 72.0f;
+
 protected:
     bool isGrounded = false;
     float groundPosY = 0;
@@ -109,6 +111,7 @@ public:
     void updateCollision(GameObject *other) override;
 
     Rectangle getBounds() const override;
+    Rectangle getActualBounds() const;
     Rectangle getFeet() const override;
     Rectangle getHead() const override;
     Rectangle getLeftSide() const override;

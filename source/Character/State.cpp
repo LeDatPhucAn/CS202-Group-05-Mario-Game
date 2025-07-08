@@ -68,12 +68,15 @@ void State::updateState()
     // Change State when pressing
     handleInput();
 
-    
-
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
     {
         character->pos = Program::mouseWorldPos;
     }
+    Rectangle bounds = Bounds();
+    cout << "State: " << stateTypeToString(type) << ", Frame: " << frameIndex
+         << ", Position: (" << character->pos.x << ", " << character->pos.y << "), Bounds: (" 
+         << bounds.x << ", " << bounds.y << ", " << bounds.width << ", " << bounds.height << ")\n";
+    character->isGrounded = false; // Reset grounded state for next frame
 }
 
 void State::applyPhysics(float deltaTime)
@@ -83,7 +86,7 @@ void State::applyPhysics(float deltaTime)
     {
         if (character->movement.velocity.y < 0)
         { // Going up
-            if (IsKeyDown(KEY_UP) && character->pos.y > maxHeight)
+            if (IsKeyDown(KEY_UP) && character->pos.y > character->maxHeight)
             {
                 character->movement.acceleration.y = jumpGravity;
             }
@@ -127,41 +130,49 @@ Rectangle State::Bounds() const
         character->pos.x,
         character->pos.y,
         fabs(frameRec.width),
-        frameRec.height};
+        frameRec.height + 3.0f // Adding 3 pixels for collision padding
+    };
 }
-
+Rectangle State::ActualBounds() const
+{
+    return Rectangle{
+        character->pos.x,
+        character->pos.y,
+        fabs(frameRec.width),
+        frameRec.height
+    };
+}
 Rectangle State::Feet() const
 {
     return Rectangle{
-        character->pos.x + 2,
+        character->pos.x + 4,
         character->pos.y + frameRec.height - 2, // Feet is at the bottom of the sprite
-        fabs(frameRec.width) - 4,
+        fabs(frameRec.width) - 8,
         5.0f}; // Height of 2 pixel for feet, 3f for collision padding
 }
 Rectangle State::Head() const
 {
     return Rectangle{
-        character->pos.x + 2,
+        character->pos.x + 4,
         character->pos.y, // Top of the sprite
-        fabs(frameRec.width) - 4,
+        fabs(frameRec.width) - 8,
         2 // Height of 2 pixels
     };
 }
 Rectangle State::LeftSide() const
 {
-    return Rectangle{
-        character->pos.x,         // Left edge
-        character->pos.y + 2,     // Slightly inset from top
-        2,                        // Narrow width
-        fabs(frameRec.height) - 4 // Full height minus padding
-    };
+    return {
+        character->pos.x + 0.5f, // Small inward offset to avoid pixel snag
+        character->pos.y + 2,
+        2,
+        frameRec.height - 4};
 }
+
 Rectangle State::RightSide() const
 {
-    return Rectangle{
-        character->pos.x + fabs(frameRec.width) - 2, // Right edge - 2px
-        character->pos.y + 2,                        // Slightly inset from top
-        2,                                           // Narrow width
-        fabs(frameRec.height) - 4                    // Full height minus padding
-    };
+    return {
+        character->pos.x + fabs(frameRec.width) - 2.5f, // Small inward offset
+        character->pos.y + 2,
+        2,
+        frameRec.height - 4};
 }

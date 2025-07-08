@@ -1,35 +1,41 @@
 #include "CollisionManager.hpp"
 
-void CollisionManager::init(MyMap *map)
+void CollisionManager::init(MyMap *map, vector<Character *> characters)
 {
     if (map)
     {
-        int count = 0;
         quadTree.setBounds(map->getMapBounds());
-        for (auto &block : map->objectBlocks)
-        {
-            quadTree.insert(block);
-            count++;
-        }
         for (auto &block : map->tileBlocks)
         {
             quadTree.insert(block);
-            count++;
+            allObjects.push_back(block);
         }
-        cout << "QuadTree initialized with " << count << " objects.\n";
+
+        // Add characters to the collision manager
+        for (Character *character : characters)
+        {
+            allObjects.push_back(character);
+        }
+
+        cout << "QuadTree initialized with " << allObjects.size() << " objects.\n";
     }
 }
 
-void CollisionManager::ManageCollision(Character *character)
+void CollisionManager::ManageCollision()
 {
-    vector<GameObject *> nearbyObjects;
-    quadTree.retrieve(nearbyObjects, character);
 
-    character->isGrounded = false;
-
-    for (GameObject *gameObject : nearbyObjects)
+    for (GameObject *gameObject : allObjects)
     {
-        character->updateCollision(gameObject);
-        gameObject->updateCollision(character);
+        vector<GameObject *> nearbyObjects;
+        quadTree.retrieve(nearbyObjects, gameObject);
+
+        for (GameObject *other : nearbyObjects)
+        {
+            if (gameObject != other && gameObject->checkCollision(other))
+            {
+                gameObject->updateCollision(other);
+                other->updateCollision(gameObject);
+            }
+        }
     }
 }

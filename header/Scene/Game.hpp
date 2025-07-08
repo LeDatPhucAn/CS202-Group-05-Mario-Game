@@ -15,6 +15,7 @@ protected:
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
+    vector<Character*> characters;
 public:
     static CollisionManager collisionManager;
     

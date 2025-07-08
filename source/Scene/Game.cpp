@@ -39,37 +39,25 @@ Game::Game() : Mario(
 }
 void Game::init()
 {
-
     current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
 
     Mario.changeState(new IdleState(&Mario));
     Goomba.changeState(new IdleState(&Goomba));
+
     // initialize Collision Manager
-    collisionManager.init(&curMap);
+    characters.push_back(&Mario);
+    // characters.push_back(&Goomba);
+    collisionManager.init(&curMap,characters);
 }
 
 void Game::updateScene()
 {
     Mario.update();
-
     // collision
-    collisionManager.ManageCollision(&Mario);
+    collisionManager.ManageCollision();
 
     curMap.update();
-
-    // Check Collision
-    // Mario with Map
-    //  for(auto &x : curMap.tileBlocks) {
-    //      if(Mario.checkCollision(x)) {
-    //          cout << "Collision Mario-Blocks" << endl;
-    //          Mario.updateCollision(x);
-    //          x->updateCollision(&Mario);
-    //          break;
-    //      }
-    //  }
-
-    // Block with Block
 }
 void Game::displaySceneInCamera()
 {
