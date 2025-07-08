@@ -43,35 +43,7 @@ void CollisionManager::init(MyMap *map, Character *_character)
 // }
 void CollisionManager::ManageCollision(Character *character, float deltaTime)
 {
-    // apply gravity
-    if (!character->isGrounded)
-    {
-        if (character->movement.velocity.y < 0)
-        { // Going up
-            if (IsKeyDown(KEY_UP) && character->pos.y > maxHeight)
-            {
-                character->movement.acceleration.y = jumpGravity;
-            }
-            else
-            {
-                character->movement.acceleration.y = fallGravity;
-            }
-        }
-        else
-        {
-            character->movement.acceleration.y = fallGravity; // Going down
-        }
-    }
-    else
-    {
-        character->movement.acceleration.y = 0;
-    }
-    character->movement.velocity += character->movement.acceleration * deltaTime;
 
-    if (character->movement.velocity.y > fallSpeedCap)
-        character->movement.velocity.y = fallSpeedCap;
-
-    character->pos += character->movement.velocity * deltaTime;
     // cout << "pos: " << character->pos.x << " "
     //      << character->pos.y << "; velocity: "
     //      << character->movement.velocity.x << " "
@@ -79,8 +51,8 @@ void CollisionManager::ManageCollision(Character *character, float deltaTime)
     //      << "pos change: " << character->movement.velocity.x * deltaTime << " "
     //      << character->movement.velocity.y * deltaTime << "\n";
     Rectangle bounds = character->getBounds();
-    cout << "Before Collision: " << bounds.x << " " << bounds.y << " "
-         << bounds.width << " " << bounds.height << " " << boolalpha << character->isGrounded << "\n";
+    // cout << "Before Collision: " << bounds.x << " " << bounds.y << " "
+    //      << bounds.width << " " << bounds.height << " " << boolalpha << character->isGrounded << "\n";
     vector<Rectangle> nearbyObjects;
     quadTree.retrieve(nearbyObjects, bounds);
     character->isGrounded = false;
@@ -90,13 +62,13 @@ void CollisionManager::ManageCollision(Character *character, float deltaTime)
         {
             if (CheckCollisionRecs(character->getFeet(), rect))
             {
-                cout<< "On Top Of: " << rect.x << " " << rect.y << " "
-                     << rect.width << " " << rect.height << "\n";
-                Rectangle feet = character->getFeet();
-                cout << "Feet: " << feet.x << " " << feet.y << " "
-                     << feet.width << " " << feet.height << "\n";
+                // cout<< "On Top Of: " << rect.x << " " << rect.y << " "
+                //      << rect.width << " " << rect.height << "\n";
+                // Rectangle feet = character->getFeet();
+                // cout << "Feet: " << feet.x << " " << feet.y << " "
+                //      << feet.width << " " << feet.height << "\n";
                 character->pos.y = rect.y - bounds.height;
-
+                // cout << "New pos: " << character->pos.x << " " << character->pos.y << "\n";
                 character->isGrounded = true;
                 if (character->movement.velocity.y > 0)
                     character->movement.velocity.y = 0;
@@ -113,33 +85,33 @@ void CollisionManager::ManageCollision(Character *character, float deltaTime)
                 character->pos.x = rect.x - bounds.width;
 
                 // if (character->movement.velocity.x > 0)
-                    // character->movement.velocity.x = 0;
+                // character->movement.velocity.x = 0;
             }
             else if (CheckCollisionRecs(character->getLeftSide(), rect)) // hitting right wall
             {
                 character->pos.x = rect.x + rect.width;
                 // if (character->movement.velocity.x < 0)
-                    // character->movement.velocity.x = 0;
+                // character->movement.velocity.x = 0;
             }
-            else{
-                Rectangle feet = character->getFeet();
-                cout << "Feet: " << feet.x << " " << feet.y << " "
-                     << feet.width << " " << feet.height << "\n";
-            }
+            // else{
+            //     Rectangle feet = character->getFeet();
+            //     cout << "Feet: " << feet.x << " " << feet.y << " "
+            //          << feet.width << " " << feet.height << "\n";
+            // }
         }
 
         bounds = character->getBounds();
     }
     bounds = character->getBounds();
 
-    if (!character->isGrounded)
-    {
-        cout << "Not Grounded After Collision: " << bounds.x << " " << bounds.y << " "
-             << bounds.width << " " << bounds.height << "\n";
-    }
-    else
-    {
-        cout << "Grounded After Collision: " << bounds.x << " " << bounds.y << " "
-             << bounds.width << " " << bounds.height << "\n";
-    }
+    // if (!character->isGrounded)
+    // {
+    //     cout << "Not Grounded After Collision: " << bounds.x << " " << bounds.y << " "
+    //          << bounds.width << " " << bounds.height << "\n";
+    // }
+    // else
+    // {
+    //     cout << "Grounded After Collision: " << bounds.x << " " << bounds.y << " "
+    //          << bounds.width << " " << bounds.height << "\n";
+    // }
 }
