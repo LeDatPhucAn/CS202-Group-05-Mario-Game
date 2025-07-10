@@ -14,6 +14,7 @@ void CollisionManager::init(MyMap *map, vector<Character *> characters)
         // Add characters to the collision manager
         for (Character *character : characters)
         {
+            quadTree.insert(character);
             allObjects.push_back(character);
         }
 
@@ -31,11 +32,10 @@ void CollisionManager::ManageCollision()
 
         for (GameObject *other : nearbyObjects)
         {
-            if (gameObject != other && gameObject->checkCollision(other))
-            {
-                gameObject->updateCollision(other);
-                other->updateCollision(gameObject);
-            }
+            int type = gameObject->checkCollision(other);
+            if (type)
+                gameObject->updateCollision(other, type);
+            // other->updateCollision(gameObject, type);
         }
     }
 }

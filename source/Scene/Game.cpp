@@ -48,16 +48,16 @@ void Game::init()
     // initialize Collision Manager
     characters.push_back(&Mario);
     // characters.push_back(&Goomba);
-    collisionManager.init(&curMap,characters);
+    collisionManager.init(&curMap, characters);
 }
 
 void Game::updateScene()
 {
+    curMap.update();
+
     Mario.update();
     // collision
     collisionManager.ManageCollision();
-
-    curMap.update();
 }
 void Game::displaySceneInCamera()
 {

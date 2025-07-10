@@ -72,10 +72,10 @@ void State::updateState()
     {
         character->pos = Program::mouseWorldPos;
     }
-    Rectangle bounds = Bounds();
-    cout << "State: " << stateTypeToString(type) << ", Frame: " << frameIndex
-         << ", Position: (" << character->pos.x << ", " << character->pos.y << "), Bounds: (" 
-         << bounds.x << ", " << bounds.y << ", " << bounds.width << ", " << bounds.height << ")\n";
+    // Rectangle bounds = Bounds();
+    // cout << "State: " << stateTypeToString(type) << ", Frame: " << frameIndex
+    //      << ", Position: (" << character->pos.x << ", " << character->pos.y << "), Bounds: ("
+    //      << bounds.x << ", " << bounds.y << ", " << bounds.width << ", " << bounds.height << ")\n";
     character->isGrounded = false; // Reset grounded state for next frame
 }
 
@@ -129,19 +129,33 @@ Rectangle State::Bounds() const
     return Rectangle{
         character->pos.x,
         character->pos.y,
-        fabs(frameRec.width),
-        frameRec.height + 3.0f // Adding 3 pixels for collision padding
-    };
+        16,
+        18};
 }
 Rectangle State::ActualBounds() const
 {
     return Rectangle{
         character->pos.x,
         character->pos.y,
-        fabs(frameRec.width),
-        frameRec.height
-    };
+        16,
+        16};
 }
+// Rectangle State::ActualBounds() const
+// {
+//     return Rectangle{
+//         character->pos.x,
+//         character->pos.y,
+//         fabs(frameRec.width),
+//         frameRec.height};
+// }
+// Rectangle State::ActualBounds() const
+// {
+//     Rectangle bounds = character->sprite.frameRecs[character->sprite.StartEndFrames[IDLE].start];
+//     bounds.x = character->pos.x;
+//     bounds.y = character->pos.y;
+//     bounds.width = fabs(bounds.width);
+//     return bounds;
+// }
 Rectangle State::Feet() const
 {
     return Rectangle{

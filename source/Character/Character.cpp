@@ -1,4 +1,5 @@
 #include "Character.hpp"
+#include "GameObject.hpp"
 void Character::changeState(State *newState)
 {
     if (currentState)
@@ -61,35 +62,61 @@ void Character::changeForm(MarioForm form)
     }
 }
 
-void Character::updateCollision(GameObject *other)
+void Character::updateCollision(GameObject *other, int type)
 {
+    if (type != NONE)
+    {
+        cout << "CHARACTER: " << getBounds().x << " " << getBounds().y << " " << getBounds().width << " " << getBounds().height << "\n";
+        cout << "BLOCK: " << other->getBounds().x << " " << other->getBounds().y << " " << other->getBounds().width << " " << other->getBounds().height << "\n";
+    }
+    switch (type)
+    {
+
+    case HEAD:
+        cout << "Collision with TOP\n";
+        break;
+    case FEET:
+        cout << "Collision with BOTTOM\n";
+        break;
+    case LEFTSIDE:
+        cout << "Collision with LEFTSIDE\n";
+        break;
+    case RIGHTSIDE:
+        cout << "Collision with RIGHTSIDE\n";
+        break;
+    }
     Rectangle bounds = getActualBounds();
     Vector2 posObj = other->getPosition();
     Vector2 sizeObj = other->getSize();
+    if (Block *block = dynamic_cast<Block *>(other))
+    {
+        if (block->isSolid)
+        {
+            if (type == HEAD)
+            {
+                pos.y = posObj.y - bounds.height;
+                groundPosY = posObj.y;
 
-    if (CheckCollisionRecs(getFeet(), other->getBounds()))
-    {
-        pos.y = posObj.y - bounds.height;
-        groundPosY = posObj.y;
+                isGrounded = true;
+                if (movement.velocity.y > 0)
+                    movement.velocity.y = 0;
 
-        isGrounded = true;
-        if (movement.velocity.y > 0)
-            movement.velocity.y = 0;
-
-        maxHeight = posObj.y - maxJumpHeight - bounds.height;
-    }
-    else if (CheckCollisionRecs(getHead(), other->getBounds())) // Jumping up (hit ceiling)
-    {
-        pos.y = posObj.y + sizeObj.y;
-        movement.velocity.y = fallGravity * GetFrameTime();
-    }
-    else if (CheckCollisionRecs(getRightSide(), other->getBounds())) // hitting left wall
-    {
-        pos.x = posObj.x - bounds.width;
-    }
-    else if (CheckCollisionRecs(getLeftSide(), other->getBounds())) // hitting right wall
-    {
-        pos.x = posObj.x + sizeObj.x;
+                maxHeight = posObj.y - maxJumpHeight - bounds.height;
+            }
+            else if (type == FEET) // Jumping up (hit ceiling)
+            {
+                pos.y = posObj.y + sizeObj.y;
+                movement.velocity.y = fallGravity * GetFrameTime();
+            }
+            else if (type == LEFTSIDE) // hitting left wall
+            {
+                pos.x = posObj.x - bounds.width;
+            }
+            else if (type == RIGHTSIDE) // hitting right wall
+            {
+                pos.x = posObj.x + sizeObj.x;
+            }
+        }
     }
 }
 
@@ -129,7 +156,7 @@ Rectangle Character::getHead() const
     }
     return currentState->Head();
 }
-Rectangle Character::getLeftSide() const
+Rectangle Character::getLeft() const
 {
     if (!currentState)
     {
@@ -139,7 +166,7 @@ Rectangle Character::getLeftSide() const
     }
     return currentState->LeftSide();
 }
-Rectangle Character::getRightSide() const
+Rectangle Character::getRight() const
 {
     if (!currentState)
     {

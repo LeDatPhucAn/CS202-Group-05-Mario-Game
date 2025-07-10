@@ -66,7 +66,7 @@ public:
     Character() {}
 
     Character(const Sprite &_sprite, const Movement &_movement, State *_initialState, Vector2 _pos)
-        : GameObject(_pos, {0, 0}), sprite(_sprite), movement(_movement), currentState(_initialState)
+        : GameObject(_pos, {14, 16}), sprite(_sprite), movement(_movement), currentState(_initialState)
     {
     }
 
@@ -108,14 +108,13 @@ public:
     void display() override;
 
     // Collision
-    void updateCollision(GameObject *other) override;
-
+    void updateCollision(GameObject *other, int type) override;
     Rectangle getBounds() const override;
     Rectangle getActualBounds() const;
     Rectangle getFeet() const override;
     Rectangle getHead() const override;
-    Rectangle getLeftSide() const override;
-    Rectangle getRightSide() const override;
+    Rectangle getLeft() const override;
+    Rectangle getRight() const override;
 
 public:
     struct Builder
@@ -150,7 +149,6 @@ public:
             pos = _pos;
             return *this;
         }
-
         Builder &setVelocity(Vector2 velocity)
         {
             movement.velocity = velocity;
