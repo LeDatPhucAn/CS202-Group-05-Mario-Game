@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.hpp"
+#include "Mario.hpp"
 #include "MyMap.hpp"
 #include "Scene.hpp"
 #include "raylib-tileson.h"
@@ -8,7 +9,7 @@
 #include "CollisionManager.hpp"
 class Game : public Scene {
 protected:
-    Character Mario;
+    Mario Mario;
     Goomba Goomba;
     Koopa Koopa;
 

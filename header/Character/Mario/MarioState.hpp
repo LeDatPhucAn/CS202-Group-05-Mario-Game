@@ -1,8 +1,10 @@
 #pragma once
 #include "State.hpp"
+class Mario;
 class MarioState : public State
 {
 protected:
+    Mario *mario;
     // Speeds (px/sec)
     const float walkSpeed = 90.0f;
     const float runSpeed = 157.5f;
@@ -19,66 +21,66 @@ protected:
     const float skidDecel = 900.0f;
 
 public:
-    MarioState(stateType Type, Character *_character, int _delay) : State(Type, _character, _delay) {}
+     MarioState(stateType Type, Mario *_mario, int _delay);
 };
 class IdleState : public MarioState
 {
 public:
-    IdleState(Character *_character, int _delay = 5);
+    IdleState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 
 class WalkState : public MarioState
 {
 public:
-    WalkState(Character *_character, int _delay = 5);
+    WalkState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 class RunState : public MarioState
 {
 public:
-    RunState(Character *_character, int _delay = 3);
+    RunState(Mario *_mario, int _delay = 3);
     void handleInput() override;
 };
 class JumpState : public MarioState
 {
 public:
-    JumpState(Character *_character, int _delay = 5);
+    JumpState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 class FallState : public MarioState
 {
 public:
-    FallState(Character *_character, int _delay = 5);
+    FallState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 class SkidState : public MarioState
 {
 public:
-    SkidState(Character *_character, int _delay = 5);
+    SkidState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 class GrowState : public MarioState
 {
 public:
-    GrowState(Character *_character, int _delay = 5);
+    GrowState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 class UnGrowState : public MarioState
 {
 public:
-    UnGrowState(Character *_character, int _delay = 3);
+    UnGrowState(Mario *_mario, int _delay = 3);
     void handleInput() override;
 };
 class CrouchState : public MarioState
 {
 public:
-    CrouchState(Character *_character, int _delay = 5);
+    CrouchState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 
 class DeadState : public MarioState {
 public:
-    DeadState(Character* _character, int _delay=5);
+    DeadState(Mario* _mario, int _delay=5);
     void handleInput() override;
 };

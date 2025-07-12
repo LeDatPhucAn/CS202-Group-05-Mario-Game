@@ -1,10 +1,10 @@
 #include "Enemy.hpp"
 #include "EnemyState.hpp"
 #include "MarioState.hpp"
-// --- Enemy Methods ---
+#include "Mario.hpp"
 
+// --- Base Enemy Methods ---
 Enemy::Enemy() : Character() {}
-
 Enemy::Enemy(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos)
     : Character(_sprite, _movement, _initialState, _pos) {}
 
@@ -12,94 +12,111 @@ Enemy::Enemy(const Enemy& other) : Character(other) {
     beCleared = other.beCleared;
 }
 
-void Enemy::updateCollision(GameObject* other, int type) {
-    Character* character = dynamic_cast<Character*>(other);
-    // Make sure the other object is not another enemy
-    if (character && !dynamic_cast<Enemy*>(other)) {
-        if (dynamic_cast<DeadState*>(character->currentState)  || dynamic_cast<EnemyDeadState*>(this->currentState)) {
-            return;
-        }
-        // Check if the character on top 
-        if (character->movement.velocity.y > 0 && CheckCollisionRecs(character->getFeet(), this->getHead())) {
-            // Change to dead state
-            this->changeState(new EnemyDeadState(this));
-            // Give the character a bounce
-            character->movement.velocity.y = -200.f; 
-        }
-        // character colliding from the side -> dead
-        else {
-            character->changeState(new DeadState(character));
-        }
-    }
-
-    Koopa* koopa = dynamic_cast<Koopa*>(other);
-    if (koopa) {
-        // Check if the Koopa that hit us is in its sliding (Run) state.
-        if (dynamic_cast<EnemyRunState*>(koopa->currentState)) {
-            this->changeState(new EnemyDeadState(this));
-            return;
-        }
-    }
+// --- Goomba Methods ---
+Goomba::Goomba()
+    : Enemy() {
+    // Goomba-specific sprite setup
+    this->sprite.StartEndFrames[IDLE] = {0, 0};
+    this->sprite.StartEndFrames[WALK] = {0, 1};
+    this->sprite.StartEndFrames[DEAD] = {2, 2};
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
+    this->sprite.texture = UI::textureMap["Enemies2D"];
 }
 
 void Goomba::updateCollision(GameObject* other, int type) {
-    Enemy::updateCollision(other, type);
+    Character::updateCollision(other, type); 
+    Mario* mario = dynamic_cast<Mario*>(other);
+    if (mario) {
+        // Access currentState directly
+        if (dynamic_cast<DeadState*>(mario->currentState) || dynamic_cast<EnemyDeadState*>(this->currentState)) {
+            return;
+        }
+        // If Mario is on top (stomp)
+        if (type == HEAD) {
+            this->changeState(new EnemyDeadState(this));
+            // Access movement directly
+            mario->movement.velocity.y = -200.f; // Bounce Mario
+        }
+        // If Mario hits from the side
+        else if (type == LEFTSIDE || type == RIGHTSIDE) {
+            mario->changeState(new DeadState(mario));
+        }
+        return; // Collision with Mario handled
+    }
+    Koopa* koopa = dynamic_cast<Koopa*>(other);
+    if (koopa && dynamic_cast<EnemyRunState*>(koopa->currentState)) {
+        this->changeState(new EnemyDeadState(this));
+    }
+}
+
+// --- Koopa Methods ---
+Koopa::Koopa()
+    : Enemy() {
+    // Koopa-specific sprite setup
+    this->sprite.StartEndFrames[IDLE] = {7, 7}; // Shell state
+    this->sprite.StartEndFrames[WALK] = {3, 4};
+    this->sprite.StartEndFrames[RUN] = {7, 7}; // Sliding shell state
+    this->sprite.StartEndFrames[DEAD] = {7, 7};
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
+    this->sprite.texture = UI::textureMap["Enemies2D"];
 }
 
 void Koopa::updateCollision(GameObject* other, int type) {
-    
-    Character* character = dynamic_cast<Character*>(other);    
-    if (!character || dynamic_cast<DeadState*>(character->currentState) || dynamic_cast<EnemyDeadState*>(this->currentState)) {
-        return; // Do nothing if it's not the player or if the player is already dead
-    }
-
-    bool isStomp = character->movement.velocity.y > 0 && CheckCollisionRecs(character->getFeet(), this->getHead());
-
-    // --- Logic for when Koopa is WALKING ---
-    if (dynamic_cast<EnemyWalkState*>(this->currentState)) {
-        if (isStomp) {
-            // turn koopa into a shell
-            this->changeState(new EnemyIdleState(this));
-            character->movement.velocity.y = -200.f; 
-        } else {
-            character->changeState(new DeadState(character));
+    Character::updateCollision(other, type);
+    Mario* mario = dynamic_cast<Mario*>(other);
+    if (mario) {
+        // Access currentState directly
+        if (dynamic_cast<DeadState*>(mario->currentState) || dynamic_cast<EnemyDeadState*>(this->currentState)) {
+            return;
         }
-        return;
-    }
 
-    // --- Logic for when Koopa is an IDLE SHELL ---
-    if (dynamic_cast<EnemyIdleState*>(this->currentState)) {
-        if (isStomp) {
-            this->changeState(new EnemyRunState(this));
-            this->direction = character->direction;
-        } else {
-            this->changeState(new EnemyRunState(this));
-            // Set shell direction
-            if (character->pos.x < this->pos.x) {
-                this->direction = RIGHT;
-            } else {
-                this->direction = LEFT;
+        // --- Logic for when Koopa is WALKING ---
+        if (dynamic_cast<EnemyWalkState*>(this->currentState)) {
+            if (type == HEAD) { // Mario stomps a walking Koopa
+                this->changeState(new EnemyIdleState(this)); // Turn into a shell
+                // Access movement directly
+                mario->movement.velocity.y = -200.f;
+            } else { // Mario hits a walking Koopa from the side
+                mario->changeState(new DeadState(mario));
             }
+            return;
         }
-        return;
-    }
 
-    // --- Logic for when Koopa is a SLIDING SHELL ---
-    if (dynamic_cast<EnemyRunState*>(this->currentState)) {
-        if (isStomp) {
-            this->changeState(new EnemyIdleState(this));
-            character->movement.velocity.y = -200.f;
-        } else {
-            character->changeState(new DeadState(character));
+        // --- Logic for when Koopa is an IDLE SHELL ---
+        if (dynamic_cast<EnemyIdleState*>(this->currentState)) {
+            this->changeState(new EnemyRunState(this)); // Any touch makes it slide
+            // Set shell direction away from Mario, accessing pos directly
+            this->direction = (mario->pos.x < this->pos.x) ? RIGHT : LEFT;
+            if (type == HEAD) { // If stomped, give Mario a bounce
+                 mario->movement.velocity.y = -200.f;
+            }
+            return;
         }
-        return;
+
+        // --- Logic for when Koopa is a SLIDING SHELL ---
+        if (dynamic_cast<EnemyRunState*>(this->currentState)) {
+            if (type == HEAD) { // Stomping a sliding shell stops it
+                this->changeState(new EnemyIdleState(this));
+                mario->movement.velocity.y = -200.f;
+            } else { // Running into a sliding shell from the side
+                mario->changeState(new DeadState(mario));
+            }
+            return;
+        }
+    }
+    Enemy* otherEnemy = dynamic_cast<Enemy*>(other);
+    if (otherEnemy && otherEnemy != this) {
+        // If this Koopa is a sliding shell and hits another enemy
+        if (dynamic_cast<EnemyRunState*>(this->currentState)) {
+             otherEnemy->changeState(new EnemyDeadState(otherEnemy));
+        }
     }
 }
 
-// --- Builder Methods ---
 
+// --- Builder Methods Implementation ---
 Enemy::Builder& Enemy::Builder::setFrames(stateType type, int start, int end) {
-    sprite.StartEndFrames[type] = { start, end };
+    sprite.StartEndFrames[type] = {start, end};
     return *this;
 }
 
@@ -132,8 +149,4 @@ Enemy::Builder& Enemy::Builder::setAcceleration(Vector2 acceleration) {
 Enemy::Builder& Enemy::Builder::setState(State* initialState) {
     state = initialState;
     return *this;
-}
-
-Enemy Enemy::Builder::build() {
-    return Enemy(sprite, movement, state, pos);
 }

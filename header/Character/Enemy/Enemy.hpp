@@ -2,6 +2,14 @@
 #include "Character.hpp"
 #include "UI.hpp" 
 #include "MarioState.hpp"
+#pragma once
+#include "Character.hpp"
+#include "UI.hpp" 
+
+// Forward declare state classes
+class State;
+class EnemyState;
+
 class Enemy : public Character {
 public:
     bool beCleared = false;
@@ -10,9 +18,11 @@ public:
     Enemy(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos);
     Enemy(const Enemy& other);
 
-    void updateCollision(GameObject* other, int type) override;
+    // Pure virtual function forces Goomba and Koopa to provide their own implementation.
+    virtual void updateCollision(GameObject* other, int type) = 0;
 
 public:
+    // The Builder is kept for use in Game.cpp
     struct Builder {
         Sprite sprite;
         Movement movement;
@@ -26,45 +36,22 @@ public:
         Builder& setVelocity(Vector2 velocity);
         Builder& setAcceleration(Vector2 acceleration);
         Builder& setState(State* initialState);
-        Enemy build();
+        // The build() method is specific to each enemy type, so it's removed from the base.
     };
 };
 
 class Goomba : public Enemy {
 public:
-    Goomba() : Enemy() {
-        this->sprite.StartEndFrames[IDLE] = {0, 0};
-        this->sprite.StartEndFrames[WALK] = {0, 1};
-        this->sprite.StartEndFrames[JUMP] = {0, 0};
-        this->sprite.StartEndFrames[FALL] = {0, 1};
-        this->sprite.StartEndFrames[DEAD] = {2, 2};
-        this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-        this->sprite.texture = UI::textureMap["Enemies2D"];
-    }
-    Goomba(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos)
-        : Enemy(_sprite, _movement, _initialState, _pos) {}
-    Goomba(const Goomba& other) : Enemy(other) {}
+    Goomba();
+    Goomba(const Builder& builder); // Add a constructor that takes a builder
 
     void updateCollision(GameObject* other, int type) override;
 };
 
 class Koopa : public Enemy {
-private:
-    int timesHit = 0;
 public:
-    Koopa() : Enemy() {
-        this->sprite.StartEndFrames[IDLE] = {7, 7};
-        this->sprite.StartEndFrames[WALK] = {3, 4};
-        this->sprite.StartEndFrames[JUMP] = {3, 4};
-        this->sprite.StartEndFrames[FALL] = {3, 4};
-        this->sprite.StartEndFrames[RUN] = {7, 7};
-        this->sprite.StartEndFrames[DEAD] = {7, 7};
-        this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-        this->sprite.texture = UI::textureMap["Enemies2D"];
-    }
-    Koopa(const Sprite& _sprite, const Movement& _movement, State* _initialState, Vector2 _pos)
-        : Enemy(_sprite, _movement, _initialState, _pos) {}
-    Koopa(const Koopa& other) : Enemy(other) {}
+    Koopa();
+    Koopa(const Builder& builder); // Add a constructor that takes a builder
 
     void updateCollision(GameObject* other, int type) override;
 };

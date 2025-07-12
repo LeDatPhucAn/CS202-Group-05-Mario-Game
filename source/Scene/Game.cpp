@@ -7,7 +7,7 @@
 CollisionManager Game::collisionManager = CollisionManager();
 
 Game::Game() : Mario(
-                   Character::Builder()
+                   Mario::Builder()
                        .setFrames(IDLE, 0, 0)
                        .setFrames(WALK, 1, 3)
                        .setFrames(JUMP, 5, 5)
@@ -29,8 +29,8 @@ Game::Game() : Mario(
     };
     init();    
     Mario.setPosition({100,0});
-    Goomba.setPosition({200,0});
-    Koopa.setPosition({350,0});
+    Goomba.setPosition({150,0});
+    Koopa.setPosition({175,0});
 }
 void Game::init()
 {
