@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include "Block.hpp"
 #include "Structs.hpp"
 
 class Items : public GameObject {
@@ -13,11 +14,13 @@ public:
 	void setMovement(Movement movement);
 	void setDirection(Direction direction);
 
-	// logic
-	void appear();
+	// displaying and animation
+	void appear(float dt);
+	void display();
 
 protected:
 	Sprite sprite;
 	Movement movement;
 	Direction direction;
+	Block* owner;
 };
