@@ -24,7 +24,8 @@ Game::Game() : Mario(
                 Koopa()
 {
     mapPaths = {
-        {"Map1.1", "assets/Map/Map1.1.json"},
+		{"test", "assets/Map/testmap.json"},
+        //{"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
     init();    
@@ -34,7 +35,7 @@ Game::Game() : Mario(
 }
 void Game::init()
 {
-    current_Map = "Map1.1";
+    current_Map = "test";
     curMap.choose(mapPaths[current_Map]);
 
     Mario.changeState(new IdleState(&Mario));

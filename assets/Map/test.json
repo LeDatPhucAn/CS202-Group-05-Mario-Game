@@ -1,0 +1,24 @@
+{ "columns":4,
+ "image":"image\/3_overworld.png",
+ "imageheight":67,
+ "imagewidth":67,
+ "margin":0,
+ "name":"test",
+ "spacing":1,
+ "tilecount":16,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tiles":[
+        {
+         "id":0,
+         "properties":[
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }]
+        }],
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}
