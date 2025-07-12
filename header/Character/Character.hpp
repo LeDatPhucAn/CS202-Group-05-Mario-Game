@@ -3,31 +3,11 @@
 #include <algorithm>
 #include "State.hpp"
 #include "Block.hpp"
-#include <raylib.h>
-#include <vector>
 #include "UI.hpp"
 #include "MarioState.hpp"
+#include "Structs.hpp"
 
 using namespace std;
-
-struct StartEndFrame
-{
-    int start = 0;
-    int end = 0;
-};
-struct Sprite
-{
-    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(15);
-    vector<Rectangle> frameRecs;
-    Texture2D texture;
-};
-
-struct Movement
-{
-    int speed = 0;
-    Vector2 velocity = {0, 0};
-    Vector2 acceleration = {0, 0};
-};
 
 class Character : public GameObject
 {

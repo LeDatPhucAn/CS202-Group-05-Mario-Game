@@ -1,33 +1,5 @@
 #pragma once
-#include "raylib.h"
-#include "raymath.h"
-enum MarioForm
-{
-    SMALL = 0,
-    BIG = 1,
-    FIRE,
-    FORM_COUNT
-};
-enum stateType
-{
-    IDLE,
-    WALK,
-    RUN,
-    JUMP,
-    FALL,
-    SKID,
-    CROUCH,
-    GROW,
-    UNGROW,
-    DEAD
-};
-
-enum Direction
-{
-    LEFT = -1,
-    BRUH,
-    RIGHT = 1,
-};
+#include "Structs.hpp"
 class Character;
 class CollisionManager;
 class State
