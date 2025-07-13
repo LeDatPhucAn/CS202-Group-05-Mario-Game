@@ -25,7 +25,7 @@ void Items::setDirection(Direction direction) {
 }
 
 void Items::appear(float dt) {
-	// TO-DO: animate the item moving into view from the block beneath it
+	// TODO: animate the item moving into view from the block beneath it
 	DrawRectangleLines(
 		owner->getPosition().x,
 	 	owner->getPosition().y - 1,

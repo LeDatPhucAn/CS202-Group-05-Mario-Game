@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Map1.1.json",
+    "activeFile": "test.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -14,6 +14,10 @@
         "8415.tsj": {
             "scaleInDock": 1,
             "scaleInEditor": 2
+        },
+        "All_Tileset.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
         },
         "Map1.1.json": {
             "expandedObjectLayers": [
@@ -42,12 +46,16 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "test.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 8
+        },
         "testmap.json": {
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 438,
-                "y": 418
+                "x": 265.5,
+                "y": 286.5
             }
         },
         "tileset.json": {
@@ -66,15 +74,21 @@
         "Map1.1.json",
         "muilti_tileset.json",
         "new_blocks1_blocks.json",
-        "new_blocks2_items.json"
+        "new_blocks2_items.json",
+        "testmap.json",
+        "test.json",
+        "All_Tileset.json"
     ],
     "project": "Map.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "new_blocks2_items.json",
-        "new_blocks1_blocks.json",
-        "muilti_tileset.json",
         "Map1.1.json",
+        "muilti_tileset.json",
+        "new_blocks1_blocks.json",
+        "new_blocks2_items.json",
+        "testmap.json",
+        "All_Tileset.json",
+        "test.json",
         "question.tsj",
         "8415.tsj",
         "tileset.json"
