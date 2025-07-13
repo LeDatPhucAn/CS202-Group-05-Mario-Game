@@ -56,3 +56,13 @@ public:
           Vector2 _pos, Vector2 _size,
           Texture2D _tex, Rectangle _src);
 };
+
+class BrickBlock : public Block {
+public:
+	BrickBlock(int _gid, Vector2 _pos, Vector2 _size,
+          Texture2D _tex, Rectangle _src);
+
+	BrickBlock(tson::Object &obj,
+          Vector2 _pos, Vector2 _size,
+          Texture2D _tex, Rectangle _src);
+};
