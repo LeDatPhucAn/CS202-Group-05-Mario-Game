@@ -31,47 +31,17 @@ public:
     bool isFlagPole = false;            // Đánh dấu cây cờ
 
     Block(int _gid, Vector2 _pos, Vector2 _size,
-          Texture2D _tex, Rectangle _src)
-        : GameObject(_pos, _size), gid(_gid), texture(_tex), srcRec(_src)
-    {
-    }
+          Texture2D _tex, Rectangle _src);
 
     // Constructor tự động đọc tất cả property từ tson::Object
     Block(tson::Object &obj,
           Vector2 _pos, Vector2 _size,
-          Texture2D _tex, Rectangle _src)
-        : GameObject(_pos, _size), gid(obj.getGid()), texture(_tex), srcRec(_src)
-    {
-        // Dùng obj.get<T>(name, default) từ Tileson
-        isSolid = obj.get<bool>("isSolid");
-        isBreakable = obj.get<bool>("isBreakable");
-        isQuestion = obj.get<bool>("isQuestion");
-        isInvisible = obj.get<bool>("isInvisible");
-        isUsed = obj.get<bool>("isUsed");
+          Texture2D _tex, Rectangle _src);
 
-        // containsItem trong Tiled lưu dưới dạng int
-        {
-            int iv = obj.get<int>("containsItem");
-            contains = static_cast<Contains>(iv);
-        }
-
-        isPipeEntrance = obj.get<bool>("isPipeEntrance");
-        isFlagPole = obj.get<bool>("isFlagPole");
-    }
-
-    void update() override
-    {
-    }
+    void update() override;
 
     // Vẽ block
-    void display() override
-    {
-        if (isInvisible && !isUsed)
-            return;
-        DrawTextureRec(texture, srcRec, getPosition(), WHITE);
-    }
+    void display() override;
 
-    void updateCollision(GameObject *other, int type) override
-    {
-    }
+    void updateCollision(GameObject *other, int type) override;
 };
