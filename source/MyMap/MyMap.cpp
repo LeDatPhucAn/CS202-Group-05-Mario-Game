@@ -95,8 +95,29 @@ void MyMap::choose(const std::string &jsonPath) {
 
 				for (auto &obj : layer.getTileData()) {
 					std::cout << "CLASS: " << obj.second->getType() << "\n";
-				}
+					int gid = obj.second->getGid(); if (gid == 0) continue;
+					const TSInfo* tsi = nullptr;
+					for (int j = tsinfo.size()-1; j >= 0; --j)
+						if (gid >= tsinfo[j].firstgid) { tsi = &tsinfo[j]; break; }
+					if (!tsi) continue;
 
+					int local = gid - tsi->firstgid;
+					int col   = local % tsi->columns;
+					int row   = local / tsi->columns;
+					Rectangle src{
+						tsi->margin + col * (tsi->tileSize.x + tsi->spacing),
+						tsi->margin + row * (tsi->tileSize.y + tsi->spacing),
+						tsi->tileSize.x,
+						tsi->tileSize.y
+					};
+
+					tileBlocks.push_back(new Block(
+						1,
+						{obj.second->getPosition(obj.first).x, obj.second->getPosition(obj.first).y},
+						{obj.second->getTileSize().x, obj.second->getTileSize().y},
+						tilesetCache[tsi->firstgid], src
+					));
+				}
 			}
 
 			// ============OBJECT LAYER PROCESSING================
