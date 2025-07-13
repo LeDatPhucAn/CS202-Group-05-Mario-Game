@@ -14,6 +14,7 @@ enum class Contains
     OneUp
 };
 
+// abstract class Block
 class Block : public GameObject
 {
 public:
@@ -26,8 +27,8 @@ public:
     bool isQuestion = false;            // Là ô dấu hỏi? hay ko
     bool isInvisible = false;           // true thì không vẽ (ví dụ Coin đã ăn rồi thì bật true)
     bool isUsed = false;                // Đã chạm vào chưa (Coin)
-    Contains contains = Contains::None; // Trong ô question chứa những thứ gì (Coin, Mushroom, Star,..)
-    bool isPipeEntrance = false;        // Đánh dấu nếu ống nước có đường bí mật
+    //Contains contains = Contains::None; // Trong ô question chứa những thứ gì (Coin, Mushroom, Star,..)
+    //bool isPipeEntrance = false;        // Đánh dấu nếu ống nước có đường bí mật
     bool isFlagPole = false;            // Đánh dấu cây cờ
 
     Block(int _gid, Vector2 _pos, Vector2 _size,
@@ -44,4 +45,14 @@ public:
     void display() override;
 
     void updateCollision(GameObject *other, int type) override;
+};
+
+class GroundBlock : public Block {
+public:
+	GroundBlock(int _gid, Vector2 _pos, Vector2 _size,
+          Texture2D _tex, Rectangle _src);
+
+	GroundBlock(tson::Object &obj,
+          Vector2 _pos, Vector2 _size,
+          Texture2D _tex, Rectangle _src);
 };

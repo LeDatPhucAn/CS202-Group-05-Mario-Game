@@ -20,10 +20,10 @@ Block::Block(tson::Object &obj,
 	// containsItem trong Tiled lưu dưới dạng int
 	{
 		int iv = obj.get<int>("containsItem");
-		contains = static_cast<Contains>(iv);
+		//contains = static_cast<Contains>(iv);
 	}
 
-	isPipeEntrance = obj.get<bool>("isPipeEntrance");
+	//isPipeEntrance = obj.get<bool>("isPipeEntrance");
 	isFlagPole = obj.get<bool>("isFlagPole");
 }
 
@@ -36,4 +36,22 @@ void Block::display() {
 }
 
 void Block::updateCollision(GameObject *other, int type) {
+}
+
+GroundBlock::GroundBlock(int _gid, Vector2 _pos, Vector2 _size, Texture2D _tex, Rectangle _src) : Block(_gid, _pos, _size, _tex, _src) {
+	isSolid = true;
+	isBreakable = false;
+	isQuestion = false;
+	isInvisible = false;
+	isUsed = false;
+	isFlagPole = false;
+}
+
+GroundBlock::GroundBlock(tson::Object &obj, Vector2 _pos, Vector2 _size, Texture2D _tex, Rectangle _src) : Block(obj, _pos, _size, _tex, _src) {
+	isSolid = true;
+	isBreakable = false;
+	isQuestion = false;
+	isInvisible = false;
+	isUsed = false;
+	isFlagPole = false;
 }
