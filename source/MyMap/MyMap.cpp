@@ -41,7 +41,9 @@ void MyMap::choose(const std::string &jsonPath) {
 	// 4) Scan layers
 	for (auto &layer : tsonMap->getLayers()) {
 		switch (layer.getType()) {
+			// =========IMAGE LAYER PROCESSING==============
 			case tson::LayerType::ImageLayer: {
+				cout << "IMAGE PROCESSING\n";
 				auto imgRel = layer.getImage();
 				std::string path = (baseDir / imgRel).string();
 				Texture2D tex = LoadTexture(path.c_str());
@@ -51,10 +53,15 @@ void MyMap::choose(const std::string &jsonPath) {
 					{ float(tex.width), float(tex.height) }, tex, src));
 				break;
 			}
+
+			// ==============TILE LAYER PROCESSING=============
 			case tson::LayerType::TileLayer: {
+				cout << "TILE PROCESSING\n";
 				const auto &data = layer.getData();
+				//cout << "DATA SIZE: " << (int)data.size() << "\n";
 				for (int i = 0; i < (int)data.size(); ++i) {
-					int gid = data[i]; if (gid == 0) continue;
+					int gid = data[i]; if (gid == 0) continue; // wtf
+					if (gid != 1) cout << "GID: " << gid << "\n";
 					// select tileset info by gid
 					const TSInfo* tsi = nullptr;
 					for (int j = tsinfo.size()-1; j >= 0; --j)
@@ -72,6 +79,7 @@ void MyMap::choose(const std::string &jsonPath) {
 					};
 					int x = (i % mapW) * tileW;
 					int y = (i / mapW) * tileH;
+					Block* newBlock = nullptr;
 					tileBlocks.push_back(new Block(
 						gid,
 						{ float(x), float(y) },
@@ -81,9 +89,13 @@ void MyMap::choose(const std::string &jsonPath) {
 				}
 				break;
 			}
+
+			// ============OBJECT LAYER PROCESSING================
 			case tson::LayerType::ObjectGroup: {
+				cout << "OBJECT PROCESSING\n";
 				for (auto &obj : layer.getObjects()) {
 					int gid = obj.getGid(); if (gid == 0) continue;
+					cout << "OBJECT_GID: " << gid << "\n";
 					const TSInfo* tsi = nullptr;
 					for (int j = tsinfo.size()-1; j >= 0; --j)
 						if (gid >= tsinfo[j].firstgid) { tsi = &tsinfo[j]; break; }

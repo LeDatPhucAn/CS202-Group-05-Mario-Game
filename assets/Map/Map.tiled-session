@@ -23,11 +23,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1,
-            "selectedLayer": 2,
+            "scale": 3,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 181.5,
-                "y": 111.5
+                "x": 127.16666666666666,
+                "y": 115.5
             }
         },
         "muilti_tileset.json": {
@@ -51,10 +51,13 @@
             "scaleInEditor": 8
         },
         "testmap.json": {
+            "expandedObjectLayers": [
+                3
+            ],
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 282.5,
+                "x": 324.5,
                 "y": 399.5
             }
         },
