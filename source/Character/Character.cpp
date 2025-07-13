@@ -96,7 +96,7 @@ void Character::updateCollision(GameObject *other, int type)
         {
             if (type == HEAD)
             {
-                cout << type << "\n";
+                //cout << type << "\n";
                 pos.y = posObj.y - bounds.height;
                 groundPosY = posObj.y;
 
@@ -109,18 +109,18 @@ void Character::updateCollision(GameObject *other, int type)
             }
             else if (type == FEET) // Jumping up (hit ceiling)
             {
-                cout << type << "\n";
+                //cout << type << "\n";
                 pos.y = posObj.y + sizeObj.y;
                 movement.velocity.y = fallGravity * GetFrameTime();
             }
             else if (type == LEFTSIDE) // hitting left wall
             {   
-                cout << type << "\n";
+                //cout << type << "\n";
                 pos.x = posObj.x - bounds.width;
             }
             else if (type == RIGHTSIDE) // hitting right wall
             {
-                cout << type << "\n";
+                //cout << type << "\n";
                 pos.x = posObj.x + sizeObj.x;
             }
         }
