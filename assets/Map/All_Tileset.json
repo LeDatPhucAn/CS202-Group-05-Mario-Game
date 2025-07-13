@@ -16,6 +16,11 @@
                  "name":"isSolid",
                  "type":"bool",
                  "value":true
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"GroundBlock"
                 }]
         }, 
         {
@@ -30,6 +35,11 @@
                  "name":"isSolid",
                  "type":"bool",
                  "value":true
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"BrickBlock"
                 }]
         }, 
         {
@@ -52,12 +62,17 @@
                 {
                  "name":"isSolid",
                  "type":"bool",
-                 "value":false
+                 "value":true
                 }, 
                 {
                  "name":"isUsed",
                  "type":"bool",
-                 "value":false
+                 "value":true
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"QuestionBlockUsed"
                 }]
         }, 
         {
@@ -76,6 +91,11 @@
                  "name":"isSolid",
                  "type":"bool",
                  "value":true
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"GroundBlock"
                 }]
         }, 
         {

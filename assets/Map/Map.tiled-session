@@ -26,7 +26,7 @@
             "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 232.5,
+                "x": 181.5,
                 "y": 111.5
             }
         },
@@ -52,10 +52,10 @@
         },
         "testmap.json": {
             "scale": 1,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 265.5,
-                "y": 286.5
+                "x": 282.5,
+                "y": 399.5
             }
         },
         "tileset.json": {
@@ -80,7 +80,7 @@
         "All_Tileset.json"
     ],
     "project": "Map.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
         "Map1.1.json",
         "muilti_tileset.json",
