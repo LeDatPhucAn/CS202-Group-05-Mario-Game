@@ -21,7 +21,8 @@
                  "name":"type",
                  "type":"string",
                  "value":"QuestionBlock"
-                }]
+                }],
+         "type":"QuestionBlock"
         }],
  "tilewidth":16,
  "type":"tileset",

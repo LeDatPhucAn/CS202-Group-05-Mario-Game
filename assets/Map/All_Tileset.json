@@ -21,7 +21,8 @@
                  "name":"type",
                  "type":"string",
                  "value":"GroundBlock"
-                }]
+                }],
+         "type":"GroundBlock"
         }, 
         {
          "id":1,
@@ -40,7 +41,8 @@
                  "name":"type",
                  "type":"string",
                  "value":"BrickBlock"
-                }]
+                }],
+         "type":"BrickBlock"
         }, 
         {
          "id":2,

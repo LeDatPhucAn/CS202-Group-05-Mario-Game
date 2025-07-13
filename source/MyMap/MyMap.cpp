@@ -1,4 +1,5 @@
 #include "MyMap.hpp"
+#include <string>
 
 void MyMap::choose(const std::string &jsonPath) {
 	clearAll();
@@ -57,6 +58,7 @@ void MyMap::choose(const std::string &jsonPath) {
 			// ==============TILE LAYER PROCESSING=============
 			case tson::LayerType::TileLayer: {
 				cout << "TILE PROCESSING\n";
+				/*
 				const auto &data = layer.getData();
 				//cout << "DATA SIZE: " << (int)data.size() << "\n";
 				for (int i = 0; i < (int)data.size(); ++i) {
@@ -79,6 +81,7 @@ void MyMap::choose(const std::string &jsonPath) {
 					};
 					int x = (i % mapW) * tileW;
 					int y = (i / mapW) * tileH;
+					// if (tsi->firstgid != 1) cout << "TSI->FIRSTGID: " << tsi->firstgid << "\n";
 					Block* newBlock = nullptr;
 					tileBlocks.push_back(new Block(
 						gid,
@@ -88,6 +91,12 @@ void MyMap::choose(const std::string &jsonPath) {
 					));
 				}
 				break;
+				*/
+
+				for (auto &obj : layer.getTileData()) {
+					std::cout << "CLASS: " << obj.second->getType() << "\n";
+				}
+
 			}
 
 			// ============OBJECT LAYER PROCESSING================
