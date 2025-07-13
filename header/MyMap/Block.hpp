@@ -27,8 +27,8 @@ public:
     bool isQuestion = false;            // Là ô dấu hỏi? hay ko
     bool isInvisible = false;           // true thì không vẽ (ví dụ Coin đã ăn rồi thì bật true)
     bool isUsed = false;                // Đã chạm vào chưa (Coin)
-    //Contains contains = Contains::None; // Trong ô question chứa những thứ gì (Coin, Mushroom, Star,..)
-    //bool isPipeEntrance = false;        // Đánh dấu nếu ống nước có đường bí mật
+    Contains contains = Contains::None; // Trong ô question chứa những thứ gì (Coin, Mushroom, Star,..)
+    bool isPipeEntrance = false;        // Đánh dấu nếu ống nước có đường bí mật
     bool isFlagPole = false;            // Đánh dấu cây cờ
 
     Block(int _gid, Vector2 _pos, Vector2 _size,
@@ -63,6 +63,16 @@ public:
           Texture2D _tex, Rectangle _src);
 
 	BrickBlock(tson::Object &obj,
+          Vector2 _pos, Vector2 _size,
+          Texture2D _tex, Rectangle _src);
+};
+
+class QuestionBlock : public Block {
+public:
+	QuestionBlock(int _gid, Vector2 _pos, Vector2 _size,
+          Texture2D _tex, Rectangle _src);
+
+	QuestionBlock(tson::Object &obj,
           Vector2 _pos, Vector2 _size,
           Texture2D _tex, Rectangle _src);
 };
