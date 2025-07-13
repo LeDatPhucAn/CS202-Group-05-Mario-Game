@@ -94,7 +94,7 @@ void MyMap::choose(const std::string &jsonPath) {
 				*/
 
 				for (auto &obj : layer.getTileData()) {
-					std::cout << "CLASS: " << obj.second->getType() << "\n";
+					// std::cout << "CLASS: " << obj.second->getType() << "\n";
 					int gid = obj.second->getGid(); if (gid == 0) continue;
 					const TSInfo* tsi = nullptr;
 					for (int j = tsinfo.size()-1; j >= 0; --j)
@@ -111,12 +111,25 @@ void MyMap::choose(const std::string &jsonPath) {
 						tsi->tileSize.y
 					};
 
-					tileBlocks.push_back(new Block(
-						1,
+					Block* newBlock = nullptr;
+					if (obj.second->getType() == "GroundBlock") {
+						newBlock = new GroundBlock(69420,
 						{obj.second->getPosition(obj.first).x, obj.second->getPosition(obj.first).y},
 						{obj.second->getTileSize().x, obj.second->getTileSize().y},
-						tilesetCache[tsi->firstgid], src
-					));
+						tilesetCache[tsi->firstgid], src);
+					} else if (obj.second->getType() == "BrickBlock") {
+						newBlock = new BrickBlock(69420,
+						{obj.second->getPosition(obj.first).x, obj.second->getPosition(obj.first).y},
+						{obj.second->getTileSize().x, obj.second->getTileSize().y},
+						tilesetCache[tsi->firstgid], src);
+					} else if (obj.second->getType() == "QuestionBlock") {
+						newBlock = new QuestionBlock(69420,
+						{obj.second->getPosition(obj.first).x, obj.second->getPosition(obj.first).y},
+						{obj.second->getTileSize().x, obj.second->getTileSize().y},
+						tilesetCache[tsi->firstgid], src);
+					}
+					if (!newBlock) continue;
+					tileBlocks.push_back(newBlock);
 				}
 			}
 
