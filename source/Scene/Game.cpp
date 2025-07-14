@@ -57,6 +57,7 @@ void Game::updateScene()
     curMap.update();
     // collision
     collisionManager.ManageCollision();
+<<<<<<< HEAD
 
     // Mario with Goomba & Koopa
     if (Mario.checkCollision(&Goomba))
@@ -76,6 +77,8 @@ void Game::updateScene()
         Goomba.updateCollision(&Koopa, Goomba.checkCollision(&Koopa));
         Koopa.updateCollision(&Goomba, Koopa.checkCollision(&Goomba));
     }
+=======
+>>>>>>> bc98d0add97622ae79c93bbf9bdf3bc19b2b1e4b
 }
 void Game::displaySceneInCamera()
 {

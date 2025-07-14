@@ -27,12 +27,6 @@ void CollisionManager::init(MyMap *map, Mario *mario, vector<Enemy *> enemies)
 
 void CollisionManager::ManageCollision()
 {
-    // reinsert the new positions of dynamic objects
-    // quadTree.resetDynamic();
-    // for (GameObject *dynamicObject : dynamicObjects)
-    // {
-    //     quadTree.insert(dynamicObject);
-    // }
 
     for (GameObject *gameObject : allObjects)
     {
@@ -46,6 +40,21 @@ void CollisionManager::ManageCollision()
             {
                 gameObject->updateCollision(other, type);
                 // other->updateCollision(gameObject, type);
+            }
+        }
+    }
+    for (size_t i = 0; i < dynamicObjects.size(); ++i)
+    {
+        for (size_t j = 0; j < dynamicObjects.size() && i != j; ++j)
+        {
+            GameObject *a = dynamicObjects[i];
+            GameObject *b = dynamicObjects[j];
+
+            int type = a->checkCollision(b);
+            if (type)
+            {
+                a->updateCollision(b, type);
+                b->updateCollision(a, type);
             }
         }
     }

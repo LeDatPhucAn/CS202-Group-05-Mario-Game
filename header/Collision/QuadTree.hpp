@@ -6,7 +6,7 @@
 class QuadTree
 {
 private:
-    const static int MAX_OBJECTS = 4;
+    const static int MAX_OBJECTS = 6;
     const static int MAX_LEVELS = 5;
 
     int level;
