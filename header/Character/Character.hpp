@@ -37,6 +37,7 @@ private:
     friend class EnemyWalkState;
     friend class EnemyDeadState;
     friend class EnemyRunState;
+    friend class Mario;
     friend class Enemy;
     friend class Goomba;
     friend class Koopa;

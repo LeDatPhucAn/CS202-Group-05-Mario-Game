@@ -61,20 +61,20 @@ void Game::updateScene()
     // Mario with Goomba & Koopa
     if (Mario.checkCollision(&Goomba))
     {
-        Mario.updateCollision(&Goomba, 1);
-        Goomba.updateCollision(&Mario, 1);
+        Mario.updateCollision(&Goomba, Mario.checkCollision(&Goomba));
+        Goomba.updateCollision(&Mario, Goomba.checkCollision(&Mario));
     }
 
     if (Mario.checkCollision(&Koopa))
     {
-        Mario.updateCollision(&Koopa, 1);
-        Koopa.updateCollision(&Mario, 1);
+        Mario.updateCollision(&Koopa, Mario.checkCollision(&Koopa));
+        Koopa.updateCollision(&Mario, Koopa.checkCollision(&Mario));
     }
 
     if (Goomba.checkCollision(&Koopa))
     {
-        Goomba.updateCollision(&Koopa, 1);
-        Koopa.updateCollision(&Goomba, 1);
+        Goomba.updateCollision(&Koopa, Goomba.checkCollision(&Koopa));
+        Koopa.updateCollision(&Goomba, Koopa.checkCollision(&Goomba));
     }
 }
 void Game::displaySceneInCamera()

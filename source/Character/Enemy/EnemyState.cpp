@@ -24,10 +24,7 @@ EnemyWalkState::EnemyWalkState(Character* _character, int _delay)
 }
 
 void EnemyWalkState::handleInput() {
-    if (character->movement.velocity.x == 0) {
-        character->direction = (character->direction == LEFT) ? RIGHT : LEFT;
-        character->movement.velocity.x = (character->direction == LEFT) ? -20.f : 20.f;
-    }
+    
 }
 
 EnemyRunState::EnemyRunState(Character* _character, int _delay)

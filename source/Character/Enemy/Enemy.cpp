@@ -28,6 +28,18 @@ Goomba::Goomba()
 void Goomba::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
+    Block *block = dynamic_cast<Block *>(other);
+    if (block)
+    {
+        if (type == LEFTSIDE){
+            this->direction = RIGHT;
+            this->movement.velocity.x = -20.f;
+        }
+        else if (type == RIGHTSIDE){
+            this->direction = LEFT;
+            this->movement.velocity.x = 20.f;
+        }
+    }
 
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
@@ -44,12 +56,7 @@ void Goomba::updateCollision(GameObject *other, int type)
             // Access movement directly
             mario->movement.velocity.y = -200.f; // Bounce Mario
         }
-        // If Mario hits from the side
-        else if (type == LEFTSIDE || type == RIGHTSIDE)
-        {
-            mario->changeState(new DeadState(mario));
-        }
-        return; // Collision with Mario handled
+        return; 
     }
     Koopa *koopa = dynamic_cast<Koopa *>(other);
     if (koopa && dynamic_cast<EnemyRunState *>(koopa->currentState))
@@ -74,6 +81,19 @@ Koopa::Koopa()
 void Koopa::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
+    Block *block = dynamic_cast<Block *>(other);
+    if (block)
+    {
+        if (type == LEFTSIDE){
+            this->direction = RIGHT;
+            this->movement.velocity.x = -20.f;
+        }
+        else if (type == RIGHTSIDE){
+            this->direction = LEFT;
+            this->movement.velocity.x = 20.f;
+        }
+       
+    }
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
@@ -119,11 +139,7 @@ void Koopa::updateCollision(GameObject *other, int type)
             { // Stomping a sliding shell stops it
                 this->changeState(new EnemyIdleState(this));
                 mario->movement.velocity.y = -200.f;
-            }
-            else
-            { // Running into a sliding shell from the side
-                mario->changeState(new DeadState(mario));
-            }
+            }         
             return;
         }
     }
