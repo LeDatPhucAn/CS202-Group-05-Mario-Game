@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "raymath.h"
+#include "UI.hpp"
 enum MarioForm
 {
     SMALL = 0,
@@ -29,20 +30,10 @@ enum Direction
     RIGHT = 1,
 };
 class Character;
-class CollisionManager;
 class State
 {
 
 protected:
-    // Thông số Mario
-    const float jumpGravity = 1056.25f; // While holding jump
-    const float fallGravity = 1462.5f;  // Letting go / falling
-
-
-    // Global
-    const float fallSpeedCap = 240.0f;
-
-
     // basic parameters
     int numFrames = 0;
     int frameIndex = 0;
@@ -52,18 +43,13 @@ protected:
     Rectangle frameRec;
     Character *character = nullptr;
 
+protected:
+    const float jumpGravity = 1056.25f / PPM; // 33.0078125f
+    const float fallGravity = 1462.5f / PPM;  // 45.703125f
 public:
-    friend class CollisionManager;
     State();
     State(stateType Type, Character *_character, int _delay);
 
-    // collision
-    virtual Rectangle Bounds() const;
-    virtual Rectangle ActualBounds() const;
-    virtual Rectangle Feet() const;
-    virtual Rectangle Head() const;
-    virtual Rectangle LeftSide() const;
-    virtual Rectangle RightSide() const;
     // salient
     virtual void updateState();
     virtual void displayState();
@@ -74,7 +60,4 @@ public:
 
     // constantly changing frames to run sprite
     virtual void animate();
-
-    // manage gravity and movements
-    virtual void applyPhysics(float deltaTime);
 };

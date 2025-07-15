@@ -2,7 +2,7 @@
 
 #include "GameObject.hpp"
 #include "tileson.hpp"
-
+#include "UI.hpp"
 // Enum chứa loại item mà Question Block có thể chứa
 enum class Contains
 {
@@ -73,5 +73,27 @@ public:
 
     void updateCollision(GameObject *other, int type) override
     {
+    }
+
+    void createBody(b2World *world) override
+    {
+        float posX = pos.x / PPM;
+        float posY = pos.y / PPM;
+        float halfWidth = size.x * 0.5f / PPM;
+        float halfHeight = size.y * 0.5f / PPM;
+        b2BodyDef bodyDef;
+        bodyDef.fixedRotation = true;
+        bodyDef.type = b2_staticBody;
+        bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
+        bodyDef.position.Set(posX, posY);
+        body = world->CreateBody(&bodyDef);
+
+        b2PolygonShape boxShape;
+        boxShape.SetAsBox(halfWidth, halfHeight);
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &boxShape;
+        fixtureDef.friction = 0.8f;
+        body->CreateFixture(&fixtureDef);
     }
 };

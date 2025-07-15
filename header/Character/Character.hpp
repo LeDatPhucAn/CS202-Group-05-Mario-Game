@@ -21,13 +21,6 @@ struct Sprite
     Texture2D texture;
 };
 
-struct Movement
-{
-    int speed = 0;
-    Vector2 velocity = {0, 0};
-    Vector2 acceleration = {0, 0};
-};
-
 class Character : public GameObject
 {
 private:
@@ -50,17 +43,20 @@ protected:
     float maxHeight = 72.0f;
 
     // Common state properties
-    bool isGrounded = false;
     float groundPosY = 0;
     Direction direction = RIGHT;
     Sprite sprite;
-    Movement movement;
     State *currentState = nullptr;
+
+    b2Fixture *footSensorFixture = nullptr;
+
+public:
+    bool isGrounded = false;
 
 public:
     Character() = default;
-    Character(const Sprite &_sprite, const Movement &_movement, State *_initialState, Vector2 _pos)
-        : GameObject(_pos, {14, 16}), sprite(_sprite), movement(_movement), currentState(_initialState) {}
+    Character(const Sprite &_sprite, State *_initialState, Vector2 _pos)
+        : GameObject(_pos, {14, 16}), sprite(_sprite), currentState(_initialState) {}
 
     virtual ~Character()
     {
@@ -75,12 +71,5 @@ public:
 
     // Collision handling
     virtual void updateCollision(GameObject *other, int type) override;
-    virtual int checkCollision(const GameObject *other) override;
-
-    virtual Rectangle getBounds() const override;
-    virtual Rectangle getActualBounds() const;
-    virtual Rectangle getFeet() const override;
-    virtual Rectangle getHead() const override;
-    virtual Rectangle getLeft() const override;
-    virtual Rectangle getRight() const override;
+    void createBody(b2World *world) override;
 };

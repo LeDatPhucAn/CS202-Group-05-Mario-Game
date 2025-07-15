@@ -4,8 +4,6 @@
 #include <chrono>
 #include <thread>
 
-CollisionManager Game::collisionManager = CollisionManager();
-
 Game::Game() : Mario(
                    Mario::Builder()
                        .setFrames(IDLE, 0, 0)
@@ -34,29 +32,42 @@ Game::Game() : Mario(
 }
 void Game::init()
 {
+
+    // initialize map
     current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
 
+    // initial states
     Mario.changeState(new IdleState(&Mario));
 
     Goomba.changeState(new EnemyWalkState(&Goomba));
     Koopa.changeState(new EnemyWalkState(&Koopa));
 
-    // initialize Collision Manager
+    // add enemies to a vector
     enemies.push_back(&Goomba);
     enemies.push_back(&Koopa);
-    // characters.push_back(&Goomba);
-    collisionManager.init(&curMap, &Mario, enemies);
-}
 
+    // box2D initialization
+    world = new b2World({0, fallGravity / PPM});
+
+    for (auto &block : curMap.tileBlocks)
+    {
+        block->createBody(world);
+    }
+    for (Enemy *enemy : enemies)
+    {
+        enemy->createBody(world);
+    }
+    Mario.createBody(world);
+}
 void Game::updateScene()
 {
+    // Step the world
+    world->Step(1.0f / 60.0f, 6, 2);
     Mario.update();
     Goomba.update();
     Koopa.update();
     curMap.update();
-    // collision
-    collisionManager.ManageCollision();
 }
 void Game::displaySceneInCamera()
 {
@@ -74,4 +85,9 @@ void Game::displaySceneInCamera()
 }
 void Game::displayScene()
 {
+}
+
+Game::~Game()
+{
+    delete world;
 }

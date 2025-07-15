@@ -57,62 +57,32 @@ void State::animate()
 
 void State::updateState()
 {
+
+    // Sync character pos from Box2D body
+    b2Vec2 physPos = character->body->GetPosition();
+    character->pos.x = physPos.x * PPM;
+    character->pos.y = physPos.y * PPM;
+
     // Set frame
     animate();
-
-    float deltaTime = GetFrameTime();
-    // Movement
-    applyPhysics(deltaTime);
 
     // change character direction accordingly
     frameRec.width = character->direction * abs(frameRec.width);
 
+    // apply different gravity when jumping and falling
+    if (!character->isGrounded)
+    {
+        float gravityAccel = (character->body->GetLinearVelocity().y < 0 && IsKeyDown(KEY_UP))
+                                 ? jumpGravity
+                                 : fallGravity;
+
+        character->body->ApplyForceToCenter({0, character->body->GetMass() * gravityAccel}, true);
+    }
+    
     // Change State when pressing
     handleInput();
 
-    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
-    {
-        character->pos = Program::mouseWorldPos;
-    }
-    // Rectangle bounds = Bounds();
-    // cout << "State: " << stateTypeToString(type) << ", Frame: " << frameIndex
-    //      << ", Position: (" << character->pos.x << ", " << character->pos.y << "), Bounds: ("
-    //      << bounds.x << ", " << bounds.y << ", " << bounds.width << ", " << bounds.height << ")\n";
     character->isGrounded = false; // Reset grounded state for next frame
-}
-
-void State::applyPhysics(float deltaTime)
-{
-    // apply gravity
-    if (!character->isGrounded)
-    {
-        if (character->movement.velocity.y < 0)
-        { // Going up
-            if (IsKeyDown(KEY_UP) && character->pos.y > character->maxHeight)
-            {
-                character->movement.acceleration.y = jumpGravity;
-            }
-            else
-            {
-                character->movement.acceleration.y = fallGravity;
-            }
-        }
-        else
-        {
-            character->movement.acceleration.y = fallGravity; // Going down
-        }
-    }
-    else
-    {
-        character->movement.acceleration.y = 0;
-    }
-
-    character->movement.velocity += character->movement.acceleration * deltaTime;
-
-    if (character->movement.velocity.y > fallSpeedCap)
-        character->movement.velocity.y = fallSpeedCap;
-
-    character->pos += character->movement.velocity * deltaTime;
 }
 
 void State::displayState()
@@ -124,57 +94,4 @@ void State::displayState()
         frameRec.height,
         {168, 168, 0, 255}); // Draw a transparent rectangle for debugging
     DrawTextureRec(character->sprite.texture, frameRec, character->pos, WHITE);
-}
-
-Rectangle State::Bounds() const
-{
-    return Rectangle{
-        character->pos.x,
-        character->pos.y,
-        16,
-        16};
-}
-
-Rectangle State::ActualBounds() const
-{
-    return Rectangle{
-        character->pos.x,
-        character->pos.y,
-        character->size.x,
-        character->size.y};
-}
-
-Rectangle State::Feet() const
-{
-    return Rectangle{
-        character->pos.x + 6,
-        character->pos.y + 16 - 2, // Feet is at the bottom of the sprite
-        16 - 12,
-        5.0f};
-}
-Rectangle State::Head() const
-{
-    return Rectangle{
-        character->pos.x + 4,
-        character->pos.y, // Top of the sprite
-        fabs(frameRec.width) - 8,
-        2 // Height of 2 pixels
-    };
-}
-Rectangle State::LeftSide() const
-{
-    return {
-        character->pos.x, // Small inward offset to avoid pixel snag
-        character->pos.y + 2,
-        4,
-        frameRec.height - 4};
-}
-
-Rectangle State::RightSide() const
-{
-    return {
-        character->pos.x + fabs(frameRec.width) - 4, // Small inward offset
-        character->pos.y + 2,
-        4,
-        frameRec.height - 4};
 }

@@ -6,25 +6,28 @@
 #include "raylib-tileson.h"
 #include "Enemy.hpp"
 #include "EnemyState.hpp"
-#include "CollisionManager.hpp"
-class Game : public Scene {
+class Game : public Scene
+{
 protected:
     Mario Mario;
     Goomba Goomba;
     Koopa Koopa;
 
-    //Character* MarioPointer = nullptr;
-    
+    // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
-    vector<Enemy*> enemies;
+    vector<Enemy *> enemies;
+
+    // for box2d integration
+    b2World *world = nullptr;
+    const float fallGravity = 1462.5f;
+
 public:
-    static CollisionManager collisionManager;
-    
+
     // initialize
     Game();
-    
+
     void init() override;
 
     // update
@@ -34,8 +37,6 @@ public:
     // display
     void displayScene() override;
     void displaySceneInCamera() override;
-    
-    ~Game() = default;
 
+    ~Game();
 };
-
