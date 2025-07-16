@@ -4,8 +4,6 @@
 #include "MarioState.hpp"
 #include "EnemyState.hpp"
 
-
-// Forward declare state classes
 class State;
 
 class Enemy : public Character
@@ -17,11 +15,8 @@ public:
     Enemy(const Sprite &_sprite, const Movement &_movement, State *_initialState, Vector2 _pos);
     Enemy(const Enemy &other);
 
-    // Pure virtual function forces Goomba and Koopa to provide their own implementation.
     virtual void updateCollision(GameObject *other, int type) = 0;
 
-public:
-    // The Builder is kept for use in Game.cpp
     struct Builder
     {
         Sprite sprite;
@@ -36,26 +31,5 @@ public:
         Builder &setVelocity(Vector2 velocity);
         Builder &setAcceleration(Vector2 acceleration);
         Builder &setState(State *initialState);
-        // The build() method is specific to each enemy type, so it's removed from the base.
     };
-};
-
-class Goomba : public Enemy
-{
-public:
-    Goomba();
-    Goomba(const Builder &builder); // Add a constructor that takes a builder
-
-    void updateCollision(GameObject *other, int type) override;
-};
-
-class Koopa : public Enemy
-{
-public:
-    Koopa();
-    Koopa(const Builder &builder); // Add a constructor that takes a builder
-
-    void updateCollision(GameObject *other, int type) override;
-    Rectangle getBounds() const override;
-    Rectangle getFeet() const override;
 };

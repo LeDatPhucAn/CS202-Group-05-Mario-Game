@@ -5,6 +5,8 @@
 #include "Scene.hpp"
 #include "raylib-tileson.h"
 #include "Enemy.hpp"
+#include "Goomba.hpp"
+#include "Koopa.hpp"
 #include "EnemyState.hpp"
 #include "CollisionManager.hpp"
 class Game : public Scene {
