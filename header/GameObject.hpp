@@ -53,7 +53,10 @@ public:
         B.y -= eps;
         B.width += 2 * eps;
         B.height += 2 * eps;
-
+        if (CheckCollisionRecs(getFeet(), B))
+        {
+            return HEAD;
+        }
         if (!CheckCollisionRecs(A, B))
             return NONE;
 

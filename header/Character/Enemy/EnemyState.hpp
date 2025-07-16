@@ -1,7 +1,7 @@
 
 #pragma once
 #include "State.hpp"
-#include "CollisionManager.hpp"
+
 class Character;
 
 class EnemyState : public State {

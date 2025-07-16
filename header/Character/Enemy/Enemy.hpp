@@ -2,13 +2,11 @@
 #include "Character.hpp"
 #include "UI.hpp"
 #include "MarioState.hpp"
-#pragma once
-#include "Character.hpp"
-#include "UI.hpp"
+#include "EnemyState.hpp"
+
 
 // Forward declare state classes
 class State;
-class EnemyState;
 
 class Enemy : public Character
 {
@@ -58,12 +56,33 @@ public:
     Koopa(const Builder &builder); // Add a constructor that takes a builder
 
     void updateCollision(GameObject *other, int type) override;
-    Rectangle getFeet() const override
+    Rectangle getBounds() const
     {
+        // If the Koopa is walking, use the taller bounds.
+        if (dynamic_cast<EnemyWalkState*>(currentState))
+        {
+            // These values are examples, adjust them to fit your walking sprite
+            return Rectangle{ pos.x, pos.y, 16.0f, 24.0f }; 
+        }
+        // If the Koopa is a shell (idle or sliding), use the shorter bounds.
+        else if (dynamic_cast<EnemyIdleState*>(currentState) || dynamic_cast<EnemyRunState*>(currentState))
+        {
+            // These values are examples, adjust them to fit your shell sprite
+            return Rectangle{ pos.x, pos.y, 16.0f, 16.0f };
+        }
+        
+        // Fallback to the default implementation if state is unknown
+        return Character::getBounds();
+    }
+
+    Rectangle getFeet() const
+    {
+        Rectangle bounds = getBounds(); // Use the new state-aware getBounds()
         return Rectangle{
-            pos.x + 6,
-            pos.y + size.y - 2, // Feet is at the bottom of the sprite
-            size.x - 12,
-            6.0f};
+            bounds.x + 4,
+            bounds.y + bounds.height - 2, // Feet are now correctly at the bottom of the current bounds
+            bounds.width - 8,
+            4.0f
+        };
     }
 };

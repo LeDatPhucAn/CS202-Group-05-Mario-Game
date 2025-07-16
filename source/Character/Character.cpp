@@ -84,7 +84,7 @@ int Character::checkCollision(const GameObject *other)
     }
     if (!CheckCollisionRecs(A, B))
         return NONE;
-
+        
     float penLeft = fabsf(A.x + A.width - B.x),
           penRight = fabsf(B.x + B.width - A.x), // Đo độ sâu "chèn", ngược lại để dương
         penTop = fabsf(A.y + A.height - B.y),

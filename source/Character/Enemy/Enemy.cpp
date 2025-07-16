@@ -72,7 +72,7 @@ Koopa::Koopa()
     // Koopa-specific sprite setup
     this->sprite.StartEndFrames[IDLE] = {7, 7}; // Shell state
     this->sprite.StartEndFrames[WALK] = {3, 4};
-    this->sprite.StartEndFrames[RUN] = {7, 7}; // Sliding shell state
+    this->sprite.StartEndFrames[RUN] = {3, 4}; // Sliding shell state
     this->sprite.StartEndFrames[DEAD] = {7, 7};
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
@@ -86,11 +86,11 @@ void Koopa::updateCollision(GameObject *other, int type)
     {
         if (type == LEFTSIDE){
             this->direction = RIGHT;
-            this->movement.velocity.x = -20.f;
+            this->movement.velocity.x = -this->movement.velocity.x; 
         }
         else if (type == RIGHTSIDE){
             this->direction = LEFT;
-            this->movement.velocity.x = 20.f;
+            this->movement.velocity.x = -this->movement.velocity.x;
         }
        
     }
@@ -106,6 +106,7 @@ void Koopa::updateCollision(GameObject *other, int type)
         // --- Logic for when Koopa is WALKING ---
         if (dynamic_cast<EnemyWalkState *>(this->currentState))
         {
+            cout<<"Idling"<<endl;
             if (type == HEAD)
             {                                                // Mario stomps a walking Koopa
                 this->changeState(new EnemyIdleState(this)); // Turn into a shell
@@ -121,20 +122,16 @@ void Koopa::updateCollision(GameObject *other, int type)
 
         // --- Logic for when Koopa is an IDLE SHELL ---
         if (dynamic_cast<EnemyIdleState *>(this->currentState))
-        {
-            this->changeState(new EnemyRunState(this)); // Any touch makes it slide
-            // Set shell direction away from Mario, accessing pos directly
-            this->direction = (mario->pos.x < this->pos.x) ? RIGHT : LEFT;
-            if (type == HEAD)
-            { // If stomped, give Mario a bounce
-                mario->movement.velocity.y = -200.f;
-            }
+        {   
+            cout<<"Running"<<endl;
+            this->changeState(new EnemyRunState(this)); 
+            this->direction = (mario->pos.x < this->pos.x) ? LEFT : RIGHT;
             return;
         }
 
         // --- Logic for when Koopa is a SLIDING SHELL ---
         if (dynamic_cast<EnemyRunState *>(this->currentState))
-        {
+        {   
             if (type == HEAD)
             { // Stomping a sliding shell stops it
                 this->changeState(new EnemyIdleState(this));
@@ -146,7 +143,10 @@ void Koopa::updateCollision(GameObject *other, int type)
     Enemy *otherEnemy = dynamic_cast<Enemy *>(other);
     if (otherEnemy && otherEnemy != this)
     {
-        // If this Koopa is a sliding shell and hits another enemy
+        if (dynamic_cast<DeadState *>(otherEnemy->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+        {
+            return;
+        }
         if (dynamic_cast<EnemyRunState *>(this->currentState))
         {
             otherEnemy->changeState(new EnemyDeadState(otherEnemy));

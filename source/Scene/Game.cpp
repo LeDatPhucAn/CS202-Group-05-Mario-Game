@@ -29,8 +29,8 @@ Game::Game() : Mario(
     };
     init();
     Mario.setPosition({100, 0});
-    Goomba.setPosition({150, 0});
-    Koopa.setPosition({175, 0});
+    Goomba.setPosition({50, 0});
+    Koopa.setPosition({220, 0});
 }
 void Game::init()
 {

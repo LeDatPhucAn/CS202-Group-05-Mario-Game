@@ -45,9 +45,13 @@ void Mario::changeForm(MarioForm form)
 }
 
 void Mario::updateCollision(GameObject *other, int type)
-{
+{   
+    if (dynamic_cast<DeadState *>(this->currentState))
+    {
+        return;
+    }
     Character::updateCollision(other, type);
-Enemy *enemy = dynamic_cast<Enemy *>(other);
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
     if (enemy)
     {
         // If Mario or the enemy is already dead, do nothing.
@@ -55,13 +59,15 @@ Enemy *enemy = dynamic_cast<Enemy *>(other);
         {
             return;
         }
-
-        if (type == FEET)
+        if (type == HEAD)
         {
-            this->movement.velocity.y = -200.f; 
+            this->movement.velocity.y = -200.f;
         }
-        else if (type == LEFTSIDE || type == RIGHTSIDE || type == HEAD)
-        {
+        else {
+            if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+            {
+                return;
+            }
             this->changeState(new DeadState(this));
         }
     }

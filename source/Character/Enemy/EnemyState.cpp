@@ -30,16 +30,16 @@ void EnemyWalkState::handleInput() {
 EnemyRunState::EnemyRunState(Character* _character, int _delay)
     : EnemyState(RUN, _character, _delay) {
         if (character->direction == RIGHT) {
-            character->movement.velocity.x = -200.f; 
+            character->movement.velocity.x = -100.f; 
         } else {
-            character->movement.velocity.x = 200.f;
+            character->movement.velocity.x = 100.f;
         }
 }
 
 void EnemyRunState::handleInput() {
     if (character->movement.velocity.x == 0) {
         character->direction = (character->direction == LEFT) ? RIGHT : LEFT;
-        character->movement.velocity.x = (character->direction == LEFT) ? -200.f : 200.f;
+        character->movement.velocity.x = (character->direction == LEFT) ? 100.f : -100.f;
     }
 }
 
