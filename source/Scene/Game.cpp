@@ -20,8 +20,9 @@ Game::Game() : Mario(
                        .setJsonAndTexture("Mario2D")
                        //.setPos({ 100,0 })
                        .build()),
-               Goomba(),
-               Koopa()
+                Goomba(),
+                Koopa(),
+                PiranhaPlant()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
@@ -31,6 +32,7 @@ Game::Game() : Mario(
     Mario.setPosition({100, 0});
     Goomba.setPosition({50, 0});
     Koopa.setPosition({175, 0});
+    PiranhaPlant.setPosition({330, 90});
 }
 void Game::init()
 {
@@ -41,10 +43,12 @@ void Game::init()
 
     Goomba.changeState(new EnemyWalkState(&Goomba));
     Koopa.changeState(new EnemyWalkState(&Koopa));
+    PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
 
     // initialize Collision Manager
     enemies.push_back(&Goomba);
     enemies.push_back(&Koopa);
+    enemies.push_back(&PiranhaPlant);
     // characters.push_back(&Goomba);
     collisionManager.init(&curMap, &Mario, enemies);
 }
@@ -54,6 +58,7 @@ void Game::updateScene()
     Mario.update();
     Goomba.update();
     Koopa.update();
+    PiranhaPlant.update();
     curMap.update();
     // collision
     collisionManager.ManageCollision();
@@ -70,6 +75,10 @@ void Game::displaySceneInCamera()
     if (!Koopa.beCleared)
     {
         Koopa.display();
+    }
+    if (!PiranhaPlant.beCleared)
+    {
+        PiranhaPlant.display();
     }
 }
 void Game::displayScene()

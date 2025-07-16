@@ -18,6 +18,7 @@ private:
     friend class DeadState;
     friend class Goomba;
     friend class Koopa;
+    friend class PiranhaPlant;
 
     MarioForm form = SMALL;
     void changeForm(MarioForm form);

@@ -7,6 +7,7 @@
 #include "Enemy.hpp"
 #include "Goomba.hpp"
 #include "Koopa.hpp"
+#include "PiranhaPlant.hpp"
 #include "EnemyState.hpp"
 #include "CollisionManager.hpp"
 class Game : public Scene {
@@ -14,6 +15,7 @@ protected:
     Mario Mario;
     Goomba Goomba;
     Koopa Koopa;
+    PiranhaPlant PiranhaPlant;
 
     //Character* MarioPointer = nullptr;
     
