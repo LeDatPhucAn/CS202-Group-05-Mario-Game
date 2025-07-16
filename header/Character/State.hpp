@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "raymath.h"
-#include "UI.hpp"
+#include "Vec2Adapter.hpp"
 enum MarioForm
 {
     SMALL = 0,

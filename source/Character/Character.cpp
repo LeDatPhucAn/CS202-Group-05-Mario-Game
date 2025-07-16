@@ -30,17 +30,16 @@ void Character::updateCollision(GameObject *other, int type)
     {
         if (block->isSolid)
         {
-            if (type == HEAD)
+            if (type == TOP)
             {
             }
-            else if (type == FEET) 
-            {
-                isGrounded = true;
-            }
-            else if (type == LEFTSIDE) 
+            else if (type == BOTTOM)
             {
             }
-            else if (type == RIGHTSIDE) 
+            else if (type == LEFTSIDE)
+            {
+            }
+            else if (type == RIGHTSIDE)
             {
             }
         }
@@ -51,13 +50,12 @@ void Character::createBody(b2World *world)
 {
     StartEndFrame se = sprite.StartEndFrames[WALK];
     Rectangle frameRec = sprite.frameRecs[se.start];
-    size.x = frameRec.width;
-    size.y = frameRec.height;
+    setSizeAdapter({frameRec.width, frameRec.height});
     // Convert position and size from pixels to meters
-    float posX = pos.x / PPM;
-    float posY = pos.y / PPM;
-    float halfWidth = size.x * 0.5f / PPM;
-    float halfHeight = size.y * 0.5f / PPM;
+    float posX = pos.toMeters().x;
+    float posY = pos.toMeters().y;
+    float halfWidth = size.getHalfWidth();
+    float halfHeight = size.getHalfHeight();
 
     // Define the body
     b2BodyDef bodyDef;
@@ -85,7 +83,7 @@ void Character::createBody(b2World *world)
     b2FixtureDef feetFixture;
     feetFixture.shape = &feetShape;
     feetFixture.isSensor = true;
-    feetFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::FEET);
+    feetFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
     body->CreateFixture(&feetFixture);
 
     // 3. Head sensor (detects when bumping into blocks from below)
@@ -95,12 +93,12 @@ void Character::createBody(b2World *world)
     b2FixtureDef headFixture;
     headFixture.shape = &headShape;
     headFixture.isSensor = true;
-    headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::HEAD);
+    headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
     body->CreateFixture(&headFixture);
 
     // 4. Left wall sensor
     b2PolygonShape leftWallShape;
-    leftWallShape.SetAsBox(2.0f / PPM, size.y * 0.4f / PPM, b2Vec2(-halfWidth, 0), 0);
+    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f, b2Vec2(-halfWidth, 0), 0);
 
     b2FixtureDef leftWallFixture;
     leftWallFixture.shape = &leftWallShape;
@@ -110,7 +108,7 @@ void Character::createBody(b2World *world)
 
     // 5. Right wall sensor
     b2PolygonShape rightWallShape;
-    rightWallShape.SetAsBox(2.0f / PPM, size.y * 0.4f / PPM, b2Vec2(halfWidth, 0), 0);
+    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f , b2Vec2(halfWidth, 0), 0);
 
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;

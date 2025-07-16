@@ -39,8 +39,7 @@ State::State(stateType Type, Character *_character, int _delay)
     numFrames = abs(se.end - se.start) + 1;
     frameRec = character->sprite.frameRecs[se.start];
     frameRec.width = character->direction * abs(frameRec.width);
-    character->size.x = fabs(frameRec.width);
-    character->size.y = frameRec.height;
+    character->setSize({fabs(frameRec.width), frameRec.height});
 }
 void State::animate()
 {
@@ -56,11 +55,6 @@ void State::animate()
 
 void State::updateState()
 {
-
-    // Sync character pos from Box2D body
-    b2Vec2 physPos = character->body->GetPosition();
-    character->pos.x = physPos.x * PPM;
-    character->pos.y = physPos.y * PPM;
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         Vector2 mouse = Program::mouseWorldPos;
@@ -99,14 +93,64 @@ void State::updateState()
     // Change State when pressing
     handleInput();
 }
+void DrawCharacterDebug(Character *character)
+{
+    b2Body *body = character->getBody();
+    b2Transform transform = body->GetTransform();
+
+    for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+    {
+        if (fixture->GetType() != b2Shape::e_polygon)
+            continue;
+
+        b2PolygonShape *poly = (b2PolygonShape *)fixture->GetShape();
+
+        Vector2 screenVerts[8]; // up to 8 vertices
+        for (int i = 0; i < poly->m_count; i++)
+        {
+            // Transform from local to world
+            b2Vec2 worldVert = b2Mul(transform, poly->m_vertices[i]);
+            Vec2Adapter adapter(worldVert);
+
+            // Convert to screen (pixels)
+            screenVerts[i] = adapter.toPixels();
+        }
+
+        // Choose color based on sensor type
+        Color color = RED;
+        CollisionType type = (CollisionType)fixture->GetUserData().pointer;
+        switch (type)
+        {
+        case CollisionType::TOP:
+            color = BLUE;
+            break;
+        case CollisionType::BOTTOM:
+            color = GREEN;
+            break;
+        case CollisionType::LEFTSIDE:
+            color = ORANGE;
+            break;
+        case CollisionType::RIGHTSIDE:
+            color = PURPLE;
+            break;
+        default:
+            color = RED;
+            break; // main body
+        }
+
+        // Draw polygon outline
+        for (int i = 0; i < poly->m_count; i++)
+        {
+            int j = (i + 1) % poly->m_count;
+            DrawLine((int)screenVerts[i].x, (int)screenVerts[i].y,
+                     (int)screenVerts[j].x, (int)screenVerts[j].y, color);
+        }
+    }
+}
 
 void State::displayState()
 {
-    DrawRectangleLines(
-        character->pos.x,
-        character->pos.y,
-        fabs(frameRec.width),
-        frameRec.height,
-        {168, 168, 0, 255}); // Draw a transparent rectangle for debugging
-    DrawTextureRec(character->sprite.texture, frameRec, character->pos, WHITE);
+    DrawCharacterDebug(character);
+    Vec2Adapter adapter(character->body->GetPosition());
+    DrawTextureRec(character->sprite.texture, frameRec, adapter.toPixels(), WHITE);
 }

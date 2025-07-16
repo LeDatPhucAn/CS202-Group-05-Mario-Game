@@ -14,13 +14,13 @@ protected:
     const float jumpVel = -390.0f / PPM; // -12.1875f
     const float fallSpeedCap = 240.0f / PPM;
     // Accelerations (in meters/second^2)
-    const float walkAccel = 225.0f / PPM;     // 7.03125f
-    const float airAccel = 112.5f / PPM;      // 3.515625f
-    const float runAccel = 337.5f / PPM;      // 10.546875f
+    const float walkAccel = 225.0f / PPM; // 7.03125f
+    const float airAccel = 112.5f / PPM;  // 3.515625f
+    const float runAccel = 337.5f / PPM;  // 10.546875f
 
-    const float friction = 225.0f / PPM;      // 7.03125f
-    const float airFriction = 50.0f / PPM;    // 1.5625f
-    const float skidDecel = 900.0f / PPM;     // 28.125f
+    const float friction = 225.0f / PPM;   // 7.03125f
+    const float airFriction = 50.0f / PPM; // 1.5625f
+    const float skidDecel = 900.0f / PPM;  // 28.125f
 
     // Max jump height (in meters)
     const float maxJumpHeight = 72.0f / PPM; // 2.25f

@@ -17,98 +17,60 @@ Game::Game() : Mario(
                        .setFrames(UNGROW, 50, 44)
                        .setJsonAndTexture("Mario2D")
                        //.setPos({ 100,0 })
-                       .build()),
-               Goomba(),
-               Koopa()
+                       .build())
+//    ,Goomba(),
+//    Koopa()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
     Mario.setPosition({100, 0});
-    Goomba.setPosition({150, 0});
-    Koopa.setPosition({175, 0});
+    // Goomba.setPosition({150, 0});
+    // Koopa.setPosition({175, 0});
     init();
 }
-// void Game::init()
-// {
 
-//     // initialize map
-//     current_Map = "Map1.1";
-//     curMap.choose(mapPaths[current_Map]);
-
-//     // initial states
-//     Mario.changeState(new IdleState(&Mario));
-
-//     Goomba.changeState(new EnemyWalkState(&Goomba));
-//     Koopa.changeState(new EnemyWalkState(&Koopa));
-
-//     // add enemies to a vector
-//     enemies.push_back(&Goomba);
-//     enemies.push_back(&Koopa);
-
-//     // box2D initialization
-//     world = new b2World({0, fallGravity / PPM});
-
-//     for (auto &block : curMap.tileBlocks)
-//     {
-//         block->createBody(world);
-//     }
-//     for (Enemy *enemy : enemies)
-//     {
-//         enemy->createBody(world);
-//     }
-//     Mario.createBody(world);
-// }
 void Game::init()
 {
-    std::cout << "Initializing Game...\n";
 
     current_Map = "Map1.1";
-    std::cout << "Choosing map: " << mapPaths[current_Map] << std::endl;
     curMap.choose(mapPaths[current_Map]);
 
-    std::cout << "Creating Box2D World...\n";
-    world = new b2World({0, fallGravity / PPM});
+    world = new b2World({0, fallGravity});
 
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
-    std::cout << "Creating tile bodies...\n";
+
     for (auto &block : curMap.tileBlocks)
     {
         block->createBody(world);
     }
 
-    std::cout << "Adding enemies to vector...\n";
-    enemies.push_back(&Goomba);
-    enemies.push_back(&Koopa);
+    // enemies.push_back(&Goomba);
+    // enemies.push_back(&Koopa);
 
-    std::cout << "Creating enemy bodies...\n";
-    for (Enemy *enemy : enemies)
-    {
-        enemy->createBody(world);
-    }
+    // for (Enemy *enemy : enemies)
+    // {
+    //     enemy->createBody(world);
+    // }
 
-    std::cout << "Creating Mario body...\n";
     Mario.createBody(world);
-    std::cout << "Initializing Mario State...\n";
+
     Mario.changeState(new IdleState(&Mario));
 
-    std::cout << "Initializing Enemies...\n";
-    Goomba.changeState(new EnemyWalkState(&Goomba));
-    Koopa.changeState(new EnemyWalkState(&Koopa));
-
-    std::cout << "Game init complete.\n";
+    // Goomba.changeState(new EnemyWalkState(&Goomba));
+    // Koopa.changeState(new EnemyWalkState(&Koopa));
 }
 
 void Game::updateScene()
 {
     // Step the world
-    if (world)
+    if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
     Mario.update();
-    Goomba.update();
-    Koopa.update();
+    // Goomba.update();
+    // Koopa.update();
     curMap.update();
 }
 void Game::displaySceneInCamera()
@@ -116,14 +78,14 @@ void Game::displaySceneInCamera()
     curMap.display();
     Mario.display();
 
-    if (!Goomba.beCleared)
-    {
-        Goomba.display();
-    }
-    if (!Koopa.beCleared)
-    {
-        Koopa.display();
-    }
+    // if (!Goomba.beCleared)
+    // {
+    //     Goomba.display();
+    // }
+    // if (!Koopa.beCleared)
+    // {
+    //     Koopa.display();
+    // }
 }
 void Game::displayScene()
 {

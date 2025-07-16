@@ -12,7 +12,6 @@
 #include "tileson.hpp"
 #include "raylib-tileson.h"
 
-#define PPM 32.0f // PIXEL PER METER
 
 using json = nlohmann::json;
 

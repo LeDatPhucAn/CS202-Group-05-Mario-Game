@@ -1,7 +1,7 @@
 #pragma once
 #include "Character.hpp"
 #include "MarioState.hpp"
-
+#include "UI.hpp"
 class Mario : public Character
 {
 private:

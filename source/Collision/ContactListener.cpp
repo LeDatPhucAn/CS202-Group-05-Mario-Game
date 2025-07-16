@@ -13,11 +13,11 @@ void ContactListener::BeginContact(b2Contact *contact)
     GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
     // switch (typeA)
     // {
-    // case HEAD:
-    //     objA->updateCollision(objB, HEAD);
+    // case TOP:
+    //     objA->updateCollision(objB, TOP);
     //     break;
-    // case FEET:
-    //     objA->updateCollision(objB, FEET);
+    // case BOTTOM:
+    //     objA->updateCollision(objB, BOTTOM);
     //     break;
     // case LEFTSIDE:
     //     objA->updateCollision(objB, LEFTSIDE);
@@ -28,11 +28,11 @@ void ContactListener::BeginContact(b2Contact *contact)
     // }
     // switch (typeB)
     // {
-    // case HEAD:
-    //     objB->updateCollision(objA, HEAD);
+    // case TOP:
+    //     objB->updateCollision(objA, TOP);
     //     break;
-    // case FEET:
-    //     objB->updateCollision(objA, FEET);
+    // case BOTTOM:
+    //     objB->updateCollision(objA, BOTTOM);
     //     break;
     // case LEFTSIDE:
     //     objB->updateCollision(objA, LEFTSIDE);
@@ -47,20 +47,20 @@ void ContactListener::BeginContact(b2Contact *contact)
 void ContactListener::EndContact(b2Contact *contact)
 {
     // Optional: you can use this if needed
-    checkGrounded(contact,false);
+    checkGrounded(contact, false);
 }
 void ContactListener::checkGrounded(b2Contact *contact, bool began)
 {
     b2Fixture *a = contact->GetFixtureA();
     b2Fixture *b = contact->GetFixtureB();
 
-    // Check both fixtures for a FEET sensor
+    // Check both fixtures for a BOTTOM sensor
     for (int i = 0; i < 2; i++)
     {
         b2Fixture *sensor = (i == 0) ? a : b;
         b2Fixture *other = (i == 0) ? b : a;
 
-        if (sensor->IsSensor() && sensor->GetUserData().pointer == static_cast<uintptr_t>(CollisionType::FEET))
+        if (sensor->IsSensor() && sensor->GetUserData().pointer == static_cast<uintptr_t>(CollisionType::BOTTOM))
         {
             b2Body *body = sensor->GetBody();
             Character *character = reinterpret_cast<Character *>(body->GetUserData().pointer);

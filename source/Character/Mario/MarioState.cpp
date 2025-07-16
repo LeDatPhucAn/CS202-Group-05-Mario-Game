@@ -421,8 +421,8 @@ void CrouchState::handleInput()
 GrowState::GrowState(Mario *_mario, int _delay)
     : MarioState(GROW, _mario, _delay)
 {
-    if (mario->isGrounded)
-        mario->pos.y = mario->groundPosY - frameRec.height;
+    // if (mario->isGrounded)
+    //     mario->pos.y = mario->groundPosY - frameRec.height;
 }
 
 void GrowState::handleInput()
@@ -441,7 +441,7 @@ void GrowState::handleInput()
         mario->changeForm(mario->form);
         if (mario->isGrounded)
         {
-            mario->pos.y = mario->groundPosY - frameRec.height;
+            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else
@@ -454,8 +454,8 @@ void GrowState::handleInput()
 UnGrowState::UnGrowState(Mario *_mario, int _delay)
     : MarioState(UNGROW, _mario, _delay)
 {
-    if (mario->isGrounded)
-        mario->pos.y = mario->groundPosY - frameRec.height;
+    // if (mario->isGrounded)
+    //     mario->pos.y = mario->groundPosY - frameRec.height;
 }
 
 void UnGrowState::handleInput()
@@ -466,8 +466,8 @@ void UnGrowState::handleInput()
         mario->changeState(new IdleState(mario));
         return;
     }
-    if (mario->isGrounded)
-        mario->pos.y = mario->groundPosY - frameRec.height;
+    // if (mario->isGrounded)
+    //     mario->pos.y = mario->groundPosY - frameRec.height;
 
     if (se.start - frameIndex == se.end)
     {
@@ -475,7 +475,7 @@ void UnGrowState::handleInput()
         mario->changeForm(mario->form);
         if (mario->isGrounded)
         {
-            mario->pos.y = mario->groundPosY - frameRec.height;
+            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else

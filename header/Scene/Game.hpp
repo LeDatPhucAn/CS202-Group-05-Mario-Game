@@ -11,22 +11,21 @@ class Game : public Scene
 {
 protected:
     Mario Mario;
-    Goomba Goomba;
-    Koopa Koopa;
+    // Goomba Goomba;
+    // Koopa Koopa;
 
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
-    vector<Enemy *> enemies;
+    // vector<Enemy *> enemies;
 
     // for box2d integration
     b2World *world = nullptr;
     ContactListener *contactListener = nullptr;
-    const float fallGravity = 1462.5f;
+    const float fallGravity = 1462.5f / PPM;
 
 public:
-
     // initialize
     Game();
 

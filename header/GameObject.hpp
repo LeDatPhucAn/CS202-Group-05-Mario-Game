@@ -4,62 +4,74 @@
 #include "raylib.h"
 #include <algorithm>
 #include <cmath>
+#include "Vec2Adapter.hpp"
 using namespace std;
 
 enum CollisionType
 {
     NONE,
-    HEAD,      // A HEAD B là A đứng trên B
-    FEET,      // A nhảy lên đụng B
-    LEFTSIDE,  // A ở bên trái B
-    RIGHTSIDE, // A ở bên phải B
+    TOP,       // TOP là đầu của 1 object
+    BOTTOM,    // BOTTOM là phần dưới của 1 object
+    LEFTSIDE,  // LEFTSIDE là phần bên trái của 1 object
+    RIGHTSIDE, // RIGHTSIDE là phần bên phải của 1 object
 };
 
-// Là một hình chữ nhật, mô tả mọi Object trong Game.
+
+
 class GameObject
 {
 public:
     GameObject() = default;
-    GameObject(const Vector2 &_position, const Vector2 &size)
-        : pos(_position), size(size) {}
+
+    GameObject(const Vector2 &_position, const Vector2 &_size)
+        : pos(_position), size(_size) {}
 
     virtual ~GameObject() = default;
 
     virtual void update() = 0;
-
     virtual void display() = 0;
 
     // Xử lý khi va chạm với một object khác
-    virtual void updateCollision(GameObject *other, int type)
-    {
-    }
+    virtual void updateCollision(GameObject *other, int type) {}
 
     // Box2D Integration
     void attachBody(b2Body *b) { body = b; }
     b2Body *getBody() const { return body; }
     virtual void createBody(b2World *world) = 0;
 
-    const Vector2 &getPosition() const { return pos; }
-    void setPosition(const Vector2 &_pos) { pos = _pos; }
+    // Accessors for position and size
+    const Vec2Adapter &getPositionAdapter() const { return pos; }
+    void setPositionAdapter(const Vec2Adapter &_pos) { pos = _pos; }
 
-    const Vector2 &getSize() const { return size; }
-    void setSize(const Vector2 &s) { size = s; }
+    const Vec2Adapter &getSizeAdapter() const { return size; }
+    void setSizeAdapter(const Vec2Adapter &_size) { size = _size; }
+
+    // Convenience: get raw Vector2 in pixels
+    Vector2 getPosition() const { return pos.toPixels(); }
+    void setPosition(const Vector2 &_pos) { pos = Vec2Adapter(_pos); }
+
+    Vector2 getSize() const { return size.toPixels(); }
+    void setSize(const Vector2 &_size) { size = Vec2Adapter(_size); }
 
     virtual Rectangle getBounds() const
     {
-        return {pos.x, pos.y, size.x, size.y};
+        Vector2 p = pos.toPixels();
+        Vector2 s = size.toPixels();
+        return {p.x, p.y, s.x, s.y};
     }
 
-    const Vector2 getCenter() { return {pos.x + size.x / 2, pos.y + size.y / 2}; }
+    Vector2 getCenter() const
+    {
+        Vector2 p = pos.toPixels();
+        Vector2 s = size.toPixels();
+        return {p.x + s.x / 2, p.y + s.y / 2};
+    }
+
     float slice = 2;
     bool isStatic = true;
 
 protected:
-    // Góc trái trên của Rec
-    Vector2 pos;
-    // Size Rectangle
-    Vector2 size;
-
-    // Box2D body pointer
+    Vec2Adapter pos;  // Top-left corner in pixels
+    Vec2Adapter size; // Size in pixels
     b2Body *body = nullptr;
 };

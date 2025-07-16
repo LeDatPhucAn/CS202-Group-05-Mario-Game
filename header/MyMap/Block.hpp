@@ -2,7 +2,6 @@
 
 #include "GameObject.hpp"
 #include "tileson.hpp"
-#include "UI.hpp"
 // Enum chứa loại item mà Question Block có thể chứa
 enum class Contains
 {
@@ -77,10 +76,10 @@ public:
 
     void createBody(b2World *world) override
     {
-        float posX = pos.x / PPM;
-        float posY = pos.y / PPM;
-        float halfWidth = size.x * 0.5f / PPM;
-        float halfHeight = size.y * 0.5f / PPM;
+        float posX = pos.toMeters().x;
+        float posY = pos.toMeters().y;
+        float halfWidth = size.getHalfWidth();
+        float halfHeight = size.getHalfHeight();
         b2BodyDef bodyDef;
         bodyDef.fixedRotation = true;
         bodyDef.type = b2_staticBody;

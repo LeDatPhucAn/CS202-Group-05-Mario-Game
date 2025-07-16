@@ -4,7 +4,6 @@
 #include "Block.hpp"
 #include <raylib.h>
 #include <vector>
-#include "UI.hpp"
 
 using namespace std;
 
@@ -36,10 +35,6 @@ private:
 
 protected:
     // Common physics properties
-    const float maxJumpHeight = 72.0f;
-    const float jumpGravity = 1056.25f;
-    const float fallGravity = 1462.5f;
-    const float fallSpeedCap = 240.0f;
     float maxHeight = 72.0f;
 
     // Common state properties
@@ -57,7 +52,7 @@ public:
 public:
     Character() = default;
     Character(const Sprite &_sprite, State *_initialState, Vector2 _pos)
-        : GameObject(_pos, {14, 16}), sprite(_sprite), currentState(_initialState) {}
+        : GameObject(_pos, {16, 16}), sprite(_sprite), currentState(_initialState) {}
 
     virtual ~Character()
     {

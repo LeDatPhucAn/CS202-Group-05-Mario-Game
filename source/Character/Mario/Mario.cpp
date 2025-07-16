@@ -48,11 +48,11 @@ void Mario::updateCollision(GameObject *other, int type)
     // First, handle generic block collision by calling the base class method
     Character::updateCollision(other, type);
 
-    // Then, handle Mario-specific collisions (like with enemies)
-    if (Enemy *enemy = dynamic_cast<Enemy *>(other))
-    {
-        // Here you can add logic for what happens when Mario hits an enemy.
-        // This is handled in the Enemy's updateCollision, so this can be left empty
-        // unless Mario needs a specific reaction (e.g., taking damage).
-    }
+    // // Then, handle Mario-specific collisions (like with enemies)
+    // if (Enemy *enemy = dynamic_cast<Enemy *>(other))
+    // {
+    //     // Here you can add logic for what happens when Mario hits an enemy.
+    //     // This is handled in the Enemy's updateCollision, so this can be left empty
+    //     // unless Mario needs a specific reaction (e.g., taking damage).
+    // }
 }
