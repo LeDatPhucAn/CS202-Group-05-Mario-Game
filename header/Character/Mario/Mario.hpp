@@ -19,6 +19,8 @@ private:
     friend class Goomba;
     friend class Koopa;
     friend class PiranhaPlant;
+    friend class Spiny;
+    friend class Lakitu;
 
     MarioForm form = SMALL;
     void changeForm(MarioForm form);

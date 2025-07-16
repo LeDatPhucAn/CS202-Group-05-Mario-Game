@@ -22,7 +22,8 @@ Game::Game() : Mario(
                        .build()),
                 Goomba(),
                 Koopa(),
-                PiranhaPlant()
+                PiranhaPlant(),
+                Lakitu()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
@@ -31,8 +32,9 @@ Game::Game() : Mario(
     init();
     Mario.setPosition({100, 0});
     Goomba.setPosition({50, 0});
-    Koopa.setPosition({175, 0});
+    Koopa.setPosition({70, 0});
     PiranhaPlant.setPosition({330, 90});
+    Lakitu.setPosition({500, 0});
 }
 void Game::init()
 {
@@ -44,23 +46,35 @@ void Game::init()
     Goomba.changeState(new EnemyWalkState(&Goomba));
     Koopa.changeState(new EnemyWalkState(&Koopa));
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
+    Lakitu.changeState(new EnemyIdleState(&Lakitu));
+    Lakitu.setTarget(&Mario, this);
 
     // initialize Collision Manager
     enemies.push_back(&Goomba);
     enemies.push_back(&Koopa);
     enemies.push_back(&PiranhaPlant);
+    enemies.push_back(&Lakitu);
     // characters.push_back(&Goomba);
     collisionManager.init(&curMap, &Mario, enemies);
+}
+
+void Game::addEnemy(Enemy* newEnemy)
+{
+    if (newEnemy)
+    {
+        enemies.push_back(newEnemy);
+        collisionManager.init(&curMap, &Mario, enemies);
+    }
 }
 
 void Game::updateScene()
 {
     Mario.update();
-    Goomba.update();
-    Koopa.update();
-    PiranhaPlant.update();
+   for (auto &enemy : enemies)
+    {
+        if (enemy) enemy->update();
+    }
     curMap.update();
-    // collision
     collisionManager.ManageCollision();
 }
 void Game::displaySceneInCamera()
@@ -68,17 +82,12 @@ void Game::displaySceneInCamera()
     curMap.display();
     Mario.display();
 
-    if (!Goomba.beCleared)
+    for (auto &enemy : enemies)
     {
-        Goomba.display();
-    }
-    if (!Koopa.beCleared)
-    {
-        Koopa.display();
-    }
-    if (!PiranhaPlant.beCleared)
-    {
-        PiranhaPlant.display();
+        if (enemy && !enemy->beCleared)
+        {
+            enemy->display();
+        }
     }
 }
 void Game::displayScene()

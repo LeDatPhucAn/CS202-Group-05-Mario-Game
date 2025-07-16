@@ -8,6 +8,8 @@
 #include "Goomba.hpp"
 #include "Koopa.hpp"
 #include "PiranhaPlant.hpp"
+#include "Lakitu.hpp"
+#include "Spiny.hpp"
 #include "EnemyState.hpp"
 #include "CollisionManager.hpp"
 class Game : public Scene {
@@ -16,6 +18,7 @@ protected:
     Goomba Goomba;
     Koopa Koopa;
     PiranhaPlant PiranhaPlant;
+    Lakitu Lakitu;
 
     //Character* MarioPointer = nullptr;
     
@@ -30,7 +33,7 @@ public:
     Game();
     
     void init() override;
-
+    void addEnemy(Enemy* newEnemy); 
     // update
     void updateScene() override;
     void updateSceneInCamera(Camera2D cam) {};

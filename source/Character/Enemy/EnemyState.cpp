@@ -14,7 +14,6 @@ EnemyIdleState::EnemyIdleState(Character* _character, int _delay)
 }
 
 void EnemyIdleState::handleInput() {
-    
 }
 
 EnemyWalkState::EnemyWalkState(Character* _character, int _delay)
@@ -24,7 +23,6 @@ EnemyWalkState::EnemyWalkState(Character* _character, int _delay)
 }
 
 void EnemyWalkState::handleInput() {
-    
 }
 
 EnemyRunState::EnemyRunState(Character* _character, int _delay)
@@ -63,3 +61,4 @@ void EnemyDeadState::updateState() {
 
 void EnemyDeadState::handleInput() {
 }
+
