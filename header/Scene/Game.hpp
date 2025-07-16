@@ -6,6 +6,7 @@
 #include "raylib-tileson.h"
 #include "Enemy.hpp"
 #include "EnemyState.hpp"
+#include "ContactListener.hpp"
 class Game : public Scene
 {
 protected:
@@ -21,6 +22,7 @@ protected:
 
     // for box2d integration
     b2World *world = nullptr;
+    ContactListener *contactListener = nullptr;
     const float fallGravity = 1462.5f;
 
 public:

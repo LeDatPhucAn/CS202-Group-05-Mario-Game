@@ -490,7 +490,7 @@ DeadState::DeadState(Mario *_mario, int _delay)
     : MarioState(DEAD, _mario, _delay)
 {
     mario->isGrounded = false;
-    mario->body->SetLinearVelocity({0, -250.f});
+    mario->body->SetLinearVelocity({0, -250.f / PPM});
 }
 
 void DeadState::handleInput()

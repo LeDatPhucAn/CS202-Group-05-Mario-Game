@@ -42,7 +42,9 @@ void Goomba::updateCollision(GameObject *other, int type)
         {
             this->changeState(new EnemyDeadState(this));
             // Access movement directly
-            mario->movement.velocity.y = -200.f; // Bounce Mario
+            // mario->movement.velocity.y = -200.f / PPM; // Bounce Mario
+            b2Vec2 vel = mario->body->GetLinearVelocity();
+            mario->body->SetLinearVelocity({vel.x, -200.f / PPM});
         }
         // If Mario hits from the side
         else if (type == LEFTSIDE || type == RIGHTSIDE)
@@ -83,14 +85,21 @@ void Koopa::updateCollision(GameObject *other, int type)
             return;
         }
 
+        // box2d Velocity
+        b2Vec2 vel = mario->body->GetLinearVelocity();
+
         // --- Logic for when Koopa is WALKING ---
         if (dynamic_cast<EnemyWalkState *>(this->currentState))
         {
+
             if (type == HEAD)
             {                                                // Mario stomps a walking Koopa
                 this->changeState(new EnemyIdleState(this)); // Turn into a shell
                 // Access movement directly
-                mario->movement.velocity.y = -200.f;
+                // mario->movement.velocity.y = -200.f / PPM;
+
+                // change velocity
+                mario->body->SetLinearVelocity({vel.x, -200.f / PPM});
             }
             else
             { // Mario hits a walking Koopa from the side
@@ -107,7 +116,10 @@ void Koopa::updateCollision(GameObject *other, int type)
             this->direction = (mario->pos.x < this->pos.x) ? RIGHT : LEFT;
             if (type == HEAD)
             { // If stomped, give Mario a bounce
-                mario->movement.velocity.y = -200.f;
+
+                // mario->movement.velocity.y = -200.f ;
+
+                mario->body->SetLinearVelocity({vel.x, -200.f / PPM});
             }
             return;
         }
@@ -118,7 +130,8 @@ void Koopa::updateCollision(GameObject *other, int type)
             if (type == HEAD)
             { // Stomping a sliding shell stops it
                 this->changeState(new EnemyIdleState(this));
-                mario->movement.velocity.y = -200.f;
+                // mario->movement.velocity.y = -200.f;
+                mario->body->SetLinearVelocity({vel.x, -200.f / PPM});
             }
             else
             { // Running into a sliding shell from the side

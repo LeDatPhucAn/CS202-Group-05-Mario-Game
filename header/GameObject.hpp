@@ -37,7 +37,7 @@ public:
     // Box2D Integration
     void attachBody(b2Body *b) { body = b; }
     b2Body *getBody() const { return body; }
-    virtual void createBody(b2World *world);
+    virtual void createBody(b2World *world) = 0;
 
     const Vector2 &getPosition() const { return pos; }
     void setPosition(const Vector2 &_pos) { pos = _pos; }

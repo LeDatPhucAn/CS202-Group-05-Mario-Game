@@ -52,6 +52,7 @@ protected:
 
 public:
     bool isGrounded = false;
+    int groundContacts = 0;
 
 public:
     Character() = default;

@@ -25,45 +25,87 @@ Game::Game() : Mario(
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
-    init();
     Mario.setPosition({100, 0});
     Goomba.setPosition({150, 0});
     Koopa.setPosition({175, 0});
+    init();
 }
+// void Game::init()
+// {
+
+//     // initialize map
+//     current_Map = "Map1.1";
+//     curMap.choose(mapPaths[current_Map]);
+
+//     // initial states
+//     Mario.changeState(new IdleState(&Mario));
+
+//     Goomba.changeState(new EnemyWalkState(&Goomba));
+//     Koopa.changeState(new EnemyWalkState(&Koopa));
+
+//     // add enemies to a vector
+//     enemies.push_back(&Goomba);
+//     enemies.push_back(&Koopa);
+
+//     // box2D initialization
+//     world = new b2World({0, fallGravity / PPM});
+
+//     for (auto &block : curMap.tileBlocks)
+//     {
+//         block->createBody(world);
+//     }
+//     for (Enemy *enemy : enemies)
+//     {
+//         enemy->createBody(world);
+//     }
+//     Mario.createBody(world);
+// }
 void Game::init()
 {
+    std::cout << "Initializing Game...\n";
 
-    // initialize map
     current_Map = "Map1.1";
+    std::cout << "Choosing map: " << mapPaths[current_Map] << std::endl;
     curMap.choose(mapPaths[current_Map]);
 
-    // initial states
-    Mario.changeState(new IdleState(&Mario));
-
-    Goomba.changeState(new EnemyWalkState(&Goomba));
-    Koopa.changeState(new EnemyWalkState(&Koopa));
-
-    // add enemies to a vector
-    enemies.push_back(&Goomba);
-    enemies.push_back(&Koopa);
-
-    // box2D initialization
+    std::cout << "Creating Box2D World...\n";
     world = new b2World({0, fallGravity / PPM});
 
+    contactListener = new ContactListener();
+    world->SetContactListener(contactListener);
+    std::cout << "Creating tile bodies...\n";
     for (auto &block : curMap.tileBlocks)
     {
         block->createBody(world);
     }
+
+    std::cout << "Adding enemies to vector...\n";
+    enemies.push_back(&Goomba);
+    enemies.push_back(&Koopa);
+
+    std::cout << "Creating enemy bodies...\n";
     for (Enemy *enemy : enemies)
     {
         enemy->createBody(world);
     }
+
+    std::cout << "Creating Mario body...\n";
     Mario.createBody(world);
+    std::cout << "Initializing Mario State...\n";
+    Mario.changeState(new IdleState(&Mario));
+
+    std::cout << "Initializing Enemies...\n";
+    Goomba.changeState(new EnemyWalkState(&Goomba));
+    Koopa.changeState(new EnemyWalkState(&Koopa));
+
+    std::cout << "Game init complete.\n";
 }
+
 void Game::updateScene()
 {
     // Step the world
-    world->Step(1.0f / 60.0f, 6, 2);
+    if (world)
+        world->Step(1.0f / 60.0f, 6, 2);
     Mario.update();
     Goomba.update();
     Koopa.update();
@@ -90,4 +132,5 @@ void Game::displayScene()
 Game::~Game()
 {
     delete world;
+    delete contactListener;
 }

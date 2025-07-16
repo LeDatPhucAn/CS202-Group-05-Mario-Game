@@ -42,7 +42,6 @@ State::State(stateType Type, Character *_character, int _delay)
     character->size.x = fabs(frameRec.width);
     character->size.y = frameRec.height;
 }
-
 void State::animate()
 {
     delayCounter++;
@@ -62,7 +61,25 @@ void State::updateState()
     b2Vec2 physPos = character->body->GetPosition();
     character->pos.x = physPos.x * PPM;
     character->pos.y = physPos.y * PPM;
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        Vector2 mouse = Program::mouseWorldPos;
 
+        // Convert screen position to Box2D world coordinates
+        float box2dX = mouse.x / PPM;
+        float box2dY = mouse.y / PPM;
+
+        // Teleport the Box2D body
+        character->body->SetTransform({box2dX, box2dY}, 0); // 0 = angle
+
+        // Optional: zero out any movement velocity
+        character->body->SetLinearVelocity({0, 0});
+
+        // Sync sprite position (optional, will get overridden next frame anyway)
+        character->pos = mouse;
+
+        std::cout << "Teleported to: " << box2dX << ", " << box2dY << "\n";
+    }
     // Set frame
     animate();
 
@@ -78,11 +95,9 @@ void State::updateState()
 
         character->body->ApplyForceToCenter({0, character->body->GetMass() * gravityAccel}, true);
     }
-    
+
     // Change State when pressing
     handleInput();
-
-    character->isGrounded = false; // Reset grounded state for next frame
 }
 
 void State::displayState()

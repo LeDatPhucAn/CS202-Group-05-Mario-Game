@@ -32,15 +32,15 @@ void Character::updateCollision(GameObject *other, int type)
         {
             if (type == HEAD)
             {
+            }
+            else if (type == FEET) 
+            {
                 isGrounded = true;
             }
-            else if (type == FEET) // Jumping up (hit ceiling)
+            else if (type == LEFTSIDE) 
             {
             }
-            else if (type == LEFTSIDE) // hitting left wall
-            {
-            }
-            else if (type == RIGHTSIDE) // hitting right wall
+            else if (type == RIGHTSIDE) 
             {
             }
         }
@@ -49,6 +49,10 @@ void Character::updateCollision(GameObject *other, int type)
 
 void Character::createBody(b2World *world)
 {
+    StartEndFrame se = sprite.StartEndFrames[WALK];
+    Rectangle frameRec = sprite.frameRecs[se.start];
+    size.x = frameRec.width;
+    size.y = frameRec.height;
     // Convert position and size from pixels to meters
     float posX = pos.x / PPM;
     float posY = pos.y / PPM;
