@@ -51,13 +51,12 @@ void Character::createBody(b2World *world)
     StartEndFrame se = sprite.StartEndFrames[WALK];
     Rectangle frameRec = sprite.frameRecs[se.start];
     setSizeAdapter({frameRec.width, frameRec.height});
-    // Convert position and size from pixels to meters
+
     float posX = pos.toMeters().x;
     float posY = pos.toMeters().y;
     float halfWidth = size.getHalfWidth();
     float halfHeight = size.getHalfHeight();
 
-    // Define the body
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(posX, posY);
@@ -65,28 +64,47 @@ void Character::createBody(b2World *world)
     bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
     body = world->CreateBody(&bodyDef);
 
-    // 1. Main body fixture (physical shape for collisions)
-    b2PolygonShape mainShape;
-    mainShape.SetAsBox(halfWidth * 0.8f, halfHeight); // 80% width, full height
+    // 1. Torso fixture (rectangle) - slightly shorter
+    float torsoHeight = halfHeight;
+    float torsoHalfHeight = torsoHeight / 2.0f;
 
-    b2FixtureDef bodyFixture;
-    bodyFixture.shape = &mainShape;
-    bodyFixture.density = 1.0f;
-    bodyFixture.friction = 0.2f;
-    bodyFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE); // Main body doesn't indicate direction
-    body->CreateFixture(&bodyFixture);
+    b2PolygonShape torsoShape;
+    b2Vec2 torsoOffset(0.0f, -halfHeight + torsoHalfHeight);
+    torsoShape.SetAsBox(halfWidth * 0.75f, torsoHalfHeight, torsoOffset, 0.0f);
 
-    // 2. Feet sensor (detects when character is on the ground)
-    b2PolygonShape feetShape;
-    feetShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, halfHeight), 0);
+    b2FixtureDef torsoFixture;
+    torsoFixture.shape = &torsoShape;
+    torsoFixture.density = 1.0f;
+    torsoFixture.friction = 0.2f;
+    torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&torsoFixture);
 
-    b2FixtureDef feetFixture;
-    feetFixture.shape = &feetShape;
-    feetFixture.isSensor = true;
-    feetFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
-    body->CreateFixture(&feetFixture);
+    // 2. Legs (circle) - real collision feet
 
-    // 3. Head sensor (detects when bumping into blocks from below)
+    float radius = halfWidth * 0.75f;
+    b2CircleShape legsShape;
+    legsShape.m_radius = radius;
+    legsShape.m_p.Set(0, radius / 2); // Bottom center of body
+
+    b2FixtureDef legsFixture;
+    legsFixture.shape = &legsShape;
+    legsFixture.density = 1.0f;
+    legsFixture.friction = 0.2f; // May adjust if sliding on slopes
+    legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&legsFixture);
+
+    // 3. Foot sensor (same size as legs, but offset slightly lower)
+    b2CircleShape footSensor;
+    footSensor.m_radius = radius;
+    footSensor.m_p.Set(0, (radius + (2.0f / PPM)) / 2); // Slightly below legs
+
+    b2FixtureDef footFixture;
+    footFixture.shape = &footSensor;
+    footFixture.isSensor = true;
+    footFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    body->CreateFixture(&footFixture);
+
+    // 4. Head sensor
     b2PolygonShape headShape;
     headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -halfHeight), 0);
 
@@ -96,7 +114,7 @@ void Character::createBody(b2World *world)
     headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
     body->CreateFixture(&headFixture);
 
-    // 4. Left wall sensor
+    // 5. Left wall sensor
     b2PolygonShape leftWallShape;
     leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f, b2Vec2(-halfWidth, 0), 0);
 
@@ -106,9 +124,9 @@ void Character::createBody(b2World *world)
     leftWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::LEFTSIDE);
     body->CreateFixture(&leftWallFixture);
 
-    // 5. Right wall sensor
+    // 6. Right wall sensor
     b2PolygonShape rightWallShape;
-    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f , b2Vec2(halfWidth, 0), 0);
+    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f, b2Vec2(halfWidth, 0), 0);
 
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;

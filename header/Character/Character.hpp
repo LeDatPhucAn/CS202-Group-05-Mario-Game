@@ -34,9 +34,6 @@ private:
     friend class Koopa;
 
 protected:
-    // Common physics properties
-    float maxHeight = 72.0f;
-
     // Common state properties
     float groundPosY = 0;
     Direction direction = RIGHT;

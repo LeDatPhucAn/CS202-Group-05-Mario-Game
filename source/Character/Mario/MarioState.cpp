@@ -6,26 +6,23 @@ MarioState::MarioState(stateType Type, Mario *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
 {
 }
-void MarioState::HorizontalAccelerate(Direction direction, float speedCap, float accel)
+void MarioState::HorizontalAccelerate(float speedCap, float accel)
 {
     float deltaTime = GetFrameTime();
     b2Vec2 vel = mario->body->GetLinearVelocity(); // current velocity
-    if (direction == RIGHT)
-    {
-        float newVelX = vel.x + accel * deltaTime;
-        newVelX = fminf(newVelX, speedCap);
-        mario->body->SetLinearVelocity({newVelX, vel.y});
-    }
-    else
-    {
-        float newVelX = vel.x - accel * deltaTime;
-        newVelX = fmaxf(newVelX, -speedCap);
-        mario->body->SetLinearVelocity({newVelX, vel.y});
-    }
+    float currentSpeed = vel.x;
+    float speedDiff = speedCap - currentSpeed;
+
+    // Clamp acceleration for this frame (a = Δv / t → Δv = a * t)
+    float maxSpeedChange = accel * deltaTime;
+    float change = std::clamp(speedDiff, -maxSpeedChange, maxSpeedChange);
+
+    // Apply impulse = mass * Δv
+    float impulse = mario->body->GetMass() * change;
+    mario->body->ApplyLinearImpulseToCenter(b2Vec2(impulse, 0.0f), true);
 }
 
 // ---------- IdleState ----------
-
 IdleState::IdleState(Mario *_mario, int _delay)
     : MarioState(IDLE, _mario, _delay)
 {
@@ -119,7 +116,7 @@ void WalkState::handleInput()
 
         mario->direction = RIGHT;
 
-        HorizontalAccelerate(RIGHT, walkSpeed, walkAccel);
+        HorizontalAccelerate(walkSpeed, walkAccel);
     }
     else if (IsKeyDown(KEY_LEFT))
     {
@@ -131,25 +128,12 @@ void WalkState::handleInput()
 
         mario->direction = LEFT;
 
-        HorizontalAccelerate(LEFT, walkSpeed, walkAccel);
+        HorizontalAccelerate(-walkSpeed, walkAccel);
     }
-    else
+    else if (fabsf(vel.x) < 0.05f)
     {
-        // No horizontal input → apply friction (gradually slow down)
-
-        float newVelX = vel.x;
-
-        if (fabsf(vel.x) < 0.05f)
-        {
-            mario->changeState(new IdleState(mario));
-            return;
-        }
-        else
-        {
-            newVelX -= copysignf(friction * GetFrameTime(), vel.x);
-        }
-
-        mario->body->SetLinearVelocity({newVelX, vel.y});
+        mario->changeState(new IdleState(mario));
+        return;
     }
 }
 // ---------- RunState ----------
@@ -196,7 +180,7 @@ void RunState::handleInput()
         }
 
         mario->direction = RIGHT;
-        HorizontalAccelerate(RIGHT, runSpeed, runAccel);
+        HorizontalAccelerate(runSpeed, runAccel);
     }
     else if (IsKeyDown(KEY_LEFT))
     {
@@ -207,21 +191,13 @@ void RunState::handleInput()
         }
 
         mario->direction = LEFT;
-        HorizontalAccelerate(LEFT, runSpeed, runAccel);
+
+        HorizontalAccelerate(-runSpeed, runAccel);
     }
-    else
+    else if (fabsf(vel.x) < 0.05f)
     {
-        // No horizontal input → apply friction
-        float drag = friction * GetFrameTime();
-        float newVelX = vel.x - copysignf(drag, vel.x);
-
-        if (fabsf(newVelX) < 0.05f)
-        {
-            mario->changeState(new IdleState(mario));
-            return;
-        }
-
-        mario->body->SetLinearVelocity({newVelX, vel.y});
+        mario->changeState(new IdleState(mario));
+        return;
     }
 }
 
@@ -231,9 +207,9 @@ JumpState::JumpState(Mario *_mario, int _delay)
     : MarioState(JUMP, _mario, _delay)
 {
     mario->isGrounded = false;
-    b2Vec2 vel = mario->body->GetLinearVelocity();
-    vel.y = jumpVel; // jumpVel should be negative (upward)
-    mario->body->SetLinearVelocity(vel);
+    float mass = mario->body->GetMass();
+    b2Vec2 impulse(0, mass * jumpVel);
+    mario->body->ApplyLinearImpulseToCenter(impulse, true);
 }
 
 void JumpState::handleInput()
@@ -269,12 +245,12 @@ void JumpState::handleInput()
     if (IsKeyDown(KEY_RIGHT))
     {
         mario->direction = RIGHT;
-        HorizontalAccelerate(RIGHT, speedCap, accel);
+        HorizontalAccelerate(speedCap, accel);
     }
     else if (IsKeyDown(KEY_LEFT))
     {
         mario->direction = LEFT;
-        HorizontalAccelerate(LEFT, speedCap, accel);
+        HorizontalAccelerate(-speedCap, accel);
     }
     else
     {
@@ -317,12 +293,12 @@ void FallState::handleInput()
     if (IsKeyDown(KEY_RIGHT))
     {
         mario->direction = RIGHT;
-        HorizontalAccelerate(RIGHT, speedCap, accel);
+        HorizontalAccelerate(speedCap, accel);
     }
     else if (IsKeyDown(KEY_LEFT))
     {
         mario->direction = LEFT;
-        HorizontalAccelerate(LEFT, speedCap, accel);
+        HorizontalAccelerate(-speedCap, accel);
     }
     else
     {

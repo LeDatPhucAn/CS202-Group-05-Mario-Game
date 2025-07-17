@@ -6,24 +6,25 @@ class MarioState : public State
 protected:
     Mario *mario;
 
-    // PPM IS PIXEL PER METER
+    // 16 pixels = 1 meter
 
-    // Movement Speeds (in meters/second)
-    const float walkSpeed = 90.0f / PPM; // 2.8125f
-    const float runSpeed = 157.5f / PPM; // 4.921875f
-    const float jumpVel = -390.0f / PPM; // -12.1875f
-    const float fallSpeedCap = 240.0f / PPM;
-    // Accelerations (in meters/second^2)
-    const float walkAccel = 225.0f / PPM; // 7.03125f
-    const float airAccel = 112.5f / PPM;  // 3.515625f
-    const float runAccel = 337.5f / PPM;  // 10.546875f
+    const float walkSpeed = 5.625f;
+    const float runSpeed = 9.84375f;
+    const float jumpVel = -14.85f; // For 4.5m jump
+    const float fallSpeedCap = 15.0f;
 
-    const float friction = 225.0f / PPM;   // 7.03125f
-    const float airFriction = 50.0f / PPM; // 1.5625f
-    const float skidDecel = 900.0f / PPM;  // 28.125f
+    const float walkAccel = 14.0625f;
+    const float runAccel = 21.09375f;
+    const float airAccel = 7.03125f;
 
-    // Max jump height (in meters)
-    const float maxJumpHeight = 72.0f / PPM; // 2.25f
+    const float friction = 14.0625f;
+    const float airFriction = 3.125f;
+    const float skidDecel = 56.25f;
+
+    const float fallGravity = 14.7f;
+    const float jumpGravity = 9.8f;
+
+    const float maxJumpHeight = 4.5f;
 
 public:
     MarioState(stateType Type, Mario *_mario, int _delay);
@@ -31,7 +32,7 @@ public:
     // direction : facing left or right
     // speedCap : the maximum speed
     // accel : the horizontal acceleration
-    virtual void HorizontalAccelerate(Direction direction, float speedCap, float accel);
+    virtual void HorizontalAccelerate(float speedCap, float accel);
 };
 class IdleState : public MarioState
 {

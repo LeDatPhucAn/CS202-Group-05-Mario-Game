@@ -23,7 +23,7 @@ protected:
     // for box2d integration
     b2World *world = nullptr;
     ContactListener *contactListener = nullptr;
-    const float fallGravity = 1462.5f / PPM;
+    const float fallGravity = 14.7f;
 
 public:
     // initialize

@@ -86,40 +86,22 @@ void State::updateState()
         float gravityAccel = (character->body->GetLinearVelocity().y < 0 && IsKeyDown(KEY_UP))
                                  ? jumpGravity
                                  : fallGravity;
-
         character->body->ApplyForceToCenter({0, character->body->GetMass() * gravityAccel}, true);
     }
 
     // Change State when pressing
     handleInput();
 }
-void DrawCharacterDebug(Character *character)
+void State::DrawCharacterDebug(Character *character)
 {
     b2Body *body = character->getBody();
-    b2Transform transform = body->GetTransform();
-
-    for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext())
     {
-        if (fixture->GetType() != b2Shape::e_polygon)
-            continue;
-
-        b2PolygonShape *poly = (b2PolygonShape *)fixture->GetShape();
-
-        Vector2 screenVerts[8]; // up to 8 vertices
-        for (int i = 0; i < poly->m_count; i++)
-        {
-            // Transform from local to world
-            b2Vec2 worldVert = b2Mul(transform, poly->m_vertices[i]);
-            Vec2Adapter adapter(worldVert);
-
-            // Convert to screen (pixels)
-            screenVerts[i] = adapter.toPixels();
-        }
-
+        b2Shape::Type type = f->GetType();
         // Choose color based on sensor type
         Color color = RED;
-        CollisionType type = (CollisionType)fixture->GetUserData().pointer;
-        switch (type)
+        CollisionType Type = static_cast<CollisionType>(f->GetUserData().pointer);
+        switch (Type)
         {
         case CollisionType::TOP:
             color = BLUE;
@@ -137,13 +119,38 @@ void DrawCharacterDebug(Character *character)
             color = RED;
             break; // main body
         }
-
-        // Draw polygon outline
-        for (int i = 0; i < poly->m_count; i++)
+        if (type == b2Shape::e_polygon)
         {
-            int j = (i + 1) % poly->m_count;
-            DrawLine((int)screenVerts[i].x, (int)screenVerts[i].y,
-                     (int)screenVerts[j].x, (int)screenVerts[j].y, color);
+            // Draw polygon fixtures (like main body)
+            b2PolygonShape *poly = (b2PolygonShape *)f->GetShape();
+            int count = poly->m_count;
+            Vector2 points[8];
+
+            for (int i = 0; i < count; i++)
+            {
+                b2Vec2 world = body->GetWorldPoint(poly->m_vertices[i]);
+                points[i] = {world.x * PPM, world.y * PPM};
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                DrawLineEx(points[i], points[(i + 1) % count], 0.5f, color);
+            }
+        }
+
+        else if (type == b2Shape::e_circle)
+        {
+            // Draw foot sensor circle
+            b2CircleShape *circle = (b2CircleShape *)f->GetShape();
+            b2Vec2 worldCenter = body->GetWorldPoint(circle->m_p);
+            float radius = circle->m_radius;
+
+            int screenX = static_cast<int>(worldCenter.x * PPM);
+            int screenY = static_cast<int>(worldCenter.y * PPM);
+            int screenRadius = static_cast<int>(radius * PPM);
+
+            DrawCircleLines(screenX, screenY, screenRadius, color);
+            
         }
     }
 }
