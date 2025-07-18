@@ -85,7 +85,7 @@ void State::updateState()
     {
         float gravityAccel = (character->body->GetLinearVelocity().y < 0 && IsKeyDown(KEY_UP))
                                  ? jumpGravity
-                                 : fallGravity;
+                                 : addedFallGravity;
         character->body->ApplyForceToCenter({0, character->body->GetMass() * gravityAccel}, true);
     }
 
@@ -150,7 +150,6 @@ void State::DrawCharacterDebug(Character *character)
             int screenRadius = static_cast<int>(radius * PPM);
 
             DrawCircleLines(screenX, screenY, screenRadius, color);
-            
         }
     }
 }

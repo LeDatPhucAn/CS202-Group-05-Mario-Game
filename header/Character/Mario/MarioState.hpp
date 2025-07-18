@@ -1,5 +1,6 @@
 #pragma once
 #include "State.hpp"
+#include "GameObject.hpp"
 class Mario;
 class MarioState : public State
 {
@@ -10,7 +11,7 @@ protected:
 
     const float walkSpeed = 5.625f;
     const float runSpeed = 9.84375f;
-    const float jumpVel = -14.85f; // For 4.5m jump
+
     const float fallSpeedCap = 15.0f;
 
     const float walkAccel = 14.0625f;
@@ -21,10 +22,9 @@ protected:
     const float airFriction = 3.125f;
     const float skidDecel = 56.25f;
 
-    const float fallGravity = 14.7f;
-    const float jumpGravity = 9.8f;
-
-    const float maxJumpHeight = 4.5f;
+    // jumping
+    const float maxJumpHeight = 4;
+    const float jumpVel = -sqrt(2 * (fallGravity + jumpGravity) * maxJumpHeight);
 
 public:
     MarioState(stateType Type, Mario *_mario, int _delay);

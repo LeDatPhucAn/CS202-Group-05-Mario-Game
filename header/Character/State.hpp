@@ -42,9 +42,7 @@ protected:
     stateType type;
     Rectangle frameRec;
     Character *character = nullptr;
-protected:
-        const float fallGravity = 14.7f;
-    const float jumpGravity = 9.8f;
+
 public:
     State();
     State(stateType Type, Character *_character, int _delay);
@@ -53,7 +51,7 @@ public:
     virtual void updateState();
     virtual void displayState();
     void DrawCharacterDebug(Character *character);
-    
+
     // Đối với Enemy thì Input là Map collision
     // Đối với Mario thì Input từ bàn phím
     virtual void handleInput() = 0;

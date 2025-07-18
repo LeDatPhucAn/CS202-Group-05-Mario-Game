@@ -4,7 +4,6 @@
 #include "Block.hpp"
 #include <raylib.h>
 #include <vector>
-
 using namespace std;
 
 // These structs are generic and can stay here

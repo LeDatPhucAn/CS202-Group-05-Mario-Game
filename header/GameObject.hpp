@@ -16,8 +16,12 @@ enum CollisionType
     RIGHTSIDE, // RIGHTSIDE là phần bên phải của 1 object
 };
 
+// global values
+const float fallGravity = 9.8f;
 
-
+const float offset = 3;
+const float jumpGravity = fallGravity * offset;
+const float addedFallGravity = fallGravity * (offset + 0.5);
 class GameObject
 {
 public:
