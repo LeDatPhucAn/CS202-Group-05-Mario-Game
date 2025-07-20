@@ -41,15 +41,17 @@ void Lakitu::update()
 
     // Lakitu tries to hover above and slightly ahead of Mario
     b2Vec2 currentPos = body->GetPosition();
-    float targetX = (target->pos.toPixels().x + 32.0f) / PPM; 
-    float desiredSpeed = 2.0f;                              
+    float targetX = (target->pos.toPixels().x + 32.0f) / PPM;
+
+    // speed for Lakitu to accelerate to
+    float desiredSpeed = 4.0f;
 
     float dx = targetX - currentPos.x;
-    float threshold = 0.1f; // To avoid jittering
+    float epsilon = 0.1f; // To avoid jittering
 
-    if (fabs(dx) > threshold)
+    if (fabs(dx) > epsilon)
     {
-        vel.x = desiredSpeed * (dx > 0 ? 2.0f : -2.0f);
+        vel.x = desiredSpeed * (dx > 0 ? 1.0f : -1.0f); // sign of dx determines direction
     }
     else
     {
@@ -69,7 +71,7 @@ void Lakitu::update()
         Spiny *newSpiny = new Spiny();
         newSpiny->setPosition(this->getPosition());
         newSpiny->changeState(new EnemyWalkState(newSpiny));
-        game->addEnemy(newSpiny);
+        Game::addEnemy(newSpiny);
     }
 }
 

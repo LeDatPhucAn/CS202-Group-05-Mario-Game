@@ -4,8 +4,9 @@
 #include <chrono>
 #include <thread>
 
-std::vector<Particle> Game::particles = {};
-
+vector<Particle> Game::particles = {};
+b2World *Game::world = new b2World({0, fallGravity});
+vector<Enemy *> Game::enemies = {};
 Game::Game() : Mario(),
                Goomba(),
                Koopa(),
@@ -61,15 +62,27 @@ void Game::init()
     Lakitu.setTarget(&Mario, this);
 }
 
-void Game::addEnemy(Enemy *newEnemy)
+void Game::addEnemy(Enemy *enemy)
 {
-    if (newEnemy)
+    if (enemy)
     {
-        newEnemy->createBody(world);
-        enemies.push_back(newEnemy);
+        enemy->createBody(world);
+        enemies.push_back(enemy);
     }
 }
-
+void Game::removeEnemy(Enemy *enemy)
+{
+    if (enemy)
+    {
+        auto it = std::remove(enemies.begin(), enemies.end(), enemy);
+        if (it != enemies.end())
+        {
+            enemies.erase(it, enemies.end());
+            world->DestroyBody(enemy->getBody());
+            enemy->attachBody(nullptr);
+        }
+    }
+}
 void Game::updateScene()
 {
     // Step the world

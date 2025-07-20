@@ -157,25 +157,25 @@ void Block::createBody(b2World *world)
     fixtureDef.friction = 0.8f;
     body->CreateFixture(&fixtureDef);
 
-    // // 1. Top sensor
-    // b2PolygonShape topSensorShape;
-    // topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight), 0);
+    // 1. Top sensor
+    b2PolygonShape topSensorShape;
+    topSensorShape.SetAsBox(halfWidth * 0.9f, 1.0f / PPM, b2Vec2(0, -halfHeight), 0);
 
-    // b2FixtureDef topFixture;
-    // topFixture.shape = &topSensorShape;
-    // topFixture.isSensor = true;
-    // topFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
-    // body->CreateFixture(&topFixture);
+    b2FixtureDef topFixture;
+    topFixture.shape = &topSensorShape;
+    topFixture.isSensor = true;
+    topFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+    body->CreateFixture(&topFixture);
 
-    // // 2. Bottom sensor
-    // b2PolygonShape bottomSensorShape;
-    // bottomSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, halfHeight), 0);
+    // 2. Bottom sensor
+    b2PolygonShape bottomSensorShape;
+    bottomSensorShape.SetAsBox(halfWidth * 0.9f, 1.0f / PPM, b2Vec2(0, halfHeight), 0);
 
-    // b2FixtureDef bottomFixture;
-    // bottomFixture.shape = &bottomSensorShape;
-    // bottomFixture.isSensor = true;
-    // bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
-    // body->CreateFixture(&bottomFixture);
+    b2FixtureDef bottomFixture;
+    bottomFixture.shape = &bottomSensorShape;
+    bottomFixture.isSensor = true;
+    bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    body->CreateFixture(&bottomFixture);
 
     // // 3. Left side sensor
     // b2PolygonShape leftSensorShape;

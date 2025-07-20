@@ -1,7 +1,7 @@
 #include "EnemyState.hpp"
 #include "Enemy.hpp"
 #include "Character.hpp"
-
+#include "Game.hpp"
 EnemyState::EnemyState(stateType type, Character *_character, int _delay)
     : State(type, _character, _delay), character(_character) {}
 
@@ -58,6 +58,7 @@ void EnemyDeadState::updateState()
         {
             // delete body of enemy
             enemy->beCleared = true;
+            Game::removeEnemy(enemy);
         }
     }
 }

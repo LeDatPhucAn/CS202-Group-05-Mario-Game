@@ -15,7 +15,7 @@
 #include "Particle.hpp"
 class Game : public Scene
 {
-    
+
 protected:
     Mario Mario;
     Goomba Goomba;
@@ -27,19 +27,25 @@ protected:
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
-    vector<Enemy *> enemies;
+    
+    
 
     // for box2d integration
-    b2World *world = nullptr;
     ContactListener *contactListener = nullptr;
 
 public:
-	static vector<Particle> particles;
+
+    static vector<Enemy *> enemies;
+
+    static b2World* world;
+
+    static vector<Particle> particles;
     // initialize
     Game();
 
     void init() override;
-    void addEnemy(Enemy* newEnemy); 
+    static void addEnemy(Enemy *enemy);
+    static void removeEnemy(Enemy *enemy);
 
     // update
     void updateScene() override;

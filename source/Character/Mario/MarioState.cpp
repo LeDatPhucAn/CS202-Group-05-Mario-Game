@@ -473,8 +473,6 @@ void DeadState::handleInput()
 {
     if (IsKeyPressed(KEY_R))
     {
-        // Reset character
-        mario->pos = {100, 0};
         mario->changeState(new FallState(mario));
         return;
     }
