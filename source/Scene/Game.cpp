@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 
-std::vector<Particle> Game::particles = {};  
+std::vector<Particle> Game::particles = {};
 
 Game::Game() : Mario(
                    Mario::Builder()
@@ -19,18 +19,23 @@ Game::Game() : Mario(
                        .setFrames(UNGROW, 50, 44)
                        .setJsonAndTexture("Mario2D")
                        //.setPos({ 100,0 })
-                       .build())
-//    ,Goomba(),
-//    Koopa()
+                       .build()),
+                Goomba(),
+                Koopa(),
+                PiranhaPlant(),
+                Lakitu()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
-    Mario.setPosition({100, 0});
-    // Goomba.setPosition({150, 0});
-    // Koopa.setPosition({175, 0});
     init();
+    Mario.setPosition({100, 0});
+    Goomba.setPosition({50, 0});
+    Koopa.setPosition({70, 0});
+    PiranhaPlant.setPosition({330, 90});
+    Lakitu.setPosition({500, 0});
+    
 }
 
 void Game::init()
@@ -49,20 +54,33 @@ void Game::init()
         block->createBody(world);
     }
 
-    // enemies.push_back(&Goomba);
-    // enemies.push_back(&Koopa);
+    enemies.push_back(&Goomba);
+    enemies.push_back(&Koopa);
+    enemies.push_back(&PiranhaPlant);
+    enemies.push_back(&Lakitu);
 
-    // for (Enemy *enemy : enemies)
-    // {
-    //     enemy->createBody(world);
-    // }
+    for (Enemy *enemy : enemies)
+    {
+        addEnemy(enemy);
+    }
 
     Mario.createBody(world);
 
     Mario.changeState(new IdleState(&Mario));
 
-    // Goomba.changeState(new EnemyWalkState(&Goomba));
-    // Koopa.changeState(new EnemyWalkState(&Koopa));
+    Goomba.changeState(new EnemyWalkState(&Goomba));
+    Koopa.changeState(new EnemyWalkState(&Koopa));
+    PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
+    Lakitu.changeState(new EnemyIdleState(&Lakitu));
+    Lakitu.setTarget(&Mario, this);
+}
+
+void Game::addEnemy(Enemy *newEnemy)
+{
+    if (newEnemy){
+        newEnemy->createBody(world);
+        enemies.push_back(newEnemy);
+    }
 }
 
 void Game::updateScene()
@@ -71,12 +89,15 @@ void Game::updateScene()
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
 
-    cout << "Mario update\n";
     Mario.update();
-    // Goomba.update();
-    // Koopa.update();
+    for (Enemy *enemy : enemies)
+    {
+        if (enemy)
+        {
+            enemy->update();
+        }
+    }
 
-    cout << "curMap update\n";
     curMap.update();
 
     // cout << "particles update\n";
@@ -87,6 +108,13 @@ void Game::displaySceneInCamera()
 {
     curMap.display();
     Mario.display();
+    for (auto &enemy : enemies)
+    {
+        if (enemy && !enemy->beCleared)
+        {
+            enemy->display();
+        }
+    }
     float dt = GetFrameTime();
 
     // for(auto &x : particles)

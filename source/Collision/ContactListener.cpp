@@ -12,36 +12,36 @@ void ContactListener::BeginContact(b2Contact *contact)
     GameObject *objA = reinterpret_cast<GameObject *>(fixtureA->GetBody()->GetUserData().pointer);
     GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
 
-    // switch (typeA)
-    // {
-    // case TOP:
-    //     objA->updateCollision(objB, TOP);
-    //     break;
-    // case BOTTOM:
-    //     objA->updateCollision(objB, BOTTOM);
-    //     break;
-    // case LEFTSIDE:
-    //     objA->updateCollision(objB, LEFTSIDE);
-    //     break;
-    // case RIGHTSIDE:
-    //     objA->updateCollision(objB, RIGHTSIDE);
-    //     break;
-    // }
-    // switch (typeB)
-    // {
-    // case TOP:
-    //     objB->updateCollision(objA, TOP);
-    //     break;
-    // case BOTTOM:
-    //     objB->updateCollision(objA, BOTTOM);
-    //     break;
-    // case LEFTSIDE:
-    //     objB->updateCollision(objA, LEFTSIDE);
-    //     break;
-    // case RIGHTSIDE:
-    //     objB->updateCollision(objA, RIGHTSIDE);
-    //     break;
-    // }
+    switch (typeA)
+    {
+    case TOP:
+        objA->updateCollision(objB, TOP);
+        break;
+    case BOTTOM:
+        objA->updateCollision(objB, BOTTOM);
+        break;
+    case LEFTSIDE:
+        objA->updateCollision(objB, LEFTSIDE);
+        break;
+    case RIGHTSIDE:
+        objA->updateCollision(objB, RIGHTSIDE);
+        break;
+    }
+    switch (typeB)
+    {
+    case TOP:
+        objB->updateCollision(objA, TOP);
+        break;
+    case BOTTOM:
+        objB->updateCollision(objA, BOTTOM);
+        break;
+    case LEFTSIDE:
+        objB->updateCollision(objA, LEFTSIDE);
+        break;
+    case RIGHTSIDE:
+        objB->updateCollision(objA, RIGHTSIDE);
+        break;
+    }
     checkGrounded(contact, true);
 }
 

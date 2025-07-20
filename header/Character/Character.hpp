@@ -31,6 +31,10 @@ private:
     friend class Enemy;
     friend class Goomba;
     friend class Koopa;
+    friend class Lakitu;
+    friend class PiranhaPlant;
+    friend class Spiny;
+    friend class Mario;
 
 protected:
     // Common state properties

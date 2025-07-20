@@ -6,6 +6,11 @@
 #include "raylib-tileson.h"
 #include "Enemy.hpp"
 #include "EnemyState.hpp"
+#include "Goomba.hpp"
+#include "Koopa.hpp"
+#include "PiranhaPlant.hpp"
+#include "Lakitu.hpp"
+#include "Spiny.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 class Game : public Scene
@@ -13,14 +18,16 @@ class Game : public Scene
     
 protected:
     Mario Mario;
-    // Goomba Goomba;
-    // Koopa Koopa;
+    Goomba Goomba;
+    Koopa Koopa;
+    PiranhaPlant PiranhaPlant;
+    Lakitu Lakitu;
 
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
-    // vector<Enemy *> enemies;
+    vector<Enemy *> enemies;
 
     // for box2d integration
     b2World *world = nullptr;
@@ -32,6 +39,7 @@ public:
     Game();
 
     void init() override;
+    void addEnemy(Enemy* newEnemy); 
 
     // update
     void updateScene() override;

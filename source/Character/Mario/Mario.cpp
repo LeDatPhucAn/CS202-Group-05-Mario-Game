@@ -1,6 +1,6 @@
 #include "Mario.hpp"
 #include "Enemy.hpp" // Needed for dynamic_cast to Enemy
-
+#include "EnemyState.hpp"
 void Mario::changeForm(MarioForm form)
 {
     switch (form)
@@ -45,14 +45,31 @@ void Mario::changeForm(MarioForm form)
 
 void Mario::updateCollision(GameObject *other, int type)
 {
-    // First, handle generic block collision by calling the base class method
+    if (dynamic_cast<DeadState *>(this->currentState))
+    {
+        return;
+    }
     Character::updateCollision(other, type);
-
-    // // Then, handle Mario-specific collisions (like with enemies)
-    // if (Enemy *enemy = dynamic_cast<Enemy *>(other))
-    // {
-    //     // Here you can add logic for what happens when Mario hits an enemy.
-    //     // This is handled in the Enemy's updateCollision, so this can be left empty
-    //     // unless Mario needs a specific reaction (e.g., taking damage).
-    // }
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    if (enemy)
+    {
+        if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
+        {
+            return;
+        }
+        if (type == BOTTOM)
+        {
+            // float mass = this->body->GetMass();
+            // b2Vec2 impulse(0, mass * jumpVel);
+            // this->body->ApplyLinearImpulseToCenter(impulse, true);
+        }
+        else
+        {
+            if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+            {
+                return;
+            }
+            this->changeState(new DeadState(this));
+        }
+    }
 }
