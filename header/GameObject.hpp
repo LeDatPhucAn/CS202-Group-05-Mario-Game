@@ -32,8 +32,10 @@ public:
 
     virtual ~GameObject() = default;
 
-    virtual void update() = 0;
-    virtual void display() = 0;
+    virtual void update() { };
+    virtual void display() { };
+
+
 
     // Xử lý khi va chạm với một object khác
     virtual void updateCollision(GameObject *other, int type) {}
@@ -41,7 +43,7 @@ public:
     // Box2D Integration
     void attachBody(b2Body *b) { body = b; }
     b2Body *getBody() const { return body; }
-    virtual void createBody(b2World *world) = 0;
+    virtual void createBody(b2World *world) { };
 
     // Accessors for position and size
     const Vec2Adapter &getPositionAdapter() const { return pos; }

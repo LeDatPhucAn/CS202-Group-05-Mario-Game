@@ -11,6 +11,7 @@ void ContactListener::BeginContact(b2Contact *contact)
 
     GameObject *objA = reinterpret_cast<GameObject *>(fixtureA->GetBody()->GetUserData().pointer);
     GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
+
     // switch (typeA)
     // {
     // case TOP:

@@ -4,6 +4,8 @@
 #include <chrono>
 #include <thread>
 
+std::vector<Particle> Game::particles = {};  
+
 Game::Game() : Mario(
                    Mario::Builder()
                        .setFrames(IDLE, 0, 0)
@@ -68,23 +70,28 @@ void Game::updateScene()
     // Step the world
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
+
+    cout << "Mario update\n";
     Mario.update();
     // Goomba.update();
     // Koopa.update();
+
+    cout << "curMap update\n";
     curMap.update();
+
+    // cout << "particles update\n";
+    // for(auto &x : particles)
+    //     x.update();
 }
 void Game::displaySceneInCamera()
 {
     curMap.display();
     Mario.display();
+    float dt = GetFrameTime();
 
-    // if (!Goomba.beCleared)
+    // for(auto &x : particles)
     // {
-    //     Goomba.display();
-    // }
-    // if (!Koopa.beCleared)
-    // {
-    //     Koopa.display();
+    //     x.display(dt);
     // }
 }
 void Game::displayScene()

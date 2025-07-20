@@ -5,7 +5,7 @@
 
 class Vec2Adapter
 {
-private:
+public:
     Vector2 vec;
 
 public:
@@ -17,6 +17,8 @@ public:
     // Get Raylib Vector2 (in pixels)
     Vector2 toPixels() const { return vec; }
 
+    Vector2 getOrigin() {return vec;}
+
     // Get b2Vec2 (in meters)
     b2Vec2 toMeters() const { return {vec.x / PPM, vec.y / PPM}; }
 
@@ -25,4 +27,9 @@ public:
 
     float x() const { return vec.x / PPM; }
     float y() const { return vec.y / PPM; }
+
+    explicit operator Vector2() const noexcept
+    {
+        return vec;
+    }
 };

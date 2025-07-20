@@ -7,8 +7,10 @@
 #include "Enemy.hpp"
 #include "EnemyState.hpp"
 #include "ContactListener.hpp"
+#include "Particle.hpp"
 class Game : public Scene
 {
+    
 protected:
     Mario Mario;
     // Goomba Goomba;
@@ -25,6 +27,7 @@ protected:
     ContactListener *contactListener = nullptr;
 
 public:
+	static vector<Particle> particles;
     // initialize
     Game();
 
