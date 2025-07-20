@@ -6,36 +6,22 @@
 
 std::vector<Particle> Game::particles = {};
 
-Game::Game() : Mario(
-                   Mario::Builder()
-                       .setFrames(IDLE, 0, 0)
-                       .setFrames(WALK, 1, 3)
-                       .setFrames(JUMP, 5, 5)
-                       .setFrames(FALL, 5, 5)
-                       .setFrames(SKID, 4, 4)
-                       .setFrames(RUN, 1, 3)
-                       .setFrames(CROUCH, 0, 0)
-                       .setFrames(GROW, 44, 50)
-                       .setFrames(UNGROW, 50, 44)
-                       .setJsonAndTexture("Mario2D")
-                       //.setPos({ 100,0 })
-                       .build()),
-                Goomba(),
-                Koopa(),
-                PiranhaPlant(),
-                Lakitu()
+Game::Game() : Mario(),
+               Goomba(),
+               Koopa(),
+               PiranhaPlant(),
+               Lakitu()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
+    Mario.setPosition({500, 50});
+    Goomba.setPosition({150, 0});
+    Koopa.setPosition({170, 0});
+    PiranhaPlant.setPosition({20, 90});
+    Lakitu.setPosition({50, -20});
     init();
-    Mario.setPosition({100, 0});
-    Goomba.setPosition({50, 0});
-    Koopa.setPosition({70, 0});
-    PiranhaPlant.setPosition({330, 90});
-    Lakitu.setPosition({500, 0});
-    
 }
 
 void Game::init()
@@ -77,7 +63,8 @@ void Game::init()
 
 void Game::addEnemy(Enemy *newEnemy)
 {
-    if (newEnemy){
+    if (newEnemy)
+    {
         newEnemy->createBody(world);
         enemies.push_back(newEnemy);
     }
@@ -100,9 +87,8 @@ void Game::updateScene()
 
     curMap.update();
 
-    // cout << "particles update\n";
-    // for(auto &x : particles)
-    //     x.update();
+    for (auto &x : particles)
+        x.update();
 }
 void Game::displaySceneInCamera()
 {
@@ -117,10 +103,10 @@ void Game::displaySceneInCamera()
     }
     float dt = GetFrameTime();
 
-    // for(auto &x : particles)
-    // {
-    //     x.display(dt);
-    // }
+    for (auto &x : particles)
+    {
+        x.display(dt);
+    }
 }
 void Game::displayScene()
 {

@@ -24,7 +24,7 @@ private:
     void changeForm(MarioForm form);
 
 public:
-    Mario() = default;
+    Mario();
     Mario(const Sprite &_sprite, State *_initialState, Vector2 _pos)
         : Character(_sprite, _initialState, _pos) {}
 

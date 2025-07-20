@@ -38,13 +38,26 @@ void Lakitu::update()
     // Not Affected by gravity
     b2Vec2 vel = this->body->GetLinearVelocity();
     vel.y = 0.0f; // Reset vertical velocity to zero
-    this->body->SetLinearVelocity(vel);
-    
-    // Lakitu tries to hover above and slightly ahead of Mario
-    Vector2 targetPos = {target->getPosition().x + 32, this->getPosition().y};
 
-    // Move towards the target position (box2d physics later)
-    // this->pos.x += (targetPos.x - this->pos.x) * 0.02f;
+    // Lakitu tries to hover above and slightly ahead of Mario
+    b2Vec2 currentPos = body->GetPosition();
+    float targetX = (target->pos.toPixels().x + 32.0f) / PPM; 
+    float desiredSpeed = 2.0f;                              
+
+    float dx = targetX - currentPos.x;
+    float threshold = 0.1f; // To avoid jittering
+
+    if (fabs(dx) > threshold)
+    {
+        vel.x = desiredSpeed * (dx > 0 ? 2.0f : -2.0f);
+    }
+    else
+    {
+        vel.x = 0.0f; // Close enough, stop horizontal movement
+    }
+
+    body->SetLinearVelocity(vel);
+    this->body->ApplyForceToCenter({0, this->body->GetMass() * (-addedFallGravity)}, true);
 
     // --- Throwing Logic ---
     throwTimer += GetFrameTime();

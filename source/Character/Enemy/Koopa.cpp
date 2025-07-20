@@ -5,7 +5,7 @@
 Koopa::Koopa()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {7, 7};
+    this->sprite.StartEndFrames[IDLE] = {3, 4};
     this->sprite.StartEndFrames[WALK] = {3, 4};
     this->sprite.StartEndFrames[RUN] = {7, 7};
     this->sprite.StartEndFrames[DEAD] = {7, 7};

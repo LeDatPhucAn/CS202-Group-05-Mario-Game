@@ -16,7 +16,6 @@ public:
     Enemy(const Enemy &other);
 
     virtual void updateCollision(GameObject *other, int type) = 0;
-
     struct Builder
     {
         Sprite sprite;

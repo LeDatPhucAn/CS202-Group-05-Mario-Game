@@ -43,8 +43,6 @@ protected:
     Sprite sprite;
     State *currentState = nullptr;
 
-    b2Fixture *footSensorFixture = nullptr;
-
 public:
     bool isGrounded = false;
     int groundContacts = 0;

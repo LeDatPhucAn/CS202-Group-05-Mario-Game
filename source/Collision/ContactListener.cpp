@@ -2,6 +2,8 @@
 #include "ContactListener.hpp"
 #include <iostream>
 #include "Character.hpp"
+#include "Lakitu.hpp"
+#include "Spiny.hpp"
 void ContactListener::BeginContact(b2Contact *contact)
 {
     b2Fixture *fixtureA = contact->GetFixtureA();
@@ -76,4 +78,29 @@ void ContactListener::checkGrounded(b2Contact *contact, bool began)
             }
         }
     }
+}
+
+void ContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
+{
+    // Called before collision response is calculated
+    b2Fixture *fixtureA = contact->GetFixtureA();
+    b2Fixture *fixtureB = contact->GetFixtureB();
+
+    GameObject *objA = reinterpret_cast<GameObject *>(fixtureA->GetBody()->GetUserData().pointer);
+    GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
+
+    if (objA && objB && ShouldNotCollide(objA, objB))
+    {
+        contact->SetEnabled(false); // Cancel the collision
+    }
+}
+
+bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
+{
+    // Implement your custom logic to determine if two objects should not collide
+    if (MatchPair<Spiny, Lakitu>(objA, objB))
+    {
+        return true; // Prevent collision between Character and Lakitu/Spiny
+    }
+    return false; // Default behavior: allow collision
 }

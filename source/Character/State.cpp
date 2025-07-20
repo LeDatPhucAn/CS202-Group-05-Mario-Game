@@ -55,7 +55,11 @@ void State::animate()
 
 void State::updateState()
 {
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    // Update the character's position based on Box2D body
+    Vec2Adapter adapter(character->body->GetPosition());
+    character->setPositionAdapter(adapter);
+    
+    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && dynamic_cast<Mario *>(character))
     {
         Vector2 mouse = Program::mouseWorldPos;
 
@@ -128,8 +132,8 @@ void State::DrawCharacterDebug(Character *character)
 
             for (int i = 0; i < count; i++)
             {
-                b2Vec2 world = body->GetWorldPoint(poly->m_vertices[i]);
-                points[i] = {world.x * PPM, world.y * PPM};
+                Vec2Adapter world(body->GetWorldPoint(poly->m_vertices[i]));
+                points[i] = world.toPixels();
             }
 
             for (int i = 0; i < count; i++)
@@ -157,6 +161,6 @@ void State::DrawCharacterDebug(Character *character)
 void State::displayState()
 {
     DrawCharacterDebug(character);
-    Vec2Adapter adapter(character->body->GetPosition());
-    DrawTextureRec(character->sprite.texture, frameRec, adapter.toPixels(), WHITE);
+
+    DrawTextureRec(character->sprite.texture, frameRec, character->getCenter(), WHITE);
 }

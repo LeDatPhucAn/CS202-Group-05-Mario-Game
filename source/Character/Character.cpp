@@ -1,7 +1,9 @@
 #include "Character.hpp"
 #include "GameObject.hpp"
 #include "ContactListener.hpp"
-
+#include "Koopa.hpp"
+#include "Goomba.hpp"
+#include "Mario.hpp"
 void Character::changeState(State *newState)
 {
     if (currentState)
@@ -48,10 +50,9 @@ void Character::updateCollision(GameObject *other, int type)
 
 void Character::createBody(b2World *world)
 {
-    StartEndFrame se = sprite.StartEndFrames[WALK];
+    StartEndFrame se = sprite.StartEndFrames[IDLE];
     Rectangle frameRec = sprite.frameRecs[se.start];
     setSizeAdapter({frameRec.width, frameRec.height});
-
     float posX = pos.toMeters().x;
     float posY = pos.toMeters().y;
     float halfWidth = size.getHalfWidth();

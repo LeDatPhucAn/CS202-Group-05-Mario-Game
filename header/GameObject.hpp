@@ -70,7 +70,7 @@ public:
     {
         Vector2 p = pos.toPixels();
         Vector2 s = size.toPixels();
-        return {p.x + s.x / 2, p.y + s.y / 2};
+        return {p.x - s.x / 2, p.y - s.y / 2};
     }
 
     float slice = 2;
