@@ -144,6 +144,7 @@ void Block::createBody(b2World *world)
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
     bodyDef.type = b2_staticBody;
+
     bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
     bodyDef.position.Set(posX, posY);
     body = world->CreateBody(&bodyDef);
@@ -153,6 +154,8 @@ void Block::createBody(b2World *world)
     boxShape.SetAsBox(halfWidth, halfHeight);
 
     b2FixtureDef fixtureDef;
+    if (!isSolid)
+        fixtureDef.isSensor = true;
     fixtureDef.shape = &boxShape;
     fixtureDef.friction = 0.8f;
     body->CreateFixture(&fixtureDef);

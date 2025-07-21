@@ -1,9 +1,7 @@
 #include "Character.hpp"
 #include "GameObject.hpp"
 #include "ContactListener.hpp"
-#include "Koopa.hpp"
-#include "Goomba.hpp"
-#include "Mario.hpp"
+#include "PiranhaPlant.hpp"
 void Character::changeState(State *newState)
 {
     if (currentState)
@@ -75,6 +73,7 @@ void Character::createBody(b2World *world)
 
     b2FixtureDef torsoFixture;
     torsoFixture.shape = &torsoShape;
+
     torsoFixture.density = 1.0f;
     torsoFixture.friction = 0.2f;
     torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
@@ -94,6 +93,13 @@ void Character::createBody(b2World *world)
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
 
+    if (dynamic_cast<PiranhaPlant *>(this)){
+        b2Fixture* fixture = body->GetFixtureList();
+        while (fixture){
+            fixture->SetSensor(true);
+            fixture = fixture->GetNext();
+        }
+    }
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius;
@@ -117,7 +123,7 @@ void Character::createBody(b2World *world)
 
     // 5. Left wall sensor
     b2PolygonShape leftWallShape;
-    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f, b2Vec2(-halfWidth/1.8, 0), 0);
+    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 1.8, 0), 0);
 
     b2FixtureDef leftWallFixture;
     leftWallFixture.shape = &leftWallShape;
@@ -127,7 +133,7 @@ void Character::createBody(b2World *world)
 
     // 6. Right wall sensor
     b2PolygonShape rightWallShape;
-    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.4f, b2Vec2(halfWidth/1.8, 0), 0);
+    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 1.8, 0), 0);
 
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;

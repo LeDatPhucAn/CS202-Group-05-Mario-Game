@@ -5,10 +5,10 @@
 Spiny::Spiny()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {132, 132}; 
-    this->sprite.StartEndFrames[WALK] = {132, 133}; 
-    this->sprite.StartEndFrames[DEAD] = {132, 132}; 
-    this->sprite.StartEndFrames[FALL] = {130, 131};
+    this->sprite.StartEndFrames[IDLE] = {131, 131};
+    this->sprite.StartEndFrames[WALK] = {131, 132};
+    this->sprite.StartEndFrames[DEAD] = {131, 131};
+    this->sprite.StartEndFrames[FALL] = {129, 130};
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
 }
@@ -20,13 +20,15 @@ void Spiny::updateCollision(GameObject *other, int type)
     Block *block = dynamic_cast<Block *>(other);
     if (block)
     {
-        if (type == LEFTSIDE){
+        if (type == LEFTSIDE)
+        {
             this->direction = RIGHT;
             b2Vec2 vel = this->body->GetLinearVelocity();
             vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
             this->body->SetLinearVelocity(vel);
         }
-        else if (type == RIGHTSIDE){
+        else if (type == RIGHTSIDE)
+        {
             this->direction = LEFT;
             b2Vec2 vel = this->body->GetLinearVelocity();
             vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction

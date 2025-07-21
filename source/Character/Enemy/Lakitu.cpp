@@ -43,7 +43,7 @@ void Lakitu::update()
     b2Vec2 currentPos = body->GetPosition();
     float targetX = (target->pos.toPixels().x + 32.0f) / PPM;
 
-    // speed for Lakitu to accelerate to
+    // speed for Lakitu to move towards Mario
     float desiredSpeed = 4.0f;
 
     float dx = targetX - currentPos.x;
