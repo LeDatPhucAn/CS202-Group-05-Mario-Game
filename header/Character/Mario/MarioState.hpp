@@ -22,9 +22,7 @@ protected:
     const float airFriction = 3.125f;
     const float skidDecel = 56.25f;
 
-    // jumping
-    const float maxJumpHeight = 4;
-    const float jumpVel = -sqrt(2 * (fallGravity + jumpGravity) * maxJumpHeight);
+
 
 public:
     MarioState(stateType Type, Mario *_mario, int _delay);

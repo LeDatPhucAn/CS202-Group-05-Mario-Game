@@ -52,7 +52,7 @@ void Game::init()
     addEnemy(&Goomba);
     addEnemy(&Koopa);
     addEnemy(&PiranhaPlant);
-    // addEnemy(&Lakitu);
+    addEnemy(&Lakitu);
 
     Mario.createBody(world);
 }
@@ -95,7 +95,6 @@ void Game::updateScene()
 void Game::updateCharacters()
 {
     Mario.update();
-
 
     for (Enemy *enemy : enemies)
     {

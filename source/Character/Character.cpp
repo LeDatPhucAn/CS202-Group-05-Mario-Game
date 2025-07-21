@@ -49,7 +49,9 @@ void Character::updateCollision(GameObject *other, int type)
 void Character::createBody(b2World *world)
 {
     StartEndFrame se = sprite.StartEndFrames[currentState->type];
-    Rectangle frameRec = sprite.frameRecs[se.start];
+    Rectangle frameRec = (se.start <= se.end) ? sprite.frameRecs[se.start + currentState->frameIndex]
+                                              : sprite.frameRecs[se.start - currentState->frameIndex];
+
     setSizeAdapter({frameRec.width, frameRec.height});
     float posX = pos.toMeters().x;
     float posY = pos.toMeters().y;
@@ -82,10 +84,14 @@ void Character::createBody(b2World *world)
     // 2. Legs (circle) - real collision feet
 
     float radius = halfWidth * 0.75f;
+
+    float legOffsetY = torsoHalfHeight * 0.75 + radius / 2.0f;
+    if (size.toPixels().y < 21)
+        legOffsetY = radius / 2.0f; // Position below torso
+
     b2CircleShape legsShape;
     legsShape.m_radius = radius;
-    legsShape.m_p.Set(0, radius / 2); // Bottom center of body
-
+    legsShape.m_p.Set(0, legOffsetY); // Bottom center of body
     b2FixtureDef legsFixture;
     legsFixture.shape = &legsShape;
     legsFixture.density = 1.0f;
@@ -105,7 +111,7 @@ void Character::createBody(b2World *world)
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius;
-    footSensor.m_p.Set(0, (radius + (2.0f / PPM)) / 2); // Slightly below legs
+    footSensor.m_p.Set(0, legOffsetY + 1 / PPM); // Slightly below legs
 
     b2FixtureDef footFixture;
     footFixture.shape = &footSensor;

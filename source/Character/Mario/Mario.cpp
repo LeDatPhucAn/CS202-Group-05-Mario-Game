@@ -76,9 +76,9 @@ void Mario::updateCollision(GameObject *other, int type)
         }
         if (type == BOTTOM)
         {
-            // float mass = this->body->GetMass();
-            // b2Vec2 impulse(0, mass * jumpVel);
-            // this->body->ApplyLinearImpulseToCenter(impulse, true);
+            float mass = this->body->GetMass();
+            b2Vec2 impulse(0, mass * jumpVel/1.5f);
+            this->body->ApplyLinearImpulseToCenter(impulse, true);
         }
         else
         {

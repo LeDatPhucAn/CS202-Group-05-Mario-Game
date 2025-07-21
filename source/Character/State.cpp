@@ -59,8 +59,10 @@ void State::updateState()
     Vec2Adapter adapter(character->body->GetPosition());
     character->setPositionAdapter(adapter);
 
+    // Updates the character's hitbox based on the current frame
     if (character->changeBody)
     {
+        Game::world->DestroyBody(character->getBody());
         character->createBody(Game::world);
         character->changeBody = false;
     }
@@ -90,7 +92,7 @@ void State::updateState()
     // apply different gravity when jumping and falling
     if (!character->isGrounded)
     {
-        float gravityAccel = (character->body->GetLinearVelocity().y < 0 && IsKeyDown(KEY_UP))
+        float gravityAccel = (character->body->GetLinearVelocity().y < 0 && (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)))
                                  ? jumpGravity
                                  : addedFallGravity;
         character->body->ApplyForceToCenter({0, character->body->GetMass() * gravityAccel}, true);

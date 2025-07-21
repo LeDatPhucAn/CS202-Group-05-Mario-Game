@@ -30,7 +30,6 @@ public:
 
     // Override collision to handle enemies
     void updateCollision(GameObject *other, int type) override;
-
 public:
     // A specific builder for Mario
     struct Builder

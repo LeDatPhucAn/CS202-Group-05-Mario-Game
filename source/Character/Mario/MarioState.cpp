@@ -332,6 +332,7 @@ void SkidState::handleInput()
 CrouchState::CrouchState(Mario *_mario, int _delay)
     : MarioState(CROUCH, _mario, _delay)
 {
+    mario->toNewBody();
 }
 void CrouchState::handleInput()
 {
@@ -340,15 +341,22 @@ void CrouchState::handleInput()
 
     if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))
     {
-        if (abs(vel.x) < 0.6f)
+        mario->toNewBody(); // Reset to normal body size
+        if (!mario->isGrounded)
+            mario->changeState(new FallState(mario));
+        else if (abs(vel.x) < 0.6f)
             mario->changeState(new IdleState(mario));
         else
             mario->changeState(new WalkState(mario));
         return;
     }
-    if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)))
+    if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && mario->isGrounded)
     {
-        mario->changeState(new JumpState(mario));
+        // mario->changeState(new JumpState(mario));
+        mario->isGrounded = false;
+        float mass = mario->body->GetMass();
+        b2Vec2 impulse(0, mass * jumpVel);
+        mario->body->ApplyLinearImpulseToCenter(impulse, true);
         return;
     }
     if (abs(vel.x) < 0.6f)
@@ -378,16 +386,14 @@ void GrowState::handleInput()
         return;
     }
     StartEndFrame se = mario->sprite.StartEndFrames[type];
-
+    // new collision box
+    mario->toNewBody();
     cout << frameIndex << " " << frameRec.height << boolalpha << mario->isGrounded << "\n";
     if (se.start + frameIndex == se.end)
     {
 
         mario->form = static_cast<MarioForm>((mario->form + 1) % FORM_COUNT);
         mario->changeForm(mario->form);
-
-        // new collision box
-        mario->toNewBody();
 
         if (mario->isGrounded)
         {
@@ -417,16 +423,13 @@ void UnGrowState::handleInput()
         mario->changeState(new IdleState(mario));
         return;
     }
-    // if (mario->isGrounded)
-    //     mario->pos.y = mario->groundPosY - frameRec.height;
 
+    // new collision box
+    mario->toNewBody();
     if (se.start - frameIndex == se.end)
     {
         mario->form = static_cast<MarioForm>((mario->form - 1 + FORM_COUNT) % FORM_COUNT);
         mario->changeForm(mario->form);
-
-        // new collision box
-        mario->toNewBody();
 
         if (mario->isGrounded)
         {

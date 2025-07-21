@@ -22,6 +22,10 @@ const float fallGravity = 9.8f;
 const float offset = 3;
 const float jumpGravity = fallGravity * offset;
 const float addedFallGravity = fallGravity * (offset + 0.5);
+
+// jumping
+const float maxJumpHeight = 4;
+const float jumpVel = -sqrt(2 * (fallGravity + jumpGravity) * maxJumpHeight);
 class GameObject
 {
 public:
@@ -32,10 +36,8 @@ public:
 
     virtual ~GameObject() = default;
 
-    virtual void update() { };
-    virtual void display() { };
-
-
+    virtual void update() {};
+    virtual void display() {};
 
     // Xử lý khi va chạm với một object khác
     virtual void updateCollision(GameObject *other, int type) {}
@@ -43,7 +45,7 @@ public:
     // Box2D Integration
     void attachBody(b2Body *b) { body = b; }
     b2Body *getBody() const { return body; }
-    virtual void createBody(b2World *world) { };
+    virtual void createBody(b2World *world) {};
 
     // Accessors for position and size
     const Vec2Adapter &getPositionAdapter() const { return pos; }
