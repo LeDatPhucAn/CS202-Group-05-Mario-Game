@@ -14,7 +14,7 @@ struct StartEndFrame
 };
 struct Sprite
 {
-    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(15);
+    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(20);
     vector<Rectangle> frameRecs;
     Texture2D texture;
 };
@@ -44,6 +44,7 @@ protected:
     State *currentState = nullptr;
 
 public:
+    bool changeBody = false; // Check when the character's body needs to be changed
     bool isGrounded = false;
     int groundContacts = 0;
 
@@ -65,5 +66,9 @@ public:
 
     // Collision handling
     virtual void updateCollision(GameObject *other, int type) override;
-    void createBody(b2World *world) override;
+
+    virtual void createBody(b2World *world) override;
+
+    // Used to change the character's body when the hitbox changes
+    virtual void toNewBody();
 };

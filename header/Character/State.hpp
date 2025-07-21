@@ -32,6 +32,8 @@ enum Direction
 class Character;
 class State
 {
+private:
+    friend class Character;
 
 protected:
     // basic parameters

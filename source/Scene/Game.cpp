@@ -41,18 +41,6 @@ void Game::init()
         block->createBody(world);
     }
 
-    enemies.push_back(&Goomba);
-    enemies.push_back(&Koopa);
-    enemies.push_back(&PiranhaPlant);
-    enemies.push_back(&Lakitu);
-
-    for (Enemy *enemy : enemies)
-    {
-        addEnemy(enemy);
-    }
-
-    Mario.createBody(world);
-
     Mario.changeState(new IdleState(&Mario));
 
     Goomba.changeState(new EnemyWalkState(&Goomba));
@@ -60,12 +48,23 @@ void Game::init()
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
     Lakitu.changeState(new EnemyIdleState(&Lakitu));
     Lakitu.setTarget(&Mario, this);
+
+    addEnemy(&Goomba);
+    addEnemy(&Koopa);
+    addEnemy(&PiranhaPlant);
+    // addEnemy(&Lakitu);
+
+    Mario.createBody(world);
 }
 
 void Game::addEnemy(Enemy *enemy)
 {
+
     if (enemy)
     {
+        std::cout << "enemy pointer: " << enemy << std::endl;
+        std::cout << "enemy type: " << typeid(*enemy).name() << std::endl;
+
         enemy->createBody(world);
         enemies.push_back(enemy);
     }
@@ -89,7 +88,15 @@ void Game::updateScene()
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
 
+    updateCharacters();
+
+    updateMap();
+}
+void Game::updateCharacters()
+{
     Mario.update();
+
+
     for (Enemy *enemy : enemies)
     {
         if (enemy)
@@ -97,7 +104,9 @@ void Game::updateScene()
             enemy->update();
         }
     }
-
+}
+void Game::updateMap()
+{
     curMap.update();
 
     for (auto &x : particles)
@@ -119,7 +128,7 @@ void Game::updateScene()
 
     for (Block *block : toDelete)
     {
-        block->behavior->block = nullptr; // Clear behavior reference
+        block->behavior->block = nullptr;
         delete block;
         block = nullptr;
     }

@@ -48,7 +48,7 @@ void Character::updateCollision(GameObject *other, int type)
 
 void Character::createBody(b2World *world)
 {
-    StartEndFrame se = sprite.StartEndFrames[IDLE];
+    StartEndFrame se = sprite.StartEndFrames[currentState->type];
     Rectangle frameRec = sprite.frameRecs[se.start];
     setSizeAdapter({frameRec.width, frameRec.height});
     float posX = pos.toMeters().x;
@@ -68,7 +68,7 @@ void Character::createBody(b2World *world)
     float torsoHalfHeight = torsoHeight / 2.0f;
 
     b2PolygonShape torsoShape;
-    b2Vec2 torsoOffset(0.0f, -halfHeight + torsoHalfHeight);
+    b2Vec2 torsoOffset(0.0f, -torsoHalfHeight);
     torsoShape.SetAsBox(halfWidth * 0.75f, torsoHalfHeight, torsoOffset, 0.0f);
 
     b2FixtureDef torsoFixture;
@@ -93,9 +93,11 @@ void Character::createBody(b2World *world)
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
 
-    if (dynamic_cast<PiranhaPlant *>(this)){
-        b2Fixture* fixture = body->GetFixtureList();
-        while (fixture){
+    if (dynamic_cast<PiranhaPlant *>(this))
+    {
+        b2Fixture *fixture = body->GetFixtureList();
+        while (fixture)
+        {
             fixture->SetSensor(true);
             fixture = fixture->GetNext();
         }
@@ -140,4 +142,9 @@ void Character::createBody(b2World *world)
     rightWallFixture.isSensor = true;
     rightWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
     body->CreateFixture(&rightWallFixture);
+}
+
+void Character::toNewBody()
+{
+    changeBody = true;
 }

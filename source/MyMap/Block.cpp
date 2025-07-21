@@ -162,7 +162,7 @@ void Block::createBody(b2World *world)
 
     // 1. Top sensor
     b2PolygonShape topSensorShape;
-    topSensorShape.SetAsBox(halfWidth * 0.9f, 1.0f / PPM, b2Vec2(0, -halfHeight), 0);
+    topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
 
     b2FixtureDef topFixture;
     topFixture.shape = &topSensorShape;
@@ -172,7 +172,7 @@ void Block::createBody(b2World *world)
 
     // 2. Bottom sensor
     b2PolygonShape bottomSensorShape;
-    bottomSensorShape.SetAsBox(halfWidth * 0.9f, 1.0f / PPM, b2Vec2(0, halfHeight), 0);
+    bottomSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, halfHeight/2), 0);
 
     b2FixtureDef bottomFixture;
     bottomFixture.shape = &bottomSensorShape;

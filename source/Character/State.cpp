@@ -58,25 +58,28 @@ void State::updateState()
     // Update the character's position based on Box2D body
     Vec2Adapter adapter(character->body->GetPosition());
     character->setPositionAdapter(adapter);
-    
+
+    if (character->changeBody)
+    {
+        character->createBody(Game::world);
+        character->changeBody = false;
+    }
+
+    Vec2Adapter mouse(Program::mouseWorldPos);
+
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && dynamic_cast<Mario *>(character))
     {
-        Vector2 mouse = Program::mouseWorldPos;
-
-        // Convert screen position to Box2D world coordinates
-        float box2dX = mouse.x / PPM;
-        float box2dY = mouse.y / PPM;
-
         // Teleport the Box2D body
-        character->body->SetTransform({box2dX, box2dY}, 0); // 0 = angle
+        character->body->SetTransform(mouse.toMeters(), 0); // 0 = angle
 
-        // Optional: zero out any movement velocity
-        character->body->SetLinearVelocity({0, 0});
-
-        // Sync sprite position (optional, will get overridden next frame anyway)
-        character->pos = mouse;
-
-        std::cout << "Teleported to: " << box2dX << ", " << box2dY << "\n";
+        std::cout << "Teleported to: " << mouse.toPixels().x << ", " << mouse.toPixels().y << "\n";
+    }
+    else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dynamic_cast<Mario *>(character))
+    {
+        Koopa *newKoopa = new Koopa();
+        newKoopa->setPosition(mouse.toPixels());
+        newKoopa->changeState(new EnemyWalkState(newKoopa));
+        Game::addEnemy(newKoopa);
     }
     // Set frame
     animate();

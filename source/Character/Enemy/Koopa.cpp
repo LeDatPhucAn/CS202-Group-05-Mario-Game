@@ -1,7 +1,7 @@
 #include "Koopa.hpp"
 #include "EnemyState.hpp"
 #include "Mario.hpp"
-
+#include "Game.hpp"
 Koopa::Koopa()
     : Enemy()
 {
@@ -45,6 +45,8 @@ void Koopa::updateCollision(GameObject *other, int type)
         {
             if (type == TOP)
             {
+                // Change to Shell hitbox
+                this->toNewBody();
                 this->changeState(new EnemyIdleState(this));
             }
             return;
