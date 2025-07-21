@@ -102,6 +102,27 @@ void Game::updateScene()
 
     for (auto &x : particles)
         x.update();
+
+    auto &blocks = curMap.tileBlocks;
+    vector<Block *> toDelete;
+
+    blocks.erase(
+        std::remove_if(blocks.begin(), blocks.end(), [&](Block *block)
+                       {
+        if (block->needDeletion) {
+            toDelete.push_back(block);
+            world->DestroyBody(block->getBody());
+            return true; // mark for removal
+        }
+        return false; }),
+        blocks.end());
+
+    for (Block *block : toDelete)
+    {
+        block->behavior->block = nullptr; // Clear behavior reference
+        delete block;
+        block = nullptr;
+    }
 }
 void Game::displaySceneInCamera()
 {
