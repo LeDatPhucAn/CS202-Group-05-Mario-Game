@@ -1,6 +1,6 @@
 # set(CMAKE_C_COMPILER gcc)
 # set(CMAKE_CXX_COMPILER g++)
-
+add_compile_options(-w) # for GCC/Clang
 cmake_minimum_required(VERSION 3.10)
 project(ProjectCS202)
 
@@ -25,6 +25,13 @@ link_directories(${RAYLIB_PATH}/lib)
 
 include_directories(include)
 
+# Add Box2D includes
+include_directories(external/box2d/include)
+include_directories(external/box2d/src)
+
+# Add Box2D source files
+file(GLOB_RECURSE BOX2D_SOURCES "external/box2d/src/*.cpp")
+
 # Đệ quy tìm tất cả các file header trong thư mục header
 file(GLOB_RECURSE HEADER_FILES "header/*.h" "header/*.hpp")
 foreach(header ${HEADER_FILES})
@@ -34,7 +41,8 @@ endforeach()
 
 file(GLOB_RECURSE SOURCES "source/*.cpp" "header/*.cpp")  # Đệ quy tìm trong các thư mục con
 
-add_executable(main ${SOURCES})
+add_executable(main ${SOURCES} ${BOX2D_SOURCES})
+
 
 add_custom_command(
     TARGET main POST_BUILD

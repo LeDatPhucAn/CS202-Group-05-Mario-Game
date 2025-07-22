@@ -14,12 +14,12 @@ public:
 
 class EnemyIdleState : public EnemyState {
 public:
-    EnemyIdleState(Character* character, int delay = 5);
+    EnemyIdleState(Character* character, int delay = 10);
     void handleInput() override;
 };
 class EnemyWalkState : public EnemyState {
 public:
-    EnemyWalkState(Character* character, int delay = 5);
+    EnemyWalkState(Character* character, int delay = 15);
     void handleInput() override;
 };
 

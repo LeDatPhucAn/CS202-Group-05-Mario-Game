@@ -20,11 +20,15 @@ void Goomba::updateCollision(GameObject *other, int type)
     {
         if (type == LEFTSIDE){
             this->direction = RIGHT;
-            this->movement.velocity.x = -20.f;
+            b2Vec2 vel = this->body->GetLinearVelocity();
+            vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
+            this->body->SetLinearVelocity(vel);
         }
         else if (type == RIGHTSIDE){
             this->direction = LEFT;
-            this->movement.velocity.x = 20.f;
+            b2Vec2 vel = this->body->GetLinearVelocity();
+            vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
+            this->body->SetLinearVelocity(vel);
         }
     }
 
@@ -35,10 +39,9 @@ void Goomba::updateCollision(GameObject *other, int type)
         {
             return;
         }
-        if (type == HEAD)
+        if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
-            mario->movement.velocity.y = -200.f;
         }
         return; 
     }

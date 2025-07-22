@@ -4,42 +4,42 @@
 #include <chrono>
 #include <thread>
 
-CollisionManager Game::collisionManager = CollisionManager();
-
-Game::Game() : Mario(
-                   Mario::Builder()
-                       .setFrames(IDLE, 0, 0)
-                       .setFrames(WALK, 1, 3)
-                       .setFrames(JUMP, 5, 5)
-                       .setFrames(FALL, 5, 5)
-                       .setFrames(SKID, 4, 4)
-                       .setFrames(RUN, 1, 3)
-                       .setFrames(CROUCH, 0, 0)
-                       .setFrames(GROW, 44, 50)
-                       .setFrames(UNGROW, 50, 44)
-                       .setJsonAndTexture("Mario2D")
-                       //.setPos({ 100,0 })
-                       .build()),
-                Goomba(),
-                Koopa(),
-                PiranhaPlant(),
-                Lakitu()
+vector<Particle> Game::particles = {};
+b2World *Game::world = new b2World({0, fallGravity});
+vector<Enemy *> Game::enemies = {};
+Game::Game() : Mario(),
+               Goomba(),
+               Koopa(),
+               PiranhaPlant(),
+               Lakitu()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
+    Mario.setPosition({500, 50});
+    Goomba.setPosition({150, 0});
+    Koopa.setPosition({170, 0});
+    PiranhaPlant.setPosition({20, 90});
+    Lakitu.setPosition({50, -20});
     init();
-    Mario.setPosition({100, 0});
-    Goomba.setPosition({50, 0});
-    Koopa.setPosition({70, 0});
-    PiranhaPlant.setPosition({330, 90});
-    Lakitu.setPosition({500, 0});
 }
+
 void Game::init()
 {
+
     current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
+
+    world = new b2World({0, fallGravity});
+
+    contactListener = new ContactListener();
+    world->SetContactListener(contactListener);
+
+    for (auto &block : curMap.tileBlocks)
+    {
+        block->createBody(world);
+    }
 
     Mario.changeState(new IdleState(&Mario));
 
@@ -49,39 +49,93 @@ void Game::init()
     Lakitu.changeState(new EnemyIdleState(&Lakitu));
     Lakitu.setTarget(&Mario, this);
 
-    // initialize Collision Manager
-    enemies.push_back(&Goomba);
-    enemies.push_back(&Koopa);
-    enemies.push_back(&PiranhaPlant);
-    enemies.push_back(&Lakitu);
-    // characters.push_back(&Goomba);
-    collisionManager.init(&curMap, &Mario, enemies);
+    addEnemy(&Goomba);
+    addEnemy(&Koopa);
+    addEnemy(&PiranhaPlant);
+    addEnemy(&Lakitu);
+
+    Mario.createBody(world);
 }
 
-void Game::addEnemy(Enemy* newEnemy)
+void Game::addEnemy(Enemy *enemy)
 {
-    if (newEnemy)
+
+    if (enemy)
     {
-        enemies.push_back(newEnemy);
-        collisionManager.init(&curMap, &Mario, enemies);
+        std::cout << "enemy pointer: " << enemy << std::endl;
+        std::cout << "enemy type: " << typeid(*enemy).name() << std::endl;
+
+        enemy->createBody(world);
+        enemies.push_back(enemy);
     }
 }
-
+void Game::removeEnemy(Enemy *enemy)
+{
+    if (enemy)
+    {
+        auto it = std::remove(enemies.begin(), enemies.end(), enemy);
+        if (it != enemies.end())
+        {
+            enemies.erase(it, enemies.end());
+            world->DestroyBody(enemy->getBody());
+            enemy->attachBody(nullptr);
+        }
+    }
+}
 void Game::updateScene()
 {
+    // Step the world
+    if (world) // 60 fps
+        world->Step(1.0f / 60.0f, 6, 2);
+
+    updateCharacters();
+
+    updateMap();
+}
+void Game::updateCharacters()
+{
     Mario.update();
-   for (auto &enemy : enemies)
+
+    for (Enemy *enemy : enemies)
     {
-        if (enemy) enemy->update();
+        if (enemy)
+        {
+            enemy->update();
+        }
     }
+}
+void Game::updateMap()
+{
     curMap.update();
-    collisionManager.ManageCollision();
+
+    for (auto &x : particles)
+        x.update();
+
+    auto &blocks = curMap.tileBlocks;
+    vector<Block *> toDelete;
+
+    blocks.erase(
+        std::remove_if(blocks.begin(), blocks.end(), [&](Block *block)
+                       {
+        if (block->needDeletion) {
+            toDelete.push_back(block);
+            world->DestroyBody(block->getBody());
+            return true; // mark for removal
+        }
+        return false; }),
+        blocks.end());
+
+    for (Block *block : toDelete)
+    {
+        block->behavior->block = nullptr;
+        delete block;
+        block = nullptr;
+    }
 }
 void Game::displaySceneInCamera()
 {
     curMap.display();
     Mario.display();
-
     for (auto &enemy : enemies)
     {
         if (enemy && !enemy->beCleared)
@@ -89,7 +143,19 @@ void Game::displaySceneInCamera()
             enemy->display();
         }
     }
+    float dt = GetFrameTime();
+
+    for (auto &x : particles)
+    {
+        x.display(dt);
+    }
 }
 void Game::displayScene()
 {
+}
+
+Game::~Game()
+{
+    delete world;
+    delete contactListener;
 }

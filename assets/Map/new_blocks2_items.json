@@ -27,7 +27,24 @@
                  "duration":150,
                  "tileid":3
                 }],
-         "id":0
+         "id":0,
+         "properties":[
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isQuestion",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"QuestionBlock"
         }, 
         {
          "animation":[
@@ -47,7 +64,59 @@
                  "duration":150,
                  "tileid":10
                 }],
-         "id":7
+         "id":7,
+         "properties":[
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"BrickBlock"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":14
+                }, 
+                {
+                 "duration":150,
+                 "tileid":15
+                }, 
+                {
+                 "duration":150,
+                 "tileid":16
+                }, 
+                {
+                 "duration":150,
+                 "tileid":17
+                }],
+         "id":14,
+         "properties":[
+                {
+                 "name":"isInvisible",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"isUsed",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
+         "id":25,
+         "properties":[
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }]
         }],
  "tilewidth":16,
  "type":"tileset",

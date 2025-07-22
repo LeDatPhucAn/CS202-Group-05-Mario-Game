@@ -8,6 +8,4 @@ public:
     Koopa(const Builder &builder);
 
     void updateCollision(GameObject *other, int type) override;
-    Rectangle getBounds() const override;
-    Rectangle getFeet() const override;
 };

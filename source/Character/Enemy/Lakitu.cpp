@@ -4,41 +4,63 @@
 #include "Mario.hpp"
 #include "Game.hpp"
 
-
 Lakitu::Lakitu()
     : Enemy()
 {
 
     this->sprite.StartEndFrames[IDLE] = {15, 15}; // Normal flying
     this->sprite.StartEndFrames[WALK] = {15, 15}; // Using WALK state for flying animation
-    this->sprite.StartEndFrames[DEAD] = {16, 16}; 
+    this->sprite.StartEndFrames[DEAD] = {16, 16};
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
 
     // Lakitu flies, so it is not affected by gravity
-    this->movement.acceleration.y = 0;
     this->throwTimer = 0.0f;
 }
 
-void Lakitu::setTarget(Mario* marioTarget, Game* game)
+void Lakitu::setTarget(Mario *marioTarget, Game *game)
 {
     this->target = marioTarget;
-    this->game = game; 
+    this->game = game;
 }
 
 void Lakitu::update()
 {
+
     // Call base update for animations
     Character::update();
 
-    if (dynamic_cast<DeadState*>(target->currentState) || dynamic_cast<EnemyDeadState*>(this->currentState)) return; 
+    if (dynamic_cast<DeadState *>(target->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+        return;
 
     // --- Movement Logic ---
-    // Lakitu tries to hover above and slightly ahead of Mario
-    Vector2 targetPos = { target->getPosition().x + 32, this->pos.y };
 
-    this->pos.x += (targetPos.x - this->pos.x) * 0.02f;
-    this->pos.y= 0.f;
+    // Not Affected by gravity
+    b2Vec2 vel = this->body->GetLinearVelocity();
+    vel.y = 0.0f; // Reset vertical velocity to zero
+
+    // Lakitu tries to hover above and slightly ahead of Mario
+    b2Vec2 currentPos = body->GetPosition();
+    float targetX = (target->pos.toPixels().x + 32.0f) / PPM;
+
+    // speed for Lakitu to move towards Mario
+    float desiredSpeed = 4.0f;
+
+    float dx = targetX - currentPos.x;
+    float epsilon = 0.1f; // To avoid jittering
+
+    if (fabs(dx) > epsilon)
+    {
+        vel.x = desiredSpeed * (dx > 0 ? 1.0f : -1.0f); // sign of dx determines direction
+    }
+    else
+    {
+        vel.x = 0.0f; // Close enough, stop horizontal movement
+    }
+
+    body->SetLinearVelocity(vel);
+    this->body->ApplyForceToCenter({0, this->body->GetMass() * (-addedFallGravity)}, true);
+
     // --- Throwing Logic ---
     throwTimer += GetFrameTime();
     if (throwTimer > throwCooldown)
@@ -46,10 +68,10 @@ void Lakitu::update()
         throwTimer = 0.0f;
 
         // Create a new Spiny at Lakitu's position
-        Spiny* newSpiny = new Spiny();
-        newSpiny->setPosition(this->pos);
+        Spiny *newSpiny = new Spiny();
+        newSpiny->setPosition(this->getPosition());
         newSpiny->changeState(new EnemyWalkState(newSpiny));
-        game->addEnemy(newSpiny);
+        Game::addEnemy(newSpiny);
     }
 }
 
@@ -63,7 +85,7 @@ void Lakitu::updateCollision(GameObject *other, int type)
             return;
         }
 
-        if (type == HEAD)
+        if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
         }

@@ -1,11 +1,8 @@
-// Super Mario Game.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 
 #include <iostream>
 #include <string>
 #include "Program.hpp"
 using namespace std;
-
 int main()
 {
     // Initialize window
@@ -16,5 +13,5 @@ int main()
     // run program
     UI ui;
     Program program;
-	program.run();
+    program.run();
 }

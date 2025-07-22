@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Map1.1.json",
+    "activeFile": "collided_animation.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -17,11 +17,20 @@
         },
         "Map1.1.json": {
             "scale": 1,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 423,
+                "x": 436.5,
                 "y": 111.5
             }
+        },
+        "collided_animation.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "ground_tileset.json": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "muilti_tileset.json": {
             "scaleInDock": 1,
@@ -32,6 +41,7 @@
             "scaleInEditor": 8
         },
         "new_blocks2_items.json": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 5.5
         },
@@ -45,7 +55,7 @@
         }
     },
     "frame.defaultDuration": 150,
-    "last.imagePath": "D:/Tuan/Project/Super Mario Game/assets/Map/image",
+    "last.imagePath": "D:/Tuan/Project/My Game/assets/Map/image",
     "map.height": 14,
     "map.lastUsedFormat": "json",
     "map.tileHeight": 16,
@@ -55,15 +65,19 @@
         "Map1.1.json",
         "muilti_tileset.json",
         "new_blocks1_blocks.json",
-        "new_blocks2_items.json"
+        "new_blocks2_items.json",
+        "ground_tileset.json",
+        "collided_animation.json"
     ],
     "project": "Map.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
-        "new_blocks2_items.json",
-        "new_blocks1_blocks.json",
-        "muilti_tileset.json",
         "Map1.1.json",
+        "muilti_tileset.json",
+        "new_blocks1_blocks.json",
+        "new_blocks2_items.json",
+        "ground_tileset.json",
+        "collided_animation.json",
         "question.tsj",
         "8415.tsj",
         "tileset.json"

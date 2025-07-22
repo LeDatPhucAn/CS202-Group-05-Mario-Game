@@ -1,5 +1,7 @@
 #include "Character.hpp"
 #include "GameObject.hpp"
+#include "ContactListener.hpp"
+#include "PiranhaPlant.hpp"
 void Character::changeState(State *newState)
 {
     if (currentState)
@@ -23,139 +25,132 @@ void Character::display()
 
 void Character::updateCollision(GameObject *other, int type)
 {
-    Rectangle bounds = getActualBounds();
-    Vector2 posObj = other->getPosition();
-    Vector2 sizeObj = other->getSize();
 
     if (Block *block = dynamic_cast<Block *>(other))
     {
         if (block->isSolid)
         {
-            if (type == HEAD)
+            if (type == TOP)
             {
-                pos.y = posObj.y - bounds.height;
-                groundPosY = posObj.y;
-
-                isGrounded = true;
-
-                if (movement.velocity.y > 0)
-                    movement.velocity.y = 0;
-
-                maxHeight = posObj.y - maxJumpHeight - bounds.height;
             }
-            else if (type == FEET) // Jumping up (hit ceiling)
+            else if (type == BOTTOM)
             {
-                pos.y = posObj.y + sizeObj.y;
-                movement.velocity.y = fallGravity * GetFrameTime();
             }
-            else if (type == LEFTSIDE) // hitting left wall
+            else if (type == LEFTSIDE)
             {
-                pos.x = posObj.x - bounds.width;
             }
-            else if (type == RIGHTSIDE) // hitting right wall
+            else if (type == RIGHTSIDE)
             {
-                pos.x = posObj.x + sizeObj.x;
             }
         }
     }
 }
-int Character::checkCollision(const GameObject *other)
+
+void Character::createBody(b2World *world)
 {
-    if (this == other)
-        return NONE; // Không va chạm với chính nó
-    // Phải thêm epsilon chỉnh bounds vì frame Raylib không chính xác
-    const float eps = -0.6f;
+    StartEndFrame se = sprite.StartEndFrames[currentState->type];
+    Rectangle frameRec = (se.start <= se.end) ? sprite.frameRecs[se.start + currentState->frameIndex]
+                                              : sprite.frameRecs[se.start - currentState->frameIndex];
 
-    Rectangle A = getBounds();
-    A.x -= eps;
-    A.y -= eps;
-    A.width += 2 * eps;
-    A.height += 2 * eps;
+    setSizeAdapter({frameRec.width, frameRec.height});
+    float posX = pos.toMeters().x;
+    float posY = pos.toMeters().y;
+    float halfWidth = size.getHalfWidth();
+    float halfHeight = size.getHalfHeight();
 
-    Rectangle B = other->getBounds();
-    B.x -= eps;
-    B.y -= eps;
-    B.width += 2 * eps;
-    B.height += 2 * eps;
-    // Rectangle circle = getFeet();
-    if (CheckCollisionRecs(getFeet(), B))
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(posX, posY);
+    bodyDef.fixedRotation = true;
+    bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
+    body = world->CreateBody(&bodyDef);
+
+    // 1. Torso fixture (rectangle) - slightly shorter
+    float torsoHeight = halfHeight;
+    float torsoHalfHeight = torsoHeight / 2.0f;
+
+    b2PolygonShape torsoShape;
+    b2Vec2 torsoOffset(0.0f, -torsoHalfHeight);
+    torsoShape.SetAsBox(halfWidth * 0.75f, torsoHalfHeight, torsoOffset, 0.0f);
+
+    b2FixtureDef torsoFixture;
+    torsoFixture.shape = &torsoShape;
+
+    torsoFixture.density = 1.0f;
+    torsoFixture.friction = 0.2f;
+    torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&torsoFixture);
+
+    // 2. Legs (circle) - real collision feet
+
+    float radius = halfWidth * 0.75f;
+
+    float legOffsetY = torsoHalfHeight * 0.75 + radius / 2.0f;
+    if (size.toPixels().y < 21)
+        legOffsetY = radius / 2.0f; // Position below torso
+
+    b2CircleShape legsShape;
+    legsShape.m_radius = radius;
+    legsShape.m_p.Set(0, legOffsetY); // Bottom center of body
+    b2FixtureDef legsFixture;
+    legsFixture.shape = &legsShape;
+    legsFixture.density = 1.0f;
+    legsFixture.friction = 0.2f; // May adjust if sliding on slopes
+    legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&legsFixture);
+
+    if (dynamic_cast<PiranhaPlant *>(this))
     {
-        return HEAD;
+        b2Fixture *fixture = body->GetFixtureList();
+        while (fixture)
+        {
+            fixture->SetSensor(true);
+            fixture = fixture->GetNext();
+        }
     }
-    if (!CheckCollisionRecs(A, B))
-        return NONE;
-        
-    float penLeft = fabsf(A.x + A.width - B.x),
-          penRight = fabsf(B.x + B.width - A.x), // Đo độ sâu "chèn", ngược lại để dương
-        penTop = fabsf(A.y + A.height - B.y),
-          penBottom = fabsf(B.y + B.height - A.y);
+    // 3. Foot sensor (same size as legs, but offset slightly lower)
+    b2CircleShape footSensor;
+    footSensor.m_radius = radius;
+    footSensor.m_p.Set(0, legOffsetY + 1 / PPM); // Slightly below legs
 
-    float m = min({penLeft, penRight, penTop, penBottom}); // abs hết cho lành
+    b2FixtureDef footFixture;
+    footFixture.shape = &footSensor;
+    footFixture.isSensor = true;
+    footFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    body->CreateFixture(&footFixture);
 
-    if (m == penTop)
-        return HEAD;
-    if (m == penBottom)
-        return FEET;
-    if (m == penLeft)
-        return LEFTSIDE;
-    if (m == penRight)
-        return RIGHTSIDE;
+    // 4. Head sensor
+    b2PolygonShape headShape;
+    headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -halfHeight), 0);
 
-    return NONE;
+    b2FixtureDef headFixture;
+    headFixture.shape = &headShape;
+    headFixture.isSensor = true;
+    headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+    body->CreateFixture(&headFixture);
+
+    // 5. Left wall sensor
+    b2PolygonShape leftWallShape;
+    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 1.8, 0), 0);
+
+    b2FixtureDef leftWallFixture;
+    leftWallFixture.shape = &leftWallShape;
+    leftWallFixture.isSensor = true;
+    leftWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::LEFTSIDE);
+    body->CreateFixture(&leftWallFixture);
+
+    // 6. Right wall sensor
+    b2PolygonShape rightWallShape;
+    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 1.8, 0), 0);
+
+    b2FixtureDef rightWallFixture;
+    rightWallFixture.shape = &rightWallShape;
+    rightWallFixture.isSensor = true;
+    rightWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
+    body->CreateFixture(&rightWallFixture);
 }
-Rectangle Character::getBounds() const
-{
-    if (!currentState)
-    {
-        cerr << "Error: getBounds called on null currentState\n";
-        return {0, 0, 0, 0};
-    }
-    return currentState->Bounds();
-}
-Rectangle Character::getActualBounds() const
-{
-    if (!currentState)
-    {
-        cerr << "Error: getBounds called on null currentState\n";
-        return {0, 0, 0, 0};
-    }
-    return currentState->ActualBounds();
-}
-Rectangle Character::getFeet() const
-{
-    if (!currentState)
-    {
-        cerr << "Error: getFeet called on null currentState\n";
-        return {0, 0, 0, 0};
-    }
-    return currentState->Feet();
-}
-Rectangle Character::getHead() const
-{
-    if (!currentState)
-    {
-        cerr << "Error: getHead called on null currentState\n";
-        return {0, 0, 0, 0};
-    }
-    return currentState->Head();
-}
-Rectangle Character::getLeft() const
-{
-    if (!currentState)
-    {
-        cerr << "Error: getLeftSide called on null currentState\n";
 
-        return {0, 0, 0, 0};
-    }
-    return currentState->LeftSide();
-}
-Rectangle Character::getRight() const
+void Character::toNewBody()
 {
-    if (!currentState)
-    {
-        cerr << "Error: getRightSide called on null currentState\n";
-
-        return {0, 0, 0, 0};
-    }
-    return currentState->RightSide();
+    changeBody = true;
 }

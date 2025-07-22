@@ -1,14 +1,28 @@
 #include "MarioState.hpp"
 #include "Mario.hpp"
-
+#include "Game.hpp"
 // Base MarioState constructor
 MarioState::MarioState(stateType Type, Mario *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
 {
 }
+void MarioState::HorizontalAccelerate(float speedCap, float accel)
+{
+    float deltaTime = GetFrameTime();
+    b2Vec2 vel = mario->body->GetLinearVelocity(); // current velocity
+    float currentSpeed = vel.x;
+    float speedDiff = speedCap - currentSpeed;
+
+    // Clamp acceleration for this frame (a = Δv / t → Δv = a * t)
+    float maxSpeedChange = accel * deltaTime;
+    float change = std::clamp(speedDiff, -maxSpeedChange, maxSpeedChange);
+
+    // Apply impulse = mass * Δv
+    float impulse = mario->body->GetMass() * change;
+    mario->body->ApplyLinearImpulseToCenter(b2Vec2(impulse, 0.0f), true);
+}
 
 // ---------- IdleState ----------
-
 IdleState::IdleState(Mario *_mario, int _delay)
     : MarioState(IDLE, _mario, _delay)
 {
@@ -24,7 +38,7 @@ void IdleState::handleInput()
     {
         mario->changeState(new UnGrowState(mario));
     }
-    else if (IsKeyPressed(KEY_UP) && mario->isGrounded)
+    else if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && mario->isGrounded)
     {
         mario->changeState(new JumpState(mario));
     }
@@ -32,18 +46,19 @@ void IdleState::handleInput()
     {
         mario->changeState(new FallState(mario));
     }
-    else if (IsKeyDown(KEY_DOWN) && mario->form != SMALL)
+    else if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && mario->form != SMALL)
     {
         mario->changeState(new CrouchState(mario));
     }
-    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         mario->changeState(new WalkState(mario));
     }
     else
     {
-        mario->movement.velocity.x = 0;
-        mario->movement.acceleration.x = 0;
+        b2Vec2 vel = mario->body->GetLinearVelocity();
+        vel.x = 0.0f;
+        mario->body->SetLinearVelocity(vel);
     }
 }
 
@@ -56,7 +71,7 @@ WalkState::WalkState(Mario *_mario, int _delay)
 
 void WalkState::handleInput()
 {
-    if (IsKeyPressed(KEY_UP) && mario->isGrounded)
+    if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && mario->isGrounded)
     {
         mario->changeState(new JumpState(mario));
         return;
@@ -64,6 +79,7 @@ void WalkState::handleInput()
     else if (!mario->isGrounded)
     {
         mario->changeState(new FallState(mario));
+        return;
     }
     else if (IsKeyPressed(KEY_ONE))
     {
@@ -80,45 +96,94 @@ void WalkState::handleInput()
         mario->changeState(new RunState(mario));
         return;
     }
-    else if (IsKeyDown(KEY_DOWN) && mario->form != SMALL)
+    else if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && mario->form != SMALL)
     {
         mario->changeState(new CrouchState(mario));
         return;
     }
-    if (IsKeyDown(KEY_RIGHT))
+
+    b2Vec2 vel = mario->body->GetLinearVelocity();
+
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
-        if (mario->direction == LEFT && abs(mario->movement.velocity.x) > 20.0f)
+        if (mario->direction == LEFT && fabsf(vel.x) > 0.6f)
         {
             mario->changeState(new SkidState(mario));
             return;
         }
         mario->direction = RIGHT;
-        mario->movement.acceleration.x = walkAccel;
+        HorizontalAccelerate(walkSpeed, walkAccel);
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        if (mario->direction == RIGHT && abs(mario->movement.velocity.x) > 20.0f)
+        if (mario->direction == RIGHT && fabsf(vel.x) > 0.6f)
         {
             mario->changeState(new SkidState(mario));
             return;
         }
         mario->direction = LEFT;
-        mario->movement.acceleration.x = -walkAccel;
+        HorizontalAccelerate(-walkSpeed, walkAccel);
     }
-    else
+    else if (fabsf(vel.x) < 0.05f)
     {
-        mario->movement.acceleration.x = mario->direction * (-friction);
+        mario->changeState(new IdleState(mario));
+        return;
+    }
+}
+// ---------- RunState ----------
 
-        if (abs(mario->movement.velocity.x) < 20.0f)
+RunState::RunState(Mario *_mario, int _delay)
+    : MarioState(RUN, _mario, _delay)
+{
+}
+void RunState::handleInput()
+{
+    b2Vec2 vel = mario->body->GetLinearVelocity();
+
+    if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && mario->isGrounded)
+    {
+        mario->changeState(new JumpState(mario));
+        return;
+    }
+    if (!IsKeyDown(KEY_LEFT_CONTROL))
+    {
+        mario->changeState(new WalkState(mario));
+        return;
+    }
+    if (!mario->isGrounded)
+    {
+        mario->changeState(new FallState(mario));
+        return;
+    }
+    if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && mario->form != SMALL)
+    {
+        mario->changeState(new CrouchState(mario));
+        return;
+    }
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+    {
+        if (mario->direction == LEFT && fabsf(vel.x) > 0.6f)
         {
-            mario->changeState(new IdleState(mario));
+            mario->changeState(new SkidState(mario));
             return;
         }
+        mario->direction = RIGHT;
+        HorizontalAccelerate(runSpeed, runAccel);
     }
-    // Clamp walk speed
-    if (abs(mario->movement.velocity.x) > walkSpeed)
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        mario->movement.velocity.x = walkSpeed * mario->direction;
+        if (mario->direction == RIGHT && fabsf(vel.x) > 0.6f)
+        {
+            mario->changeState(new SkidState(mario));
+            return;
+        }
+        mario->direction = LEFT;
+        HorizontalAccelerate(-runSpeed, runAccel);
+    }
+    else if (fabsf(vel.x) < 0.05f)
+    {
+        mario->changeState(new IdleState(mario));
+        return;
     }
 }
 
@@ -128,47 +193,52 @@ JumpState::JumpState(Mario *_mario, int _delay)
     : MarioState(JUMP, _mario, _delay)
 {
     mario->isGrounded = false;
-    mario->movement.velocity.y = jumpVel;
+    float mass = mario->body->GetMass();
+    b2Vec2 impulse(0, mass * jumpVel);
+    mario->body->ApplyLinearImpulseToCenter(impulse, true);
 }
 
 void JumpState::handleInput()
 {
+    b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = airAccel;
+    float speedCap = walkSpeed;
     if (IsKeyDown(KEY_LEFT_CONTROL))
     {
         accel = walkAccel;
+        speedCap = runSpeed;
     }
+
     if (mario->isGrounded)
     {
-        if (abs(mario->movement.velocity.x) < 20.0f)
-        {
+        if (fabsf(vel.x) < 0.6f)
             mario->changeState(new IdleState(mario));
-        }
         else
-        {
             mario->changeState(new WalkState(mario));
-        }
         return;
     }
-    if (mario->movement.velocity.y > 0)
+    if (vel.y > 0.0f)
     {
         mario->changeState(new FallState(mario));
         return;
     }
-
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
         mario->direction = RIGHT;
-        mario->movement.acceleration.x = accel;
+        HorizontalAccelerate(speedCap, accel);
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         mario->direction = LEFT;
-        mario->movement.acceleration.x = -accel;
+        HorizontalAccelerate(-speedCap, accel);
     }
     else
     {
-        mario->movement.acceleration.x = mario->direction * accel / 8;
+        float drag = airFriction * GetFrameTime();
+        float newVelX = vel.x - copysignf(drag, vel.x);
+        if (fabsf(newVelX) < 0.05f)
+            newVelX = 0;
+        mario->body->SetLinearVelocity({newVelX, vel.y});
     }
 }
 
@@ -180,59 +250,41 @@ FallState::FallState(Mario *_mario, int _delay)
 
 void FallState::handleInput()
 {
-    // float airSpeed = walkSpeed;
+    b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = airAccel;
+    float speedCap = walkSpeed;
     if (IsKeyDown(KEY_LEFT_CONTROL))
     {
         accel = walkAccel;
-        // airSpeed = runSpeed;
+        speedCap = runSpeed;
     }
     if (mario->isGrounded)
     {
-        if (abs(mario->movement.velocity.x) < 20)
-        {
+        if (fabsf(vel.x) < 0.6f)
             mario->changeState(new IdleState(mario));
-            return;
-        }
         else
-        {
-            if (mario->movement.velocity.x * mario->direction < 0)
-            {
-                mario->direction = (mario->direction == LEFT) ? RIGHT : LEFT;
-            }
             mario->changeState(new WalkState(mario));
-            return;
-        }
+        return;
     }
-
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
         mario->direction = RIGHT;
-        mario->movement.acceleration.x = accel;
+        HorizontalAccelerate(speedCap, accel);
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         mario->direction = LEFT;
-        mario->movement.acceleration.x = -accel;
+        HorizontalAccelerate(-speedCap, accel);
     }
     else
     {
-        mario->movement.acceleration.x = mario->direction * (-airFriction);
-
-        if (abs(mario->movement.velocity.x) < 20.0f)
-        {
-            mario->movement.velocity.x = 0;
-            mario->movement.acceleration.x = 0;
-            return;
-        }
+        float drag = airFriction * GetFrameTime();
+        float newVelX = vel.x - copysignf(drag, vel.x);
+        if (fabsf(newVelX) < 0.05f)
+            newVelX = 0;
+        mario->body->SetLinearVelocity({newVelX, vel.y});
     }
-    // // Clamp air speed
-    // if (abs(mario->movement.velocity.x) > airSpeed)
-    // {
-    //     mario->movement.velocity.x = airSpeed * mario->direction;
-    // }
 }
-
 // ---------- SkidState ----------
 
 SkidState::SkidState(Mario *_mario, int _delay)
@@ -242,130 +294,79 @@ SkidState::SkidState(Mario *_mario, int _delay)
 
 void SkidState::handleInput()
 {
-    if (abs(mario->movement.velocity.x) < 20)
+    b2Vec2 vel = mario->body->GetLinearVelocity();
+    if (fabs(vel.x) < 0.6f)
     {
         mario->changeState(new IdleState(mario));
         return;
     }
-    else if (IsKeyPressed(KEY_UP) && mario->isGrounded)
+    else if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && mario->isGrounded)
     {
         mario->changeState(new JumpState(mario));
         return;
     }
 
-    if (IsKeyDown(KEY_RIGHT))
+    float accel = -skidDecel;
+    if (vel.x < 0)
+        accel = skidDecel;
+
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
         mario->direction = RIGHT;
-        mario->movement.acceleration.x = (mario->movement.velocity.x > 0) ? -skidDecel : skidDecel;
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         mario->direction = LEFT;
-        mario->movement.acceleration.x = (mario->movement.velocity.x > 0) ? -skidDecel : skidDecel;
     }
     else
     {
-
-        mario->movement.acceleration.x = (mario->movement.velocity.x > 0) ? -friction * 2 : friction * 2;
-    }
-}
-
-// ---------- RunState ----------
-
-RunState::RunState(Mario *_mario, int _delay)
-    : MarioState(RUN, _mario, _delay)
-{
-}
-
-void RunState::handleInput()
-{
-    if (IsKeyPressed(KEY_UP) && mario->isGrounded)
-    {
-        mario->changeState(new JumpState(mario));
-        return;
-    }
-    if (!IsKeyDown(KEY_LEFT_CONTROL))
-    {
-        mario->changeState(new WalkState(mario));
-        return;
+        accel = (vel.x > 0) ? -friction * 2 : friction * 2;
     }
 
-    if (!mario->isGrounded)
-    {
-        mario->changeState(new FallState(mario));
-        return;
-    }
-    if (IsKeyDown(KEY_DOWN) && mario->form != SMALL)
-    {
-        mario->changeState(new CrouchState(mario));
-        return;
-    }
-    if (IsKeyDown(KEY_RIGHT))
-    {
-        if (mario->direction == LEFT && abs(mario->movement.velocity.x) > 20.0f)
-        {
-            mario->changeState(new SkidState(mario));
-            return;
-        }
-        mario->direction = RIGHT;
-        mario->movement.acceleration.x = runAccel;
-    }
-    else if (IsKeyDown(KEY_LEFT))
-    {
-        if (mario->direction == RIGHT && abs(mario->movement.velocity.x) > 20.0f)
-        {
-            mario->changeState(new SkidState(mario));
-            return;
-        }
-        mario->direction = LEFT;
-        mario->movement.acceleration.x = -runAccel;
-    }
-    else
-    {
-        mario->movement.acceleration.x = mario->direction * (-friction);
-
-        if (abs(mario->movement.velocity.x) < 20)
-        {
-            mario->changeState(new IdleState(mario));
-            return;
-        }
-    }
-
-    // Clamp run speed
-    if (abs(mario->movement.velocity.x) > runSpeed)
-    {
-        mario->movement.velocity.x = runSpeed * mario->direction;
-    }
+    float deltaTime = GetFrameTime();
+    float newVelX = vel.x + accel * deltaTime;
+    mario->body->SetLinearVelocity({newVelX, vel.y});
 }
 
 // ---------- CrouchState ----------
 CrouchState::CrouchState(Mario *_mario, int _delay)
     : MarioState(CROUCH, _mario, _delay)
 {
+    mario->toNewBody();
 }
 void CrouchState::handleInput()
 {
-    mario->movement.acceleration.x = mario->direction * (-friction);
+    b2Vec2 vel = mario->body->GetLinearVelocity();
+    float accel = mario->direction * (-friction);
 
-    if (!IsKeyDown(KEY_DOWN))
+    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))     
     {
-        if (abs(mario->movement.velocity.x) < 20.0f)
+        mario->toNewBody(); // Reset to normal body size
+        if (!mario->isGrounded)
+            mario->changeState(new FallState(mario));
+        else if (abs(vel.x) < 0.6f)
             mario->changeState(new IdleState(mario));
         else
             mario->changeState(new WalkState(mario));
         return;
     }
-    if (IsKeyPressed(KEY_UP))
+    if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && mario->isGrounded)
     {
-        mario->changeState(new JumpState(mario));
+        // mario->changeState(new JumpState(mario));
+        mario->isGrounded = false;
+        float mass = mario->body->GetMass();
+        b2Vec2 impulse(0, mass * jumpVel);
+        mario->body->ApplyLinearImpulseToCenter(impulse, true);
         return;
     }
-    if (abs(mario->movement.velocity.x) < 20.0f)
+    if (abs(vel.x) < 0.6f)
     {
-        mario->movement.velocity.x = 0;
-        mario->movement.acceleration.x = 0;
+        mario->body->SetLinearVelocity({0, vel.y});
         return;
     }
+    float deltaTime = GetFrameTime();
+    float newVelX = vel.x + accel * deltaTime;
+    mario->body->SetLinearVelocity({newVelX, vel.y});
 }
 
 // ---------- GrowState ----------
@@ -373,8 +374,8 @@ void CrouchState::handleInput()
 GrowState::GrowState(Mario *_mario, int _delay)
     : MarioState(GROW, _mario, _delay)
 {
-    if (mario->isGrounded)
-        mario->pos.y = mario->groundPosY - frameRec.height;
+    // if (mario->isGrounded)
+    //     mario->pos.y = mario->groundPosY - frameRec.height;
 }
 
 void GrowState::handleInput()
@@ -385,29 +386,33 @@ void GrowState::handleInput()
         return;
     }
     StartEndFrame se = mario->sprite.StartEndFrames[type];
-
+    // new collision box
+    mario->toNewBody();
     cout << frameIndex << " " << frameRec.height << boolalpha << mario->isGrounded << "\n";
     if (se.start + frameIndex == se.end)
     {
+
         mario->form = static_cast<MarioForm>((mario->form + 1) % FORM_COUNT);
         mario->changeForm(mario->form);
+
         if (mario->isGrounded)
         {
-            mario->pos.y = mario->groundPosY - frameRec.height;
+            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else
         {
             mario->changeState(new FallState(mario));
         }
+
         return;
     }
 }
 UnGrowState::UnGrowState(Mario *_mario, int _delay)
     : MarioState(UNGROW, _mario, _delay)
 {
-    if (mario->isGrounded)
-        mario->pos.y = mario->groundPosY - frameRec.height;
+    // if (mario->isGrounded)
+    //     mario->pos.y = mario->groundPosY - frameRec.height;
 }
 
 void UnGrowState::handleInput()
@@ -418,16 +423,17 @@ void UnGrowState::handleInput()
         mario->changeState(new IdleState(mario));
         return;
     }
-    if (mario->isGrounded)
-        mario->pos.y = mario->groundPosY - frameRec.height;
 
+    // new collision box
+    mario->toNewBody();
     if (se.start - frameIndex == se.end)
     {
         mario->form = static_cast<MarioForm>((mario->form - 1 + FORM_COUNT) % FORM_COUNT);
         mario->changeForm(mario->form);
+
         if (mario->isGrounded)
         {
-            mario->pos.y = mario->groundPosY - frameRec.height;
+            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else
@@ -438,25 +444,18 @@ void UnGrowState::handleInput()
     }
 }
 
-
-DeadState::DeadState(Mario* _mario, int _delay)
+DeadState::DeadState(Mario *_mario, int _delay)
     : MarioState(DEAD, _mario, _delay)
-{   
+{
     mario->isGrounded = false;
-    mario->movement.velocity.y = -250.f;
-    mario->movement.velocity.x = 0;
-    mario->movement.acceleration.x = 0;
+    mario->body->SetLinearVelocity({0, -250.f / PPM});
 }
 
 void DeadState::handleInput()
 {
     if (IsKeyPressed(KEY_R))
     {
-        // Reset character
-        mario->changeState(new IdleState(mario));
-        mario->pos = {100, 0}; 
-        mario->movement.velocity = {0, 0}; 
-        mario->isGrounded = true; 
+        mario->changeState(new FallState(mario));
+        return;
     }
-
 }
