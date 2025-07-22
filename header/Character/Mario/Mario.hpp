@@ -30,6 +30,7 @@ public:
 
     // Override collision to handle enemies
     void updateCollision(GameObject *other, int type) override;
+    void createBody(b2World *world) override;
 public:
     // A specific builder for Mario
     struct Builder

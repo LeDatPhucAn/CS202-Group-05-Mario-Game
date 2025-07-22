@@ -339,7 +339,7 @@ void CrouchState::handleInput()
     b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = mario->direction * (-friction);
 
-    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))
+    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))     
     {
         mario->toNewBody(); // Reset to normal body size
         if (!mario->isGrounded)

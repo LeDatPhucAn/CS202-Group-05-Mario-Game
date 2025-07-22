@@ -34,7 +34,7 @@ class State
 {
 private:
     friend class Character;
-
+    friend class Mario;
 protected:
     // basic parameters
     int numFrames = 0;

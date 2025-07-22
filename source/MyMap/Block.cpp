@@ -172,7 +172,7 @@ void Block::createBody(b2World *world)
 
     // 2. Bottom sensor
     b2PolygonShape bottomSensorShape;
-    bottomSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, halfHeight/2), 0);
+    bottomSensorShape.SetAsBox(halfWidth * 0.825f, 2.0f / PPM, b2Vec2(0, halfHeight / 2), 0);
 
     b2FixtureDef bottomFixture;
     bottomFixture.shape = &bottomSensorShape;
