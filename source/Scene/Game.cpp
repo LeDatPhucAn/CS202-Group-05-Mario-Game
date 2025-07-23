@@ -62,9 +62,6 @@ void Game::addEnemy(Enemy *enemy)
 
     if (enemy)
     {
-        std::cout << "enemy pointer: " << enemy << std::endl;
-        std::cout << "enemy type: " << typeid(*enemy).name() << std::endl;
-
         enemy->createBody(world);
         enemies.push_back(enemy);
     }

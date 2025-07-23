@@ -52,11 +52,6 @@ Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
                                tmpRec.width,
                                tmpRec.height});
         }
-        // cout << tsi->tileSize.x << ' ' <<tsi->spacing << endl;
-        // cout << srcRec.x << " " << srcRec.y <<" " << srcRec.width << " " << srcRec.height << endl;
-        // for(auto x : srcRecs) {
-        //     cout << x.x << " " << x.y <<" " << x.width << " " << x.height << endl;
-        // }
     }
 
     isSolid = inforTile->get<bool>("isSolid");
@@ -154,31 +149,47 @@ void Block::createBody(b2World *world)
     boxShape.SetAsBox(halfWidth, halfHeight);
 
     b2FixtureDef fixtureDef;
-    if (!isSolid)
-        fixtureDef.isSensor = true;
     fixtureDef.shape = &boxShape;
     fixtureDef.friction = 0.8f;
-    body->CreateFixture(&fixtureDef);
+    if (!isSolid)
+    {
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = CATEGORY_NOTSOLID;
+        fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body
+    }
+    else
+    {
+        fixtureDef.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
+        fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
+    }
+    b2Fixture *fixtureMain = body->CreateFixture(&fixtureDef);
 
-    // 1. Top sensor
-    b2PolygonShape topSensorShape;
-    topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
+    if (isSolid)
+    {
+        // 1. Top sensor
+        b2PolygonShape topSensorShape;
+        topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
 
-    b2FixtureDef topFixture;
-    topFixture.shape = &topSensorShape;
-    topFixture.isSensor = true;
-    topFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
-    body->CreateFixture(&topFixture);
+        b2FixtureDef topFixture;
+        topFixture.shape = &topSensorShape;
+        topFixture.isSensor = true;
+        topFixture.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
+        topFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
+        topFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+        body->CreateFixture(&topFixture);
 
-    // 2. Bottom sensor
-    b2PolygonShape bottomSensorShape;
-    bottomSensorShape.SetAsBox(halfWidth * 0.825f, 2.0f / PPM, b2Vec2(0, halfHeight / 2), 0);
+        // 2. Bottom sensor
+        b2PolygonShape bottomSensorShape;
+        bottomSensorShape.SetAsBox(halfWidth * 0.825f, 2.0f / PPM, b2Vec2(0, halfHeight / 2), 0);
 
-    b2FixtureDef bottomFixture;
-    bottomFixture.shape = &bottomSensorShape;
-    bottomFixture.isSensor = true;
-    bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
-    body->CreateFixture(&bottomFixture);
+        b2FixtureDef bottomFixture;
+        bottomFixture.shape = &bottomSensorShape;
+        bottomFixture.isSensor = true;
+        bottomFixture.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
+        bottomFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
+        bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+        body->CreateFixture(&bottomFixture);
+    }
 
     // // 3. Left side sensor
     // b2PolygonShape leftSensorShape;

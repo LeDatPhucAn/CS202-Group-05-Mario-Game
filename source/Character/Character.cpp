@@ -30,17 +30,37 @@ void Character::updateCollision(GameObject *other, int type)
     {
         if (block->isSolid)
         {
-            if (type == TOP)
+            switch (type)
             {
+            case TOP:
+                // Handle top collision with solid block
+                break;
+            case BOTTOM:
+                // Handle bottom collision with solid block
+                break;
+            case LEFTSIDE:
+                // Handle left side collision with solid block
+                break;
+            case RIGHTSIDE:
+                break;
             }
-            else if (type == BOTTOM)
+        }
+        else if (!block->isSolid)
+        {
+            switch (type)
             {
-            }
-            else if (type == LEFTSIDE)
-            {
-            }
-            else if (type == RIGHTSIDE)
-            {
+            case TOP:
+                // Handle top collision with non-solid block
+                break;
+            case BOTTOM:
+                // Handle bottom collision with non-solid block
+                break;
+            case LEFTSIDE:
+                // Handle left side collision with non-solid block
+                break;
+            case RIGHTSIDE:
+                // Handle right side collision with non-solid block
+                break;
             }
         }
     }
@@ -78,6 +98,9 @@ void Character::createBody(b2World *world)
 
     torsoFixture.density = 1.0f;
     torsoFixture.friction = 0.2f;
+    torsoFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+    torsoFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+
     torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&torsoFixture);
 
@@ -96,6 +119,8 @@ void Character::createBody(b2World *world)
     legsFixture.shape = &legsShape;
     legsFixture.density = 1.0f;
     legsFixture.friction = 0.2f; // May adjust if sliding on slopes
+    legsFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+    legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
 
@@ -111,12 +136,14 @@ void Character::createBody(b2World *world)
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius;
-    footSensor.m_p.Set(0, legOffsetY + 1 / PPM); // Slightly below legs
+    footSensor.m_p.Set(0, legOffsetY + 0.5f / PPM); // Slightly below legs
 
     b2FixtureDef footFixture;
     footFixture.shape = &footSensor;
     footFixture.isSensor = true;
     footFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    footFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    footFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
     body->CreateFixture(&footFixture);
 
     // 4. Head sensor
@@ -127,6 +154,8 @@ void Character::createBody(b2World *world)
     headFixture.shape = &headShape;
     headFixture.isSensor = true;
     headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+    headFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
     body->CreateFixture(&headFixture);
 
     // 5. Left wall sensor
@@ -137,6 +166,8 @@ void Character::createBody(b2World *world)
     leftWallFixture.shape = &leftWallShape;
     leftWallFixture.isSensor = true;
     leftWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::LEFTSIDE);
+    leftWallFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    leftWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
     body->CreateFixture(&leftWallFixture);
 
     // 6. Right wall sensor
@@ -146,6 +177,8 @@ void Character::createBody(b2World *world)
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;
     rightWallFixture.isSensor = true;
+    rightWallFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    rightWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
     rightWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
     body->CreateFixture(&rightWallFixture);
 }

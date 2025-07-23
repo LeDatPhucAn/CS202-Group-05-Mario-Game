@@ -26,6 +26,13 @@ const float addedFallGravity = fallGravity * (offset + 0.5);
 // jumping
 const float maxJumpHeight = 4;
 const float jumpVel = -sqrt(2 * (fallGravity + jumpGravity) * maxJumpHeight);
+
+// To set what collides with what
+constexpr uint16 CATEGORY_CHARACTER_MAIN = 0x0001;
+constexpr uint16 CATEGORY_CHARACTER_SENSOR = 0x0002;
+constexpr uint16 CATEGORY_SOLID = 0x0004;
+constexpr uint16 CATEGORY_NOTSOLID = 0x0008;
+
 class GameObject
 {
 public:

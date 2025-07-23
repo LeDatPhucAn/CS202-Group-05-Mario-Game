@@ -13,6 +13,7 @@ void ContactListener::BeginContact(b2Contact *contact)
 
     GameObject *objA = reinterpret_cast<GameObject *>(fixtureA->GetBody()->GetUserData().pointer);
     GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
+    checkGrounded(contact, true);
 
     switch (typeA)
     {
@@ -44,7 +45,6 @@ void ContactListener::BeginContact(b2Contact *contact)
         objB->updateCollision(objA, RIGHTSIDE);
         break;
     }
-    checkGrounded(contact, true);
 }
 
 void ContactListener::EndContact(b2Contact *contact)

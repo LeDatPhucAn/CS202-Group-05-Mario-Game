@@ -1,6 +1,5 @@
 # set(CMAKE_C_COMPILER gcc)
 # set(CMAKE_CXX_COMPILER g++)
-add_compile_options(-w) # for GCC/Clang
 cmake_minimum_required(VERSION 3.10)
 project(ProjectCS202)
 
@@ -17,8 +16,15 @@ set_property(GLOBAL PROPERTY JOB_FAIL_FAST TRUE)
 
 set(RAYLIB_PATH "C:/raylib")
 
-add_compile_options(-fdiagnostics-color=always)
-add_compile_options(-Wfatal-errors)
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    add_compile_options(-w)  # suppress all warnings
+    add_compile_options(-fdiagnostics-color=always)
+    add_compile_options(-Wfatal-errors)
+elseif(MSVC)
+    # MSVC-compatible warning level, optional:
+    add_compile_options(/W3)  # or /W4 for more warnings
+    # Don't use /w (MSVC's full suppress); it's usually not recommended
+endif()
 
 include_directories(${RAYLIB_PATH}/include)
 link_directories(${RAYLIB_PATH}/lib)
@@ -50,7 +56,11 @@ add_custom_command(
             ${CMAKE_SOURCE_DIR}/assets
             ${CMAKE_BINARY_DIR}/assets
 )
-
+add_custom_target(clang-uml
+    COMMAND clang-uml -d
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Generating UML diagrams with clang-uml"
+)
 target_link_libraries(main raylib -lopengl32 -lgdi32 -lwinmm)
 
 target_include_directories(main PRIVATE ${PROJECT_SOURCE_DIR}/header)
