@@ -20,13 +20,13 @@ void EnemyIdleState::handleInput()
 EnemyWalkState::EnemyWalkState(Character *_character, int _delay)
     : EnemyState(WALK, _character, _delay)
 {
-    character->direction = RIGHT;
+    character->direction = LEFT;
 }
 
 void EnemyWalkState::handleInput()
 {
     b2Vec2 vel = character->body->GetLinearVelocity();
-    vel.x = character->direction * fabs(20 / PPM); // Ensure correct direction
+    vel.x = -character->direction * fabs(20 / PPM); // Ensure correct direction
     character->body->SetLinearVelocity(vel);
 }
 

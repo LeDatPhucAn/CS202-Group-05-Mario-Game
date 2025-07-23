@@ -16,7 +16,6 @@ private:
 public:
     Lakitu();
 
-    // We need a way to tell Lakitu who to follow
     void setTarget(Mario* marioTarget, Game* game);
 
     // Lakitu has custom movement, so we override update()

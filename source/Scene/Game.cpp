@@ -19,7 +19,7 @@ Game::Game() : Mario(),
     };
     Mario.setPosition({500, 50});
     Goomba.setPosition({150, 0});
-    Koopa.setPosition({170, 0});
+    Koopa.setPosition({210, 0});
     PiranhaPlant.setPosition({20, 90});
     Lakitu.setPosition({50, -20});
     init();

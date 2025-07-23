@@ -5,11 +5,11 @@
 Goomba::Goomba()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {0, 0};
-    this->sprite.StartEndFrames[WALK] = {0, 1};
-    this->sprite.StartEndFrames[DEAD] = {2, 2};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    this->sprite.StartEndFrames[IDLE] = {11, 12};
+    this->sprite.StartEndFrames[WALK] = {0, 7};
+    this->sprite.StartEndFrames[DEAD] = {8, 9};
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba"]);
+    this->sprite.texture = UI::textureMap["Goomba"];
 }
 
 void Goomba::updateCollision(GameObject *other, int type)
@@ -19,15 +19,15 @@ void Goomba::updateCollision(GameObject *other, int type)
     if (block)
     {
         if (type == LEFTSIDE){
-            this->direction = RIGHT;
+            this->direction = LEFT;
             b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
+            vel.x = -this->direction * fabs(20 / PPM); // Ensure correct direction
             this->body->SetLinearVelocity(vel);
         }
         else if (type == RIGHTSIDE){
-            this->direction = LEFT;
+            this->direction = RIGHT;
             b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
+            vel.x = -this->direction * fabs(20 / PPM); // Ensure correct direction
             this->body->SetLinearVelocity(vel);
         }
     }
