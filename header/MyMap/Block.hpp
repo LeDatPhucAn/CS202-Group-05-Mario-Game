@@ -27,7 +27,7 @@ enum class Contains
 
 class Block : public GameObject
 {
-
+      friend class IBlockBehavior;
       friend class BrickBehavior;
       friend class QuestionBehavior;
       friend class GroundBehavior;

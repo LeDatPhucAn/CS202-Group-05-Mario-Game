@@ -151,6 +151,7 @@ void Block::createBody(b2World *world)
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &boxShape;
     fixtureDef.friction = 0.8f;
+    fixtureDef.density = 1.0f;
     if (!isSolid)
     {
         fixtureDef.isSensor = true;
