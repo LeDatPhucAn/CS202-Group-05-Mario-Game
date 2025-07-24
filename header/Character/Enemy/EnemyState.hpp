@@ -39,6 +39,19 @@ public:
     void handleInput() override;
     void updateState() override;
 };
+class EnemyFlyState : public EnemyState
+{
+private:
+    float flyTime = 0.0f;
+    float flyAmplitude = 50.0f; // How high/low it flies
+    float flyFrequency = 2.0f;  // How fast it oscillates
+    float directionTimer = 0.0f; 
+    
+public:
+    EnemyFlyState(Character *_character, int _delay = 500);
+    void handleInput() override;
+    void updateState() override;
+};
 
 
 

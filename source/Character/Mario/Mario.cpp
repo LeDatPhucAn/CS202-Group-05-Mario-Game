@@ -69,7 +69,15 @@ void Mario::updateCollision(GameObject *other, int type)
     Character::updateCollision(other, type);
     Enemy *enemy = dynamic_cast<Enemy *>(other);
     if (enemy)
-    {
+    {   
+        static float lastHitTime = 0.0f;
+            float currentTime = GetTime(); // Raylib function to get current time
+            
+            if (currentTime - lastHitTime < 0.2f) // 0.2 second cooldown
+            {
+                return; // Ignore this hit if too soon after last hit
+            }
+            lastHitTime = currentTime;
         if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
         {
             return;
@@ -86,7 +94,7 @@ void Mario::updateCollision(GameObject *other, int type)
             {
                 return;
             }
-            this->changeState(new DeadState(this));
+            else this->changeState(new DeadState(this));
         }
     }
 }

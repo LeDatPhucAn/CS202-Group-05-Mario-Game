@@ -20,7 +20,8 @@ enum stateType
     CROUCH,
     GROW,
     UNGROW,
-    DEAD
+    DEAD,
+    FLY
 };
 
 enum Direction

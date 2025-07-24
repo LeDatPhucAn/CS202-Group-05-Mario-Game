@@ -22,7 +22,7 @@ private:
 protected:
     Mario Mario;
     Goomba Goomba;
-    Koopa Koopa;
+    Koopa Koopa, FlyingKoopa;
     PiranhaPlant PiranhaPlant;
     Lakitu Lakitu;
 

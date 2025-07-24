@@ -10,6 +10,7 @@ vector<Enemy *> Game::enemies = {};
 Game::Game() : Mario(),
                Goomba(),
                Koopa(),
+               FlyingKoopa(),
                PiranhaPlant(),
                Lakitu()
 {
@@ -20,6 +21,7 @@ Game::Game() : Mario(),
     Mario.setPosition({500, 50});
     Goomba.setPosition({150, 0});
     Koopa.setPosition({210, 0});
+    FlyingKoopa.setPosition({300, 0});
     PiranhaPlant.setPosition({20, 90});
     Lakitu.setPosition({50, -20});
     init();
@@ -45,12 +47,14 @@ void Game::init()
 
     Goomba.changeState(new EnemyWalkState(&Goomba));
     Koopa.changeState(new EnemyWalkState(&Koopa));
+    FlyingKoopa.changeState(new EnemyFlyState(&FlyingKoopa));
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
     Lakitu.changeState(new EnemyIdleState(&Lakitu));
     Lakitu.setTarget(&Mario, this);
 
     addEnemy(&Goomba);
     addEnemy(&Koopa);
+    addEnemy(&FlyingKoopa);
     addEnemy(&PiranhaPlant);
     addEnemy(&Lakitu);
 
