@@ -9,6 +9,11 @@ Enemy::Enemy(const Enemy &other) : Character(other)
     beCleared = other.beCleared;
 }
 
+void Enemy::update(const Vector2& marioPos)
+{
+    Character::update();
+}
+
 // Builder methods...
 Enemy::Builder &Enemy::Builder::setFrames(stateType type, int start, int end)
 {

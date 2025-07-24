@@ -18,48 +18,37 @@ Lakitu::Lakitu()
     this->throwTimer = 0.0f;
 }
 
-void Lakitu::setTarget(Mario *marioTarget, Game *game)
-{
-    this->target = marioTarget;
-    this->game = game;
-}
 
-void Lakitu::update()
+void Lakitu::update(const Vector2& marioPos)
 {
-
-    // Call base update for animations
     Character::update();
-
-    if (dynamic_cast<DeadState *>(target->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+    if (dynamic_cast<EnemyDeadState *>(this->currentState))
         return;
 
     // --- Movement Logic ---
-
-    // Not Affected by gravity
     b2Vec2 vel = this->body->GetLinearVelocity();
-    vel.y = 0.0f; // Reset vertical velocity to zero
+    vel.y = -0.75f;
 
-    // Lakitu tries to hover above and slightly ahead of Mario
+    // Use the marioPos parameter for movement
     b2Vec2 currentPos = body->GetPosition();
-    float targetX = (target->pos.toPixels().x + 32.0f) / PPM;
+    float targetX = (marioPos.x + 32.0f) / PPM;
 
-    // speed for Lakitu to move towards Mario
     float desiredSpeed = 4.0f;
-
     float dx = targetX - currentPos.x;
-    float epsilon = 0.1f; // To avoid jittering
+    float epsilon = 0.1f;
 
     if (fabs(dx) > epsilon)
     {
-        vel.x = desiredSpeed * (dx > 0 ? 1.0f : -1.0f); // sign of dx determines direction
+        vel.x = desiredSpeed * (dx > 0 ? 1.0f : -1.0f);
     }
     else
     {
-        vel.x = 0.0f; // Close enough, stop horizontal movement
+        vel.x = 0.0f;
     }
 
     body->SetLinearVelocity(vel);
-    this->body->ApplyForceToCenter({0, this->body->GetMass() * (-addedFallGravity)}, true);
+    // Apply an UPWARD force to counteract gravity
+    this->body->ApplyForceToCenter({0, this->body->GetMass() * fallGravity}, true);
 
     // --- Throwing Logic ---
     throwTimer += GetFrameTime();
@@ -67,7 +56,6 @@ void Lakitu::update()
     {
         throwTimer = 0.0f;
 
-        // Create a new Spiny at Lakitu's position
         Spiny *newSpiny = new Spiny();
         newSpiny->setPosition(this->getPosition());
         newSpiny->changeState(new EnemyWalkState(newSpiny));

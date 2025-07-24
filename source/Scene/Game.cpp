@@ -18,12 +18,13 @@ Game::Game() : Mario(),
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
-    Mario.setPosition({500, 50});
+    Mario.setPosition({275, 50});
     Goomba.setPosition({150, 0});
     Koopa.setPosition({210, 0});
     FlyingKoopa.setPosition({300, 0});
     PiranhaPlant.setPosition({20, 90});
     Lakitu.setPosition({50, -20});
+    BulletBill.setPosition({660, 150});
     init();
 }
 
@@ -49,14 +50,15 @@ void Game::init()
     Koopa.changeState(new EnemyWalkState(&Koopa));
     FlyingKoopa.changeState(new EnemyFlyState(&FlyingKoopa));
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
+    BulletBill.changeState(new EnemyIdleState(&BulletBill));
     Lakitu.changeState(new EnemyIdleState(&Lakitu));
-    Lakitu.setTarget(&Mario, this);
 
     addEnemy(&Goomba);
     addEnemy(&Koopa);
     addEnemy(&FlyingKoopa);
     addEnemy(&PiranhaPlant);
     addEnemy(&Lakitu);
+    addEnemy(&BulletBill);
 
     Mario.createBody(world);
 }
@@ -99,12 +101,13 @@ void Game::updateScene()
 void Game::updateCharacters()
 {
     Mario.update();
+    Vector2 marioPos = Mario.getPosition();
 
     for (Enemy *enemy : enemies)
     {
         if (enemy)
         {
-            enemy->update();
+            enemy->update(marioPos);
         }
     }
 }
@@ -124,7 +127,7 @@ void Game::updateMap()
         if (block->needDeletion) {
             toDelete.push_back(block);
             world->DestroyBody(block->getBody());
-            return true; // mark for removal
+            return true; 
         }
         return false; }),
         blocks.end());

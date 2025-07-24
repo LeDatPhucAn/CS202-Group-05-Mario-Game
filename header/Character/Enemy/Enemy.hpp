@@ -15,6 +15,7 @@ public:
     Enemy(const Sprite &_sprite, State *_initialState, Vector2 _pos);
     Enemy(const Enemy &other);
 
+    virtual void update(const Vector2& marioPos);
     virtual void updateCollision(GameObject *other, int type) = 0;
     struct Builder
     {

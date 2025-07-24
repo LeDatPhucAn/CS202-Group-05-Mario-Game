@@ -36,6 +36,7 @@ private:
     friend class Lakitu;
     friend class PiranhaPlant;
     friend class Spiny;
+    friend class BulletBill;
     friend class Mario;
 
 protected:

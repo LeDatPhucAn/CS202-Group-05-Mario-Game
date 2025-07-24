@@ -11,6 +11,7 @@
 #include "PiranhaPlant.hpp"
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
+#include "BulletBill.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 class Game : public Scene
@@ -25,6 +26,7 @@ protected:
     Koopa Koopa, FlyingKoopa;
     PiranhaPlant PiranhaPlant;
     Lakitu Lakitu;
+    BulletBill BulletBill;
 
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
