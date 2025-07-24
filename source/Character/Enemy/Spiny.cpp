@@ -18,20 +18,21 @@ void Spiny::updateCollision(GameObject *other, int type)
     Character::updateCollision(other, type);
 
     Block *block = dynamic_cast<Block *>(other);
-    if (block)
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    if (block || enemy)
     {
         if (type == LEFTSIDE)
         {
             this->direction = RIGHT;
             b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
+            vel.x = this->direction * fabs(vel.x / PPM);
             this->body->SetLinearVelocity(vel);
         }
         else if (type == RIGHTSIDE)
         {
             this->direction = LEFT;
             b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(20 / PPM); // Ensure correct direction
+            vel.x = this->direction * fabs(vel.x / PPM);
             this->body->SetLinearVelocity(vel);
         }
     }

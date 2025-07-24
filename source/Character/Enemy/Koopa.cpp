@@ -17,7 +17,8 @@ void Koopa::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
     Block *block = dynamic_cast<Block *>(other);
-    if (block)
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    if (block || enemy)
     {
         if (type == LEFTSIDE)
         {
@@ -34,6 +35,7 @@ void Koopa::updateCollision(GameObject *other, int type)
             this->body->SetLinearVelocity(vel);
         }
     }
+    
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
