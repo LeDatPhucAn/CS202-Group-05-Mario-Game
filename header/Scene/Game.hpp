@@ -12,6 +12,7 @@
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
 #include "BulletBill.hpp"
+#include "HammerBro.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 class Game : public Scene
@@ -27,6 +28,8 @@ protected:
     PiranhaPlant PiranhaPlant;
     Lakitu Lakitu;
     BulletBill BulletBill;
+    HammerBro HammerBro;
+
 
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;

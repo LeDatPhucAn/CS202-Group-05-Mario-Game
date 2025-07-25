@@ -24,7 +24,7 @@ PiranhaPlant::PiranhaPlant()
     this->isSetup = false;
 }
 
-void PiranhaPlant::update()
+void PiranhaPlant::update(const Vector2 &marioPos)
 {
     // One-time setup on the first frame to capture the correct positions
     if (!isSetup)

@@ -14,7 +14,7 @@ private:
 
 public:
     PiranhaPlant();
-    
-    void update() override;
+
+    void update(const Vector2 &marioPos) override;
     void updateCollision(GameObject *other, int type) override;
 };

@@ -29,6 +29,7 @@ private:
     friend class EnemyDeadState;
     friend class EnemyRunState;
     friend class EnemyFlyState;
+    friend class EnemyJumpState;
     friend class Enemy;
     friend class Goomba;
     friend class Koopa;
@@ -37,6 +38,7 @@ private:
     friend class PiranhaPlant;
     friend class Spiny;
     friend class BulletBill;
+    friend class HammerBro;
     friend class Mario;
 
 protected:

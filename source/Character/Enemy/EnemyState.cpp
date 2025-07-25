@@ -13,7 +13,7 @@ EnemyIdleState::EnemyIdleState(Character *_character, int _delay)
 void EnemyIdleState::handleInput()
 {
     b2Vec2 vel = character->body->GetLinearVelocity();
-    vel.x = 0.0f; // Ensure no horizontal movement
+    vel.x = 0.0f;
     character->body->SetLinearVelocity(vel);
 }
 
@@ -71,34 +71,83 @@ void EnemyDeadState::handleInput()
     character->body->SetLinearVelocity(vel);
 }
 
-EnemyFlyState::EnemyFlyState(Character *_character, int _delay)
-    : EnemyState(FLY, _character, _delay) 
+// --- FLY STATE IMPLEMENTATION ---
+
+EnemyFlyState::EnemyFlyState(Character* _character)
+    : EnemyState(FLY, _character, 5)
 {
-    character->direction = LEFT;
-    directionTimer = 0.0f;
-}
-
-void EnemyFlyState::handleInput()
-{   
-    b2Vec2 vel = character->body->GetLinearVelocity();
-    vel.x = character->direction * fabs(20 / PPM);
-    vel.y = (sin(flyTime * flyFrequency) - 0.3f) * flyAmplitude / PPM;
-    
-    character->body->SetLinearVelocity(vel);
-
-    character->body->ApplyForceToCenter({0, character->body->GetMass() * 9.8f}, true);
-}
-
-void EnemyFlyState::updateState()
-{
-    State::updateState();
-    flyTime += GetFrameTime();
-    directionTimer += GetFrameTime();
-
-    if (directionTimer >= 3.0f)
+    // On entering this state, ensure gravity is disabled.
+    if (character && character->body)
     {
-        character->direction = (character->direction == LEFT) ? RIGHT : LEFT;
-        directionTimer = 0.0f; 
+        character->body->SetGravityScale(0.0f);
     }
 }
 
+EnemyFlyState::~EnemyFlyState()
+{
+    // Optional: Restore gravity if the character can stop flying.
+    if (character && character->body)
+    {
+        character->body->SetGravityScale(1.0f);
+    }
+}
+
+void EnemyFlyState::handleInput()
+{
+    
+}
+
+
+// --- JUMP STATE IMPLEMENTATION ---
+
+EnemyJumpState::EnemyJumpState(Character* _character, int delay)
+  : EnemyState(JUMP, _character, delay)
+{
+    if (character && character->body) 
+        character->body->SetGravityScale(0.0f);
+    initSineJump();
+}
+
+EnemyJumpState::~EnemyJumpState()
+{
+    // restore normal gravity when (if) we ever exit this state
+    if (character && character->body)
+        character->body->SetGravityScale(1.0f);
+}
+
+void EnemyJumpState::initSineJump()
+{
+    elapsed   = 0.0f;
+    if (character && character->body) 
+        baselineY = character->body->GetPosition().y;
+}
+
+void EnemyJumpState::handleInput()
+{
+    if (!character || !character->body) return;
+
+    // maintain horizontal patrol speed
+    b2Vec2 v = character->body->GetLinearVelocity();
+    v.x = character->direction * horizontalSpeed;
+    character->body->SetLinearVelocity(v);
+}
+
+void EnemyJumpState::updateState()
+{
+    State::updateState();
+
+    // advance our time
+    float dt = GetFrameTime();
+    elapsed += dt;
+
+    // compute vertical velocity from derivative of y = A * sin(ω t)
+    float vy = amplitude * omega * cos(omega * elapsed);
+
+    // set body velocity (Box2D works in meters/sec)
+    b2Vec2 v = character->body->GetLinearVelocity();
+    v.y = vy;
+    character->body->SetLinearVelocity(v);
+
+    // (optional) wrap elapsed to avoid large floats
+    if (elapsed > period) elapsed -= period;
+}

@@ -41,17 +41,30 @@ public:
 };
 class EnemyFlyState : public EnemyState
 {
-private:
-    float flyTime = 0.0f;
-    float flyAmplitude = 50.0f; // How high/low it flies
-    float flyFrequency = 2.0f;  // How fast it oscillates
-    float directionTimer = 0.0f; 
-    
 public:
-    EnemyFlyState(Character *_character, int _delay = 500);
+    EnemyFlyState(Character* character);
+    ~EnemyFlyState();
+
     void handleInput() override;
-    void updateState() override;
+    // This state is continuous and doesn't need an updateState to transition
 };
 
+class EnemyJumpState : public EnemyState {
+public:
+    EnemyJumpState(Character* _character, int delay = 0);
+    ~EnemyJumpState();
 
+    void handleInput() override;
+    void updateState() override;
 
+private:
+    float elapsed = 0.0f;
+    const float period    = 2.0f;    // seconds per full up‑and‑down cycle
+    const float amplitude = 1.5f;    // max vertical displacement in meters
+    const float horizontalSpeed = 1.5f; // m/s sideways
+    const float omega = 2*PI/2.0f;   // angular frequency
+
+    float baselineY = 0.0f;  // world‑space y at state start
+
+    void initSineJump();
+};

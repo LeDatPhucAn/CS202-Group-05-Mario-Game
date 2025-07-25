@@ -9,7 +9,7 @@ Lakitu::Lakitu()
 {
 
     this->sprite.StartEndFrames[IDLE] = {15, 15}; // Normal flying
-    this->sprite.StartEndFrames[WALK] = {15, 15}; // Using WALK state for flying animation
+    this->sprite.StartEndFrames[FLY] = {15, 15}; // Using FLY state for flying animation
     this->sprite.StartEndFrames[DEAD] = {16, 16};
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];

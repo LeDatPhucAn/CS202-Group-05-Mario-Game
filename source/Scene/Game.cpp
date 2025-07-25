@@ -12,7 +12,9 @@ Game::Game() : Mario(),
                Koopa(),
                FlyingKoopa(),
                PiranhaPlant(),
-               Lakitu()
+               Lakitu(),
+               BulletBill(),
+               HammerBro()
 {
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
@@ -21,10 +23,11 @@ Game::Game() : Mario(),
     Mario.setPosition({275, 50});
     Goomba.setPosition({150, 0});
     Koopa.setPosition({210, 0});
-    FlyingKoopa.setPosition({300, 0});
+    FlyingKoopa.setPosition({100, 150});
     PiranhaPlant.setPosition({20, 90});
     Lakitu.setPosition({50, -20});
     BulletBill.setPosition({660, 150});
+    HammerBro.setPosition({600, 0});
     init();
 }
 
@@ -48,10 +51,11 @@ void Game::init()
 
     Goomba.changeState(new EnemyWalkState(&Goomba));
     Koopa.changeState(new EnemyWalkState(&Koopa));
-    FlyingKoopa.changeState(new EnemyFlyState(&FlyingKoopa));
+    FlyingKoopa.changeState(new EnemyJumpState(&FlyingKoopa)); 
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
-    BulletBill.changeState(new EnemyIdleState(&BulletBill));
-    Lakitu.changeState(new EnemyIdleState(&Lakitu));
+    BulletBill.changeState(new EnemyIdleState(&BulletBill)); // Use FlyState for BulletBill
+    Lakitu.changeState(new EnemyFlyState(&Lakitu)); // Use FlyState for Lakitu
+    HammerBro.changeState(new EnemyIdleState(&HammerBro)); // HammerBro starts walking/idle
 
     addEnemy(&Goomba);
     addEnemy(&Koopa);
@@ -59,6 +63,7 @@ void Game::init()
     addEnemy(&PiranhaPlant);
     addEnemy(&Lakitu);
     addEnemy(&BulletBill);
+    addEnemy(&HammerBro);
 
     Mario.createBody(world);
 }
