@@ -2,34 +2,8 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "Vec2Adapter.hpp"
-enum MarioForm
-{
-    SMALL = 0,
-    BIG = 1,
-    FIRE,
-    FORM_COUNT
-};
-enum stateType
-{
-    IDLE,
-    WALK,
-    RUN,
-    JUMP,
-    FALL,
-    SKID,
-    CROUCH,
-    GROW,
-    UNGROW,
-    DEAD,
-    FLY
-};
+#include "Structs.hpp"
 
-enum Direction
-{
-    LEFT = -1,
-    BRUH,
-    RIGHT = 1,
-};
 class Character;
 class State
 {

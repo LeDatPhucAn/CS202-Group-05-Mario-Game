@@ -5,16 +5,8 @@
 #include <algorithm>
 #include <cmath>
 #include "Vec2Adapter.hpp"
+#include "Structs.hpp"
 using namespace std;
-
-enum CollisionType
-{
-    NONE,
-    TOP,       // TOP là đầu của 1 object
-    BOTTOM,    // BOTTOM là phần dưới của 1 object
-    LEFTSIDE,  // LEFTSIDE là phần bên trái của 1 object
-    RIGHTSIDE, // RIGHTSIDE là phần bên phải của 1 object
-};
 
 // global values
 const float fallGravity = 9.8f;

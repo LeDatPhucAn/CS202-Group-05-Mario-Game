@@ -2,22 +2,10 @@
 #include <algorithm>
 #include "State.hpp"
 #include "Block.hpp"
+#include "Structs.hpp"
 #include <raylib.h>
 #include <vector>
 using namespace std;
-
-// These structs are generic and can stay here
-struct StartEndFrame
-{
-    int start = 0;
-    int end = 0;
-};
-struct Sprite
-{
-    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(20);
-    vector<Rectangle> frameRecs;
-    Texture2D texture;
-};
 
 class Character : public GameObject
 {
