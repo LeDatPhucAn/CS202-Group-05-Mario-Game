@@ -3,11 +3,12 @@
 #include "MarioState.hpp"
 #include <chrono>
 #include <thread>
-
+#include "Global.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = new b2World({0, fallGravity});
 vector<Enemy *> Game::enemies = {};
-Game::Game() : Mario(),
+Game::Game(SceneManager* _mag): Scene(_mag),
+                Mario(),
                Goomba(),
                Koopa(),
                PiranhaPlant(),
@@ -23,6 +24,13 @@ Game::Game() : Mario(),
     PiranhaPlant.setPosition({20, 90});
     Lakitu.setPosition({50, -20});
     init();
+
+    prePosX = Mario.getPosition().x;
+
+    cam.offset = { 0 , 0};
+    cam.target = {0, 0};
+    cam.zoom = (float) screenHeight / WorldHeight;
+    cam.rotation = 0;
 }
 
 void Game::init()
@@ -31,30 +39,34 @@ void Game::init()
     current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
 
-    world = new b2World({0, fallGravity});
+    cout << "Box2d...????\n";
 
-    contactListener = new ContactListener();
-    world->SetContactListener(contactListener);
+    // world = new b2World({0, fallGravity});
+    // cout << "??";
+    // contactListener = new ContactListener();
+    // world->SetContactListener(contactListener);
 
-    for (auto &block : curMap.tileBlocks)
-    {
-        block->createBody(world);
-    }
-
-    Mario.changeState(new IdleState(&Mario));
-
-    Goomba.changeState(new EnemyWalkState(&Goomba));
-    Koopa.changeState(new EnemyWalkState(&Koopa));
-    PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
-    Lakitu.changeState(new EnemyIdleState(&Lakitu));
-    Lakitu.setTarget(&Mario, this);
-
-    addEnemy(&Goomba);
-    addEnemy(&Koopa);
-    addEnemy(&PiranhaPlant);
-    addEnemy(&Lakitu);
-
-    Mario.createBody(world);
+    // for (auto &block : curMap.tileBlocks)
+    // {
+    //     block->createBody(world);
+    // }
+    // cout << "&&";
+    // Mario.changeState(new IdleState(&Mario));
+    // cout <<"1";
+    // Goomba.changeState(new EnemyWalkState(&Goomba));
+    // Koopa.changeState(new EnemyWalkState(&Koopa));
+    // PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
+    // cout << "2";
+    // Lakitu.changeState(new EnemyIdleState(&Lakitu));
+    // Lakitu.setTarget(&Mario, this);
+    // cout << "#23";
+    // addEnemy(&Goomba);
+    // addEnemy(&Koopa);
+    // addEnemy(&PiranhaPlant);
+    // addEnemy(&Lakitu);
+    // cout << "@@";
+    // Mario.createBody(world);
+    // cout << "gud";
 }
 
 void Game::addEnemy(Enemy *enemy)
@@ -81,11 +93,20 @@ void Game::removeEnemy(Enemy *enemy)
 }
 void Game::updateScene()
 {
+    if(IsKeyPressed(KEY_P))
+        manager->goBack();  
     // Step the world
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
 
     updateCharacters();
+
+    float delta = Mario.getPosition().x - prePosX;
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x > 0.8*screenWidth)
+        cam.target.x += (delta > 1) ? delta : 0;
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x < 0.2*screenWidth)
+        cam.target.x += (delta < -1) ? delta : 0;
+
 
     updateMap();
 }
@@ -131,6 +152,9 @@ void Game::updateMap()
 }
 void Game::displaySceneInCamera()
 {
+}
+void Game::displayScene()
+{
     curMap.display();
     Mario.display();
     for (auto &enemy : enemies)
@@ -146,9 +170,6 @@ void Game::displaySceneInCamera()
     {
         x.display(dt);
     }
-}
-void Game::displayScene()
-{
 }
 
 Game::~Game()

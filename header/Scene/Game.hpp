@@ -18,7 +18,7 @@ class Game : public Scene
 private:
     void updateCharacters();
     void updateMap();
-
+	float prePosX = 0;
 protected:
     Mario Mario;
     Goomba Goomba;
@@ -41,19 +41,20 @@ public:
 
     static vector<Particle> particles;
     // initialize
-    Game();
+    Game(SceneManager* _mag);
 
-    void init() override;
+    void init() ;
     static void addEnemy(Enemy *enemy);
     static void removeEnemy(Enemy *enemy);
 
     // update
-    void updateScene() override;
+    void updateScene() ;
     void updateSceneInCamera(Camera2D cam) {};
 
     // display
-    void displayScene() override;
-    void displaySceneInCamera() override;
+    void displayScene() ;
+    void displaySceneInCamera() ;
 
     ~Game();
+
 };

@@ -1,15 +1,14 @@
+#pragma once
 #include "raylib.h"
-
-inline const Vector2 sum(const Vector2 a, const Vector2 b) {
-    return {a.x + b.x, a.y + b.y};
-}
-inline const Vector2 product(const Vector2 a, float k) {
-    return {a.x*k, a.y*k};
-}
-
 struct Movement {
 public:
-
+    
+    inline const Vector2 sum(const Vector2 a, const Vector2 b) {
+        return {a.x + b.x, a.y + b.y};
+    }
+    inline const Vector2 product(const Vector2 a, float k) {
+        return {a.x*k, a.y*k};
+    }
     inline void update(Vector2 &pos, float dt) {
         velocity = sum(velocity , product(acceleration, dt));
         pos = sum(pos , product(velocity,dt));

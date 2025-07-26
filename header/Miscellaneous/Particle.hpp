@@ -7,23 +7,12 @@
 using std::cout;
 
 class Block;
-
 class Particle : public GameObject {
 public:
     Particle() = default;
-    inline Particle(const Vector2& _pos, const Vector2& _size,
+    Particle(const Vector2& _pos, const Vector2& _size,
                     Texture2D _texture, const Rectangle& _srcRec,
-                    const Vector2& initialVelocity, float lifetimeSeconds)
-        : GameObject(_pos, _size)
-        , texture(_texture)
-        , srcRec(_srcRec)
-        , isActive(true)
-    {
-        move.velocity     = initialVelocity;
-        move.acceleration      = {0, 900.f};          
-        maxLifetime  = lifetimeSeconds;
-        age          = 0.0f;
-    }
+                    const Vector2& initialVelocity, float lifetimeSeconds);
 
     static void spawnParticles(const Block& block, std::vector<Particle>& particles);
 

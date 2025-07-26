@@ -4,6 +4,7 @@
 #include "PiranhaPlant.hpp"
 void Character::changeState(State *newState)
 {
+    cout << "changeState";
     if (currentState)
         delete currentState;
     currentState = newState;

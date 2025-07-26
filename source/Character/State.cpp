@@ -67,7 +67,7 @@ void State::updateState()
         character->changeBody = false;
     }
 
-    Vec2Adapter mouse(Program::mouseWorldPos);
+    Vec2Adapter mouse(GetMousePosition());
 
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && dynamic_cast<Mario *>(character))
     {

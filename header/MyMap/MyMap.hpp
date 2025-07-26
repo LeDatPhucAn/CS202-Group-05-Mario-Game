@@ -23,6 +23,8 @@ public:
     void display(int ox = 0, int oy = 0) const;
     void update();
     Rectangle getMapBounds() const;
+    Vector2 StartingPoint;
+    Vector2 FinishingPoint;
 
 private:
     // Parsing and setup steps
@@ -52,6 +54,8 @@ private:
     vector<Block*> imageBlocks;
     vector<Block*> tileBlocks;
     vector<Block*> objectBlocks;
+
+
    
 };
 

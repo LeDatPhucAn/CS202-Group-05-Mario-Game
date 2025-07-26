@@ -98,11 +98,31 @@ void MyMap::scanLayers() {
 }
 
 void MyMap::handleImageLayer(const tson::Layer &layer) {
+    // 1) Load texture và tính src/offset
     auto path = (baseDir / layer.getImage()).string();
     Texture2D tex = LoadTexture(path.c_str());
     Rectangle src{ 0, 0, float(tex.width), float(tex.height) };
-    Vector2 pos{ layer.getOffset().x, layer.getOffset().y };
-    imageBlocks.push_back(new Block(0, pos, { float(tex.width), float(tex.height) }, tex, src));
+
+    bool repeatX = layer.hasRepeatX();
+    bool repeatY = layer.hasRepeatY();
+
+    // Giả sử pos là vị trí gốc của block đầu tiên
+    Vector2 basePos{ layer.getOffset().x, layer.getOffset().y };
+    float  w = float(tex.width), h = float(tex.height);
+
+    for(int i = 0; i < 10; ++i) {
+        Vector2 p = { basePos.x + i * w, basePos.y };
+        imageBlocks.push_back(
+            new Block(
+                0,               // gid
+                p,               // vị trí
+                { w, h },        // size
+                tex,             // texture
+                src              // srcRec
+            )
+        );
+        if(!repeatX) return;
+    }
 }
 
 void MyMap::handleTileLayer(const tson::Layer &layer,
@@ -133,13 +153,15 @@ void MyMap::handleTileLayer(const tson::Layer &layer,
 }
 
 void MyMap::handleObjectLayer(tson::Layer &layer) {
-    for (auto &obj : layer.getObjects()) {
-        int gid = obj.getGid(); if (gid == 0) continue;
-        const TSInfo* info = selectTSInfo(gid); if (!info) continue;
-        Rectangle src = calcSrcRect(*info, gid);
-        Vector2 pos{ obj.getPosition().x, obj.getPosition().y - info->tileSize.y };
-        objectBlocks.push_back(new Block(obj, pos, info->tileSize,
-            tilesetCache[info->firstgid], src));
+    auto lists = layer.getObjects();
+
+
+    for(auto &x : lists) {
+        if(x.getName() == "StartingPoint") 
+            { StartingPoint = {(float) x.getPosition().x, (float) x.getPosition().y}; }
+
+        if(x.getName() == "FinishingPoint") 
+            { FinishingPoint = {(float) x.getPosition().x, (float) x.getPosition().y}; }
     }
 }
 
