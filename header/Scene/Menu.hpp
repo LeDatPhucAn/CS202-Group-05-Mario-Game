@@ -14,6 +14,7 @@ private:
     Texture2D backgroundTexture;
     Texture2D buttonTexture;
     Texture2D buttonHoverTexture;
+    vector<Texture2D> buttonTextures;
     
 public:
     Menu(SceneManager* _manager);

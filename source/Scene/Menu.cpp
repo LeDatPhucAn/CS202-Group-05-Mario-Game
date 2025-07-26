@@ -17,14 +17,30 @@ Menu::Menu(SceneManager* _manager) : Scene(_manager) {
     }
 
     // Load button textures
-    buttonTexture = LoadTexture("assets/Backgrounds/MenuButton.png");  // Your orange button
-    buttonHoverTexture = LoadTexture("assets/Backgrounds/MenuButtonHovered.png"); // Your darker orange button
+    buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");  // Your orange button
+    buttonHoverTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButtonHovered.png"); // Your darker orange button
 
     if (buttonTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load button texture");
     }
     if (buttonHoverTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load button hover texture");
+    }
+
+    //Load button textures into vector
+    vector<std::string> iconPaths = {
+        "assets/Backgrounds/Buttons/StartButtonIcon.png",
+        "assets/Backgrounds/Buttons/ChooseLVButtonIcon.png",
+        "assets/Backgrounds/Buttons/SettingButtonIcon.png",
+        "assets/Backgrounds/Buttons/ExitButtonIcon.png"
+    };
+
+    for (const auto& path : iconPaths) {
+        Texture2D texture = LoadTexture(path.c_str());
+        if (texture.id == 0) {
+            TraceLog(LOG_WARNING, "Failed to load button icon texture");
+        }
+        buttonTextures.push_back(texture);
     }
 }
 
@@ -46,6 +62,14 @@ Menu::~Menu() {
         delete button;
     }
     buttons.clear();
+
+    // Clean up button textures
+    for (auto& texture : buttonTextures) {
+        if (texture.id > 0) {
+            UnloadTexture(texture);
+        }
+    }
+    buttonTextures.clear();
 }
 
 void Menu::updateScene() {
@@ -228,6 +252,24 @@ void Menu::displayScene() {
                   {textX + 1, textY + 1}, 20, buttonTextSpacing, GRAY);
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
                   {textX, textY}, 20, buttonTextSpacing, WHITE);
+
+        if (i < buttonTextures.size() && buttonTextures[i].id > 0) {
+            float padding    = 10.0f;
+            float maxH       = buttonRect.height - padding*2;
+            float scale      = maxH / buttonTextures[i].height;
+            float iconW      = buttonTextures[i].width  * scale;
+            float iconH      = buttonTextures[i].height * scale;
+            float iconX      = buttonRect.x + buttonRect.width - iconW - padding;
+            float iconY      = buttonRect.y + (buttonRect.height - iconH) * 0.5f;
+
+            // Draw scaled icon
+            DrawTexturePro(
+                buttonTextures[i],
+                { 0.0f, 0.0f, (float)buttonTextures[i].width, (float)buttonTextures[i].height }, // source
+                { iconX, iconY, iconW, iconH },                                                   // dest
+                { 0.0f, 0.0f }, 0.0f, WHITE
+            );
+        }
     }
     
     // Draw selection arrow
