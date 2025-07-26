@@ -24,6 +24,7 @@ public:
 	~UI();
 
 	static Font font;
+	static Font boldFont;
 	static constexpr float spacing = 2.0f;
 	static constexpr float fontSize = 30.0f;
 

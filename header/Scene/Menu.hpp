@@ -2,11 +2,22 @@
 #include "Scene.hpp"
 #include "Button.hpp"
 
+#pragma once
+#include "Scene.hpp"
+#include "Button.hpp"
+
 class Program;
 class Menu : public Scene {
-    //vector<Button> buttons;
+private:
+    std::vector<TextBox*> buttons;
+    int selectedButton = 0;
+    Texture2D backgroundTexture;
+    Texture2D buttonTexture;
+    Texture2D buttonHoverTexture;
+    
 public:
-    Menu(SceneManager* _manager) : Scene(_manager) {}
+    Menu(SceneManager* _manager);
+    ~Menu();
     void updateScene();
     void displayScene();
 };

@@ -39,7 +39,7 @@ void Game::init()
     current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
 
-    cout << "Box2d...????\n";
+    // cout << "Box2d...????\n";
 
     // world = new b2World({0, fallGravity});
     // cout << "??";
