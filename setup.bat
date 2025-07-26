@@ -1,0 +1,6 @@
+@echo off
+echo Deleting old build folder...
+rmdir /s /q VSCode\build
+
+echo Configuring project with Ninja...
+cmake -G "Ninja" -S . -B VSCode/build -DCMAKE_BUILD_TYPE=Debug

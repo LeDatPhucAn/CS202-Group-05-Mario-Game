@@ -1,0 +1,16 @@
+compilation_database_dir: build
+output_directory: diagrams
+
+diagrams:
+  game_diagram:
+    type: class
+    glob:
+      - "**/*.cpp"
+      - "**/*.hpp"
+    exclude:
+      paths:
+        - "^<.*>$" # exclude std headers
+        - ".*/external/.*" # exclude Box2D
+        - ".*/raylib-tileson/.*" # exclude raylib-tileson
+    using_namespace:
+      - "!^b2$"
