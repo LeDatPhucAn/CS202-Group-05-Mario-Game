@@ -38,7 +38,7 @@ EnemyRunState::EnemyRunState(Character *_character, int _delay)
 void EnemyRunState::handleInput()
 {
     b2Vec2 vel = character->body->GetLinearVelocity();
-    vel.x = character->direction * fabs(100 / PPM); // Ensure correct direction
+    vel.x = character->direction * fabs(200 / PPM); // Ensure correct direction
     character->body->SetLinearVelocity(vel);
 }
 

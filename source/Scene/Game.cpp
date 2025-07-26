@@ -27,7 +27,7 @@ Game::Game() : Mario(),
     PiranhaPlant.setPosition({20, 90});
     Lakitu.setPosition({50, -20});
     BulletBill.setPosition({660, 150});
-    HammerBro.setPosition({600, 0});
+    HammerBro.setPosition({300, 0});
     init();
 }
 
@@ -53,7 +53,7 @@ void Game::init()
     Koopa.changeState(new EnemyWalkState(&Koopa));
     FlyingKoopa.changeState(new EnemyJumpState(&FlyingKoopa)); 
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
-    BulletBill.changeState(new EnemyIdleState(&BulletBill)); // Use FlyState for BulletBill
+    BulletBill.changeState(new EnemyIdleState(&BulletBill)); // Use IdleState for BulletBill
     Lakitu.changeState(new EnemyFlyState(&Lakitu)); // Use FlyState for Lakitu
     HammerBro.changeState(new EnemyIdleState(&HammerBro)); // HammerBro starts walking/idle
 

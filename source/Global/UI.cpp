@@ -51,7 +51,7 @@ void UI::drawBackground()
 	Rectangle screen = {0, 0, static_cast<float>(screenWidth), static_cast<float>(screenHeight)};
 	Rectangle source = {1300, 300, static_cast<float>(screenWidth), static_cast<float>(screenHeight)};
 
-	DrawTexturePro(UI::textureMap["TitleScreen"], source, screen, {0, 0}, 0, LIGHTGRAY);
+	DrawTexturePro(UI::textureMap["TitleScreen"], source, screen, {0, 0}, 0, BLUE);
 }
 
 void UI::drawLogo()
