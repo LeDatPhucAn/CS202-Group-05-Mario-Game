@@ -357,9 +357,9 @@ void Menu::displayScene()
 
         // Text with shadow for better visibility
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX + 2, textY + 2}, 20, buttonTextSpacing, BLACK);
+                   {textX + 2, textY + 2}, 24, buttonTextSpacing, BLACK);
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX, textY}, 20, buttonTextSpacing, WHITE);
+                   {textX, textY}, 24, buttonTextSpacing, WHITE);
 
         // Flash effect
         if (flashActive && i == selectedButton)
@@ -367,7 +367,7 @@ void Menu::displayScene()
             float t = fmodf(flashTimer / flashDuration, 1.0f);
             float hue = fmodf(flashTimer * 360.0f / flashDuration, 360.0f);
             Color col = ColorFromHSV(hue, 1.0f, 1.0f);
-            DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 20, 3, col);
+            DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 24, 3, col);
         }
 
         if (i < buttonTextures.size() && buttonTextures[i].id > 0)

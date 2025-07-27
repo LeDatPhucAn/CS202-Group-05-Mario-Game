@@ -16,7 +16,7 @@ Settings::Settings(SceneManager* _manager) : Scene(_manager) {
     backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
     buttonHoverTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButtonHovered.png");
-    selectionIconTexture = LoadTexture("assets/Backgrounds/Buttons/SelectionIcon.png");
+    settingsBoard = LoadTexture("assets/Backgrounds/SettingsBoard.png");
     
     if (backgroundTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load settings background texture");
@@ -27,8 +27,8 @@ Settings::Settings(SceneManager* _manager) : Scene(_manager) {
     if (buttonHoverTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load settings button hover texture");
     }
-    if (selectionIconTexture.id == 0) {
-        TraceLog(LOG_WARNING, "Failed to load settings selection icon texture");
+    if (settingsBoard.id == 0) {
+        TraceLog(LOG_WARNING, "Failed to load settings board texture");
     }
 }
 
@@ -42,8 +42,8 @@ Settings::~Settings() {
     if (buttonHoverTexture.id > 0) {
         UnloadTexture(buttonHoverTexture);
     }
-    if (selectionIconTexture.id > 0) {
-        UnloadTexture(selectionIconTexture);
+    if (settingsBoard.id > 0) {
+        UnloadTexture(settingsBoard);
     }
     
     for (auto button : buttons) {
@@ -135,11 +135,15 @@ void Settings::updateScene() {
 
     // Mouse interaction
     Vector2 mousePos = GetMousePosition();
-    int buttonWidth = 300;
-    int buttonHeight = 60;
-    int buttonX = UI::screenWidth / 2 - buttonWidth / 2;
-    int startY = UI::screenHeight / 2 - 80;
-    int spacing = 80;
+    float boardWidth = 600;
+    float boardHeight = 525;
+    float boardX = UI::screenWidth / 2 - boardWidth / 2;
+    float boardY = UI::screenHeight / 2 - 350;
+    float buttonWidth = 320;
+    float buttonHeight = 50;
+    float buttonX = boardX + (boardWidth - buttonWidth) / 2; // Center buttons in board
+    float startY = boardY + 120; // Start buttons below board title area
+    float spacing = 60;
 
     for (int i = 0; i < 4; ++i) {
         Rectangle btnRect = {
@@ -227,63 +231,80 @@ void Settings::displayScene() {
         ClearBackground(BLACK);
     }
     
+    
+    
+    // Calculate settings board dimensions and position
+    float boardWidth = 600;
+    float boardHeight = 525;
+    float boardX = UI::screenWidth / 2 - boardWidth / 2;
+    float boardY = UI::screenHeight / 2 - 350;
+    Rectangle boardRect = {boardX, boardY, boardWidth, boardHeight};
+
+    
+    
+    // Draw the settings board texture first (contains all buttons)
+    if (settingsBoard.id > 0) {
+        DrawTexturePro(settingsBoard,
+                      {0, 0, (float)settingsBoard.width, (float)settingsBoard.height},
+                      boardRect,
+                      {0, 0}, 0.0f, WHITE);
+    } else {
+        // Fallback background for the board
+        DrawRectangleRounded(boardRect, 0.1f, 10, Color{139, 69, 19, 255}); // Brown background
+    }
+
     // Draw title
-    float titleSpacing = 12.0f;
-    float titleFontSize = 72.0f;
+    float titleSpacing = 5.0f;
+    float titleFontSize = 48.0f;
     Vector2 titleSize = MeasureTextEx(UI::boldFont, titleText.c_str(), titleFontSize, titleSpacing);
     float titleX = (UI::screenWidth - titleSize.x) / 2.0f;
-    float titleY = 80;
+    float titleY = boardY + 30;
 
     DrawTextEx(UI::boldFont, titleText.c_str(),
                { titleX + 2, titleY + 2 }, titleFontSize, titleSpacing, ORANGE);
     DrawTextEx(UI::boldFont, titleText.c_str(),
-               { titleX, titleY }, titleFontSize, titleSpacing, RED);
+               { titleX, titleY }, titleFontSize, titleSpacing, BLACK);
     
-    // Draw buttons and settings
-    float buttonWidth = 300;
-    float buttonHeight = 60;
-    float buttonX = UI::screenWidth / 2 - buttonWidth / 2;
-    float startY = UI::screenHeight / 2 - 80;
-    float spacing = 80;
-    
+    // Draw buttons inside the settings board
+    float buttonWidth = 320;
+    float buttonHeight = 80;
+    float buttonX = boardX + (boardWidth - buttonWidth) / 2; // Center buttons in board
+    float startY = boardY + 120; // Start buttons below board title area
+    float spacing = 100;
+
     for (int i = 0; i < 4; i++) {
         Rectangle buttonRect = {buttonX, startY + i * spacing, buttonWidth, buttonHeight};
         
-        // Choose texture based on selection
-        Texture2D currentTexture = (i == selectedButton) ? buttonHoverTexture : buttonTexture;
-        
-        // Draw button texture
-        if (currentTexture.id > 0) {
-            DrawTexturePro(currentTexture,
-                          {0, 0, (float)currentTexture.width, (float)currentTexture.height},
-                          buttonRect,
-                          {0, 0}, 0.0f, WHITE);
-        } else {
-            Color buttonColor = (i == selectedButton) ? ORANGE : Color {255, 165, 0, 255};
-            DrawRectangleRounded(buttonRect, 0.2f, 10, buttonColor);
+        // Only draw selection highlight, no background (the board is the background)
+        if (i == selectedButton) {
+            // Draw selection highlight
+            DrawRectangleRoundedLines(buttonRect, 0.2f, 10, ORANGE);
+            // Or draw a subtle overlay
+            DrawRectangleRounded(buttonRect, 0.2f, 10, Color{255, 165, 0, 50});
         }
         
         // Button text
         float buttonTextSpacing = 3.0f;
-        Vector2 textSize = MeasureTextEx(UI::font, buttonTexts[i].c_str(), 20, buttonTextSpacing);
         float textX = buttonRect.x + 20; // Left aligned
-        float textY = buttonRect.y + (buttonRect.height - textSize.y) / 2;
+        float textY = buttonRect.y + (buttonRect.height - 24) / 2;
         
         // Text with shadow
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
-                  {textX + 1, textY + 1}, 20, buttonTextSpacing, BLACK);
+                  {textX + 1, textY + 1}, 24, buttonTextSpacing, WHITE);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(), 
+                  {textX, textY}, 24, buttonTextSpacing, BLACK);
         
         // Flash effect for selected button
-        Color mainColor = WHITE;
-        if (flashActive && i == selectedButton) {
-            float alpha = 1.0f - (flashTimer / flashDuration);
-            mainColor.a = (unsigned char)(alpha * 255);
+        if (flashActive && i == selectedButton)
+        {
+            float t = fmodf(flashTimer / flashDuration, 1.0f);
+            float hue = fmodf(flashTimer * 360.0f / flashDuration, 360.0f);
+            Color col = ColorFromHSV(hue, 1.0f, 1.0f);
+            DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 24, 3, col);
         }
-        DrawTextEx(UI::font, buttonTexts[i].c_str(), 
-                  {textX, textY}, 20, buttonTextSpacing, mainColor);
-        
-        // Draw setting values
-        float valueX = buttonRect.x + buttonRect.width - 150;
+
+        // Draw setting values (adjust position to fit within board)
+        float valueX = buttonRect.x + buttonRect.width - 120;
         std::string valueText;
         
         switch(i) {
@@ -292,30 +313,30 @@ void Settings::displayScene() {
                 float volume = (i == 0) ? musicVolume : sfxVolume;
                 
                 // Draw slider background
-                Rectangle sliderBg = {valueX, textY + 5, 100, 10};
-                DrawRectangleRounded(sliderBg, 0.5f, 10, DARKGRAY);
+                Rectangle sliderBg = {valueX, textY + 8, 80, 8};
+                DrawRectangleRounded(sliderBg, 0.5f, 10, Color{101, 67, 33, 255}); // Dark brown
                 
                 // Draw slider fill
-                Rectangle sliderFill = {valueX, textY + 5, 100 * volume, 10};
-                Color fillColor = (i == selectedButton) ? ORANGE : LIGHTGRAY;
+                Rectangle sliderFill = {valueX, textY + 8, 80 * volume, 8};
+                Color fillColor = (i == selectedButton) ? ORANGE : Color{160, 82, 45, 255}; // Saddle brown
                 DrawRectangleRounded(sliderFill, 0.5f, 10, fillColor);
                 
                 // Draw slider handle
-                float handleX = valueX + (100 * volume) - 5;
-                Rectangle handle = {handleX, textY + 2, 10, 16};
-                Color handleColor = (i == selectedButton) ? WHITE : GRAY;
+                float handleX = valueX + (80 * volume) - 4;
+                Rectangle handle = {handleX, textY + 5, 8, 14};
+                Color handleColor = (i == selectedButton) ? WHITE : Color{205, 133, 63, 255}; // Peru
                 DrawRectangleRounded(handle, 0.3f, 10, handleColor);
                 
                 // Draw percentage text
                 valueText = std::to_string((int)(volume * 100)) + "%";
                 DrawTextEx(UI::font, valueText.c_str(), 
-                          {valueX + 110, textY}, 16, 2, WHITE);
+                          {valueX + 85, textY}, 14, 2, Color{139, 69, 19, 255});
                 break;
             }
             case 2: // Fullscreen toggle
             {
-                Rectangle switchBg = {valueX, textY + 5, 60, 20};
-                Color bgColor = fullscreen ? GREEN : DARKGRAY;
+                Rectangle switchBg = {valueX, textY + 8, 50, 16};
+                Color bgColor = fullscreen ? Color{34, 139, 34, 255} : Color{101, 67, 33, 255}; // Forest green or dark brown
                 DrawRectangleRounded(switchBg, 0.5f, 10, bgColor);
                 
                 // Switch border (when selected)
@@ -324,14 +345,14 @@ void Settings::displayScene() {
                 }
                 
                 // Animated switch handle
-                float animatedX = valueX + 5 + (35.0f * switchAnimation);
-                Rectangle handle = {animatedX, textY + 7, 16, 16};
+                float animatedX = valueX + 3 + (28.0f * switchAnimation);
+                Rectangle handle = {animatedX, textY + 10, 12, 12};
                 DrawRectangleRounded(handle, 0.5f, 10, WHITE);
                 
                 // Switch label
                 valueText = fullscreen ? "ON" : "OFF";
                 DrawTextEx(UI::font, valueText.c_str(), 
-                          {valueX + 70, textY}, 16, 2, WHITE);
+                          {valueX + 55, textY}, 14, 2, Color{139, 69, 19, 255});
                 break;
             }
             case 3:
@@ -339,19 +360,6 @@ void Settings::displayScene() {
         }
     }
     
-    // Draw selection icon
-    if (selectionIconTexture.id > 0) {
-        float iconScale = 0.15f;
-        float iconW = selectionIconTexture.width * iconScale;
-        float iconH = selectionIconTexture.height * iconScale;
-        float iconX = buttonX - iconW - 10;
-        float iconY = startY + selectedButton * spacing + (buttonHeight - iconH) * 0.5f;
-
-        DrawTexturePro(selectionIconTexture,
-                      {0, 0, (float)selectionIconTexture.width, (float)selectionIconTexture.height},
-                      {iconX, iconY, iconW, iconH},
-                      {0, 0}, 0.0f, WHITE);
-    }
     
     // Draw instructions
     std::string instructions = "Use ARROW KEYS to navigate and adjust settings\nENTER to select • ESC to go back";

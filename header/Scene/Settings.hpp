@@ -9,7 +9,8 @@ private:
     Texture2D backgroundTexture;
     Texture2D buttonTexture;
     Texture2D buttonHoverTexture;
-    Texture2D selectionIconTexture;
+    Texture2D settingsBoard;
+
     
     // Settings values
     float musicVolume = 0.5f;
