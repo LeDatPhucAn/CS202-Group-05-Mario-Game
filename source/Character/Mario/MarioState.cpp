@@ -1,6 +1,7 @@
 #include "MarioState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
+#include "GrowMushroom.hpp"
 // Base MarioState constructor
 MarioState::MarioState(stateType Type, Mario *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
@@ -54,6 +55,11 @@ void IdleState::handleInput()
     {
         mario->changeState(new WalkState(mario));
     }
+	else if ((IsKeyDown(KEY_M)))
+	{
+		GrowMushroom* newMushroom = new GrowMushroom();
+		newMushroom->test_appear();
+	}
     else
     {
         b2Vec2 vel = mario->body->GetLinearVelocity();
@@ -374,8 +380,7 @@ void CrouchState::handleInput()
 GrowState::GrowState(Mario *_mario, int _delay)
     : MarioState(GROW, _mario, _delay)
 {
-    // if (mario->isGrounded)
-    //     mario->pos.y = mario->groundPosY - frameRec.height;
+	_mario->changeForm(MarioForm::BIG);
 }
 
 void GrowState::handleInput()

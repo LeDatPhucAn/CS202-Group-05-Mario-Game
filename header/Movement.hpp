@@ -1,3 +1,4 @@
+#pragma once
 #include "raylib.h"
 
 inline const Vector2 sum(const Vector2 a, const Vector2 b) {

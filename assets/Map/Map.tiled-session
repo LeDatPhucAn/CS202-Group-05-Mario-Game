@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "collided_animation.json",
+    "activeFile": "items.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -32,6 +32,10 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "items.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 5.5
+        },
         "muilti_tileset.json": {
             "scaleInDock": 1,
             "scaleInEditor": 3
@@ -55,7 +59,7 @@
         }
     },
     "frame.defaultDuration": 150,
-    "last.imagePath": "D:/Tuan/Project/My Game/assets/Map/image",
+    "last.imagePath": "D:/study/tiled/sprites",
     "map.height": 14,
     "map.lastUsedFormat": "json",
     "map.tileHeight": 16,
@@ -67,7 +71,8 @@
         "new_blocks1_blocks.json",
         "new_blocks2_items.json",
         "ground_tileset.json",
-        "collided_animation.json"
+        "collided_animation.json",
+        "items.json"
     ],
     "project": "Map.tiled-project",
     "property.type": "string",
@@ -78,6 +83,7 @@
         "new_blocks2_items.json",
         "ground_tileset.json",
         "collided_animation.json",
+        "items.json",
         "question.tsj",
         "8415.tsj",
         "tileset.json"
@@ -88,5 +94,7 @@
     "tileset.tileSize": {
         "height": 16,
         "width": 16
-    }
+    },
+    "tileset.transparentColor": "#a349a4",
+    "tileset.useTransparentColor": true
 }

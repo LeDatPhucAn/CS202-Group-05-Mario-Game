@@ -11,6 +11,7 @@ struct StartEndFrame
     int start = 0;
     int end = 0;
 };
+
 struct Sprite
 {
     vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(15);
