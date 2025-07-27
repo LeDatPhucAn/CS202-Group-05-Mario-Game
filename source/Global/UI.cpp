@@ -77,25 +77,24 @@ void UI::drawLogo()
 
 void UI::initBackgrounds()
 {
-	const string backgroundPath = "assets/Backgrounds/";
+	// const string backgroundPath = "assets/Backgrounds/";
 
-	for (const auto &entry : fs::directory_iterator(backgroundPath))
-	{
-		textureMap[entry.path().stem().string()] = LoadTexture(entry.path().string().c_str());
-	}
+	// for (const auto &entry : fs::directory_iterator(backgroundPath))
+	// {
+	// 	textureMap[entry.path().stem().string()] = LoadTexture(entry.path().string().c_str());
+	// }
 }
 
 void UI::initSprites()
 {
 	const std::string spritePath = "assets/Sprites/";
-
 	for (const auto &entry : fs::directory_iterator(spritePath))
 	{
 		if (entry.path().extension() == ".json")
 		{
 			std::string name = entry.path().stem().string(); // e.g., "Mario2D"
 			fs::path pngFile = spritePath + name + ".png";
-
+			cout << "Processing sprite: " << pngFile.string() << "\n";
 			if (fs::exists(pngFile))
 			{
 				jsonMap[name] = getProcessedSpriteJson(entry.path().string());

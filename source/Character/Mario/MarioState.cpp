@@ -55,11 +55,11 @@ void IdleState::handleInput()
     {
         mario->changeState(new WalkState(mario));
     }
-	else if ((IsKeyDown(KEY_M)))
-	{
-		GrowMushroom* newMushroom = new GrowMushroom();
-		newMushroom->test_appear();
-	}
+    else if ((IsKeyDown(KEY_M)))
+    {
+        GrowMushroom *newMushroom = new GrowMushroom();
+        newMushroom->test_appear();
+    }
     else
     {
         b2Vec2 vel = mario->body->GetLinearVelocity();
@@ -345,7 +345,7 @@ void CrouchState::handleInput()
     b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = mario->direction * (-friction);
 
-    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))     
+    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))
     {
         mario->toNewBody(); // Reset to normal body size
         if (!mario->isGrounded)

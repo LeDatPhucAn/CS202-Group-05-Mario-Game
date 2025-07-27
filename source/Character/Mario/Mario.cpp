@@ -7,10 +7,10 @@ Mario::Mario()
 {
     setFrame(marioStateType::IDLE, 0, 0);
     setFrame(marioStateType::WALK, 1, 3);
+    setFrame(marioStateType::RUN, 1, 3);
     setFrame(marioStateType::JUMP, 5, 5);
     setFrame(marioStateType::FALL, 5, 5);
     setFrame(marioStateType::SKID, 4, 4);
-    setFrame(marioStateType::RUN, 1, 3);
     setFrame(marioStateType::CROUCH, 0, 0);
     setFrame(marioStateType::GROW, 44, 50);
     setFrame(marioStateType::UNGROW, 50, 44);

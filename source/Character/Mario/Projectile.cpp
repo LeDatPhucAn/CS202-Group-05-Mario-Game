@@ -2,8 +2,7 @@
 
 Projectile::Projectile() : GameObject()
 {
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Projectiles2D"]);
-    this->sprite.texture = UI::textureMap["Projectiles2D"];
+    setTexture("Projectiles2D");
 }
 void Projectile::update()
 {

@@ -78,6 +78,10 @@ public:
     Vector2 getSize() const { return size.toPixels(); }
     void setSize(const Vector2 &_size) { size = Vec2Adapter(_size); }
 
+    // getters
+    Direction getDirection() const { return direction; }
+    void setDirection(Direction dir) { direction = dir; }
+    Sprite getSprite() const { return sprite; }
     virtual Rectangle getBounds() const
     {
         Vector2 p = pos.toPixels();

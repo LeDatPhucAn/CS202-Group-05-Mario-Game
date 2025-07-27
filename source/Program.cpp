@@ -1,40 +1,42 @@
 #include "Program.hpp"
 #include "raylib.h"
-#include<iostream>
-
+#include <iostream>
+#include "UI.hpp"
 using namespace std;
-Program::Program() {
-    InitWindow(1600,800, "Game Mario");
-    SetTargetFPS(60);
+Program::Program()
+{
+
+
     mySceneManager.init();
     mySceneManager.pro = this;
-    
-
 }
 
-void Program::update() {
+void Program::update()
+{
     mySceneManager.update();
 }
 
-void Program::display() {
+void Program::display()
+{
     mySceneManager.display();
 }
 
-
-void Program::run() {
+void Program::run()
+{
     /// main functions
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose())
+    {
 
         // Update
         update();
         // Draw
-         BeginDrawing();
-            BeginMode2D(mySceneManager.getCamera());
+        BeginDrawing();
+        BeginMode2D(mySceneManager.getCamera());
 
-                ClearBackground(WHITE);
-                display();
-            
-            EndMode2D();
+        ClearBackground(WHITE);
+        display();
+
+        EndMode2D();
         EndDrawing();
     }
     CloseWindow();
