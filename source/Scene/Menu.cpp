@@ -255,7 +255,7 @@ void Menu::displayScene()
     // Texts
     std::string titleText = "SUPER MARIO BROS";
     std::string subtitleText = "CS202 Group 05";
-    std::string instructionsText = "Use ARROW KEYS/W-S to navigate \n ENTER/SPACE to select \n ESC to exit \n N for quick start";
+    std::string instructionsText = "Use ARROW KEYS/W-S to navigate \nENTER/SPACE to select \nESC to exit \nN for quick start";
 
     std::vector<std::string> buttonTexts = {
         "START GAME",
@@ -419,11 +419,11 @@ void Menu::displayScene()
     }
 
     float instrSpacing = 2.0f;
-    float instrX = UI::screenWidth - 300;
+   float instrX = UI::screenWidth - 350;
     float instrY = UI::screenHeight - 200;
 
     DrawTextEx(UI::font, instructionsText.c_str(),
-               {instrX + 1, instrY + 1}, 16, instrSpacing, DARKGRAY);
+              {instrX + 1, instrY + 1}, 20, 2, DARKGRAY);
     DrawTextEx(UI::font, instructionsText.c_str(),
-               {instrX, instrY}, 16, instrSpacing, WHITE);
+              {instrX, instrY}, 20, 2, WHITE);
 }
