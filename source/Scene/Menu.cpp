@@ -177,9 +177,9 @@ void Menu::updateScene() {
                 selectedButton = i;
                 // Execute button action
                 switch(i) {
-                    case 0: manager->changeScene(sceneType::GAME); break;
-                    case 1: manager->changeScene(sceneType::CHOOSE_LEVEL); break;
-                    case 2: manager->changeScene(sceneType::SETTING); break;
+                    case 0: nextScene = sceneType::GAME; break;
+                    case 1: nextScene = sceneType::CHOOSE_LEVEL; break;
+                    case 2: nextScene = sceneType::SETTING; break;
                     case 3: CloseWindow(); break;
                 }
                 flashActive = true;
@@ -338,7 +338,7 @@ void Menu::displayScene() {
     
     // Draw selection icon
     if (selectionIconTexture.id > 0) {
-        float iconScale  = 0.17f;
+        float iconScale  = 0.15f;
         float iconW      = selectionIconTexture.width  * iconScale;
         float iconH      = selectionIconTexture.height * iconScale;
         float iconX      = buttonX - iconW - 10;
