@@ -15,7 +15,7 @@ private:
     Texture2D buttonTexture;
     Texture2D buttonHoverTexture;
     vector<Texture2D> buttonTextures;
-    
+    Texture2D selectionIconTexture;
 public:
     Menu(SceneManager* _manager);
     ~Menu();
