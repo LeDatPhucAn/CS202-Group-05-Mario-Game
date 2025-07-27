@@ -2,7 +2,8 @@
 #include <stack>
 #include "raylib.h"
 using namespace std;
-enum class sceneType { 
+enum class sceneType
+{
 	NONE,
 	MENU,
 	GAME,
@@ -13,13 +14,15 @@ enum class sceneType {
 
 class SceneManager;
 class Program;
-class Scene {
+class Scene
+{
 protected:
-	Camera2D cam = {{0,0}, {0,0}, 0.0f, 1.0f};
+	Camera2D cam = {{0, 0}, {0, 0}, 0.0f, 1.0f};
+
 public:
-	SceneManager* manager = nullptr;
+	SceneManager *manager = nullptr;
 	Scene() = default;
-	Scene(SceneManager* _manager);
+	Scene(SceneManager *_manager);
 
 	// update_ Để đổi Scene thì gọi manager.changeScene(sceneType::ABC)
 	virtual void updateScene() = 0;
@@ -27,18 +30,17 @@ public:
 	// display
 	virtual void displayScene() = 0;
 
-	
 	virtual ~Scene() = default;
 
 	virtual Camera2D getCamera();
 };
 
-
-class SceneManager {
-public:	
-	stack<Scene*> scenes;
+class SceneManager
+{
+public:
+	stack<Scene *> scenes;
 	sceneType nextScene = sceneType::NONE;
-	Program* pro;
+	Program *pro;
 	bool needBack = 0;
 
 	void changeScene(sceneType nextScene);
@@ -50,11 +52,11 @@ public:
 
 	~SceneManager();
 
-	Camera2D getCamera(); 
-	
+	Camera2D getCamera();
 };
 
-class SceneFactory {
+class SceneFactory
+{
 public:
-	static Scene* create(sceneType newScene, SceneManager* mag);
+	static Scene *create(sceneType newScene, SceneManager *mag);
 };

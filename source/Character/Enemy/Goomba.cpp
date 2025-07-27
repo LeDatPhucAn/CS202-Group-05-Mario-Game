@@ -5,12 +5,13 @@
 Goomba::Goomba()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {0, 0};
-    this->sprite.StartEndFrames[WALK] = {0, 1};
-    this->sprite.StartEndFrames[DEAD] = {2, 2};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 0, 0);
+    setFrame(enemyStateType::WALK, 0, 1);
+    setFrame(enemyStateType::DEAD, 2, 2);
+
+    setTexture("Enemies2D");
 }
+
 
 void Goomba::updateCollision(GameObject *other, int type)
 {

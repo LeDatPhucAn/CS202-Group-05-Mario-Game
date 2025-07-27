@@ -62,7 +62,7 @@ public:
             Texture2D _tex, Rectangle _src);
 
       Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
-            Texture2D _tex, Rectangle _src, const TSInfo *tsi);
+            Texture2D _tex, Rectangle _src, const TSInfo *tsi, Vector2 _StartEnd, vector<Rectangle> _fullFrame);
 
       Block(tson::Object &obj,
             Vector2 _pos, Vector2 _size,
@@ -76,18 +76,8 @@ public:
       void createBody(b2World *world) override;
 
 protected:
-      // Physics Components
-      void handleInput(float dt);
-      void applyPhysics(float dt);
-      // Physics & movement state
-      Vector2 velocity;
-      // static constexpr float speed     = 200.0f;  // pixels per second
-      static constexpr float jumpForce = 200.0f; // initial jump velocity
-      static constexpr float gravity = 900.0f;   // gravity acceleration
-      static constexpr float maxHeight = -8.0f;
-      bool onGround = true;
-      // static constexpr int GroundY = 240;
-
       bool isJumping = false;
       Vector2 prePos;
+      Vector2 StartEnd;
+      Rectangle fullSrc;
 };

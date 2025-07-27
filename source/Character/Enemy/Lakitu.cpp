@@ -7,16 +7,15 @@
 Lakitu::Lakitu()
     : Enemy()
 {
+    setFrame(enemyStateType::IDLE, 15, 15);
+    setFrame(enemyStateType::WALK, 15, 15); // Flying animation uses WALK state
+    setFrame(enemyStateType::DEAD, 16, 16);
 
-    this->sprite.StartEndFrames[IDLE] = {15, 15}; // Normal flying
-    this->sprite.StartEndFrames[WALK] = {15, 15}; // Using WALK state for flying animation
-    this->sprite.StartEndFrames[DEAD] = {16, 16};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setTexture("Enemies2D");
 
-    // Lakitu flies, so it is not affected by gravity
     this->throwTimer = 0.0f;
 }
+
 
 void Lakitu::setTarget(Mario *marioTarget, Game *game)
 {

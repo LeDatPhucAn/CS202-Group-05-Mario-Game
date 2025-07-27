@@ -25,12 +25,17 @@ Block::Block(tson::Object &obj, Vector2 _pos, Vector2 _size,
 
     isPipeEntrance = obj.get<bool>("isPipeEntrance");
     isFlagPole = obj.get<bool>("isFlagPole");
+
+    // sprites.texture = _tex;
+    // sprites.frameRecs.push_back(_src);
+    // sprites.StartEndFrames.push_back({0, 0}); // Chỉ có 1 frame
 }
 
 Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
-             Texture2D _tex, Rectangle _src, const TSInfo *tsi)
-    : GameObject(_pos, _size), gid(inforTile->getGid()), texture(_tex), srcRec(_src), prePos(_pos)
+             Texture2D _tex, Rectangle _src, const TSInfo *tsi, Vector2 saved, vector<Rectangle> _fullFrame)
+    : GameObject(_pos, _size), gid(inforTile->getGid()), texture(_tex), srcRec(_src), prePos(_pos), StartEnd(saved)
 {
+
     // trong Block::Block(...):
     behavior = shared_ptr<IBlockBehavior>(
         FactoryIBlockBehavior::create(inforTile->getType(), this));
@@ -47,12 +52,19 @@ Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
         Rectangle tmpRec = srcRec;
         for (int i = 0; i < frames.size(); ++i)
         {
-            srcRecs.push_back({tmpRec.x + i * (tsi->tileSize.x + tsi->spacing),
-                               tmpRec.y,
-                               tmpRec.width,
-                               tmpRec.height});
+            sprite.frameRecs.push_back({tmpRec.x + i * (tsi->tileSize.x + tsi->spacing),
+                                        tmpRec.y,
+                                        tmpRec.width,
+                                        tmpRec.height});
         }
+        StartEnd.y += frames.size() - 1;
     }
+    else
+        sprite.frameRecs.push_back(_src);
+    sprite.frameRecs = _fullFrame;
+
+    sprite.StartEndFrames[(int)blockStateType::IDLE] = {(int)(StartEnd.x), (int)StartEnd.y};
+    sprite.texture = _tex;
 
     isSolid = inforTile->get<bool>("isSolid");
     isBreakable = inforTile->get<bool>("isBreakable");
@@ -71,53 +83,61 @@ void Block::update()
 {
     float dt = GetFrameTime();
     behavior->updateFrame(dt);
-    // physics.update(dt);
+    if (currentState)
+    {
+        currentState->updateState();
+    }
 }
 
 void Block::display()
 {
     // if (isInvisible && !isUsed) return;
 
-    float dt = GetFrameTime();
-
-    // Animation Display
-    if (srcRecs.size() == 0)
-        DrawTextureRec(texture, srcRec, getCenter(), color);
-    else
+    if (currentState)
     {
-        aniTimer += GetFrameTime() * 1000; // đổi qua mili giây vì duration ms
-        if (aniTimer > duration)
-        {
-            aniIndex = (aniIndex + 1) % srcRecs.size();
-            aniTimer = 0;
-        }
-        DrawTextureRec(texture, srcRecs[aniIndex], getCenter(), color);
-        // cout << aniTimer << endl;
+        currentState->displayState();
     }
-    b2Body *body = getBody();
-    if (!body)
-        return;
-    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext())
-    {
-        if (f->GetType() != b2Shape::e_polygon)
-            continue;
 
-        b2PolygonShape *poly = static_cast<b2PolygonShape *>(f->GetShape());
-        int32 count = poly->m_count;
+    // float dt = GetFrameTime();
 
-        std::vector<Vector2> points(count);
-        for (int32 i = 0; i < count; ++i)
-        {
-            Vec2Adapter worldPoint(body->GetWorldPoint(poly->m_vertices[i]));
-            points[i] = worldPoint.toPixels();
-        }
+    // // Animation Display
+    // if (srcRecs.size() == 0)
+    //     DrawTextureRec(texture, srcRec, getCenter(), color);
+    // else
+    // {
+    //     aniTimer += GetFrameTime() * 1000; // đổi qua mili giây vì duration ms
+    //     if (aniTimer > duration)
+    //     {
+    //         aniIndex = (aniIndex + 1) % srcRecs.size();
+    //         aniTimer = 0;
+    //     }
+    //     DrawTextureRec(texture, srcRecs[aniIndex], getCenter(), color);
+    //     // cout << aniTimer << endl;
+    // }
+    // b2Body *body = getBody();
+    // if (!body)
+    //     return;
+    // for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext())
+    // {
+    //     if (f->GetType() != b2Shape::e_polygon)
+    //         continue;
 
-        // Draw loop
-        for (int i = 0; i < count; ++i)
-        {
-            DrawLineV(points[i], points[(i + 1) % count], RED);
-        }
-    }
+    //     b2PolygonShape *poly = static_cast<b2PolygonShape *>(f->GetShape());
+    //     int32 count = poly->m_count;
+
+    //     std::vector<Vector2> points(count);
+    //     for (int32 i = 0; i < count; ++i)
+    //     {
+    //         Vec2Adapter worldPoint(body->GetWorldPoint(poly->m_vertices[i]));
+    //         points[i] = worldPoint.toPixels();
+    //     }
+
+    //     // Draw loop
+    //     for (int i = 0; i < count; ++i)
+    //     {
+    //         DrawLineV(points[i], points[(i + 1) % count], RED);
+    //     }
+    //}
     // behavior->onDraw(dt);
 }
 
@@ -211,33 +231,4 @@ void Block::createBody(b2World *world)
     // rightFixture.isSensor = true;
     // rightFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
     // body->CreateFixture(&rightFixture);
-}
-
-// Physics Components
-void Block::handleInput(float dt)
-{
-    // if (onGround && isJumping) {
-    //     velocity.y = -jumpForce;
-    //     onGround = false;
-    // }
-}
-
-// Apply gravity and vertical movement
-void Block::applyPhysics(float dt)
-{
-    // velocity.y += gravity * dt;
-    // pos.vec.y += velocity.y * dt;
-
-    // // Ground collision
-    // if (pos.vec.y > prePos.y) {
-    //     pos.vec.y = prePos.y;
-    //     velocity.y = 0;
-    //     onGround = true;
-    //     isJumping = false;
-    // }
-
-    // if (pos.vec.y < prePos.y + maxHeight) {
-    //     pos.vec.y = prePos.y + maxHeight;
-    //     velocity.y = 0;
-    // }
 }

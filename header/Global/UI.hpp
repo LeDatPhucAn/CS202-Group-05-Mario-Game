@@ -12,7 +12,6 @@
 #include "tileson.hpp"
 #include "raylib-tileson.h"
 
-
 using json = nlohmann::json;
 
 using namespace std;

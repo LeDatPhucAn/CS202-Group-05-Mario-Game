@@ -2,13 +2,8 @@
 #include "GameObject.hpp"
 #include "ContactListener.hpp"
 #include "PiranhaPlant.hpp"
-void Character::changeState(State *newState)
-{
-    cout << "changeState";
-    if (currentState)
-        delete currentState;
-    currentState = newState;
-}
+#include "Structs.hpp"
+
 void Character::update()
 {
     if (currentState)

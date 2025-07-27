@@ -14,11 +14,7 @@ struct IBlockBehavior
     IBlockBehavior(Block *block) : block(block) {}
 
     virtual void makeBlockBounce(float dt);
-    virtual ~IBlockBehavior()
-    {
-        delete block;
-        block = nullptr;
-    };
+    virtual ~IBlockBehavior() {};
     virtual void reactToCollision(GameObject *p, int type) {
 
     };

@@ -1,21 +1,5 @@
 #include "Particle.hpp"
 #include "Block.hpp"
-
-Particle::Particle(const Vector2& _pos, const Vector2& _size,
-                    Texture2D _texture, const Rectangle& _srcRec,
-                    const Vector2& initialVelocity, float lifetimeSeconds)
-        : GameObject(_pos, _size)
-        , texture(_texture)
-        , srcRec(_srcRec)
-        , isActive(true)
-    {
-        move.velocity     = initialVelocity;
-        move.acceleration      = {0, 900.f};          
-        maxLifetime  = lifetimeSeconds;
-        age          = 0.0f;
-    }
-
-
 void Particle::spawnParticles(const Block& block, std::vector<Particle>& particles) {
     // chia srcRec thành 4 miếng
     float w2 = block.srcRec.width*0.5f;

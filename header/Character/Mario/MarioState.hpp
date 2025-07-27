@@ -25,13 +25,14 @@ protected:
 
 
 public:
-    MarioState(stateType Type, Mario *_mario, int _delay);
+    MarioState(int Type, Mario *_mario, int _delay);
 
     // direction : facing left or right
     // speedCap : the maximum speed
     // accel : the horizontal acceleration
     virtual void HorizontalAccelerate(float speedCap, float accel);
 };
+
 class IdleState : public MarioState
 {
 public:

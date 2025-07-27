@@ -1,7 +1,7 @@
 #pragma once
 #include <stack>
 #include "Scene.hpp"
-#include "Global.hpp"
+
 using namespace std;
 
 class Program {

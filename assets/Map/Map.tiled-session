@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Map1.1.json",
+    "activeFile": "collided_animation.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -16,11 +16,11 @@
             "scaleInEditor": 2
         },
         "Map1.1.json": {
-            "scale": 1.5,
+            "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 85.33333333333333,
-                "y": 139.99999999999997
+                "x": 436.5,
+                "y": 111.5
             }
         },
         "collided_animation.json": {
@@ -45,10 +45,6 @@
             "scaleInDock": 1,
             "scaleInEditor": 5.5
         },
-        "new_items_powerups.json": {
-            "scaleInDock": 1,
-            "scaleInEditor": 8
-        },
         "question.tsj": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -66,23 +62,22 @@
     "map.tileWidth": 16,
     "map.width": 53,
     "openFiles": [
-        "new_blocks1_blocks.json",
-        "new_blocks2_items.json",
-        "ground_tileset.json",
-        "collided_animation.json",
-        "Map1.1.json",
-        "new_items_powerups.json"
-    ],
-    "project": "Map.tiled-project",
-    "property.type": "bool",
-    "recentFiles": [
-        "new_blocks1_blocks.json",
-        "new_blocks2_items.json",
-        "ground_tileset.json",
-        "collided_animation.json",
-        "new_items_powerups.json",
         "Map1.1.json",
         "muilti_tileset.json",
+        "new_blocks1_blocks.json",
+        "new_blocks2_items.json",
+        "ground_tileset.json",
+        "collided_animation.json"
+    ],
+    "project": "Map.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "Map1.1.json",
+        "muilti_tileset.json",
+        "new_blocks1_blocks.json",
+        "new_blocks2_items.json",
+        "ground_tileset.json",
+        "collided_animation.json",
         "question.tsj",
         "8415.tsj",
         "tileset.json"
