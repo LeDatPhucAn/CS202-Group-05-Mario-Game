@@ -54,34 +54,50 @@ void SceneManager::update()
 
 void SceneManager::display()
 {
-
-    if (scenes.size() >= 2) {
-        // Create a temporary stack to access the previous scene
-        std::stack<Scene*> tempStack;
+    if (scenes.empty()) return;
+    
+    // Find the base scene (Game or Menu) and collect overlay scenes
+    std::vector<Scene*> overlayScenes;
+    std::stack<Scene*> tempStack;
+    Scene* baseScene = nullptr;
+    
+    // Pop scenes until we find a base scene (not Pause or Settings)
+    while (!scenes.empty()) {
         Scene* currentScene = scenes.top();
+        scenes.pop();
+        tempStack.push(currentScene);
         
-        // Check if current scene is pause
-        if (dynamic_cast<Pause*>(currentScene)) {
-            tempStack.push(currentScene);
-            scenes.pop();
-            
-            // Get the previous scene (should be Game)
-            Scene* previousScene = scenes.top();
-            
-            // Render the previous scene first
-            previousScene->displayScene();
-            
-            // Restore the pause scene to the stack
-            scenes.push(tempStack.top());
-            tempStack.pop();
-            
-            // Now render the pause overlay on top
-            currentScene->displayScene();
-            return;
+        // Check if current scene is an overlay scene
+        if (dynamic_cast<Pause*>(currentScene) || dynamic_cast<Settings*>(currentScene)) {
+            overlayScenes.push_back(currentScene);
+        } else {
+            // This is our base scene
+            baseScene = currentScene;
+            break;
         }
     }
-    // Normal scene rendering
-    scenes.top()->displayScene();
+    
+    // Restore all scenes back to the main stack
+    while (!tempStack.empty()) {
+        scenes.push(tempStack.top());
+        tempStack.pop();
+    }
+    
+    // Render the base scene first
+    if (baseScene) {
+        baseScene->displayScene();
+    }
+    
+    // Render overlay scenes in the correct order (bottom to top)
+    // Reverse the vector so the first overlay (deepest) renders first
+    for (int i = overlayScenes.size() - 1; i >= 0; i--) {
+        overlayScenes[i]->displayScene();
+    }
+    
+    // If no overlay scenes were found, render normally
+    if (overlayScenes.empty() && !baseScene) {
+        scenes.top()->displayScene();
+    }
 }
 
 Scene *SceneFactory::create(sceneType newScene, SceneManager *mag)

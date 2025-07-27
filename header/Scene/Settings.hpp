@@ -6,7 +6,6 @@ class Settings : public Scene {
 private:
     std::vector<TextBox*> buttons;
     int selectedButton = 0;
-    Texture2D backgroundTexture;
     Texture2D buttonTexture;
     Texture2D buttonHoverTexture;
     Texture2D settingsBoard;

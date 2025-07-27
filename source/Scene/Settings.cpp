@@ -4,23 +4,15 @@
 #include <vector>
 #include <string>
 
-// Static variables for flash effect
-static bool        flashActive    = false;
-static float       flashTimer     = 0.0f;
-static sceneType   nextScene      = sceneType::MENU;
-static const float flashDuration  = 0.6f;
-static bool        buttonsInitialized = false;
+
+static bool   buttonsInitialized = false;
 
 Settings::Settings(SceneManager* _manager) : Scene(_manager) {
     // Load textures (reuse menu textures)
-    backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
     buttonHoverTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButtonHovered.png");
     settingsBoard = LoadTexture("assets/Backgrounds/SettingsBoard.png");
     
-    if (backgroundTexture.id == 0) {
-        TraceLog(LOG_WARNING, "Failed to load settings background texture");
-    }
     if (buttonTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load settings button texture");
     }
@@ -33,9 +25,6 @@ Settings::Settings(SceneManager* _manager) : Scene(_manager) {
 }
 
 Settings::~Settings() {
-    if (backgroundTexture.id > 0) {
-        UnloadTexture(backgroundTexture);
-    }
     if (buttonTexture.id > 0) {
         UnloadTexture(buttonTexture);
     }
@@ -53,16 +42,6 @@ Settings::~Settings() {
 }
 
 void Settings::updateScene() {
-    // Handle flash effect
-    if (flashActive) {
-        flashTimer += GetFrameTime();
-        if (flashTimer >= flashDuration) {
-            flashActive = false;
-            flashTimer = 0.0f;
-            manager->changeScene(nextScene);
-        }
-        return;
-    }
 
     // Update switch animation continuously
     float targetPos = fullscreen ? 1.0f : 0.0f;
@@ -76,7 +55,7 @@ void Settings::updateScene() {
             "MUSIC",
             "SFX", 
             "FULLSCREEN",
-            "BACK TO MENU"
+            "BACK"
         };
         
         for (int i = 0; i < buttonTexts.size(); i++) {
@@ -123,9 +102,7 @@ void Settings::updateScene() {
             fullscreen = !fullscreen;
         } 
         else if (selectedButton == 3) { // Back to menu
-            nextScene = sceneType::MENU;
-            flashActive = true;
-            flashTimer = 0.0f;
+            manager->goBack();
             return;
         }
     }
@@ -199,9 +176,7 @@ void Settings::updateScene() {
                 (float)buttonHeight
             };
             if (CheckCollisionPointRec(mousePos, btnRect)) {
-                nextScene = sceneType::MENU;
-                flashActive = true;
-                flashTimer = 0.0f;
+                manager->goBack();
                 return;
             }
         }
@@ -218,19 +193,11 @@ void Settings::displayScene() {
         "MUSIC",
         "SFX", 
         "FULLSCREEN",
-        "BACK TO MENU"
+        "BACK"
     };
     
-    // Draw background
-    if (backgroundTexture.id > 0) {
-        DrawTexturePro(backgroundTexture, 
-                      {0, 0, (float)backgroundTexture.width, (float)backgroundTexture.height},
-                      {0, 0, (float)UI::screenWidth, (float)UI::screenHeight},
-                      {0, 0}, 0.0f, WHITE);
-    } else {
-        ClearBackground(BLACK);
-    }
-    
+    //Draw background
+    DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 80}); // Semi-transparent black background
     
     
     // Calculate settings board dimensions and position
@@ -312,14 +279,6 @@ void Settings::displayScene() {
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
                   {textX, textY}, 24, buttonTextSpacing, BLACK);
         
-        // Flash effect for selected button
-        if (flashActive && i == selectedButton)
-        {
-            float t = fmodf(flashTimer / flashDuration, 1.0f);
-            float hue = fmodf(flashTimer * 360.0f / flashDuration, 360.0f);
-            Color col = ColorFromHSV(hue, 1.0f, 1.0f);
-            DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 24, 3, col);
-        }
 
         // Draw setting values and sliders
         switch(i) {

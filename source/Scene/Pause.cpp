@@ -63,9 +63,7 @@ void Pause::updateScene() {
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         switch(selectedButton) {
             case 0: // Resume
-                nextScene = sceneType::GAME;
-                flashActive = true;
-                flashTimer = 0.0f;
+                manager->goBack();
                 return;
             case 1: // Save
                 // Add save functionality here
@@ -127,10 +125,8 @@ void Pause::updateScene() {
         if (CheckCollisionPointRec(mousePos, btnRect)) {
             switch(selectedButton) {
                 case 0: // Resume
-                    nextScene = sceneType::GAME;
-                    flashActive = true;
-                    flashTimer = 0.0f;
-                    return;
+                    manager->goBack();
+                    break;
                 case 1: // Save
                     // Add save functionality here
                     break;
