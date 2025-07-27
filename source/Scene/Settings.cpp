@@ -208,7 +208,7 @@ void Settings::updateScene() {
     }
 
     if (IsKeyPressed(KEY_ESCAPE)) {
-        manager->changeScene(sceneType::MENU);
+        manager->goBack();
     }
 }
 

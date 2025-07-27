@@ -2,9 +2,6 @@
 #include "Scene.hpp"
 #include "Button.hpp"
 
-#pragma once
-#include "Scene.hpp"
-#include "Button.hpp"
 
 class Program;
 class Menu : public Scene

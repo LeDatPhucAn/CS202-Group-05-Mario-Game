@@ -84,6 +84,23 @@ void Game::removeEnemy(Enemy *enemy)
 }
 void Game::updateScene()
 {
+    // Check for pause input (P key or mouse click on pause icon)
+    if (IsKeyPressed(KEY_P)) {
+        manager->changeScene(sceneType::PAUSE);
+        return;
+    }
+    
+    // Check for mouse click on pause icon
+    Vector2 mousePos = GetMousePosition();
+    float iconSize = 40.0f;
+    float iconX = UI::screenWidth - iconSize - 20; // Top-right corner with margin
+    float iconY = 20;
+    Rectangle pauseIconRect = {iconX, iconY, iconSize, iconSize};
+    
+    if (CheckCollisionPointRec(mousePos, pauseIconRect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        manager->changeScene(sceneType::PAUSE);
+        return;
+    }
     // Step the world
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
@@ -150,6 +167,33 @@ void Game::displayScene()
     {
         x.display(dt);
     }
+
+    // Draw pause button in top-right corner
+    float iconSize = 40.0f;
+    float iconX = UI::screenWidth - iconSize - 20;
+    float iconY = 20;
+    Rectangle pauseIconRect = {iconX, iconY, iconSize, iconSize};
+    
+    // Check if mouse is hovering over the icon
+    Vector2 mousePos = GetMousePosition();
+    bool isHovered = CheckCollisionPointRec(mousePos, pauseIconRect);
+    
+    // Draw background circle
+    Color bgColor = isHovered ? Color{101, 67, 33, 255} : ORANGE; // Dark brown when hovered, orange when normal
+    DrawCircle(iconX + iconSize/2, iconY + iconSize/2, iconSize/2, bgColor);
+    
+    // Draw border
+    DrawCircleLines(iconX + iconSize/2, iconY + iconSize/2, iconSize/2, BLACK);
+    
+    // Draw pause symbol (two vertical bars)
+    float barWidth = 6;
+    float barHeight = iconSize * 0.5f;
+    float barY = iconY + (iconSize - barHeight) / 2;
+    float leftBarX = iconX + iconSize * 0.3f;
+    float rightBarX = iconX + iconSize * 0.6f;
+    
+    DrawRectangle(leftBarX, barY, barWidth, barHeight, WHITE);
+    DrawRectangle(rightBarX, barY, barWidth, barHeight, WHITE);
 }
 
 Game::~Game()
