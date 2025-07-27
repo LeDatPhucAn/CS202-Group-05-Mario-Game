@@ -357,9 +357,9 @@ void Menu::displayScene()
 
         // Text with shadow for better visibility
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX + 2, textY + 2}, 24, buttonTextSpacing, BLACK);
+                   {textX + 1, textY + 1}, 24, buttonTextSpacing, WHITE);
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX, textY}, 24, buttonTextSpacing, WHITE);
+                   {textX, textY}, 24, buttonTextSpacing, BLACK);
 
         // Flash effect
         if (flashActive && i == selectedButton)

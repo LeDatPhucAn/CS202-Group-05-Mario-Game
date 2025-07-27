@@ -194,6 +194,17 @@ void Game::displayScene()
     
     DrawRectangle(leftBarX, barY, barWidth, barHeight, WHITE);
     DrawRectangle(rightBarX, barY, barWidth, barHeight, WHITE);
+
+    //Draw Instructions
+    string instructions = "Use Arrow Keys/ WASD to move - P to pause";
+    Vector2 instrSize = MeasureTextEx(UI::font, instructions.c_str(), 16, 2);
+    float instrX = (UI::screenWidth - instrSize.x) / 2;
+    float instrY = UI::screenHeight - instrSize.y - 20;
+    
+    DrawTextEx(UI::font, instructions.c_str(), 
+              {instrX + 1, instrY + 1}, 20, 2, WHITE);
+    DrawTextEx(UI::font, instructions.c_str(), 
+              {instrX, instrY}, 20, 2, BLACK);
 }
 
 Game::~Game()

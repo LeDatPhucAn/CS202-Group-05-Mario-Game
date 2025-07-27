@@ -240,9 +240,9 @@ void Pause::displayScene() {
         
         // Text with shadow
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
-                  {textX + 1, textY + 1}, 22, buttonTextSpacing, BLACK);
+                  {textX + 1, textY + 1}, 22, buttonTextSpacing, WHITE);
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
-                  {textX, textY}, 22, buttonTextSpacing, WHITE);
+                  {textX, textY}, 22, buttonTextSpacing, BLACK);
         
         // Flash effect for selected button
         if (flashActive && i == selectedButton) {
@@ -254,13 +254,13 @@ void Pause::displayScene() {
     }
     
     // Draw instructions
-    std::string instructions = "Use ARROW KEYS to navigate - ENTER to select - ESC to resume";
+    string instructions = "Use ARROW KEYS to navigate - ENTER to select - ESC to resume";
     Vector2 instrSize = MeasureTextEx(UI::font, instructions.c_str(), 16, 2);
     float instrX = (UI::screenWidth - instrSize.x) / 2;
     float instrY = panelY + panelHeight + 20;
     
     DrawTextEx(UI::font, instructions.c_str(), 
-              {instrX + 1, instrY + 1}, 16, 2, BLACK);
+              {instrX + 1, instrY + 1}, 20, 2, BLACK);
     DrawTextEx(UI::font, instructions.c_str(), 
-              {instrX, instrY}, 16, 2, WHITE);
+              {instrX, instrY}, 20, 2, WHITE);
 }
