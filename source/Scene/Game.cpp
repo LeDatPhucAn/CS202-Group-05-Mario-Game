@@ -7,12 +7,14 @@
 vector<Particle> Game::particles = {};
 b2World *Game::world = new b2World({0, fallGravity});
 vector<Enemy *> Game::enemies = {};
-Game::Game() : Mario(),
-               Goomba(),
-               Koopa(),
-               PiranhaPlant(),
-               Lakitu()
+
+Game::Game(SceneManager *_mag) : Mario(),
+                                 Goomba(),
+                                 Koopa(),
+                                 PiranhaPlant(),
+                                 Lakitu()
 {
+    manager = _mag;
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
@@ -130,7 +132,8 @@ void Game::updateMap()
         block = nullptr;
     }
 }
-void Game::displaySceneInCamera()
+
+void Game::displayScene()
 {
     curMap.display();
     Mario.display();
@@ -147,9 +150,6 @@ void Game::displaySceneInCamera()
     {
         x.display(dt);
     }
-}
-void Game::displayScene()
-{
 }
 
 Game::~Game()

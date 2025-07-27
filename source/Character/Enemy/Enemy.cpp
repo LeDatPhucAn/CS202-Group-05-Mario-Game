@@ -8,23 +8,3 @@ Enemy::Enemy(const Enemy &other) : Character(other)
 {
     beCleared = other.beCleared;
 }
-
-// // Builder methods...
-// Enemy::Builder &Enemy::Builder::setFrames(stateType type, int start, int end)
-// {
-//     sprite.StartEndFrames[type] = {start, end};
-//     return *this;
-// }
-// Enemy::Builder &Enemy::Builder::setJsonAndTexture(const std::string &name)
-// {
-//     sprite.texture = UI::textureMap[name];
-//     sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap[name]);
-//     return *this;
-// }
-// Enemy::Builder &Enemy::Builder::setState(State *initialState)
-// {
-//     state = initialState;
-//     return *this;
-// }
-
-

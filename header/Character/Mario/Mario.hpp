@@ -2,13 +2,8 @@
 #include "Character.hpp"
 #include "MarioState.hpp"
 #include "UI.hpp"
-enum MarioForm
-{
-    SMALL = 0,
-    BIG = 1,
-    FIRE,
-    FORM_COUNT
-};
+#include "Structs.hpp"
+
 class Mario : public Character
 {
 private:
@@ -32,6 +27,11 @@ private:
 
 public:
     Mario();
+    void setFrame(marioStateType type, int start, int end)
+    {
+        this->sprite.StartEndFrames[(int)type] = {start, end};
+    }
+
     // Override collision to handle enemies
     void updateCollision(GameObject *other, int type) override;
     void createBody(b2World *world) override;

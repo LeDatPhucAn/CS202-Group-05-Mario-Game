@@ -1,60 +1,63 @@
 #include "Mario.hpp"
 #include "Enemy.hpp" // Needed for dynamic_cast to Enemy
 #include "EnemyState.hpp"
-
+#include "Structs.hpp"
 Mario::Mario()
     : Character()
 {
-    this->sprite.StartEndFrames[IDLE] = {0, 0};
-    this->sprite.StartEndFrames[WALK] = {1, 3};
-    this->sprite.StartEndFrames[JUMP] = {5, 5};
-    this->sprite.StartEndFrames[FALL] = {5, 5};
-    this->sprite.StartEndFrames[SKID] = {4, 4};
-    this->sprite.StartEndFrames[RUN] = {1, 3};
-    this->sprite.StartEndFrames[CROUCH] = {0, 0};
-    this->sprite.StartEndFrames[GROW] = {44, 50};
-    this->sprite.StartEndFrames[UNGROW] = {50, 44};
-    this->sprite.StartEndFrames[DEAD] = {6, 6};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Mario2D"]);
-    this->sprite.texture = UI::textureMap["Mario2D"];
+    setFrame(marioStateType::IDLE, 0, 0);
+    setFrame(marioStateType::WALK, 1, 3);
+    setFrame(marioStateType::JUMP, 5, 5);
+    setFrame(marioStateType::FALL, 5, 5);
+    setFrame(marioStateType::SKID, 4, 4);
+    setFrame(marioStateType::RUN, 1, 3);
+    setFrame(marioStateType::CROUCH, 0, 0);
+    setFrame(marioStateType::GROW, 44, 50);
+    setFrame(marioStateType::UNGROW, 50, 44);
+    setFrame(marioStateType::DEAD, 6, 6);
+
+    setTexture("Mario2D");
 }
 void Mario::changeForm(MarioForm form)
 {
     switch (form)
     {
     case SMALL:
-        sprite.StartEndFrames[IDLE] = {0, 0};
-        sprite.StartEndFrames[JUMP] = {5, 5};
-        sprite.StartEndFrames[FALL] = {5, 5};
-        sprite.StartEndFrames[SKID] = {4, 4};
-        sprite.StartEndFrames[WALK] = {1, 3};
-        sprite.StartEndFrames[RUN] = {1, 3};
-        sprite.StartEndFrames[CROUCH] = {0, 0};
-        sprite.StartEndFrames[GROW] = {44, 50};
-        sprite.StartEndFrames[UNGROW] = {0, 0};
+        setFrame(marioStateType::IDLE, 0, 0);
+        setFrame(marioStateType::JUMP, 5, 5);
+        setFrame(marioStateType::FALL, 5, 5);
+        setFrame(marioStateType::SKID, 4, 4);
+        setFrame(marioStateType::WALK, 1, 3);
+        setFrame(marioStateType::RUN, 1, 3);
+        setFrame(marioStateType::CROUCH, 0, 0);
+        setFrame(marioStateType::GROW, 44, 50);
+        setFrame(marioStateType::UNGROW, 0, 0);
         break;
+
     case BIG:
-        sprite.StartEndFrames[IDLE] = {13, 13};
-        sprite.StartEndFrames[WALK] = {16, 14};
-        sprite.StartEndFrames[JUMP] = {18, 18};
-        sprite.StartEndFrames[FALL] = {18, 18};
-        sprite.StartEndFrames[SKID] = {17, 17};
-        sprite.StartEndFrames[RUN] = {16, 14};
-        sprite.StartEndFrames[CROUCH] = {19, 19};
-        sprite.StartEndFrames[GROW] = {28, 28};
-        sprite.StartEndFrames[UNGROW] = {50, 44};
+        setFrame(marioStateType::IDLE, 13, 13);
+        setFrame(marioStateType::WALK, 16, 14);
+        setFrame(marioStateType::JUMP, 18, 18);
+        setFrame(marioStateType::FALL, 18, 18);
+        setFrame(marioStateType::SKID, 17, 17);
+        setFrame(marioStateType::RUN, 16, 14);
+        setFrame(marioStateType::CROUCH, 19, 19);
+        setFrame(marioStateType::GROW, 28, 28);
+        setFrame(marioStateType::UNGROW, 50, 44);
         break;
+
     case FIRE:
-        sprite.StartEndFrames[IDLE] = {28, 28};
-        sprite.StartEndFrames[WALK] = {31, 29};
-        sprite.StartEndFrames[JUMP] = {34, 34};
-        sprite.StartEndFrames[FALL] = {34, 34};
-        sprite.StartEndFrames[SKID] = {33, 33};
-        sprite.StartEndFrames[RUN] = {31, 29};
-        sprite.StartEndFrames[CROUCH] = {35, 35};
-        sprite.StartEndFrames[GROW] = {28, 28};
-        sprite.StartEndFrames[UNGROW] = {13, 13};
+        setFrame(marioStateType::IDLE, 28, 28);
+        setFrame(marioStateType::WALK, 31, 29);
+        setFrame(marioStateType::JUMP, 34, 34);
+        setFrame(marioStateType::FALL, 34, 34);
+        setFrame(marioStateType::SKID, 33, 33);
+        setFrame(marioStateType::RUN, 31, 29);
+        setFrame(marioStateType::CROUCH, 35, 35);
+        setFrame(marioStateType::GROW, 28, 28);
+        setFrame(marioStateType::UNGROW, 13, 13);
         break;
+
     default:
         break;
     }

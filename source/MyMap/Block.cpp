@@ -63,7 +63,7 @@ Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
         sprite.frameRecs.push_back(_src);
     sprite.frameRecs = _fullFrame;
 
-    sprite.StartEndFrames[IDLE] = {(int)(StartEnd.x), (int)StartEnd.y};
+    sprite.StartEndFrames[(int)blockStateType::IDLE] = {(int)(StartEnd.x), (int)StartEnd.y};
     sprite.texture = _tex;
 
     isSolid = inforTile->get<bool>("isSolid");

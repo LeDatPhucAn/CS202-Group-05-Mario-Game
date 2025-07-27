@@ -5,7 +5,7 @@
 // ---------- Base State ----------
 State::State() : delay(0), gameObject(nullptr), delayCounter(0), frameIndex(0), numFrames(0) {}
 
-State::State(stateType _type, GameObject *_gameObject, int _delay)
+State::State(int _type, GameObject *_gameObject, int _delay)
     : delay(_delay), gameObject(_gameObject), delayCounter(_delay), type(_type), frameIndex(0)
 {
     StartEndFrame se = gameObject->sprite.StartEndFrames[_type];
@@ -74,22 +74,22 @@ void State::displayState()
 }
 void State::gameObjectDebug(GameObject *gameObject)
 {
-    Vec2Adapter mouse(Program::mouseWorldPos);
+    // Vec2Adapter mouse(Program::mouseWorldPos);
 
-    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && dynamic_cast<Mario *>(gameObject))
-    {
-        // Teleport the Box2D body
-        gameObject->body->SetTransform(mouse.toMeters(), 0); // 0 = angle
+    // if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && dynamic_cast<Mario *>(gameObject))
+    // {
+    //     // Teleport the Box2D body
+    //     gameObject->body->SetTransform(mouse.toMeters(), 0); // 0 = angle
 
-        std::cout << "Teleported to: " << mouse.toPixels().x << ", " << mouse.toPixels().y << "\n";
-    }
-    else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dynamic_cast<Mario *>(gameObject))
-    {
-        Koopa *newKoopa = new Koopa();
-        newKoopa->setPosition(mouse.toPixels());
-        newKoopa->changeState(new EnemyWalkState(newKoopa));
-        Game::addEnemy(newKoopa);
-    }
+    //     std::cout << "Teleported to: " << mouse.toPixels().x << ", " << mouse.toPixels().y << "\n";
+    // }
+    // else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dynamic_cast<Mario *>(gameObject))
+    // {
+    //     Koopa *newKoopa = new Koopa();
+    //     newKoopa->setPosition(mouse.toPixels());
+    //     newKoopa->changeState(new EnemyWalkState(newKoopa));
+    //     Game::addEnemy(newKoopa);
+    // }
 }
 void State::drawDebug(GameObject *gameObject)
 {

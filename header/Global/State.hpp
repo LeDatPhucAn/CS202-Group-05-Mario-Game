@@ -3,32 +3,7 @@
 #include "raymath.h"
 #include "Vec2Adapter.hpp"
 #include "GameObject.hpp"
-
-enum stateType
-{
-    IDLE,
-    WALK,
-    RUN,
-    JUMP,
-    FALL,
-    SKID,
-    CROUCH,
-    GROW,
-    UNGROW,
-    DEAD
-};
-
-/*
-
-    if (animation.any())
-    {
-        auto frames = animation.getFrames();
-
-        int index = getIndex();
-        this->sprite.StartEndFrames[type] = {index, index + frames.size() - 1};
-    }
-*/
-
+#include "Structs.hpp"
 class State
 {
 private:
@@ -41,14 +16,14 @@ protected:
     int delay = 0;
     int delayCounter = 0;
     Rectangle frameRec;
-    stateType type;
+    int type;
     GameObject *gameObject = nullptr;
 
 public:
     State();
-    State(stateType _type, GameObject *_gameObject, int _delay);
+    State(int _type, GameObject *_gameObject, int _delay);
 
-    virtual stateType getType() const { return type; }
+    virtual int getType() const { return type; }
     // salient
     virtual void updateState();
     virtual void displayState();

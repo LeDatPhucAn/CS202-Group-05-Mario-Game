@@ -1,16 +1,17 @@
 #include "Spiny.hpp"
 #include "EnemyState.hpp"
 #include "Mario.hpp"
+#include "Structs.hpp"
 
 Spiny::Spiny()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {131, 131};
-    this->sprite.StartEndFrames[WALK] = {131, 132};
-    this->sprite.StartEndFrames[DEAD] = {131, 131};
-    this->sprite.StartEndFrames[FALL] = {129, 130};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 131, 131);
+    setFrame(enemyStateType::WALK, 131, 132);
+    setFrame(enemyStateType::DEAD, 131, 131);
+    setFrame(enemyStateType::FALL, 129, 130);
+    
+    setTexture("Enemies2D");
 }
 
 void Spiny::updateCollision(GameObject *other, int type)

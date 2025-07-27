@@ -6,6 +6,7 @@ namespace fs = std::filesystem;
 
 // initialize static members
 Font UI::font = {0};
+Font UI::boldFont = {0};
 int UI::screenWidth = 1600;
 int UI::screenHeight = 900;
 int UI::lastScreenWidth = 1600;
@@ -27,6 +28,15 @@ UI::UI()
 	{
 		cout << "didnt get da font";
 		font = GetFontDefault();
+	}
+
+	boldFont = LoadFont("assets/Fonts/JetBrainsMono-Bold.ttf");
+	SetTextureFilter(boldFont.texture, TEXTURE_FILTER_BILINEAR);
+
+	if (boldFont.texture.id == 0)
+	{
+		cout << "didnt get da bold font";
+		boldFont = GetFontDefault();
 	}
 }
 

@@ -9,18 +9,12 @@
 PiranhaPlant::PiranhaPlant()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {9, 10};
-    this->sprite.StartEndFrames[DEAD] = {9, 10};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 9, 10);
+    setFrame(enemyStateType::DEAD, 9, 10);
 
-    // // Piranha Plants do not move via physics
-    // this->movement.velocity = {0, 0};
-    // this->movement.acceleration = {0, 0};
-
-    // Defer position-based setup to the first update call
+    setTexture("Enemies2D");
     this->timer = 0.0f;
-    this->isHiding = true; // Start hidden inside the pipe
+    this->isHiding = true;
     this->isSetup = false;
 }
 
@@ -70,7 +64,7 @@ void PiranhaPlant::update()
     }
     else
     {
-        vel.y = 0.0f; 
+        vel.y = 0.0f;
     }
 
     body->SetLinearVelocity(vel);

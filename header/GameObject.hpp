@@ -5,36 +5,13 @@
 #include <algorithm>
 #include <cmath>
 #include "Vec2Adapter.hpp"
+#include "Structs.hpp"
+#include "UI.hpp"
+#include <string>
 using namespace std;
 
 class State;
-enum CollisionType
-{
-    NONE,
-    TOP,       // TOP là đầu của 1 object
-    BOTTOM,    // BOTTOM là phần dưới của 1 object
-    LEFTSIDE,  // LEFTSIDE là phần bên trái của 1 object
-    RIGHTSIDE, // RIGHTSIDE là phần bên phải của 1 object
-};
-// These structs are generic and can stay here
-struct StartEndFrame
-{
-    int start = 0;
-    int end = 0;
-};
-struct Sprite
-{
-    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(20);
-    vector<Rectangle> frameRecs = {};
-    Texture2D texture = {0};
-};
 
-enum Direction
-{
-    LEFT = -1,
-    BRUH,
-    RIGHT = 1,
-};
 // global values
 const float fallGravity = 9.8f;
 
@@ -77,6 +54,11 @@ public:
     // Xử lý khi va chạm với một object khác
     virtual void updateCollision(GameObject *other, int type) {}
 
+    virtual void setTexture(const string &name)
+    {
+        sprite.texture = UI::textureMap[name];
+        sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap[name]);
+    }
     // Box2D Integration
     void attachBody(b2Body *b) { body = b; }
     b2Body *getBody() const { return body; }

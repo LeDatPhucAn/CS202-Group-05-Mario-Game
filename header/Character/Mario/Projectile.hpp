@@ -7,7 +7,6 @@
 class Projectile : public GameObject
 {
 protected:
-    Sprite sprite;
 
 public:
     Projectile();

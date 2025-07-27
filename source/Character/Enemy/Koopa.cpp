@@ -5,12 +5,12 @@
 Koopa::Koopa()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {3, 4};
-    this->sprite.StartEndFrames[WALK] = {3, 4};
-    this->sprite.StartEndFrames[RUN] = {7, 7};
-    this->sprite.StartEndFrames[DEAD] = {7, 7};
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 3, 4);
+    setFrame(enemyStateType::WALK, 3, 4);
+    setFrame(enemyStateType::RUN, 7, 7);
+    setFrame(enemyStateType::DEAD, 7, 7);
+
+    setTexture("Enemies2D");
 }
 
 void Koopa::updateCollision(GameObject *other, int type)

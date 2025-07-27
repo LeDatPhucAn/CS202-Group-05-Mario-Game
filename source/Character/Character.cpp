@@ -2,6 +2,7 @@
 #include "GameObject.hpp"
 #include "ContactListener.hpp"
 #include "PiranhaPlant.hpp"
+#include "Structs.hpp"
 
 void Character::update()
 {
