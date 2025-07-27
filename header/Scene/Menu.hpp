@@ -12,6 +12,7 @@ private:
     std::vector<TextBox*> buttons;
     int selectedButton = 0;
     Texture2D backgroundTexture;
+    Texture2D titleTexture;
     Texture2D buttonTexture;
     Texture2D buttonHoverTexture;
     vector<Texture2D> buttonTextures;

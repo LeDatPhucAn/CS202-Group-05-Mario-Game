@@ -22,6 +22,12 @@ Menu::Menu(SceneManager* _manager) : Scene(_manager) {
         TraceLog(LOG_WARNING, "Failed to load menu background texture");
     }
 
+    // Load the title texture
+    titleTexture = LoadTexture("assets/Backgrounds/Title.png");
+    if (titleTexture.id == 0) {
+        TraceLog(LOG_WARNING, "Failed to load title texture");
+    }
+
     // Load button textures
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");  
     buttonHoverTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButtonHovered.png"); 
@@ -61,7 +67,10 @@ Menu::~Menu() {
         UnloadTexture(backgroundTexture);
     }
 
-     if (buttonTexture.id > 0) {
+    if (titleTexture.id > 0) {
+        UnloadTexture(titleTexture);
+    }
+    if (buttonTexture.id > 0) {
         UnloadTexture(buttonTexture);
     }
     if (buttonHoverTexture.id > 0) {
@@ -220,41 +229,48 @@ void Menu::displayScene() {
         ClearBackground(BLACK);
     }
     
-    // Bouncing title effect
-    float bounceOffset = sin(titleBounce) * 20.0f;
-    
-    // Title centering
-    float titleSpacing = 12.0f;
-    float titleFontSize = 72.0f;
-    
-    float titleX = (UI::screenWidth - 750) / 2.0f;
-    float titleY = 80 + bounceOffset;
-    
+    if (titleTexture.id > 0) {
+        // Scale so it never exceeds 30% of screen width
+        float maxW   = UI::screenWidth * 0.25f;
+        float scale  = maxW / titleTexture.width;
+        float drawW  = titleTexture.width  * scale;
+        float drawH  = titleTexture.height * scale;
+        // apply your bounce offset to Y
+        float drawX  = (UI::screenWidth - drawW) / 2.0f;
+        float drawY  = 80 + sinf(titleBounce) * 10.0f;
+        DrawTexturePro(
+            titleTexture,
+            { 0, 0, (float)titleTexture.width,  (float)titleTexture.height },
+            { drawX, drawY, drawW, drawH },
+            { 0, 0 }, 0.0f, WHITE
+        );
+    }
+    else {
+        // fallback to original text‐drawing code
+        float titleSpacing = 12.0f;
+        float titleFontSize = 72.0f;
+        float titleX = (UI::screenWidth - 750) / 2.0f;
+        float titleY = 80 + sinf(titleBounce) * 10.0f;
+
+        // Draw title with outline effect
+        DrawTextEx(UI::boldFont, titleText.c_str(),
+                   { titleX + 2, titleY + 2 }, titleFontSize, titleSpacing, ORANGE);
+        DrawTextEx(UI::boldFont, titleText.c_str(),
+                   { titleX, titleY }, titleFontSize, titleSpacing, RED);
+    }
     //Subtitle centering
-    float subtitleSpacing = 5.0f; 
-    float subtitleFontSize = 40.0f;
+    float subtitleSpacing = 3.0f; 
+    float subtitleFontSize = 24.0f;
     
-    float subtitleX = (UI::screenWidth + 200) / 2.0f; 
-    float subtitleY = 160 + bounceOffset;
+    float subtitleX = (UI::screenWidth) / 2.0f; 
+    float subtitleY = 275 + sinf(titleBounce) * 10.0f;
     
     // Draw title with outline effect
-    int outlineThickness = 4;
-    for (int dx = -outlineThickness; dx <= outlineThickness; dx++) {
-        for (int dy = -outlineThickness; dy <= outlineThickness; dy++) {
-            if (dx != 0 || dy != 0) {
-                DrawTextEx(UI::boldFont, titleText.c_str(), 
-                          {titleX + dx, titleY + dy}, titleFontSize, titleSpacing, ORANGE);
-            }
-        }
-    }
-    DrawTextEx(UI::boldFont, titleText.c_str(), 
-              {titleX, titleY}, titleFontSize, titleSpacing, RED);
-    
     // Draw subtitle with shadow
     DrawTextEx(UI::boldFont, subtitleText.c_str(), 
-              {subtitleX + 2, subtitleY + 2}, subtitleFontSize, subtitleSpacing, DARKBROWN);
+              {subtitleX + 1, subtitleY + 1}, subtitleFontSize, subtitleSpacing, ORANGE);
     DrawTextEx(UI::boldFont, subtitleText.c_str(), 
-              {subtitleX, subtitleY}, subtitleFontSize, subtitleSpacing, ORANGE);
+              {subtitleX, subtitleY}, subtitleFontSize, subtitleSpacing, RED);
     
     // Position and draw custom textured buttons
     float buttonWidth = 250;
@@ -294,11 +310,11 @@ void Menu::displayScene() {
                   {textX, textY}, 20, buttonTextSpacing, WHITE);
 
     //Flash effect
-    Color flashColor = BLUE;
     if (flashActive && i == selectedButton) {
-        float alpha = 1.0f - (flashTimer / flashDuration);
-        flashColor.a = (unsigned char)(alpha * 255);
-        DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 20, 3, flashColor);
+        float t = fmodf(flashTimer / flashDuration, 1.0f);
+        float hue      = fmodf(flashTimer * 360.0f / flashDuration, 360.0f);
+        Color col      = ColorFromHSV(hue, 1.0f, 1.0f);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 20, 3, col);
     }
 
     if (i < buttonTextures.size() && buttonTextures[i].id > 0) {
