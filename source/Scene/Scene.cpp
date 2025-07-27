@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 #include "Menu.hpp"
 #include "Game.hpp"
+#include "Settings.hpp"
 #include <iostream>
 using namespace std;
 Scene::Scene(SceneManager* _manager) : manager(_manager) {}
@@ -57,6 +58,8 @@ Scene* SceneFactory::create(sceneType newScene, SceneManager* mag)
         return new Menu(mag);
     if(newScene == sceneType::GAME) 
         return new Game(mag);
+    if(newScene == sceneType::SETTING)
+        return new Settings(mag);
         
     // if(newScene == CHOOSE_LEVEL)
     // 	retunr new ChooseLevel(mag); ....
