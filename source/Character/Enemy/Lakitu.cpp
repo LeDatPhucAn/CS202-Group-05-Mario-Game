@@ -8,9 +8,9 @@ Lakitu::Lakitu()
     : Enemy()
 {
 
-    this->sprite.StartEndFrames[IDLE] = {15, 15}; // Normal flying
-    this->sprite.StartEndFrames[FLY] = {15, 15}; // Using FLY state for flying animation
-    this->sprite.StartEndFrames[DEAD] = {16, 16};
+    setFrame(enemyStateType::IDLE, 15, 15); // Normal flying
+    setFrame(enemyStateType::FLY, 15, 15); // Using FLY state for flying animation
+    setFrame(enemyStateType::DEAD, 16, 16);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
 

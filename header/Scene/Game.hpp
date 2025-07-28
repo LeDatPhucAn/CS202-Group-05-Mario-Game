@@ -11,8 +11,6 @@
 #include "PiranhaPlant.hpp"
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
-#include "BulletBill.hpp"
-#include "HammerBro.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 class Game : public Scene
@@ -24,12 +22,9 @@ private:
 protected:
     Mario Mario;
     Goomba Goomba;
-    Koopa Koopa, FlyingKoopa;
+    Koopa Koopa;
     PiranhaPlant PiranhaPlant;
     Lakitu Lakitu;
-    BulletBill BulletBill;
-    HammerBro HammerBro;
-
 
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
@@ -39,6 +34,8 @@ protected:
     // for box2d integration
     ContactListener *contactListener = nullptr;
 
+    float prePosX = 0;
+    
 public:
     static vector<Enemy *> enemies;
 
@@ -46,19 +43,17 @@ public:
 
     static vector<Particle> particles;
     // initialize
-    Game();
+    Game(SceneManager *_mag);
 
-    void init() override;
+    void init();
     static void addEnemy(Enemy *enemy);
     static void removeEnemy(Enemy *enemy);
 
     // update
-    void updateScene() override;
+    void updateScene();
     void updateSceneInCamera(Camera2D cam) {};
 
     // display
-    void displayScene() override;
-    void displaySceneInCamera() override;
-
+    void displayScene();
     ~Game();
 };

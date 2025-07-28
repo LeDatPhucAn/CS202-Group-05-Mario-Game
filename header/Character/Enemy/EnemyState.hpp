@@ -1,6 +1,7 @@
 
 #pragma once
 #include "State.hpp"
+#include "Structs.hpp"
 
 class Character;
 
@@ -8,7 +9,7 @@ class EnemyState : public State {
 protected:
     Character* character;
 public:
-    EnemyState(stateType type, Character* character, int delay = 5);
+    EnemyState(int type, Character* character, int delay = 5);
     virtual void handleInput() = 0;
 };
 

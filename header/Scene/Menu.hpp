@@ -1,21 +1,27 @@
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
+
+#pragma once
+#include "Scene.hpp"
+#include "Button.hpp"
+
 class Program;
-class Menu : public Scene {
-protected:
-    static constexpr int spacing = 100;
-    vector<RectButton*> RectButtons;
-    Program* scenehandler = nullptr;
+class Menu : public Scene
+{
+private:
+    std::vector<TextBox *> buttons;
+    int selectedButton = 0;
+    Texture2D backgroundTexture;
+    Texture2D titleTexture;
+    Texture2D buttonTexture;
+    Texture2D buttonHoverTexture;
+    vector<Texture2D> buttonTextures;
+    Texture2D selectionIconTexture;
+
 public:
-    Menu() { init(); };
-    Menu(Program* handler) : scenehandler(handler) { init(); }
-    void init() override;
-
-    void updateScene() override;
-    void updateSceneInCamera(Camera2D cam) {};
-
-    void resetAnimations() {};
-    void displayScene() override;
-    void displaySceneInCamera() {}
+    Menu(SceneManager *_manager);
+    ~Menu();
+    void updateScene();
+    void displayScene();
 };

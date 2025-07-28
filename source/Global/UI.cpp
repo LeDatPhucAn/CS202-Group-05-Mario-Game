@@ -6,6 +6,7 @@ namespace fs = std::filesystem;
 
 // initialize static members
 Font UI::font = {0};
+Font UI::boldFont = {0};
 int UI::screenWidth = 1600;
 int UI::screenHeight = 900;
 int UI::lastScreenWidth = 1600;
@@ -27,6 +28,15 @@ UI::UI()
 	{
 		cout << "didnt get da font";
 		font = GetFontDefault();
+	}
+
+	boldFont = LoadFont("assets/Fonts/JetBrainsMono-Bold.ttf");
+	SetTextureFilter(boldFont.texture, TEXTURE_FILTER_BILINEAR);
+
+	if (boldFont.texture.id == 0)
+	{
+		cout << "didnt get da bold font";
+		boldFont = GetFontDefault();
 	}
 }
 
@@ -51,7 +61,7 @@ void UI::drawBackground()
 	Rectangle screen = {0, 0, static_cast<float>(screenWidth), static_cast<float>(screenHeight)};
 	Rectangle source = {1300, 300, static_cast<float>(screenWidth), static_cast<float>(screenHeight)};
 
-	DrawTexturePro(UI::textureMap["TitleScreen"], source, screen, {0, 0}, 0, BLUE);
+	DrawTexturePro(UI::textureMap["TitleScreen"], source, screen, {0, 0}, 0, LIGHTGRAY);
 }
 
 void UI::drawLogo()
@@ -67,25 +77,24 @@ void UI::drawLogo()
 
 void UI::initBackgrounds()
 {
-	const string backgroundPath = "assets/Backgrounds/";
+	// const string backgroundPath = "assets/Backgrounds/";
 
-	for (const auto &entry : fs::directory_iterator(backgroundPath))
-	{
-		textureMap[entry.path().stem().string()] = LoadTexture(entry.path().string().c_str());
-	}
+	// for (const auto &entry : fs::directory_iterator(backgroundPath))
+	// {
+	// 	textureMap[entry.path().stem().string()] = LoadTexture(entry.path().string().c_str());
+	// }
 }
 
 void UI::initSprites()
 {
 	const std::string spritePath = "assets/Sprites/";
-
 	for (const auto &entry : fs::directory_iterator(spritePath))
 	{
 		if (entry.path().extension() == ".json")
 		{
 			std::string name = entry.path().stem().string(); // e.g., "Mario2D"
 			fs::path pngFile = spritePath + name + ".png";
-
+			cout << "Processing sprite: " << pngFile.string() << "\n";
 			if (fs::exists(pngFile))
 			{
 				jsonMap[name] = getProcessedSpriteJson(entry.path().string());

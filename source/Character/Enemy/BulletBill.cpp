@@ -7,9 +7,9 @@
 BulletBill::BulletBill()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {19, 19};
-    this->sprite.StartEndFrames[FLY] = {20, 20}; 
-    this->sprite.StartEndFrames[DEAD] = {19, 19}; 
+    setFrame(enemyStateType::IDLE, 19, 19);
+    setFrame(enemyStateType::FLY, 20, 20); 
+    setFrame(enemyStateType::DEAD, 19, 19); 
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
     

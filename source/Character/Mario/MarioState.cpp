@@ -1,8 +1,9 @@
 #include "MarioState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
+#include "GrowMushroom.hpp"
 // Base MarioState constructor
-MarioState::MarioState(stateType Type, Mario *_mario, int _delay)
+MarioState::MarioState(int Type, Mario *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
 {
 }
@@ -24,7 +25,7 @@ void MarioState::HorizontalAccelerate(float speedCap, float accel)
 
 // ---------- IdleState ----------
 IdleState::IdleState(Mario *_mario, int _delay)
-    : MarioState(IDLE, _mario, _delay)
+    : MarioState((int)marioStateType::IDLE, _mario, _delay)
 {
 }
 
@@ -54,6 +55,11 @@ void IdleState::handleInput()
     {
         mario->changeState(new WalkState(mario));
     }
+    else if ((IsKeyDown(KEY_M)))
+    {
+        GrowMushroom *newMushroom = new GrowMushroom();
+        newMushroom->test_appear();
+    }
     else
     {
         b2Vec2 vel = mario->body->GetLinearVelocity();
@@ -65,7 +71,7 @@ void IdleState::handleInput()
 // ---------- WalkState ----------
 
 WalkState::WalkState(Mario *_mario, int _delay)
-    : MarioState(WALK, _mario, _delay)
+    : MarioState((int)marioStateType::WALK, _mario, _delay)
 {
 }
 
@@ -133,7 +139,7 @@ void WalkState::handleInput()
 // ---------- RunState ----------
 
 RunState::RunState(Mario *_mario, int _delay)
-    : MarioState(RUN, _mario, _delay)
+    : MarioState((int)marioStateType::RUN, _mario, _delay)
 {
 }
 void RunState::handleInput()
@@ -190,7 +196,7 @@ void RunState::handleInput()
 // ---------- JumpState ----------
 
 JumpState::JumpState(Mario *_mario, int _delay)
-    : MarioState(JUMP, _mario, _delay)
+    : MarioState((int)marioStateType::JUMP, _mario, _delay)
 {
     mario->isGrounded = false;
     float mass = mario->body->GetMass();
@@ -244,7 +250,7 @@ void JumpState::handleInput()
 
 // ---------- FallState ----------
 FallState::FallState(Mario *_mario, int _delay)
-    : MarioState(FALL, _mario, _delay)
+    : MarioState((int)marioStateType::FALL, _mario, _delay)
 {
 }
 
@@ -288,7 +294,7 @@ void FallState::handleInput()
 // ---------- SkidState ----------
 
 SkidState::SkidState(Mario *_mario, int _delay)
-    : MarioState(SKID, _mario, _delay)
+    : MarioState((int)marioStateType::SKID, _mario, _delay)
 {
 }
 
@@ -330,7 +336,7 @@ void SkidState::handleInput()
 
 // ---------- CrouchState ----------
 CrouchState::CrouchState(Mario *_mario, int _delay)
-    : MarioState(CROUCH, _mario, _delay)
+    : MarioState((int)marioStateType::CROUCH, _mario, _delay)
 {
     mario->toNewBody();
 }
@@ -339,7 +345,7 @@ void CrouchState::handleInput()
     b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = mario->direction * (-friction);
 
-    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))     
+    if (!(IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)))
     {
         mario->toNewBody(); // Reset to normal body size
         if (!mario->isGrounded)
@@ -372,7 +378,7 @@ void CrouchState::handleInput()
 // ---------- GrowState ----------
 
 GrowState::GrowState(Mario *_mario, int _delay)
-    : MarioState(GROW, _mario, _delay)
+    : MarioState((int)marioStateType::GROW, _mario, _delay)
 {
     // if (mario->isGrounded)
     //     mario->pos.y = mario->groundPosY - frameRec.height;
@@ -409,7 +415,7 @@ void GrowState::handleInput()
     }
 }
 UnGrowState::UnGrowState(Mario *_mario, int _delay)
-    : MarioState(UNGROW, _mario, _delay)
+    : MarioState((int)marioStateType::UNGROW, _mario, _delay)
 {
     // if (mario->isGrounded)
     //     mario->pos.y = mario->groundPosY - frameRec.height;
@@ -445,7 +451,7 @@ void UnGrowState::handleInput()
 }
 
 DeadState::DeadState(Mario *_mario, int _delay)
-    : MarioState(DEAD, _mario, _delay)
+    : MarioState((int)marioStateType::DEAD, _mario, _delay)
 {
     mario->isGrounded = false;
     mario->body->SetLinearVelocity({0, -250.f / PPM});

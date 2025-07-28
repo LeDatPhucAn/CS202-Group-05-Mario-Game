@@ -9,8 +9,8 @@
 PiranhaPlant::PiranhaPlant()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {9, 10};
-    this->sprite.StartEndFrames[DEAD] = {9, 10};
+    setFrame(enemyStateType::IDLE, 9, 10);
+    setFrame(enemyStateType::DEAD, 9, 10);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
 

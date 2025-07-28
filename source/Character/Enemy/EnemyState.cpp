@@ -2,11 +2,11 @@
 #include "Enemy.hpp"
 #include "Character.hpp"
 #include "Game.hpp"
-EnemyState::EnemyState(stateType type, Character *_character, int _delay)
+EnemyState::EnemyState(int type, Character *_character, int _delay)
     : State(type, _character, _delay), character(_character) {}
 
 EnemyIdleState::EnemyIdleState(Character *_character, int _delay)
-    : EnemyState(IDLE, _character, _delay)
+    : EnemyState((int)enemyStateType::IDLE, _character, _delay)
 {
 }
 
@@ -18,7 +18,7 @@ void EnemyIdleState::handleInput()
 }
 
 EnemyWalkState::EnemyWalkState(Character *_character, int _delay)
-    : EnemyState(WALK, _character, _delay)
+    : EnemyState((int)enemyStateType::WALK, _character, _delay)
 {
     character->direction = LEFT;
 }
@@ -31,7 +31,7 @@ void EnemyWalkState::handleInput()
 }
 
 EnemyRunState::EnemyRunState(Character *_character, int _delay)
-    : EnemyState(RUN, _character, _delay)
+    : EnemyState((int)enemyStateType::RUN, _character, _delay)
 {
 }
 
@@ -43,7 +43,7 @@ void EnemyRunState::handleInput()
 }
 
 EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
-    : EnemyState(DEAD, _character, _delay)
+    : EnemyState((int)enemyStateType::DEAD, _character, _delay)
 {
 }
 
@@ -74,7 +74,7 @@ void EnemyDeadState::handleInput()
 // --- FLY STATE IMPLEMENTATION ---
 
 EnemyFlyState::EnemyFlyState(Character* _character)
-    : EnemyState(FLY, _character, 5)
+    : EnemyState((int)enemyStateType::FLY, _character, 5)
 {
     // On entering this state, ensure gravity is disabled.
     if (character && character->body)
@@ -101,7 +101,7 @@ void EnemyFlyState::handleInput()
 // --- JUMP STATE IMPLEMENTATION ---
 
 EnemyJumpState::EnemyJumpState(Character* _character, int delay)
-  : EnemyState(JUMP, _character, delay)
+  : EnemyState((int)enemyStateType::JUMP, _character, delay)
 {
     if (character && character->body) 
         character->body->SetGravityScale(0.0f);

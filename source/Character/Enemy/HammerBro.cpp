@@ -26,9 +26,9 @@ Hammer::Hammer()
     : Enemy()
 {
     // Assuming sprite index 24 is the hammer sprite in the "Enemies2D" atlas
-    this->sprite.StartEndFrames[IDLE] = {25, 25};
-    this->sprite.StartEndFrames[FLY] = {25, 25};
-    this->sprite.StartEndFrames[DEAD] = {25, 25};
+    setFrame(enemyStateType::IDLE, 25, 25);
+    setFrame(enemyStateType::FLY, 25, 25);
+    setFrame(enemyStateType::DEAD, 25, 25);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
     
@@ -67,9 +67,9 @@ void Hammer::updateCollision(GameObject *other, int type)
 HammerBro::HammerBro()
     : Enemy()
 {
-    this->sprite.StartEndFrames[IDLE] = {21, 22};   // Hopping animation
-    this->sprite.StartEndFrames[JUMP] = {23, 23};   // Frame for throwing
-    this->sprite.StartEndFrames[DEAD] = {22, 22};   // Use one of the frames, will be flipped
+    setFrame(enemyStateType::IDLE, 21, 22);   // Hopping animation
+    setFrame(enemyStateType::JUMP, 23, 23);   // Frame for throwing
+    setFrame(enemyStateType::DEAD, 22, 22);   // Use one of the frames, will be flipped
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
 

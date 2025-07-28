@@ -10,8 +10,10 @@
 #include "tileson.hpp"
 #include "Block.hpp"
 
-class MyMap {
+class MyMap
+{
     friend class Game;
+
 public:
     MyMap();
     ~MyMap();
@@ -34,24 +36,23 @@ private:
     // Layer handlers
     void handleImageLayer(const tson::Layer &layer);
     void handleTileLayer(const tson::Layer &layer,
-                         const map<uint32_t, tson::Tile*> &tileMap,
+                         const map<uint32_t, tson::Tile *> &tileMap,
                          int mapW);
     void handleObjectLayer(tson::Layer &layer);
 
     // Helpers
-    const TSInfo* selectTSInfo(int gid) const;
+    const TSInfo *selectTSInfo(int gid) const;
     Rectangle calcSrcRect(const TSInfo &info, int gid) const;
     void clearAll();
 
     // Data members
-    tson::Map* tsonMap;
+    tson::Map *tsonMap;
     filesystem::path baseDir;
     unordered_map<int, Texture2D> tilesetCache;
     vector<TSInfo> tsinfo;
     Rectangle mapBounds;
-    vector<Block*> imageBlocks;
-    vector<Block*> tileBlocks;
-    vector<Block*> objectBlocks;
-   
-};
 
+    vector<Block *> imageBlocks;
+    vector<Block *> tileBlocks;
+    vector<Block *> objectBlocks;
+};
