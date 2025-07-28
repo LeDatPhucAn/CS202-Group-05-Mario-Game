@@ -58,6 +58,12 @@ void Game::init()
     addEnemy(&Lakitu);
 
     Mario.createBody(world);
+
+            
+    cam.offset = { 0 , 0};
+    cam.target = {0, 0};
+    cam.zoom = (float) screenHeight / WorldHeight;
+    cam.rotation = 0;
 }
 
 void Game::addEnemy(Enemy *enemy)
@@ -84,13 +90,27 @@ void Game::removeEnemy(Enemy *enemy)
 }
 void Game::updateScene()
 {
+
+    if(IsKeyPressed(KEY_P))
+    manager->goBack();  
+
     // Step the world
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
 
     updateCharacters();
-
     updateMap();
+
+
+    //amera
+    float delta = (float) Mario.getPosition().x - prePosX;
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x > 0.8*screenWidth)
+        cam.target.x += (delta > 1) ? delta : 0;
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x < 0.2*screenWidth)
+        cam.target.x += (delta < -1) ? delta : 0;
+        
+    prePosX = Mario.getPosition().x;
+
 }
 void Game::updateCharacters()
 {

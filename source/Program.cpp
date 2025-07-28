@@ -1,11 +1,11 @@
 #include "Program.hpp"
 #include "raylib.h"
 #include <iostream>
+#include "Structs.hpp"
 #include "UI.hpp"
 using namespace std;
 Program::Program()
-{
-
+{   
 
     mySceneManager.init();
     mySceneManager.pro = this;
@@ -26,17 +26,14 @@ void Program::run()
     /// main functions
     while (!WindowShouldClose())
     {
-
-        // Update
         update();
-        // Draw
         BeginDrawing();
-        BeginMode2D(mySceneManager.getCamera());
+            BeginMode2D(mySceneManager.getCamera());
 
-        ClearBackground(WHITE);
-        display();
+            ClearBackground(WHITE);
+            display();
 
-        EndMode2D();
+            EndMode2D();
         EndDrawing();
     }
     CloseWindow();

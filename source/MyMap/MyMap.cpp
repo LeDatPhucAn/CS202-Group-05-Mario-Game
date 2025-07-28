@@ -114,13 +114,30 @@ void MyMap::scanLayers()
     }
 }
 
-void MyMap::handleImageLayer(const tson::Layer &layer)
-{
+void MyMap::handleImageLayer(const tson::Layer &layer) {
     auto path = (baseDir / layer.getImage()).string();
     Texture2D tex = LoadTexture(path.c_str());
-    Rectangle src{0, 0, float(tex.width), float(tex.height)};
-    Vector2 pos{layer.getOffset().x, layer.getOffset().y};
-    imageBlocks.push_back(new Block(0, pos, {float(tex.width), float(tex.height)}, tex, src));
+    Rectangle src{ 0, 0, float(tex.width), float(tex.height) };
+
+    bool repeatX = layer.hasRepeatX();
+    bool repeatY = layer.hasRepeatY();
+
+    Vector2 basePos{ layer.getOffset().x, layer.getOffset().y };
+    float  w = float(tex.width), h = float(tex.height);
+
+    for(int i = 0; i < 10; ++i) {
+        Vector2 p = { basePos.x + i * w, basePos.y };
+        imageBlocks.push_back(
+            new Block(
+                0,               // gid
+                p,               // vị trí
+                { w, h },        // size
+                tex,             // texture
+                src              // srcRec
+            )
+        );
+        if(!repeatX) return;
+    }
 }
 
 Vector2 getStartEnd(const TSInfo &info, int gid)

@@ -16,6 +16,8 @@ set_property(GLOBAL PROPERTY JOB_FAIL_FAST TRUE)
 
 set(RAYLIB_PATH "C:/raylib")
 
+set(CMAKE_BUILD_TYPE Debug)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     add_compile_options(-w)  # suppress all warnings
     add_compile_options(-fdiagnostics-color=always)
