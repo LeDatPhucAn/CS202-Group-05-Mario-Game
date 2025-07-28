@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "UI.hpp"
 #include "MarioState.hpp"
+#include "Pause.hpp"
 #include <chrono>
 #include <thread>
 #include "BlockState.hpp"
@@ -58,6 +59,12 @@ void Game::init()
     addEnemy(&Lakitu);
 
     Mario.createBody(world);
+
+            
+    cam.offset = { 0 , 0};
+    cam.target = {0, 0};
+    cam.zoom = (float) screenHeight / WorldHeight;
+    cam.rotation = 0;
 }
 
 void Game::addEnemy(Enemy *enemy)
@@ -84,30 +91,27 @@ void Game::removeEnemy(Enemy *enemy)
 }
 void Game::updateScene()
 {
-    // Check for pause input (P key or mouse click on pause icon)
-    if (IsKeyPressed(KEY_P)) {
-        manager->changeScene(sceneType::PAUSE);
-        return;
-    }
-    
-    // Check for mouse click on pause icon
-    Vector2 mousePos = GetMousePosition();
-    float iconSize = 40.0f;
-    float iconX = UI::screenWidth - iconSize - 20; // Top-right corner with margin
-    float iconY = 20;
-    Rectangle pauseIconRect = {iconX, iconY, iconSize, iconSize};
-    
-    if (CheckCollisionPointRec(mousePos, pauseIconRect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        manager->changeScene(sceneType::PAUSE);
-        return;
-    }
+
+    if(IsKeyPressed(KEY_P))
+    manager->changeScene(sceneType::PAUSE);
+
     // Step the world
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
 
     updateCharacters();
-
     updateMap();
+
+
+    //amera
+    float delta = (float) Mario.getPosition().x - prePosX;
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x > 0.8*screenWidth)
+        cam.target.x += (delta > 1) ? delta : 0;
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x < 0.2*screenWidth)
+        cam.target.x += (delta < -1) ? delta : 0;
+        
+    prePosX = Mario.getPosition().x;
+
 }
 void Game::updateCharacters()
 {
@@ -167,44 +171,6 @@ void Game::displayScene()
     {
         x.display(dt);
     }
-
-    // Draw pause button in top-right corner
-    float iconSize = 40.0f;
-    float iconX = UI::screenWidth - iconSize - 20;
-    float iconY = 20;
-    Rectangle pauseIconRect = {iconX, iconY, iconSize, iconSize};
-    
-    // Check if mouse is hovering over the icon
-    Vector2 mousePos = GetMousePosition();
-    bool isHovered = CheckCollisionPointRec(mousePos, pauseIconRect);
-    
-    // Draw background circle
-    Color bgColor = isHovered ? Color{101, 67, 33, 255} : ORANGE; // Dark brown when hovered, orange when normal
-    DrawCircle(iconX + iconSize/2, iconY + iconSize/2, iconSize/2, bgColor);
-    
-    // Draw border
-    DrawCircleLines(iconX + iconSize/2, iconY + iconSize/2, iconSize/2, BLACK);
-    
-    // Draw pause symbol (two vertical bars)
-    float barWidth = 6;
-    float barHeight = iconSize * 0.5f;
-    float barY = iconY + (iconSize - barHeight) / 2;
-    float leftBarX = iconX + iconSize * 0.3f;
-    float rightBarX = iconX + iconSize * 0.6f;
-    
-    DrawRectangle(leftBarX, barY, barWidth, barHeight, WHITE);
-    DrawRectangle(rightBarX, barY, barWidth, barHeight, WHITE);
-
-    //Draw Instructions
-    string instructions = "Use Arrow Keys/ WASD to move - P to pause";
-    Vector2 instrSize = MeasureTextEx(UI::font, instructions.c_str(), 16, 2);
-    float instrX = (UI::screenWidth - instrSize.x) / 2;
-    float instrY = UI::screenHeight - instrSize.y - 20;
-    
-    DrawTextEx(UI::font, instructions.c_str(), 
-              {instrX + 1, instrY + 1}, 20, 2, WHITE);
-    DrawTextEx(UI::font, instructions.c_str(), 
-              {instrX, instrY}, 20, 2, BLACK);
 }
 
 Game::~Game()

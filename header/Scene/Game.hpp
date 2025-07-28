@@ -34,6 +34,8 @@ protected:
     // for box2d integration
     ContactListener *contactListener = nullptr;
 
+    float prePosX = 0;
+    
 public:
     static vector<Enemy *> enemies;
 

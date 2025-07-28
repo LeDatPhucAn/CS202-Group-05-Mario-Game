@@ -83,20 +83,37 @@ void SceneManager::display()
         tempStack.pop();
     }
     
-    // Render the base scene first
+    // Render the base scene first with camera applied
     if (baseScene) {
-        baseScene->displayScene();
+        // Apply camera if it's a Game scene
+        Game* gameScene = dynamic_cast<Game*>(baseScene);
+        if (gameScene) {
+            BeginMode2D(gameScene->getCamera());
+            baseScene->displayScene();
+            EndMode2D();
+        } else {
+            // For other base scenes (like Menu), render normally
+            baseScene->displayScene();
+        }
     }
     
     // Render overlay scenes in the correct order (bottom to top)
-    // Reverse the vector so the first overlay (deepest) renders first
+    // These are rendered WITHOUT camera transformation (UI overlays)
     for (int i = overlayScenes.size() - 1; i >= 0; i--) {
         overlayScenes[i]->displayScene();
     }
     
     // If no overlay scenes were found, render normally
     if (overlayScenes.empty() && !baseScene) {
-        scenes.top()->displayScene();
+        Scene* currentScene = scenes.top();
+        Game* gameScene = dynamic_cast<Game*>(currentScene);
+        if (gameScene) {
+            BeginMode2D(gameScene->getCamera());
+            currentScene->displayScene();
+            EndMode2D();
+        } else {
+            currentScene->displayScene();
+        }
     }
 }
 

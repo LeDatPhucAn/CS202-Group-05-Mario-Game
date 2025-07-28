@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "State.hpp"
+﻿#include "State.hpp"
 #include "Game.hpp"
 #include "Character.hpp"
 #include "Program.hpp"
