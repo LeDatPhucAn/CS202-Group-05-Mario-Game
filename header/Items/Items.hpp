@@ -1,3 +1,4 @@
+#pragma once
 #include "GameObject.hpp"
 #include "Block.hpp"
 #include "Structs.hpp"

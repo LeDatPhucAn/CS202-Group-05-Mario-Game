@@ -4,9 +4,11 @@
 #include <chrono>
 #include <thread>
 #include "BlockState.hpp"
+#include "Items.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = new b2World({0, fallGravity});
 vector<Enemy *> Game::enemies = {};
+vector<Items*> Game::items = {};
 
 Game::Game(SceneManager *_mag) : Mario(),
                                  Goomba(),

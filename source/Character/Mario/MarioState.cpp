@@ -55,9 +55,10 @@ void IdleState::handleInput()
     {
         mario->changeState(new WalkState(mario));
     }
-    else if ((IsKeyDown(KEY_M)))
+    else if ((IsKeyPressed(KEY_M)))
     {
         GrowMushroom *newMushroom = new GrowMushroom();
+		cout << "Mushroom spawned" << endl;
         newMushroom->test_appear();
     }
     else

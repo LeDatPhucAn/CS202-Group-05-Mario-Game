@@ -13,6 +13,7 @@
 #include "Spiny.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
+#include "Items.hpp"
 class Game : public Scene
 {
 private:
@@ -40,6 +41,8 @@ public:
     static b2World *world;
 
     static vector<Particle> particles;
+
+	static vector<Items*> items;
     // initialize
     Game(SceneManager *_mag);
 
