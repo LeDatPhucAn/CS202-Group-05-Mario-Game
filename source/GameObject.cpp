@@ -9,7 +9,10 @@ GameObject::GameObject(const Vector2 &_position, const Vector2 &_size)
 GameObject::~GameObject()
 {
     if (currentState)
+    {
         delete currentState;
+        currentState = nullptr;
+    }
 }
 
 void GameObject::changeState(State *newState)

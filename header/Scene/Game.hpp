@@ -13,6 +13,7 @@
 #include "Spiny.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
+#include "Projectile.hpp"
 class Game : public Scene
 {
 private:
@@ -20,11 +21,11 @@ private:
     void updateMap();
 
 protected:
-    Mario Mario;
-    Goomba Goomba;
-    Koopa Koopa;
-    PiranhaPlant PiranhaPlant;
-    Lakitu Lakitu;
+    Mario *mario = nullptr;
+    Goomba *goomba = nullptr;
+    Koopa *koopa = nullptr;
+    PiranhaPlant *piranhaPlant = nullptr;
+    Lakitu *lakitu = nullptr;
 
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
@@ -35,10 +36,9 @@ protected:
     ContactListener *contactListener = nullptr;
 
     float prePosX = 0;
-    
-public:
-    static vector<Enemy *> enemies;
 
+public:
+    static vector<GameObject *> gameObjects;
     static b2World *world;
 
     static vector<Particle> particles;
@@ -46,9 +46,8 @@ public:
     Game(SceneManager *_mag);
 
     void init();
-    static void addEnemy(Enemy *enemy);
-    static void removeEnemy(Enemy *enemy);
-
+    static void addGameObject(GameObject *gameObject);
+    static void removeGameObject(GameObject *gameObject);
     // update
     void updateScene();
     void updateSceneInCamera(Camera2D cam) {};

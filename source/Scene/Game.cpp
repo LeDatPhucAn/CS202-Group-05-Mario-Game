@@ -7,93 +7,98 @@
 #include "BlockState.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = new b2World({0, fallGravity});
-vector<Enemy *> Game::enemies = {};
-
-Game::Game(SceneManager *_mag) : Mario(),
-                                 Goomba(),
-                                 Koopa(),
-                                 PiranhaPlant(),
-                                 Lakitu()
+vector<GameObject *> Game::gameObjects = {};
+Game::Game(SceneManager *_mag)
 {
     manager = _mag;
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
-    Mario.setPosition({100, 50});
-    Goomba.setPosition({150, 0});
-    Koopa.setPosition({170, 0});
-    PiranhaPlant.setPosition({20, 90});
-    Lakitu.setPosition({50, -20});
+
     init();
 }
 
 void Game::init()
 {
+    // Instantiate main characters
+    mario = new Mario();
+    goomba = new Goomba();
+    koopa = new Koopa();
+    piranhaPlant = new PiranhaPlant();
+    lakitu = new Lakitu();
 
+    // Set initial positions
+    mario->setPosition({100, 50});
+    goomba->setPosition({150, 0});
+    koopa->setPosition({170, 0});
+    piranhaPlant->setPosition({20, 90});
+    lakitu->setPosition({50, -20});
+
+    // Load map
     current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
 
+    // Initialize Box2D world and contact listener
     world = new b2World({0, fallGravity});
-
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
 
+    // Prepare map blocks
     for (auto &block : curMap.tileBlocks)
     {
         block->changeState(new BlockIdleState(block));
         block->createBody(world);
     }
 
-    Mario.changeState(new IdleState(&Mario));
+    // Initialize character states
+    mario->changeState(new IdleState(mario));
+    goomba->changeState(new EnemyWalkState(goomba));
+    koopa->changeState(new EnemyWalkState(koopa));
+    piranhaPlant->changeState(new EnemyIdleState(piranhaPlant));
+    lakitu->changeState(new EnemyIdleState(lakitu));
+    lakitu->setTarget(mario, this);
 
-    Goomba.changeState(new EnemyWalkState(&Goomba));
-    Koopa.changeState(new EnemyWalkState(&Koopa));
-    PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
-    Lakitu.changeState(new EnemyIdleState(&Lakitu));
-    Lakitu.setTarget(&Mario, this);
+    // Add enemies to game
+    addGameObject(goomba);
+    addGameObject(koopa);
+    addGameObject(piranhaPlant);
+    addGameObject(lakitu);
+    addGameObject(mario);
 
-    addEnemy(&Goomba);
-    addEnemy(&Koopa);
-    addEnemy(&PiranhaPlant);
-    addEnemy(&Lakitu);
-
-    Mario.createBody(world);
-
-            
-    cam.offset = { 0 , 0};
+    // Initialize camera
+    cam.offset = {0, 0};
     cam.target = {0, 0};
-    cam.zoom = (float) screenHeight / WorldHeight;
+    cam.zoom = static_cast<float>(screenHeight) / WorldHeight;
     cam.rotation = 0;
 }
 
-void Game::addEnemy(Enemy *enemy)
+void Game::addGameObject(GameObject *gameObject)
 {
-
-    if (enemy)
+    if (gameObject)
     {
-        enemy->createBody(world);
-        enemies.push_back(enemy);
+        gameObject->createBody(world);
+        gameObjects.push_back(gameObject);
     }
 }
-void Game::removeEnemy(Enemy *enemy)
+void Game::removeGameObject(GameObject *gameObject)
 {
-    if (enemy)
+    if (gameObject)
     {
-        auto it = std::remove(enemies.begin(), enemies.end(), enemy);
-        if (it != enemies.end())
+        auto it = std::remove(gameObjects.begin(), gameObjects.end(), gameObject);
+        if (it != gameObjects.end())
         {
-            enemies.erase(it, enemies.end());
-            world->DestroyBody(enemy->getBody());
-            enemy->attachBody(nullptr);
+            gameObjects.erase(it, gameObjects.end());
+            world->DestroyBody(gameObject->getBody());
+            gameObject->attachBody(nullptr);
         }
     }
 }
 void Game::updateScene()
 {
 
-    if(IsKeyPressed(KEY_P))
-    manager->changeScene(sceneType::PAUSE);
+    if (IsKeyPressed(KEY_P))
+        manager->changeScene(sceneType::PAUSE);
 
     // Step the world
     if (world) // 60 fps
@@ -102,26 +107,23 @@ void Game::updateScene()
     updateCharacters();
     updateMap();
 
-
-    //amera
-    float delta = (float) Mario.getPosition().x - prePosX;
-    if(GetWorldToScreen2D(Mario.getPosition(),cam).x > 0.8*screenWidth)
+    // amera
+    float delta = (float)mario->getPosition().x - prePosX;
+    if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.8 * screenWidth)
         cam.target.x += (delta > 1) ? delta : 0;
-    if(GetWorldToScreen2D(Mario.getPosition(),cam).x < 0.2*screenWidth)
+    if (GetWorldToScreen2D(mario->getPosition(), cam).x < 0.2 * screenWidth)
         cam.target.x += (delta < -1) ? delta : 0;
-        
-    prePosX = Mario.getPosition().x;
 
+    prePosX = mario->getPosition().x;
 }
 void Game::updateCharacters()
 {
-    Mario.update();
 
-    for (Enemy *enemy : enemies)
+    for (GameObject *obj : gameObjects)
     {
-        if (enemy)
+        if (obj)
         {
-            enemy->update();
+            obj->update();
         }
     }
 }
@@ -157,14 +159,14 @@ void Game::updateMap()
 void Game::displayScene()
 {
     curMap.display();
-    Mario.display();
-    for (auto &enemy : enemies)
+    for (GameObject *obj : gameObjects)
     {
-        if (enemy && !enemy->beCleared)
+        if (obj)
         {
-            enemy->display();
+            obj->display();
         }
     }
+
     float dt = GetFrameTime();
 
     for (auto &x : particles)
@@ -175,6 +177,12 @@ void Game::displayScene()
 
 Game::~Game()
 {
+
     delete world;
     delete contactListener;
+    for (auto &obj : gameObjects)
+    {
+        if (obj)
+            delete obj;
+    }
 }

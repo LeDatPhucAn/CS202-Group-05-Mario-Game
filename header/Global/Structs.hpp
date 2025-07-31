@@ -19,7 +19,6 @@ const int WorldWidthCNT = 28;
 const float WorldHeight = WorldHeightCNT * TileSize;
 const float WorldWidth = WorldWidthCNT * TileSize;
 
-
 // Box2D integration
 // global values
 const float fallGravity = 9.8f;
@@ -37,7 +36,6 @@ constexpr uint16 CATEGORY_CHARACTER_MAIN = 0x0001;
 constexpr uint16 CATEGORY_CHARACTER_SENSOR = 0x0002;
 constexpr uint16 CATEGORY_SOLID = 0x0004;
 constexpr uint16 CATEGORY_NOTSOLID = 0x0008;
-
 
 struct StartEndFrame
 {
@@ -102,7 +100,8 @@ enum class itemStateType
 };
 enum class projectileStateType
 {
-    MOVE
+    MOVE,
+    STOP
 };
 enum Direction
 {

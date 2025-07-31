@@ -70,7 +70,7 @@ void Lakitu::update()
         Spiny *newSpiny = new Spiny();
         newSpiny->setPosition(this->getPosition());
         newSpiny->changeState(new EnemyWalkState(newSpiny));
-        Game::addEnemy(newSpiny);
+        Game::addGameObject(newSpiny);
     }
 }
 

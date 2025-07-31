@@ -6,8 +6,6 @@
 
 class Projectile : public GameObject
 {
-protected:
-    Sprite sprite;
 
 public:
     Projectile();
@@ -19,10 +17,4 @@ public:
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
-    virtual void update() override;
-    virtual void display() override;
-
-    virtual void createBody(b2World *world) override;
-    // Collision handling
-    virtual void updateCollision(GameObject *other, int type) override;
 };

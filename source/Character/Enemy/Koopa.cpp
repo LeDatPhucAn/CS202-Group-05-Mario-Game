@@ -53,6 +53,7 @@ void Koopa::updateCollision(GameObject *other, int type)
         }
         if (dynamic_cast<EnemyIdleState *>(this->currentState))
         {
+            this->toNewBody();
             this->direction = (mario->body->GetPosition().x < this->body->GetPosition().x) ? LEFT : RIGHT;
             this->changeState(new EnemyRunState(this));
             return;
@@ -61,6 +62,7 @@ void Koopa::updateCollision(GameObject *other, int type)
         {
             if (type == TOP)
             {
+                this->toNewBody();
                 this->changeState(new EnemyIdleState(this));
             }
             return;
