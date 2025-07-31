@@ -13,6 +13,8 @@
 #include "Spiny.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
+
+class Spawner;
 class Game : public Scene
 {
 private:
@@ -30,6 +32,8 @@ protected:
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
+
+    Spawner* spawner = nullptr;
 
     // for box2d integration
     ContactListener *contactListener = nullptr;

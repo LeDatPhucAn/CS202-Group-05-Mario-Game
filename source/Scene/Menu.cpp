@@ -93,6 +93,7 @@ Menu::~Menu()
     for (auto button : buttons)
     {
         delete button;
+        button = nullptr;
     }
     buttons.clear();
 

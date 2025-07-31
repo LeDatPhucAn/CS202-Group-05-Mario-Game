@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "UI.hpp"
 #include "MarioState.hpp"
+#include "Spawner.hpp"
 #include <chrono>
 #include <thread>
 #include "BlockState.hpp"
@@ -14,25 +15,29 @@ Game::Game(SceneManager *_mag) : Mario(),
                                  PiranhaPlant(),
                                  Lakitu()
 {
+    spawner = new Spawner(this);
+    curMap.setSpawner(spawner);
     manager = _mag;
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
     };
+    
     Mario.setPosition({100, 50});
-    Goomba.setPosition({150, 0});
-    Koopa.setPosition({170, 0});
-    PiranhaPlant.setPosition({20, 90});
-    Lakitu.setPosition({50, -20});
     init();
+
+    
+    // Goomba.setPosition({150, 0});
+    // Koopa.setPosition({170, 0});
+    // PiranhaPlant.setPosition({20, 90});
+    // Lakitu.setPosition({50, -20});
+
 }
 
 void Game::init()
 {
-
-    current_Map = "Map1.1";
+        current_Map = "Map1.1";
     curMap.choose(mapPaths[current_Map]);
-
     world = new b2World({0, fallGravity});
 
     contactListener = new ContactListener();
@@ -43,6 +48,7 @@ void Game::init()
         block->changeState(new BlockIdleState(block));
         block->createBody(world);
     }
+    
 
     Mario.changeState(new IdleState(&Mario));
 
@@ -50,12 +56,16 @@ void Game::init()
     Koopa.changeState(new EnemyWalkState(&Koopa));
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
     Lakitu.changeState(new EnemyIdleState(&Lakitu));
+
     Lakitu.setTarget(&Mario, this);
 
     addEnemy(&Goomba);
     addEnemy(&Koopa);
     addEnemy(&PiranhaPlant);
     addEnemy(&Lakitu);
+
+
+    spawner->spawnEnemy();
 
     Mario.createBody(world);
 
@@ -68,7 +78,6 @@ void Game::init()
 
 void Game::addEnemy(Enemy *enemy)
 {
-
     if (enemy)
     {
         enemy->createBody(world);
@@ -79,6 +88,8 @@ void Game::removeEnemy(Enemy *enemy)
 {
     if (enemy)
     {
+        delete enemy;
+        enemy = nullptr;
         auto it = std::remove(enemies.begin(), enemies.end(), enemy);
         if (it != enemies.end())
         {
@@ -116,11 +127,11 @@ void Game::updateCharacters()
 {
     Mario.update();
 
-    for (Enemy *enemy : enemies)
+    for (int i=0; i < enemies.size(); ++i)
     {
-        if (enemy)
+        if (enemies[i] && enemies[i]->beCleared == false)
         {
-            enemy->update();
+            enemies[i]->update();
         }
     }
 }
@@ -157,11 +168,11 @@ void Game::displayScene()
 {
     curMap.display();
     Mario.display();
-    for (auto &enemy : enemies)
+    for (int i=0; i < enemies.size(); ++i)
     {
-        if (enemy && !enemy->beCleared)
+        if (enemies[i] && enemies[i]->beCleared == false)
         {
-            enemy->display();
+            enemies[i]->display();
         }
     }
     float dt = GetFrameTime();
@@ -175,5 +186,7 @@ void Game::displayScene()
 Game::~Game()
 {
     delete world;
+    world = nullptr;
     delete contactListener;
+    contactListener = nullptr;
 }

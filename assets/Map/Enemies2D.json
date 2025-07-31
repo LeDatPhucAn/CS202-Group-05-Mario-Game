@@ -1,0 +1,14 @@
+{ "columns":39,
+ "image":"..\/..\/..\/My Game\/assets\/Map\/image\/Enemies2D.png",
+ "imageheight":227,
+ "imagewidth":639,
+ "margin":0,
+ "name":"Enemies2D",
+ "spacing":0,
+ "tilecount":546,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

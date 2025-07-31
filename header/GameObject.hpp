@@ -39,7 +39,7 @@ public:
     virtual ~GameObject()
     {
         if (currentState)
-            delete currentState;
+            {delete currentState; currentState = nullptr;}
     }
     virtual void changeState(State *newState)
     {
@@ -73,7 +73,7 @@ public:
 
     // Convenience: get raw Vector2 in pixels
     Vector2 getPosition() const { return pos.toPixels(); }
-    void setPosition(const Vector2 &_pos) { pos = Vec2Adapter(_pos); }
+    virtual void setPosition(const Vector2 &_pos) { pos = Vec2Adapter(_pos); }
 
     Vector2 getSize() const { return size.toPixels(); }
     void setSize(const Vector2 &_size) { size = Vec2Adapter(_size); }
