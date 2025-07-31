@@ -16,7 +16,6 @@ Lakitu::Lakitu()
     this->throwTimer = 0.0f;
 }
 
-
 void Lakitu::setTarget(Mario *marioTarget, Game *game)
 {
     this->target = marioTarget;

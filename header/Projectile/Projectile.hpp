@@ -12,7 +12,6 @@ public:
     Projectile(Vector2 _pos, Vector2 _size)
         : GameObject(_pos, _size) {}
 
-    virtual ~Projectile() = default;
     void setFrame(projectileStateType type, int start, int end)
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};

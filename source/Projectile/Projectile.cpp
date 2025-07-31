@@ -2,6 +2,4 @@
 
 Projectile::Projectile() : GameObject()
 {
-    setTexture("Projectiles2D");
 }
-

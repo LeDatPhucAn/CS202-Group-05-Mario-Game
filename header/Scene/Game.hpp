@@ -14,6 +14,7 @@
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 #include "Projectile.hpp"
+class Spawner;
 class Game : public Scene
 {
 private:
@@ -27,6 +28,7 @@ protected:
     PiranhaPlant *piranhaPlant = nullptr;
     Lakitu *lakitu = nullptr;
 
+    Spawner *spawner = nullptr;
     // Character* MarioPointer = nullptr;
     std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;

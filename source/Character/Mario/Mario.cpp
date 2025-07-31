@@ -2,6 +2,9 @@
 #include "Enemy.hpp" // Needed for dynamic_cast to Enemy
 #include "EnemyState.hpp"
 #include "Structs.hpp"
+#include "FireBall.hpp"
+#include "ProjectileState.hpp"
+#include "Game.hpp"
 Mario::Mario()
     : Character()
 {
@@ -62,7 +65,21 @@ void Mario::changeForm(MarioForm form)
         break;
     }
 }
+void Mario::update()
+{
+    Character::update();
+    if (IsKeyPressed(KEY_Z))
+    {
+        FireBall *projectile = new FireBall();
+        projectile->setDirection(this->getDirection());
+        Vector2 pos = this->getPositionAdapter().toPixels();
+        pos.x += this->getDirection() * 100 / PPM;
+        projectile->setPosition(pos);
 
+        projectile->changeState(new ProjectileMoveState(projectile));
+        Game::addGameObject(projectile);
+    }
+}
 void Mario::updateCollision(GameObject *other, int type)
 {
     if (dynamic_cast<DeadState *>(this->currentState))

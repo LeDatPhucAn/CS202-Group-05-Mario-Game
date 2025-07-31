@@ -1,12 +1,17 @@
 #include "FireBall.hpp"
+#include "ProjectileState.hpp"
+#include "Enemy.hpp"
 FireBall::FireBall() : Projectile()
 {
     setFrame(projectileStateType::MOVE, 0, 3);
+    setFrame(projectileStateType::STOP, 4, 6);
+    setTexture("Projectiles2D");
 }
 
 void FireBall::updateCollision(GameObject *other, int type)
 {
-    if (Block *block = dynamic_cast<Block *>(other))
+    Block *block = dynamic_cast<Block *>(other);
+    if (block)
     {
         if (block->isSolid)
         {
@@ -16,15 +21,28 @@ void FireBall::updateCollision(GameObject *other, int type)
                 // Handle top collision with solid block
                 break;
             case BOTTOM:
-                // Handle bottom collision with solid block
+            { // Handle bottom collision with solid
+                float mass = getBody()->GetMass();
+                b2Vec2 impulse(0, mass * jumpVel / 8);
+                getBody()->ApplyLinearImpulseToCenter(impulse, true);
                 break;
+            }
             case LEFTSIDE:
-                // Handle left side collision with solid block
+            { // Handle left side collision with solid block
+                changeState(new ProjectileStopState(this));
                 break;
+            }
             case RIGHTSIDE:
+                changeState(new ProjectileStopState(this));
                 break;
             }
         }
+    }
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    if (enemy)
+    {
+        enemy->changeState(new EnemyDeadState(enemy));
+        changeState(new ProjectileStopState(this));
     }
 }
 void FireBall::createBody(b2World *world)
@@ -59,21 +77,6 @@ void FireBall::createBody(b2World *world)
     // 1. Torso fixture (rectangle) - slightly shorter
     float torsoHeight = halfHeight;
     float torsoHalfHeight = torsoHeight / 2.0f;
-
-    b2PolygonShape torsoShape;
-    b2Vec2 torsoOffset(0.0f, -torsoHalfHeight);
-    torsoShape.SetAsBox(halfWidth * 0.75f, torsoHalfHeight, torsoOffset, 0.0f);
-
-    b2FixtureDef torsoFixture;
-    torsoFixture.shape = &torsoShape;
-
-    torsoFixture.density = 1.0f;
-    torsoFixture.friction = 0.2f;
-    torsoFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
-    torsoFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
-
-    torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
-    body->CreateFixture(&torsoFixture);
 
     // 2. Legs (circle) - real collision feet
 

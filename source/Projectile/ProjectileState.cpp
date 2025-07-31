@@ -1,4 +1,5 @@
 #include "ProjectileState.hpp"
+#include "Game.hpp"
 ProjectileState::ProjectileState(int Type, Projectile *_projectile, int _delay)
     : State(Type, _projectile, _delay), projectile(_projectile) {}
 
@@ -25,4 +26,8 @@ void ProjectileStopState::handleInput()
     b2Vec2 vel = projectile->getBody()->GetLinearVelocity();
     vel.x = 0;
     projectile->getBody()->SetLinearVelocity({vel.x, vel.y});
+    if (frameIndex == numFrames - 1)
+    {
+        Game::removeGameObject(projectile);
+    }
 }

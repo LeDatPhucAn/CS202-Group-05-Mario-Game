@@ -1,13 +1,20 @@
 
 #include "MyMap.hpp"
+#include "Spawner.hpp"
 #include <algorithm>
 
 MyMap::MyMap()
     : tsonMap(nullptr) {}
 
+void MyMap::setSpawner(Spawner *_sp)
+{
+    spawner = _sp;
+}
+
 MyMap::~MyMap()
 {
     clearAll();
+    delete spawner;
 }
 
 void MyMap::choose(const std::string &jsonPath)
@@ -26,8 +33,6 @@ void MyMap::display(int ox, int oy) const
     for (auto *b : imageBlocks)
         b->display();
     for (auto *b : tileBlocks)
-        b->display();
-    for (auto *b : objectBlocks)
         b->display();
 }
 
@@ -119,8 +124,27 @@ void MyMap::handleImageLayer(const tson::Layer &layer)
     auto path = (baseDir / layer.getImage()).string();
     Texture2D tex = LoadTexture(path.c_str());
     Rectangle src{0, 0, float(tex.width), float(tex.height)};
-    Vector2 pos{layer.getOffset().x, layer.getOffset().y};
-    imageBlocks.push_back(new Block(0, pos, {float(tex.width), float(tex.height)}, tex, src));
+
+    bool repeatX = layer.hasRepeatX();
+    bool repeatY = layer.hasRepeatY();
+
+    Vector2 basePos{layer.getOffset().x, layer.getOffset().y};
+    float w = float(tex.width), h = float(tex.height);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        Vector2 p = {basePos.x + i * w, basePos.y};
+        imageBlocks.push_back(
+            new Block(
+                0,      // gid
+                p,      // vị trí
+                {w, h}, // size
+                tex,    // texture
+                src     // srcRec
+                ));
+        if (!repeatX)
+            return;
+    }
 }
 
 Vector2 getStartEnd(const TSInfo &info, int gid)
@@ -194,12 +218,17 @@ void MyMap::handleObjectLayer(tson::Layer &layer)
         if (gid == 0)
             continue;
         const TSInfo *info = selectTSInfo(gid);
-        if (!info)
-            continue;
-        Rectangle src = calcSrcRect(*info, gid);
-        Vector2 pos{obj.getPosition().x, obj.getPosition().y - info->tileSize.y};
-        objectBlocks.push_back(new Block(obj, pos, info->tileSize,
-                                         tilesetCache[info->firstgid], src));
+        // if (!info)
+        //     continue;
+        // Rectangle src = calcSrcRect(*info, gid);
+        // Vector2 pos{obj.getPosition().x, obj.getPosition().y - info->tileSize.y};
+        // objectBlocks.push_back(new Block(obj, pos, info->tileSize,        //
+        // tilesetCache[info->firstgid], src));
+
+        if (obj.getClassType() == "Enemy")
+        {
+            spawner->InfoSpawn["Enemy"][obj.getName()].push_back({(float)obj.getPosition().x, (float)obj.getPosition().y});
+        }
     }
 }
 

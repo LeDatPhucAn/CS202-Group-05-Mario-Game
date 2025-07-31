@@ -10,6 +10,8 @@
 #include "tileson.hpp"
 #include "Block.hpp"
 
+class Spawner;
+
 class MyMap
 {
     friend class Game;
@@ -25,6 +27,8 @@ public:
     void display(int ox = 0, int oy = 0) const;
     void update();
     Rectangle getMapBounds() const;
+
+    void setSpawner(Spawner* _spawner);
 
 private:
     // Parsing and setup steps
@@ -55,4 +59,5 @@ private:
     vector<Block *> imageBlocks;
     vector<Block *> tileBlocks;
     vector<Block *> objectBlocks;
+    Spawner* spawner;
 };

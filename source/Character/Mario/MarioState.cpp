@@ -33,17 +33,6 @@ IdleState::IdleState(Mario *_mario, int _delay)
 
 void IdleState::handleInput()
 {
-    if (IsKeyPressed(KEY_Z))
-    {
-        FireBall *projectile = new FireBall();
-        projectile->setDirection(mario->getDirection());
-        Vector2 pos = mario->getPositionAdapter().toPixels();
-        pos.x += mario->getDirection() * mario->getSizeAdapter().x();
-        projectile->setPosition(pos);
-
-        projectile->changeState(new ProjectileMoveState(projectile));
-        Game::addGameObject(projectile);
-    }
     if (IsKeyPressed(KEY_ONE))
     {
         mario->changeState(new GrowState(mario));

@@ -33,6 +33,7 @@ public:
     }
 
     // Override collision to handle enemies
+    void update() override;
     void updateCollision(GameObject *other, int type) override;
     void createBody(b2World *world) override;
 

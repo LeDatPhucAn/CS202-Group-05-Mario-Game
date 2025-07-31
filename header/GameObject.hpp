@@ -36,7 +36,7 @@ public:
     void setSizeAdapter(const Vec2Adapter &_size);
 
     Vector2 getPosition() const;
-    void setPosition(const Vector2 &_pos);
+    virtual void setPosition(const Vector2 &_pos);
 
     Vector2 getSize() const;
     void setSize(const Vector2 &_size);

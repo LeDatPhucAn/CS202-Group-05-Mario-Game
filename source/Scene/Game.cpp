@@ -5,12 +5,15 @@
 #include <chrono>
 #include <thread>
 #include "BlockState.hpp"
+#include "Spawner.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = new b2World({0, fallGravity});
 vector<GameObject *> Game::gameObjects = {};
 Game::Game(SceneManager *_mag)
 {
     manager = _mag;
+    spawner = new Spawner(this);
+    curMap.setSpawner(spawner);
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
         // Add the rest...
@@ -21,6 +24,7 @@ Game::Game(SceneManager *_mag)
 
 void Game::init()
 {
+
     // Instantiate main characters
     mario = new Mario();
     goomba = new Goomba();
@@ -30,10 +34,10 @@ void Game::init()
 
     // Set initial positions
     mario->setPosition({100, 50});
-    goomba->setPosition({150, 0});
-    koopa->setPosition({170, 0});
-    piranhaPlant->setPosition({20, 90});
-    lakitu->setPosition({50, -20});
+    // goomba->setPosition({150, 0});
+    // koopa->setPosition({170, 0});
+    // piranhaPlant->setPosition({20, 90});
+    // lakitu->setPosition({50, -20});
 
     // Load map
     current_Map = "Map1.1";
@@ -65,7 +69,7 @@ void Game::init()
     addGameObject(piranhaPlant);
     addGameObject(lakitu);
     addGameObject(mario);
-
+    spawner->spawnEnemy();
     // Initialize camera
     cam.offset = {0, 0};
     cam.target = {0, 0};
@@ -91,6 +95,7 @@ void Game::removeGameObject(GameObject *gameObject)
             gameObjects.erase(it, gameObjects.end());
             world->DestroyBody(gameObject->getBody());
             gameObject->attachBody(nullptr);
+            delete gameObject;
         }
     }
 }
@@ -118,17 +123,17 @@ void Game::updateScene()
 }
 void Game::updateCharacters()
 {
-
-    for (GameObject *obj : gameObjects)
+    for (int i = 0; i < gameObjects.size(); i++)
     {
-        if (obj)
+        if (gameObjects[i])
         {
-            obj->update();
+            gameObjects[i]->update();
         }
     }
 }
 void Game::updateMap()
 {
+
     curMap.update();
 
     for (auto &x : particles)
@@ -148,7 +153,7 @@ void Game::updateMap()
         return false; }),
         blocks.end());
 
-    for (Block *block : toDelete)
+    for (Block *&block : toDelete)
     {
         block->behavior->block = nullptr;
         delete block;
@@ -159,14 +164,20 @@ void Game::updateMap()
 void Game::displayScene()
 {
     curMap.display();
-    for (GameObject *obj : gameObjects)
+    // for (GameObject *&obj : gameObjects)
+    // {
+    //     if (obj)
+    //     {
+    //         obj->display();
+    //     }
+    // }
+    for (int i = 0; i < gameObjects.size(); i++)
     {
-        if (obj)
+        if (gameObjects[i])
         {
-            obj->display();
+            gameObjects[i]->display();
         }
     }
-
     float dt = GetFrameTime();
 
     for (auto &x : particles)
