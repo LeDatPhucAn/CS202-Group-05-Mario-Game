@@ -68,15 +68,16 @@ void Mario::changeForm(MarioForm form)
 void Mario::update()
 {
     Character::update();
-    if (IsKeyPressed(KEY_Z))
+    if (form == FIRE && IsKeyPressed(KEY_Z))
     {
         FireBall *projectile = new FireBall();
         projectile->setDirection(this->getDirection());
         Vector2 pos = this->getPositionAdapter().toPixels();
-        pos.x += this->getDirection() * 100 / PPM;
+        pos.x += this->getDirection() * getSize().x;
         projectile->setPosition(pos);
 
         projectile->changeState(new ProjectileMoveState(projectile));
+        cout << "FireBall before: " << projectile << "\n";
         Game::addGameObject(projectile);
     }
 }

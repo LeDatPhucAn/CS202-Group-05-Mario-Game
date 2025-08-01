@@ -1,8 +1,5 @@
 #pragma once
 #include "GameObject.hpp"
-#include "box2d/box2d.h"
-#include "UI.hpp"
-#include "Character.hpp"
 
 class Projectile : public GameObject
 {

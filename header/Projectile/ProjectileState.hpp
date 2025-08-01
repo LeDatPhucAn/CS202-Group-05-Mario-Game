@@ -20,6 +20,8 @@ public:
 
 class ProjectileStopState : public ProjectileState
 {
+private:
+    bool removed = false;
 public:
     ProjectileStopState(Projectile *_projectile, int _delay = 5);
     void handleInput() override;

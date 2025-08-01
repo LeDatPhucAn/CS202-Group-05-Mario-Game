@@ -11,7 +11,7 @@ ProjectileMoveState::ProjectileMoveState(Projectile *_projectile, int _delay)
 void ProjectileMoveState::handleInput()
 {
     b2Vec2 vel = projectile->getBody()->GetLinearVelocity();
-    vel.x = projectile->getDirection() * 50 / PPM;
+    vel.x = projectile->getDirection() * 8;
     projectile->getBody()->SetLinearVelocity({vel.x, vel.y});
 }
 
@@ -23,11 +23,10 @@ ProjectileStopState::ProjectileStopState(Projectile *_projectile, int _delay)
 
 void ProjectileStopState::handleInput()
 {
-    b2Vec2 vel = projectile->getBody()->GetLinearVelocity();
-    vel.x = 0;
-    projectile->getBody()->SetLinearVelocity({vel.x, vel.y});
-    if (frameIndex == numFrames - 1)
+    projectile->getBody()->SetLinearVelocity({0, 0});
+    if (frameIndex == numFrames - 1 && !removed)
     {
+        removed = true;
         Game::removeGameObject(projectile);
     }
 }

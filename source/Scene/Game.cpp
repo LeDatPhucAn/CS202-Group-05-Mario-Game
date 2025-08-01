@@ -81,6 +81,8 @@ void Game::addGameObject(GameObject *gameObject)
 {
     if (gameObject)
     {
+        if (dynamic_cast<Projectile *>(gameObject))
+            cout << "FireBall After: " << gameObject << "\n";
         gameObject->createBody(world);
         gameObjects.push_back(gameObject);
     }
@@ -89,13 +91,17 @@ void Game::removeGameObject(GameObject *gameObject)
 {
     if (gameObject)
     {
-        auto it = std::remove(gameObjects.begin(), gameObjects.end(), gameObject);
+        auto it = std::find(gameObjects.begin(), gameObjects.end(), gameObject);
         if (it != gameObjects.end())
         {
-            gameObjects.erase(it, gameObjects.end());
-            world->DestroyBody(gameObject->getBody());
-            gameObject->attachBody(nullptr);
+            gameObjects.erase(it);
+            if (gameObject->getBody())
+            {
+                world->DestroyBody(gameObject->getBody());
+                gameObject->attachBody(nullptr);
+            }
             delete gameObject;
+            gameObject = nullptr;
         }
     }
 }
@@ -164,17 +170,11 @@ void Game::updateMap()
 void Game::displayScene()
 {
     curMap.display();
-    // for (GameObject *&obj : gameObjects)
-    // {
-    //     if (obj)
-    //     {
-    //         obj->display();
-    //     }
-    // }
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
         {
+
             gameObjects[i]->display();
         }
     }

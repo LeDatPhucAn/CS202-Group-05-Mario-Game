@@ -3,10 +3,9 @@
 #include <iostream>
 #include "UI.hpp"
 using namespace std;
+
 Program::Program()
 {
-
-
     mySceneManager.init();
     mySceneManager.pro = this;
 }
