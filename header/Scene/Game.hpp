@@ -19,6 +19,7 @@ class Game : public Scene
 private:
     void updateCharacters();
     void updateMap();
+	void updateItems();
 
 protected:
     Mario Mario;

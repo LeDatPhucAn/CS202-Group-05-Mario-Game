@@ -14,7 +14,8 @@ public:
 	// displaying and animation
 	void appear(float dt, Block *owner);
 	void test_appear();
-	void display(Block *owner);
+	virtual void update() = 0;
+	void display();
 
 protected:
 };

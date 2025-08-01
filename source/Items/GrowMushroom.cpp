@@ -8,3 +8,9 @@ GrowMushroom::GrowMushroom() {
 void GrowMushroom::affect(Mario* mario) {
 	mario->changeState(new GrowState(mario));
 }
+
+void GrowMushroom::update() {
+	if (currentState) {
+		currentState->updateState();
+	}
+}

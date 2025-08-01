@@ -60,6 +60,8 @@ void IdleState::handleInput()
         GrowMushroom *newMushroom = new GrowMushroom();
 		cout << "Mushroom spawned" << endl;
         newMushroom->test_appear();
+
+		Game::items.push_back(newMushroom);
     }
     else
     {

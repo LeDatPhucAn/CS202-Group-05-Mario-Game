@@ -23,11 +23,11 @@ void Items::test_appear()
 	DrawTextureRec(sprite.texture, sprite.frameRecs[0], (Vector2)pos, WHITE);
 }
 
-void Items::display(Block *owner)
+void Items::display()
 {
 	DrawRectangleLines(
-		owner->getPosition().x,
-		owner->getPosition().y - 1,
+		getPosition().x,
+		getPosition().y,
 		sprite.frameRecs[0].width,
 		sprite.frameRecs[0].height,
 		{168, 168, 0, 255});

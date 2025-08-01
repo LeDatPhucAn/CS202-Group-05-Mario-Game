@@ -93,7 +93,16 @@ void Game::updateScene()
     updateCharacters();
 
     updateMap();
+
+	updateItems();
 }
+
+void Game::updateItems() {
+	for (auto item : items) {
+		item->update();
+	}
+}
+
 void Game::updateCharacters()
 {
     Mario.update();
@@ -146,6 +155,13 @@ void Game::displayScene()
             enemy->display();
         }
     }
+
+	for (auto &item : items) {
+		if (item) {
+			item->display();
+		}
+	}
+
     float dt = GetFrameTime();
 
     for (auto &x : particles)

@@ -5,8 +5,7 @@
 #include "UI.hpp"
 using namespace std;
 int main()
-{
-    InitWindow(1600, 800, "Game Mario");
+{    InitWindow(1600, 800, "Game Mario");
     SetTargetFPS(60);
     UI ui;
     Program program;

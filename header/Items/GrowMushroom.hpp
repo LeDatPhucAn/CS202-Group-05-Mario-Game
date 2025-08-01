@@ -7,4 +7,5 @@ class GrowMushroom : public Items {
 public:
 	GrowMushroom();
 	void affect(Mario* mario);
+	void update() override;
 };
