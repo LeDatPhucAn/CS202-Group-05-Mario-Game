@@ -55,7 +55,6 @@ public:
 
       shared_ptr<IBlockBehavior> behavior;
 
-      bool needDeletion = false; // Đánh dấu để xóa block nếu cần
       Color color = WHITE;
 
       Block(int _gid, Vector2 _pos, Vector2 _size,

@@ -59,7 +59,8 @@ void EnemyDeadState::updateState()
             // delete body of enemy
             enemy->beCleared = true;
             cout << "REMOVED\n";
-            Game::removeGameObject(enemy);
+            enemy->needDeletion = true;
+            // Game::removeGameObject(enemy);
         }
     }
 }

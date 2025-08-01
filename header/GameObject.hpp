@@ -51,7 +51,7 @@ public:
 
     float slice = 2;
     bool isStatic = true;
-
+    bool needDeletion = false;
 protected:
     Vec2Adapter pos;
     Vec2Adapter size;

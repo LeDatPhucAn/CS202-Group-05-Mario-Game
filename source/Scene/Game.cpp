@@ -27,10 +27,6 @@ void Game::init()
 
     // Instantiate main characters
     mario = new Mario();
-    goomba = new Goomba();
-    koopa = new Koopa();
-    piranhaPlant = new PiranhaPlant();
-    lakitu = new Lakitu();
 
     // Set initial positions
     mario->setPosition({100, 50});
@@ -57,17 +53,9 @@ void Game::init()
 
     // Initialize character states
     mario->changeState(new IdleState(mario));
-    goomba->changeState(new EnemyWalkState(goomba));
-    koopa->changeState(new EnemyWalkState(koopa));
-    piranhaPlant->changeState(new EnemyIdleState(piranhaPlant));
-    lakitu->changeState(new EnemyIdleState(lakitu));
-    lakitu->setTarget(mario, this);
 
     // Add enemies to game
-    addGameObject(goomba);
-    addGameObject(koopa);
-    addGameObject(piranhaPlant);
-    addGameObject(lakitu);
+
     addGameObject(mario);
     spawner->spawnEnemy();
     // Initialize camera
@@ -134,6 +122,23 @@ void Game::updateCharacters()
         if (gameObjects[i])
         {
             gameObjects[i]->update();
+            if (gameObjects[i]->needDeletion)
+            {
+                deleteLater.push_back(gameObjects[i]);
+            }
+        }
+    }
+    for (int i = 0; i < deleteLater.size(); i++)
+    {
+        auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
+        if (it != gameObjects.end())
+        {
+            gameObjects.erase(it);
+            if (deleteLater[i]->getBody())
+            {
+                world->DestroyBody(deleteLater[i]->getBody());
+                deleteLater[i]->attachBody(nullptr);
+            }
         }
     }
 }
@@ -191,6 +196,11 @@ Game::~Game()
 
     delete world;
     delete contactListener;
+    for (auto &obj : deleteLater)
+    {
+        if (obj)
+            delete obj;
+    }
     for (auto &obj : gameObjects)
     {
         if (obj)

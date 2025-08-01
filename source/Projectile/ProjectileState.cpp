@@ -27,6 +27,7 @@ void ProjectileStopState::handleInput()
     if (frameIndex == numFrames - 1 && !removed)
     {
         removed = true;
-        Game::removeGameObject(projectile);
+        // Game::removeGameObject(projectile);
+        projectile->needDeletion = true;
     }
 }

@@ -24,7 +24,8 @@ private:
 
     MarioForm form = SMALL;
     void changeForm(MarioForm form);
-
+    float throwPerSecond = 0.5f;
+    float sinceLastThrow = 0;
 public:
     Mario();
     void setFrame(marioStateType type, int start, int end)
@@ -33,9 +34,9 @@ public:
     }
 
     // Override collision to handle enemies
+    void throwFireBall();
     void update() override;
     void updateCollision(GameObject *other, int type) override;
-    void createBody(b2World *world) override;
 
 public:
 };

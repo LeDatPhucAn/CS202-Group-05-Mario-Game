@@ -23,10 +23,6 @@ private:
 
 protected:
     Mario *mario = nullptr;
-    Goomba *goomba = nullptr;
-    Koopa *koopa = nullptr;
-    PiranhaPlant *piranhaPlant = nullptr;
-    Lakitu *lakitu = nullptr;
 
     Spawner *spawner = nullptr;
     // Character* MarioPointer = nullptr;
@@ -42,7 +38,7 @@ protected:
 public:
     static vector<GameObject *> gameObjects;
     static b2World *world;
-
+    vector<GameObject *> deleteLater;
     static vector<Particle> particles;
     // initialize
     Game(SceneManager *_mag);
