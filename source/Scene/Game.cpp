@@ -12,7 +12,7 @@ vector<Enemy *> Game::enemies = {};
 Game::Game(SceneManager *_mag) : Mario(),
                                  Goomba(),
                                  Koopa(),
-                                 FlyingKoopa(),
+                                 FlyingKoopa(true), // Flying variant
                                  PiranhaPlant(),
                                  Lakitu(),
                                  BulletBill()
@@ -54,14 +54,7 @@ void Game::init()
 
     Mario.changeState(new IdleState(&Mario));
 
-    Goomba.changeState(new EnemyWalkState(&Goomba));
-    Koopa.changeState(new EnemyWalkState(&Koopa));
-    FlyingKoopa.changeState(new EnemyJumpState(&FlyingKoopa));
-    PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
-    Lakitu.changeState(new EnemyIdleState(&Lakitu));
-    BulletBill.changeState(new EnemyIdleState(&BulletBill));
-    // HammerBro.changeState(new EnemyIdleState(&HammerBro));
-
+    // Enemy states are now initialized in their constructors
 
     addEnemy(&Goomba);
     addEnemy(&Koopa);

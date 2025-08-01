@@ -22,6 +22,7 @@ PiranhaPlant::PiranhaPlant()
     this->timer = 0.0f;
     this->isHiding = true; // Start hidden inside the pipe
     this->isSetup = false;
+    this->changeState(new EnemyIdleState(this));
 }
 
 void PiranhaPlant::update(const Vector2 &marioPos)

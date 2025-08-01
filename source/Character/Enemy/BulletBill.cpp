@@ -15,6 +15,7 @@ BulletBill::BulletBill()
     
     
     this->isActivated = false;
+    this->changeState(new EnemyIdleState(this));
 }
 
 void BulletBill::update(const Vector2& marioPos)

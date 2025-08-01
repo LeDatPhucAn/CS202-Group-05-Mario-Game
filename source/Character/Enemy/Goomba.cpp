@@ -10,6 +10,7 @@ Goomba::Goomba()
     setFrame(enemyStateType::DEAD, 12, 12);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba"]);
     this->sprite.texture = UI::textureMap["Goomba"];
+    this->changeState(new EnemyWalkState(this));
 }
 
 void Goomba::updateCollision(GameObject *other, int type)

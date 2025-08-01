@@ -16,6 +16,7 @@ Lakitu::Lakitu()
 
     // Lakitu flies, so it is not affected by gravity
     this->throwTimer = 0.0f;
+    this->changeState(new EnemyIdleState(this));
 }
 
 
