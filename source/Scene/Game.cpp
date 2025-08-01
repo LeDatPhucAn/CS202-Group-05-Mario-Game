@@ -12,8 +12,12 @@ vector<Enemy *> Game::enemies = {};
 Game::Game(SceneManager *_mag) : Mario(),
                                  Goomba(),
                                  Koopa(),
+                                 FlyingKoopa(),
                                  PiranhaPlant(),
-                                 Lakitu()
+                                 Lakitu(),
+                                 BulletBill()
+                                //  HammerBro(),
+                                
 {
     manager = _mag;
     mapPaths = {
@@ -23,8 +27,11 @@ Game::Game(SceneManager *_mag) : Mario(),
     Mario.setPosition({100, 50});
     Goomba.setPosition({150, 0});
     Koopa.setPosition({170, 0});
+    FlyingKoopa.setPosition({200, 150});
     PiranhaPlant.setPosition({20, 90});
-    Lakitu.setPosition({50, -20});
+    Lakitu.setPosition({50, 20});
+    BulletBill.setPosition({660, 150});
+    // HammerBro.setPosition({300, 0});
     init();
 }
 
@@ -49,13 +56,20 @@ void Game::init()
 
     Goomba.changeState(new EnemyWalkState(&Goomba));
     Koopa.changeState(new EnemyWalkState(&Koopa));
+    FlyingKoopa.changeState(new EnemyJumpState(&FlyingKoopa));
     PiranhaPlant.changeState(new EnemyIdleState(&PiranhaPlant));
     Lakitu.changeState(new EnemyIdleState(&Lakitu));
+    BulletBill.changeState(new EnemyIdleState(&BulletBill));
+    // HammerBro.changeState(new EnemyIdleState(&HammerBro));
+
 
     addEnemy(&Goomba);
     addEnemy(&Koopa);
+    addEnemy(&FlyingKoopa);
     addEnemy(&PiranhaPlant);
     addEnemy(&Lakitu);
+    addEnemy(&BulletBill);
+    // addEnemy(&HammerBro);
 
     Mario.createBody(world);
 
@@ -104,9 +118,9 @@ void Game::updateScene()
 
     //amera
     float delta = (float) Mario.getPosition().x - prePosX;
-    if(GetWorldToScreen2D(Mario.getPosition(),cam).x > 0.8*screenWidth)
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x > 0.6*screenWidth)
         cam.target.x += (delta > 1) ? delta : 0;
-    if(GetWorldToScreen2D(Mario.getPosition(),cam).x < 0.2*screenWidth)
+    if(GetWorldToScreen2D(Mario.getPosition(),cam).x < 0.4*screenWidth)
         cam.target.x += (delta < -1) ? delta : 0;
         
     prePosX = Mario.getPosition().x;
