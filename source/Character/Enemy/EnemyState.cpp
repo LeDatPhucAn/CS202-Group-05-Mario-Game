@@ -26,7 +26,7 @@ EnemyWalkState::EnemyWalkState(Character *_character, int _delay)
 void EnemyWalkState::handleInput()
 {
     b2Vec2 vel = character->body->GetLinearVelocity();
-    vel.x = character->direction * fabs(20 / PPM); // Ensure correct direction
+    vel.x = -character->direction * fabs(20 / PPM); // Ensure correct direction
     character->body->SetLinearVelocity(vel);
 }
 
@@ -128,7 +128,7 @@ void EnemyJumpState::handleInput()
 
     // maintain horizontal patrol speed
     b2Vec2 v = character->body->GetLinearVelocity();
-    v.x = character->direction * horizontalSpeed;
+    v.x = -character->direction * horizontalSpeed;
     character->body->SetLinearVelocity(v);
 }
 

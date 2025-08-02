@@ -82,8 +82,10 @@ void Character::createBody(b2World *world)
     body = world->CreateBody(&bodyDef);
 
     // 1. Torso fixture (rectangle) - slightly shorter
-    float torsoHeight = halfHeight;
+    float torsoHeight = halfHeight * 0.85;
     float torsoHalfHeight = torsoHeight / 2.0f;
+    float radius = halfWidth * 0.75f;
+    float legOffsetY = halfHeight - radius;
 
     b2PolygonShape torsoShape;
     b2Vec2 torsoOffset(0.0f, -torsoHalfHeight);
@@ -101,12 +103,6 @@ void Character::createBody(b2World *world)
     body->CreateFixture(&torsoFixture);
 
     // 2. Legs (circle) - real collision feet
-
-    float radius = halfWidth * 0.75f;
-
-    float legOffsetY = torsoHalfHeight * 0.75 + radius / 2.0f;
-    if (size.toPixels().y < 21)
-        legOffsetY = radius / 2.0f; // Position below torso
 
     b2CircleShape legsShape;
     legsShape.m_radius = radius;
@@ -144,7 +140,7 @@ void Character::createBody(b2World *world)
 
     // 4. Head sensor
     b2PolygonShape headShape;
-    headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -halfHeight), 0);
+    headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -torsoHeight), 0);
 
     b2FixtureDef headFixture;
     headFixture.shape = &headShape;

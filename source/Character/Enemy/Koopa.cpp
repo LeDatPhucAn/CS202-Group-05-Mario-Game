@@ -5,26 +5,27 @@
 Koopa::Koopa()
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 7, 7);
-    setFrame(enemyStateType::WALK, 3, 4);
-    setFrame(enemyStateType::RUN, 7, 7);
-    setFrame(enemyStateType::JUMP, 5, 6); 
-    setFrame(enemyStateType::DEAD, 7, 7);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 49, 49);
+    setFrame(enemyStateType::WALK, 26, 33);
+    setFrame(enemyStateType::RUN, 50, 57);
+    setFrame(enemyStateType::JUMP, 59, 59); 
+    setFrame(enemyStateType::DEAD, 49, 49);
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa"]);
+    this->sprite.texture = UI::textureMap["Koopa"];
     this->changeState(new EnemyWalkState(this));
 }
 
 Koopa::Koopa(bool isFlying)
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 7, 7);
-    setFrame(enemyStateType::WALK, 3, 4);
-    setFrame(enemyStateType::RUN, 7, 7);
-    setFrame(enemyStateType::JUMP, 5, 6); 
-    setFrame(enemyStateType::DEAD, 7, 7);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 49, 49);
+    setFrame(enemyStateType::WALK, 26, 33);
+    setFrame(enemyStateType::RUN, 50, 57);
+    setFrame(enemyStateType::JUMP, 59, 59); 
+    setFrame(enemyStateType::DEAD, 49, 49);
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa"]);
+    this->sprite.texture = UI::textureMap["Koopa"];
+    this->changeState(new EnemyWalkState(this));
     
     if (isFlying)
         this->changeState(new EnemyJumpState(this));

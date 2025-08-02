@@ -55,7 +55,7 @@ public:
 
     // update
     void updateScene();
-    void updateSceneInCamera(Camera2D cam) {};
+ 
 
     // display
     void displayScene();
