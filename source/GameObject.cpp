@@ -1,6 +1,6 @@
 #include "GameObject.hpp"
 #include "State.hpp"
-
+#include "Game.hpp"
 GameObject::GameObject() = default;
 
 GameObject::GameObject(const Vector2 &_position, const Vector2 &_size)
@@ -10,8 +10,14 @@ GameObject::~GameObject()
 {
     if (currentState)
     {
+        currentState->gameObject = nullptr;
         delete currentState;
         currentState = nullptr;
+    }
+    if (body)
+    {
+        Game::world->DestroyBody(body);
+        body = nullptr;
     }
 }
 

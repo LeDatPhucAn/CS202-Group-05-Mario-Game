@@ -69,8 +69,8 @@ void State::updateState()
 
 void State::displayState()
 {
+    DrawTextureRec(gameObject->sprite.texture, frameRec, gameObject->getPosition(), WHITE);
     drawDebug(gameObject);
-    DrawTextureRec(gameObject->sprite.texture, frameRec, gameObject->getCenter(), WHITE);
 }
 void State::gameObjectDebug(GameObject *gameObject)
 {

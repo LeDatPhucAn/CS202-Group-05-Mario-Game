@@ -4,8 +4,6 @@
 #include "PiranhaPlant.hpp"
 #include "Structs.hpp"
 
-
-
 void Character::updateCollision(GameObject *other, int type)
 {
 
@@ -69,12 +67,15 @@ void Character::createBody(b2World *world)
     body = world->CreateBody(&bodyDef);
 
     // 1. Torso fixture (rectangle) - slightly shorter
-    float torsoHeight = halfHeight;
-    float torsoHalfHeight = torsoHeight / 2.0f;
+    float radius = halfWidth * 0.75f;
+    float torsoHeight = halfHeight - radius;
+    float torsoHalfHeight = torsoHeight /2 ;
+
+    float legOffsetY = halfHeight - radius;
 
     b2PolygonShape torsoShape;
     b2Vec2 torsoOffset(0.0f, -torsoHalfHeight);
-    torsoShape.SetAsBox(halfWidth * 0.75f, torsoHalfHeight, torsoOffset, 0.0f);
+    torsoShape.SetAsBox(radius, torsoHalfHeight, torsoOffset, 0.0f);
 
     b2FixtureDef torsoFixture;
     torsoFixture.shape = &torsoShape;
@@ -87,13 +88,7 @@ void Character::createBody(b2World *world)
     torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&torsoFixture);
 
-    // 2. Legs (circle) - real collision feet
-
-    float radius = halfWidth * 0.75f;
-
-    float legOffsetY = torsoHalfHeight * 0.75 + radius / 2.0f;
-    if (size.toPixels().y < 21)
-        legOffsetY = radius / 2.0f; // Position below torso
+    // 2.a Legs (circle) - real collision feet // 2.b Pelvis(rectangle) - to prevent getting stuck on blocks
 
     b2CircleShape legsShape;
     legsShape.m_radius = radius;
@@ -107,6 +102,21 @@ void Character::createBody(b2World *world)
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
 
+    b2PolygonShape pelvisShape;
+    float nudge = 0.07 / PPM;
+    b2Vec2 pelvisOffset(0, legOffsetY - radius / 2);
+    pelvisShape.SetAsBox(radius - nudge, radius / 2, pelvisOffset, 0);
+
+    b2FixtureDef pelvisFixture;
+    pelvisFixture.shape = &pelvisShape;
+
+    pelvisFixture.density = 1.0f;
+    pelvisFixture.friction = 0.2f;
+    pelvisFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+    pelvisFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+
+    pelvisFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&pelvisFixture);
     if (dynamic_cast<PiranhaPlant *>(this))
     {
         b2Fixture *fixture = body->GetFixtureList();
@@ -131,7 +141,7 @@ void Character::createBody(b2World *world)
 
     // 4. Head sensor
     b2PolygonShape headShape;
-    headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -halfHeight), 0);
+    headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -torsoHeight), 0);
 
     b2FixtureDef headFixture;
     headFixture.shape = &headShape;

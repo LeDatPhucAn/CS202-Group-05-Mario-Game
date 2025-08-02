@@ -9,7 +9,7 @@ class State
 private:
     friend class Mario;
     friend class Character;
-
+    friend class GameObject;
 protected:
     int numFrames = 0;
     int frameIndex = 0;

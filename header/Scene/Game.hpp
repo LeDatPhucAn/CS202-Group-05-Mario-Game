@@ -32,7 +32,6 @@ protected:
 
     // for box2d integration
     ContactListener *contactListener = nullptr;
-
     float prePosX = 0;
 
 public:
@@ -48,7 +47,6 @@ public:
     static void removeGameObject(GameObject *gameObject);
     // update
     void updateScene();
-    void updateSceneInCamera(Camera2D cam) {};
 
     // display
     void displayScene();

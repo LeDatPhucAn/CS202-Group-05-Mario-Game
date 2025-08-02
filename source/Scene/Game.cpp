@@ -7,7 +7,7 @@
 #include "BlockState.hpp"
 #include "Spawner.hpp"
 vector<Particle> Game::particles = {};
-b2World *Game::world = new b2World({0, fallGravity});
+b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
 Game::Game(SceneManager *_mag)
 {
@@ -30,10 +30,6 @@ void Game::init()
 
     // Set initial positions
     mario->setPosition({100, 50});
-    // goomba->setPosition({150, 0});
-    // koopa->setPosition({170, 0});
-    // piranhaPlant->setPosition({20, 90});
-    // lakitu->setPosition({50, -20});
 
     // Load map
     current_Map = "Map1.1";
@@ -55,7 +51,6 @@ void Game::init()
     mario->changeState(new IdleState(mario));
 
     // Add enemies to game
-
     addGameObject(mario);
     spawner->spawnEnemy();
     // Initialize camera
@@ -193,17 +188,28 @@ void Game::displayScene()
 
 Game::~Game()
 {
-
+    for (int i = 0; i < deleteLater.size(); i++)
+    {
+        if (deleteLater[i])
+        {
+            delete deleteLater[i];
+            deleteLater[i] = nullptr;
+        }
+    }
+    for (int i = 0; i < gameObjects.size(); i++)
+    {
+        if (gameObjects[i])
+        {
+            delete gameObjects[i];
+            gameObjects[i] = nullptr;
+        }
+    }
+    gameObjects.clear();
+    deleteLater.clear();
     delete world;
+    world = nullptr;
     delete contactListener;
-    for (auto &obj : deleteLater)
-    {
-        if (obj)
-            delete obj;
-    }
-    for (auto &obj : gameObjects)
-    {
-        if (obj)
-            delete obj;
-    }
+    contactListener = nullptr;
+    delete spawner;
+    spawner = nullptr;
 }
