@@ -15,7 +15,16 @@ State::State(int _type, GameObject *_gameObject, int _delay)
     frameRec.width = gameObject->direction * abs(frameRec.width);
     gameObject->setSize({fabs(frameRec.width), frameRec.height});
 }
-
+State::~State()
+{
+    cout <<"DELETED CURRENT STATE\n";
+    numFrames = 0;
+    frameIndex = 0;
+    delay = 0;
+    delayCounter = 0;
+    frameRec = {0, 0, 0, 0}; // Assuming Rectangle is a struct with x, y, width, height
+    type = 0;
+}
 void State::animate()
 {
     delayCounter++;

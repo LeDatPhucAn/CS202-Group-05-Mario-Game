@@ -22,7 +22,7 @@ protected:
 public:
     State();
     State(int _type, GameObject *_gameObject, int _delay);
-
+    virtual ~State();
     virtual int getType() const { return type; }
     // salient
     virtual void updateState();

@@ -200,6 +200,8 @@ void Game::displayScene()
 
 Game::~Game()
 {
+
+    cout << "DELETED GAME\n";
     for (int i = 0; i < deleteLater.size(); i++)
     {
         if (deleteLater[i])

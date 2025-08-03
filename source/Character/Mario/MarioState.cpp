@@ -426,10 +426,9 @@ void UnGrowState::handleInput()
     StartEndFrame se = mario->sprite.StartEndFrames[type];
     if (mario->form == SMALL)
     {
-        mario->changeState(new IdleState(mario));
+        mario->changeState(new DeadState(mario));
         return;
     }
-
     // new collision box
     mario->toNewBody();
     if (se.start - frameIndex == se.end)
@@ -439,7 +438,6 @@ void UnGrowState::handleInput()
 
         if (mario->isGrounded)
         {
-            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else

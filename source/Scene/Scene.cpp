@@ -26,6 +26,7 @@ void SceneManager::changeScene(sceneType nextScene)
     {
         if (!scenes.empty())
         {
+            delete scenes.top();
             scenes.pop();
         }
     }
