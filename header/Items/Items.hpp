@@ -11,6 +11,8 @@ public:
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
+
+	void createBody(b2World* world) override;
 	// displaying and animation
 	void appear(float dt, Block *owner);
 	void test_appear();
