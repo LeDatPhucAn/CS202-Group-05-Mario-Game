@@ -61,6 +61,8 @@ void IdleState::handleInput()
 		cout << "Mushroom spawned" << endl;
         newMushroom->test_appear();
 
+		
+		newMushroom->createBody(Game::world);
 		Game::items.push_back(newMushroom);
     }
     else

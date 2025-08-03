@@ -51,6 +51,10 @@ public:
     static void addEnemy(Enemy *enemy);
     static void removeEnemy(Enemy *enemy);
 
+	static void addItem(Items* item);
+	static void removeItem(Items* item);
+
+
     // update
     void updateScene();
     void updateSceneInCamera(Camera2D cam) {};

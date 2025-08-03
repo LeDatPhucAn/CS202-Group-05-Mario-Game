@@ -84,6 +84,13 @@ void Game::removeEnemy(Enemy *enemy)
         }
     }
 }
+
+void Game::addItem(Items* item) {
+	if (item) {
+		item->createBody(world);
+		items.push_back(item);
+	}
+}
 void Game::updateScene()
 {
     // Step the world

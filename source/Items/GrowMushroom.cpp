@@ -1,8 +1,10 @@
 #include "GrowMushroom.hpp"
+#include "ItemState.hpp"
 
-GrowMushroom::GrowMushroom() {
+GrowMushroom::GrowMushroom() : Items() {
 	setFrame(itemStateType::MOVE, 0, 0);
 	setTexture("Items");
+	changeState(new ItemMoveState(this));
 }
 
 void GrowMushroom::affect(Mario* mario) {
