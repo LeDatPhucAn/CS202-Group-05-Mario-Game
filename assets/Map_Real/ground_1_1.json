@@ -1,0 +1,15 @@
+{ "columns":8,
+ "image":"image\/new_grounds_1.png",
+ "imageheight":101,
+ "imagewidth":135,
+ "margin":0,
+ "name":"ground_1_1",
+ "spacing":1,
+ "tilecount":153,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "transparentcolor":"#0000ff",
+ "type":"tileset",
+ "version":"1.10"
+}
