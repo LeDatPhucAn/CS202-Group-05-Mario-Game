@@ -456,11 +456,14 @@ DeadState::DeadState(Mario *_mario, int _delay)
     mario->isGrounded = false;
     mario->body->SetLinearVelocity({0, -250.f / PPM});
     b2Body *body = mario->getBody();
+    b2Filter filter;
+    filter.categoryBits = 0;
+    filter.maskBits = 0;
 
     // Iterate over all fixtures attached to this body
     for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
     {
-        fixture->SetSensor(true);
+        fixture->SetFilterData(filter);
     }
 }
 
@@ -468,6 +471,7 @@ void DeadState::handleInput()
 {
     if (IsKeyPressed(KEY_R))
     {
+        mario->toNewBody();
         mario->changeState(new FallState(mario));
         return;
     }
