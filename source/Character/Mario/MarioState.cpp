@@ -455,6 +455,13 @@ DeadState::DeadState(Mario *_mario, int _delay)
 {
     mario->isGrounded = false;
     mario->body->SetLinearVelocity({0, -250.f / PPM});
+    b2Body *body = mario->getBody();
+
+    // Iterate over all fixtures attached to this body
+    for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+    {
+        fixture->SetSensor(true);
+    }
 }
 
 void DeadState::handleInput()
