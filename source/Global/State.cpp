@@ -56,9 +56,6 @@ void State::updateState()
         }
     }
 
-    // Update the gameObject's position
-    gameObjectDebug(gameObject);
-
     // Set frame
     animate();
 
@@ -71,85 +68,5 @@ void State::updateState()
 
 void State::displayState()
 {
-    drawDebug(gameObject);
     DrawTextureRec(gameObject->sprite.texture, frameRec, gameObject->getCenter(), WHITE);
-}
-void State::gameObjectDebug(GameObject *gameObject)
-{
-    // Vec2Adapter mouse(Program::mouseWorldPos);
-
-    // if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && dynamic_cast<Mario *>(gameObject))
-    // {
-    //     // Teleport the Box2D body
-    //     gameObject->body->SetTransform(mouse.toMeters(), 0); // 0 = angle
-
-    //     std::cout << "Teleported to: " << mouse.toPixels().x << ", " << mouse.toPixels().y << "\n";
-    // }
-    // else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dynamic_cast<Mario *>(gameObject))
-    // {
-    //     Koopa *newKoopa = new Koopa();
-    //     newKoopa->setPosition(mouse.toPixels());
-    //     newKoopa->changeState(new EnemyWalkState(newKoopa));
-    //     Game::addGameObject(newKoopa);
-    // }
-}
-void State::drawDebug(GameObject *gameObject)
-{
-    // Draw the hitbox of the gameObject
-    b2Body *body = gameObject->getBody();
-    if (!body)
-        return;
-
-    for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext())
-    {
-        b2Shape::Type type = f->GetType();
-        Color color;
-
-        // Determine color based on fixture type
-        CollisionType Type = static_cast<CollisionType>(f->GetUserData().pointer);
-        switch (Type)
-        {
-        case CollisionType::TOP:
-            color = BLUE;
-            break;
-        case CollisionType::BOTTOM:
-            color = GREEN;
-            break;
-        case CollisionType::LEFTSIDE:
-            color = ORANGE;
-            break;
-        case CollisionType::RIGHTSIDE:
-            color = PURPLE;
-            break;
-        default:
-            color = RED; // Main body
-            break;
-        }
-        if (type == b2Shape::e_polygon)
-        {
-            // Draw polygon fixtures (like main body)
-            b2PolygonShape *poly = (b2PolygonShape *)f->GetShape();
-            int count = poly->m_count;
-            Vector2 points[8];
-
-            for (int i = 0; i < count; i++)
-            {
-                Vec2Adapter world(body->GetWorldPoint(poly->m_vertices[i]));
-                points[i] = world.toPixels();
-            }
-
-            for (int i = 0; i < count; i++)
-            {
-                DrawLineV(points[i], points[(i + 1) % count], color);
-            }
-        }
-        else if (type == b2Shape::e_circle)
-        {
-            // Draw circle fixtures
-            b2CircleShape *circle = (b2CircleShape *)f->GetShape();
-            Vec2Adapter center(body->GetWorldPoint(circle->m_p));
-            float radius = circle->m_radius * PPM;
-            DrawCircleLinesV(center.toPixels(), radius, color);
-        }
-    }
 }

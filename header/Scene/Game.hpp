@@ -15,11 +15,14 @@
 #include "Particle.hpp"
 #include "Projectile.hpp"
 class Spawner;
+class DrawDebug;
 class Game : public Scene
 {
 private:
     void updateCharacters();
     void updateMap();
+    DrawDebug *drawDebug = nullptr;
+    bool showDebugDraw = false;
 
 protected:
     Mario *mario = nullptr;

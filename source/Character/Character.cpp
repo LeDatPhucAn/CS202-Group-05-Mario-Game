@@ -4,7 +4,6 @@
 #include "PiranhaPlant.hpp"
 #include "Structs.hpp"
 
-
 void Character::updateCollision(GameObject *other, int type)
 {
 
@@ -69,14 +68,13 @@ void Character::createBody(b2World *world)
 
     // 1. Torso fixture (rectangle) - slightly shorter
     float radius = halfWidth * 0.75f;
-    float torsoHeight = halfHeight - radius;
-    float torsoHalfHeight = torsoHeight / 2;
+    float torsoHeight = halfHeight - radius + 2 / PPM;
 
     float legOffsetY = halfHeight - radius;
 
     b2PolygonShape torsoShape;
-    b2Vec2 torsoOffset(0.0f, -torsoHalfHeight);
-    torsoShape.SetAsBox(radius, torsoHalfHeight, torsoOffset, 0.0f);
+    b2Vec2 torsoOffset(0.0f, 0);
+    torsoShape.SetAsBox(radius, torsoHeight - 0.02 / PPM, torsoOffset, 0.0f);
 
     b2FixtureDef torsoFixture;
     torsoFixture.shape = &torsoShape;
@@ -102,22 +100,6 @@ void Character::createBody(b2World *world)
     legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
-
-    b2PolygonShape pelvisShape;
-    float nudge = 0.07 / PPM;
-    b2Vec2 pelvisOffset(0, legOffsetY - radius / 2);
-    pelvisShape.SetAsBox(radius - nudge, radius / 2, pelvisOffset, 0);
-
-    b2FixtureDef pelvisFixture;
-    pelvisFixture.shape = &pelvisShape;
-
-    pelvisFixture.density = 1.0f;
-    pelvisFixture.friction = 0.2f;
-    pelvisFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
-    pelvisFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
-
-    pelvisFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
-    body->CreateFixture(&pelvisFixture);
     if (dynamic_cast<PiranhaPlant *>(this))
     {
         b2Fixture *fixture = body->GetFixtureList();

@@ -7,6 +7,7 @@
 #include "BlockState.hpp"
 #include "Spawner.hpp"
 #include "Projectile.hpp"
+#include "DrawDebug.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
@@ -40,7 +41,7 @@ void Game::init()
     world = new b2World({0, fallGravity});
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
-
+    drawDebug = new DrawDebug();
     // Prepare map blocks
     for (auto &block : curMap.tileBlocks)
     {
@@ -91,6 +92,8 @@ void Game::updateScene()
 
     if (IsKeyPressed(KEY_P))
         manager->changeScene(sceneType::PAUSE);
+    if (IsKeyPressed(KEY_Q))
+        showDebugDraw = !showDebugDraw;
 
     // Step the world
     if (world) // 60 fps
@@ -119,18 +122,12 @@ void Game::updateCharacters()
             {
                 enemy->update(mario->getPosition());
             }
-            // else
-            // {
-            Projectile *proj = dynamic_cast<Projectile *>(gameObjects[i]);
-            if (proj)
-            {
-                proj->update();
-            }
             else
                 gameObjects[i]->update();
-            // }
+
             if (gameObjects[i]->needDeletion)
             {
+                gameObjects[i]->needDeletion = false;
                 deleteLater.push_back(gameObjects[i]);
             }
         }
@@ -196,6 +193,9 @@ void Game::displayScene()
     {
         x.display(dt);
     }
+
+    if (showDebugDraw)
+        drawDebug->DrawWorld(world);
 }
 
 Game::~Game()
@@ -208,6 +208,7 @@ Game::~Game()
             deleteLater[i] = nullptr;
         }
     }
+    deleteLater.clear();
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
@@ -218,9 +219,10 @@ Game::~Game()
     }
     curMap.clearAll();
     gameObjects.clear();
-    deleteLater.clear();
     delete world;
     world = nullptr;
+    delete drawDebug;
+    drawDebug = nullptr;
     delete contactListener;
     contactListener = nullptr;
 }

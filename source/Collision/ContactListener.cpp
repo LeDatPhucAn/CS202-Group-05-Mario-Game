@@ -4,13 +4,13 @@
 #include "Character.hpp"
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
+#include "Mario.hpp"
 void ContactListener::BeginContact(b2Contact *contact)
 {
     b2Fixture *fixtureA = contact->GetFixtureA();
     b2Fixture *fixtureB = contact->GetFixtureB();
     CollisionType typeA = static_cast<CollisionType>(fixtureA->GetUserData().pointer);
     CollisionType typeB = static_cast<CollisionType>(fixtureB->GetUserData().pointer);
-
     GameObject *objA = reinterpret_cast<GameObject *>(fixtureA->GetBody()->GetUserData().pointer);
     GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
     checkGrounded(contact, true);
@@ -86,8 +86,28 @@ void ContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold
     b2Fixture *fixtureA = contact->GetFixtureA();
     b2Fixture *fixtureB = contact->GetFixtureB();
 
+    CollisionType typeA = static_cast<CollisionType>(fixtureA->GetUserData().pointer);
+    CollisionType typeB = static_cast<CollisionType>(fixtureB->GetUserData().pointer);
+
     GameObject *objA = reinterpret_cast<GameObject *>(fixtureA->GetBody()->GetUserData().pointer);
     GameObject *objB = reinterpret_cast<GameObject *>(fixtureB->GetBody()->GetUserData().pointer);
+
+    // cout << typeA << " " << typeB << "\n";
+    if (MatchPair<Block, Character>(objA, objB))
+    {
+        b2WorldManifold worldManifold;
+        contact->GetWorldManifold(&worldManifold);
+        b2Vec2 normal = worldManifold.normal;
+        // cout << "Normal: (" << normal.x << ", " << normal.y << ")\n";
+
+        const float groundNormalThreshold = 0.866025f; // Adjust as needed (cosine of ~60 degrees)
+        if (fabs(normal.y) < groundNormalThreshold && fabs(normal.y) > 0)
+        {
+            cout << "NOPE: " << normal.y << "\n";
+            contact->SetEnabled(false);
+            return;
+        }
+    }
 
     if (objA && objB && ShouldNotCollide(objA, objB))
     {
