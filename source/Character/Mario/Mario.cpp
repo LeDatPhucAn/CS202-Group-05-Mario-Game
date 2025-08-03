@@ -18,7 +18,7 @@ Mario::Mario()
     setFrame(marioStateType::GROW, 57, 63);
     setFrame(marioStateType::UNGROW, 63, 57);
     setFrame(marioStateType::DEAD, 6, 6);
-
+    setFrame(marioStateType::THROWFB, 52, 52);
     setTexture("Mario2D");
     changeState(new IdleState(this));
 }
@@ -75,6 +75,12 @@ void Mario::updateCollision(GameObject *other, int type)
         return;
     }
     Character::updateCollision(other, type);
+    if (type == LEFTSIDE || type == RIGHTSIDE)
+    {
+        b2Vec2 vel = this->body->GetLinearVelocity();
+        this->body->SetLinearVelocity({0, vel.y});
+        cout << "STOPIN\n";
+    }
     Enemy *enemy = dynamic_cast<Enemy *>(other);
     if (enemy)
     {
@@ -88,6 +94,7 @@ void Mario::updateCollision(GameObject *other, int type)
             b2Vec2 impulse(0, mass * jumpVel / 1.5f);
             this->body->ApplyLinearImpulseToCenter(impulse, true);
         }
+
         else
         {
             if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
@@ -104,7 +111,7 @@ void Mario::update()
     sinceLastThrow += GetFrameTime();
     if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > throwPerSecond)
     {
-        throwFireBall();
+        changeState(new ThrowFBState(this));
     }
 }
 void Mario::throwFireBall()

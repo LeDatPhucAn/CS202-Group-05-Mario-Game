@@ -474,3 +474,16 @@ void DeadState::handleInput()
         return;
     }
 }
+
+ThrowFBState::ThrowFBState(Mario *_mario, int _delay)
+    : MarioState((int)marioStateType::THROWFB, _mario, _delay) {}
+
+void ThrowFBState::handleInput()
+{
+    if (delayCounter == delay)
+    {
+        mario->throwFireBall();
+
+        mario->changeState(new WalkState(mario));
+    }
+}
