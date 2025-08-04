@@ -21,7 +21,7 @@ const float jumpGravity = fallGravity * offset;
 const float addedFallGravity = fallGravity * (offset + 0.5);
 
 // jumping
-const float maxJumpHeight = 4;
+const float maxJumpHeight = 4.5f;
 const float jumpVel = -sqrt(2 * (fallGravity + jumpGravity) * maxJumpHeight);
 
 // To set what collides with what

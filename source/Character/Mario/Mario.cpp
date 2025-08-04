@@ -75,12 +75,7 @@ void Mario::updateCollision(GameObject *other, int type)
         return;
     }
     Character::updateCollision(other, type);
-    Block *block = dynamic_cast<Block *>(other);
-    if (block && (type == LEFTSIDE || type == RIGHTSIDE))
-    {
-        b2Vec2 vel = this->body->GetLinearVelocity();
-        this->body->SetLinearVelocity({0, vel.y});
-    }
+
     Enemy *enemy = dynamic_cast<Enemy *>(other);
     if (enemy)
     {
@@ -127,11 +122,7 @@ void Mario::throwFireBall()
 
 void Mario::createBody(b2World *world)
 {
-    if (form != SMALL)
-    {
-        Character::createBody(world);
-        return;
-    }
+
     StartEndFrame se = sprite.StartEndFrames[currentState->type];
     Rectangle frameRec = (se.start <= se.end) ? sprite.frameRecs[se.start + currentState->frameIndex]
                                               : sprite.frameRecs[se.start - currentState->frameIndex];
@@ -157,7 +148,7 @@ void Mario::createBody(b2World *world)
 
     b2PolygonShape torsoShape;
     b2Vec2 torsoOffset(0.0f, 0);
-    torsoShape.SetAsBox(radius, torsoHeight, torsoOffset, 0.0f);
+    torsoShape.SetAsBox(halfWidth * 0.6f, torsoHeight, torsoOffset, 0.0f);
 
     b2FixtureDef torsoFixture;
     torsoFixture.shape = &torsoShape;
@@ -192,21 +183,10 @@ void Mario::createBody(b2World *world)
             fixture = fixture->GetNext();
         }
     }
-    // b2PolygonShape pelvisShape;
-    // b2Vec2 pelvisOffset(0, legOffsetY);
-    // pelvisShape.SetAsBox(radius-1/PPM, 2 / PPM, pelvisOffset, 0.0f);
-
-    // b2FixtureDef pelvisFixture;
-    // pelvisFixture.shape = &pelvisShape;
-    // pelvisFixture.isSensor = true;
-    // pelvisFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
-    // pelvisFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-    // pelvisFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
-    // body->CreateFixture(&pelvisFixture);
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
-    footSensor.m_radius = radius;
-    footSensor.m_p.Set(0, legOffsetY + 0.5f / PPM); // Slightly below legs
+    footSensor.m_radius = radius - 0.5f / PPM;
+    footSensor.m_p.Set(0, legOffsetY + 1 / PPM); // Slightly below legs
 
     b2FixtureDef footFixture;
     footFixture.shape = &footSensor;
@@ -217,21 +197,63 @@ void Mario::createBody(b2World *world)
     body->CreateFixture(&footFixture);
 
     // 4. Head sensor
-    b2PolygonShape headShape;
-    float headHeight = 2 / PPM;
-    headShape.SetAsBox(halfWidth * 0.6f, headHeight, b2Vec2(0, -halfHeight + headHeight), 0);
+    if (form != SMALL)
+    {
 
-    b2FixtureDef headFixture;
-    headFixture.shape = &headShape;
-    headFixture.isSensor = true;
-    headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
-    headFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-    headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
-    body->CreateFixture(&headFixture);
+        // b2PolygonShape headShape;
+        float headHeight = 2 / PPM;
+        // headShape.SetAsBox(halfWidth * 0.75f, headHeight, b2Vec2(0, -torsoHeight + headHeight), 0);
+
+        // b2FixtureDef headFixture;
+        // headFixture.shape = &headShape;
+        // headFixture.density = 1.0f;
+        // headFixture.friction = 0.2f;
+        // headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+        // headFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+        // headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+        // body->CreateFixture(&headFixture);
+
+        b2PolygonShape head1Shape;
+        head1Shape.SetAsBox(halfWidth * 0.6f, headHeight, b2Vec2(0, -torsoHeight), 0);
+
+        b2FixtureDef head1Fixture;
+        head1Fixture.shape = &head1Shape;
+        head1Fixture.isSensor = true;
+        head1Fixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+        head1Fixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+        body->CreateFixture(&head1Fixture);
+    }
+    else
+    {
+        // b2PolygonShape headShape;
+        float headHeight = 2 / PPM;
+        // headShape.SetAsBox(halfWidth * 0.75f, headHeight, b2Vec2(0, -halfHeight + 2 * headHeight), 0);
+
+        // b2FixtureDef headFixture;
+        // headFixture.shape = &headShape;
+        // headFixture.density = 1.0f;
+        // headFixture.friction = 0.2f;
+        // headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+        // headFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+        // headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+        // body->CreateFixture(&headFixture);
+
+        b2PolygonShape head1Shape;
+        head1Shape.SetAsBox(halfWidth * 0.6f, headHeight, b2Vec2(0, -halfHeight + headHeight), 0);
+
+        b2FixtureDef head1Fixture;
+        head1Fixture.shape = &head1Shape;
+        head1Fixture.isSensor = true;
+        head1Fixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+        head1Fixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+        body->CreateFixture(&head1Fixture);
+    }
 
     // 5. Left wall sensor
     b2PolygonShape leftWallShape;
-    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 1.8, 0), 0);
+    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 1.2, 0), 0);
 
     b2FixtureDef leftWallFixture;
     leftWallFixture.shape = &leftWallShape;
@@ -243,7 +265,7 @@ void Mario::createBody(b2World *world)
 
     // 6. Right wall sensor
     b2PolygonShape rightWallShape;
-    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 1.8, 0), 0);
+    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 1.2, 0), 0);
 
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;
@@ -252,4 +274,6 @@ void Mario::createBody(b2World *world)
     rightWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
     rightWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
     body->CreateFixture(&rightWallFixture);
+
+    body->SetBullet(true);
 }
