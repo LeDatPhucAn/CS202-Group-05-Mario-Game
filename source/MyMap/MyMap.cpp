@@ -13,7 +13,7 @@ void MyMap::setSpawner(Spawner *_sp)
 
 MyMap::~MyMap()
 {
-    delete spawner;
+    spawner = nullptr;
 }
 
 void MyMap::choose(const std::string &jsonPath)

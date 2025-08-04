@@ -32,6 +32,9 @@ public:
 	static int lastScreenWidth;
 	static int lastScreenHeight;
 
+	
+    static std::unordered_map<std::string, std::string> mapPaths;
+
 	static unordered_map<string, json> jsonMap;
 	static unordered_map<string, Texture2D> textureMap;
 	static unordered_map<string, Map> gameMap;
