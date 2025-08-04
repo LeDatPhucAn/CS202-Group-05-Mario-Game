@@ -27,6 +27,7 @@ private:
     Texture2D HUDLives;
     Texture2D HUDTime;
     Texture2D HUDCoin;
+    Texture2D HUDScore;
 
     //For display
     int lives = 3;

@@ -22,7 +22,7 @@ void EnemyIdleState::handleInput()
 EnemyWalkState::EnemyWalkState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::WALK, _character, _delay)
 {
-    character->direction = LEFT;
+    character->direction = RIGHT;
 }
 
 void EnemyWalkState::handleInput()
