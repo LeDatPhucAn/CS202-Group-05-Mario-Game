@@ -298,7 +298,7 @@ void Menu::displayScene()
         float titleSpacing = 12.0f;
         float titleFontSize = 72.0f;
         float titleX = (UI::screenWidth - 750) / 2.0f;
-        float titleY = 80 + sinf(titleBounce) * 10.0f;
+        float titleY = 60 + sinf(titleBounce) * 10.0f;
 
         // Draw title with outline effect
         DrawTextEx(UI::boldFont, titleText.c_str(),
@@ -311,7 +311,7 @@ void Menu::displayScene()
     float subtitleFontSize = 24.0f;
 
     float subtitleX = (UI::screenWidth) / 2.0f;
-    float subtitleY = 275 + sinf(titleBounce) * 10.0f;
+    float subtitleY = 265 + sinf(titleBounce) * 10.0f;
 
     // Draw title with outline effect
     // Draw subtitle with shadow

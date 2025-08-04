@@ -5,6 +5,8 @@
 #include "Game.hpp"
 #include "Mario.hpp"
 #include "GameObject.hpp"
+#include "Score.hpp"
+
 IBlockBehavior::IBlockBehavior(Block *block) : block(block)
 {
     prePos = block->getPositionAdapter();
@@ -83,6 +85,7 @@ void BrickBehavior::reactToCollision(GameObject *p, int type)
         {
             setNoBounce();
             block->needDeletion = true;
+            Score::getInstance()->addScore(50); 
             Particle::spawnParticles(*block, Game::particles);
         }
     }

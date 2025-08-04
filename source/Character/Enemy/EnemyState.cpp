@@ -2,6 +2,8 @@
 #include "Enemy.hpp"
 #include "Character.hpp"
 #include "Game.hpp"
+#include "Score.hpp"
+
 EnemyState::EnemyState(int type, Character *_character, int _delay)
     : State(type, _character, _delay), character(_character) {}
 
@@ -20,7 +22,7 @@ void EnemyIdleState::handleInput()
 EnemyWalkState::EnemyWalkState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::WALK, _character, _delay)
 {
-    character->direction = LEFT;
+    character->direction = RIGHT;
 }
 
 void EnemyWalkState::handleInput()
@@ -45,6 +47,7 @@ void EnemyRunState::handleInput()
 EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::DEAD, _character, _delay)
 {
+    Score::getInstance()->addScore(100); // Add score for defeating enemy
 }
 
 void EnemyDeadState::updateState()
