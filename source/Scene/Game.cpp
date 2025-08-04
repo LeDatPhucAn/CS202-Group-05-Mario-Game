@@ -164,7 +164,7 @@ void Game::updateScene()
 
     // Camera
     float delta = (float)mario->getPosition().x - prePosX;
-    if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.8 * screenWidth)
+    if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.5 * screenWidth)
         cam.target.x += (delta > 1) ? delta : 0;
     if (GetWorldToScreen2D(mario->getPosition(), cam).x < 0.2 * screenWidth)
         cam.target.x += (delta < -1) ? delta : 0;
