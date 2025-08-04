@@ -22,8 +22,6 @@ protected:
     const float airFriction = 3.125f;
     const float skidDecel = 56.25f;
 
-
-
 public:
     MarioState(int Type, Mario *_mario, int _delay);
 
@@ -93,5 +91,12 @@ class DeadState : public MarioState
 {
 public:
     DeadState(Mario *_mario, int _delay = 5);
+    void handleInput() override;
+};
+
+class ThrowFBState : public MarioState
+{
+public:
+    ThrowFBState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };

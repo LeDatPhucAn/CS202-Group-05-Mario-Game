@@ -29,8 +29,6 @@ void SceneManager::changeScene(sceneType _nextScene)
             numBackToBaseScene++;
         scenes.push_back(SceneFactory::create(_nextScene, this));
 
-
-
     }
 }
 

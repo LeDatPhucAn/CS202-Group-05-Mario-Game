@@ -426,10 +426,9 @@ void UnGrowState::handleInput()
     StartEndFrame se = mario->sprite.StartEndFrames[type];
     if (mario->form == SMALL)
     {
-        mario->changeState(new IdleState(mario));
+        mario->changeState(new DeadState(mario));
         return;
     }
-
     // new collision box
     mario->toNewBody();
     if (se.start - frameIndex == se.end)
@@ -439,7 +438,6 @@ void UnGrowState::handleInput()
 
         if (mario->isGrounded)
         {
-            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else
@@ -455,13 +453,37 @@ DeadState::DeadState(Mario *_mario, int _delay)
 {
     mario->isGrounded = false;
     mario->body->SetLinearVelocity({0, -250.f / PPM});
+    b2Body *body = mario->getBody();
+    b2Filter filter;
+    filter.categoryBits = 0;
+    filter.maskBits = 0;
+
+    // Iterate over all fixtures attached to this body
+    for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+    {
+        fixture->SetFilterData(filter);
+    }
 }
 
 void DeadState::handleInput()
 {
     if (IsKeyPressed(KEY_R))
     {
+        mario->toNewBody();
         mario->changeState(new FallState(mario));
         return;
+    }
+}
+
+ThrowFBState::ThrowFBState(Mario *_mario, int _delay)
+    : MarioState((int)marioStateType::THROWFB, _mario, _delay) {}
+
+void ThrowFBState::handleInput()
+{
+    if (delayCounter == delay)
+    {
+        mario->throwFireBall();
+
+        mario->changeState(new WalkState(mario));
     }
 }

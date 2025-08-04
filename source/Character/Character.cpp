@@ -68,13 +68,13 @@ void Character::createBody(b2World *world)
 
     // 1. Torso fixture (rectangle) - slightly shorter
     float radius = halfWidth * 0.75f;
-    float torsoHeight = halfHeight - radius + 2 / PPM;
+    float torsoHeight = halfHeight - radius;
 
     float legOffsetY = halfHeight - radius;
 
     b2PolygonShape torsoShape;
     b2Vec2 torsoOffset(0.0f, 0);
-    torsoShape.SetAsBox(radius, torsoHeight - 0.02 / PPM, torsoOffset, 0.0f);
+    torsoShape.SetAsBox(radius, torsoHeight, torsoOffset, 0.0f);
 
     b2FixtureDef torsoFixture;
     torsoFixture.shape = &torsoShape;
@@ -109,6 +109,17 @@ void Character::createBody(b2World *world)
             fixture = fixture->GetNext();
         }
     }
+    // b2PolygonShape pelvisShape;
+    // b2Vec2 pelvisOffset(0, legOffsetY);
+    // pelvisShape.SetAsBox(radius-1/PPM, 2 / PPM, pelvisOffset, 0.0f);
+
+    // b2FixtureDef pelvisFixture;
+    // pelvisFixture.shape = &pelvisShape;
+    // pelvisFixture.isSensor = true;
+    // pelvisFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    // pelvisFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    // pelvisFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    // body->CreateFixture(&pelvisFixture);
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius;
@@ -124,7 +135,8 @@ void Character::createBody(b2World *world)
 
     // 4. Head sensor
     b2PolygonShape headShape;
-    headShape.SetAsBox(halfWidth * 0.6f, 2.0f / PPM, b2Vec2(0, -torsoHeight), 0);
+    float headHeight = 2 / PPM;
+    headShape.SetAsBox(halfWidth * 0.6f, headHeight, b2Vec2(0, -torsoHeight), 0);
 
     b2FixtureDef headFixture;
     headFixture.shape = &headShape;

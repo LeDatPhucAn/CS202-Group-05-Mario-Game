@@ -51,7 +51,7 @@ enum class marioStateType
     GROW,
     UNGROW,
     DEAD,
-    FLY
+    THROWFB
 };
 enum class enemyStateType
 {
