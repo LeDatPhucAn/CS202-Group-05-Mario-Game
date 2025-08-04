@@ -23,6 +23,13 @@ private:
     void updateMap();
     DrawDebug *drawDebug = nullptr;
     bool showDebugDraw = false;
+    Texture2D HUDLives;
+    Texture2D HUDTime;
+
+    //For display
+    int lives = 3;
+    float gameTime = 0.0f;
+    float maxTime = 400.0f; 
 
 protected:
     Mario *mario = nullptr;
@@ -52,5 +59,6 @@ public:
 
     // display
     void displayScene();
+    void drawHUD();
     ~Game();
 };
