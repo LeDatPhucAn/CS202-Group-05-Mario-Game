@@ -122,6 +122,7 @@ void Mario::throwFireBall()
     pos.x += this->getDirection() * getSize().x;
     projectile->setPosition(pos);
     cout << "FireBall before: " << projectile << "\n";
+    
     Game::addGameObject(projectile);
 }
 

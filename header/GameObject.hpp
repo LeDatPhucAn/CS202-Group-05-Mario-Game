@@ -9,8 +9,10 @@
 #include "UI.hpp"
 #include <string>
 #include "State.hpp"
+
 using namespace std;
 
+class Game;
 class State;
 
 // global values
@@ -69,6 +71,7 @@ public:
         }
     };
 
+
     // Xử lý khi va chạm với một object khác
     virtual void updateCollision(GameObject *other, int type) {}
 
@@ -114,6 +117,14 @@ public:
         return {p.x - s.x / 2, p.y - s.y / 2};
     }
 
+    void setGamePtr(Game* _game) {
+        gamePtr = _game;
+    }
+
+    virtual void MyDelete(int Index) {
+        
+    }
+
     float slice = 2;
     bool isStatic = true;
     bool needDeletion = false;
@@ -125,6 +136,7 @@ protected:
     b2Body *body = nullptr;
     Sprite sprite;
     Direction direction = RIGHT;
+    Game* gamePtr = nullptr;
 
 private:
     friend class State;
