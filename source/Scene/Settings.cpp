@@ -132,7 +132,7 @@ void Settings::updateScene() {
         }
     }
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         if (selectedButton == 0 || selectedButton == 1) {
             // Match the slider position from displayScene()
             Rectangle buttonRect = {buttonX, startY + selectedButton * spacing, buttonWidth, buttonHeight};
