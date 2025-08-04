@@ -6,7 +6,7 @@
 // Static variables for flash effect
 static bool        flashActive    = false;
 static float       flashTimer     = 0.0f;
-static sceneType   nextScene      = sceneType::GAME;
+//static sceneType   nextScene      = sceneType::GAME;
 static const float flashDuration  = 0.6f;
 
 Pause::Pause(SceneManager* _manager) : Scene(_manager) {
@@ -41,23 +41,23 @@ Pause::~Pause() {
 
 void Pause::updateScene() {
     // Handle flash effect
-    if (flashActive) {
-        flashTimer += GetFrameTime();
-        if (flashTimer >= flashDuration) {
-            flashActive = false;
-            flashTimer = 0.0f;
-            manager->changeScene(nextScene);
-        }
-        return;
-    }
+    // if (flashActive) {
+    //     flashTimer += GetFrameTime();
+    //     if (flashTimer >= flashDuration) {
+    //         flashActive = false;
+    //         flashTimer = 0.0f;
+    //         manager->changeScene(nextScene);
+    //     }
+    //     return;
+    // }
 
     // Navigation
-    // if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
-    //     selectedButton = (selectedButton - 1 + 4) % 4;
-    // }
-    // if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-    //     selectedButton = (selectedButton + 1) % 4;
-    // }
+    if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
+        selectedButton = (selectedButton - 1 + 4) % 4;
+    }
+    if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
+        selectedButton = (selectedButton + 1) % 4;
+    }
     
     // // Activate button
     // if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
@@ -81,13 +81,13 @@ void Pause::updateScene() {
     //     }
     // }
 
-    // ESC to resume game
-    if (IsKeyPressed(KEY_ESCAPE)) {
-        nextScene = sceneType::GAME;
-        flashActive = true;
-        flashTimer = 0.0f;
-        return;
-    }
+    // // ESC to resume game
+    // if (IsKeyPressed(KEY_ESCAPE)) {
+    //     nextScene = sceneType::GAME;
+    //     flashActive = true;
+    //     flashTimer = 0.0f;
+    //     return;
+    // }
 
     // Mouse interaction
     Vector2 mousePos = GetMousePosition();
@@ -131,7 +131,8 @@ void Pause::updateScene() {
                     // Add save functionality here
                     break;
                 case 2: // Settings
-                    nextScene = sceneType::SETTING;
+                    //nextScene = sceneType::SETTING;
+                    manager->changeScene(sceneType::SETTING);
                     flashActive = true;
                     flashTimer = 0.0f;
                     return;
