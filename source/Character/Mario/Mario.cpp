@@ -75,11 +75,11 @@ void Mario::updateCollision(GameObject *other, int type)
         return;
     }
     Character::updateCollision(other, type);
-    if (type == LEFTSIDE || type == RIGHTSIDE)
+    Block *block = dynamic_cast<Block *>(other);
+    if (block && (type == LEFTSIDE || type == RIGHTSIDE))
     {
         b2Vec2 vel = this->body->GetLinearVelocity();
         this->body->SetLinearVelocity({0, vel.y});
-        cout << "STOPIN\n";
     }
     Enemy *enemy = dynamic_cast<Enemy *>(other);
     if (enemy)

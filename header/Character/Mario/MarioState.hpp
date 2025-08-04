@@ -70,12 +70,18 @@ public:
 };
 class GrowState : public MarioState
 {
+private:
+    float posBeforeY = 0;
+
 public:
     GrowState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
 class UnGrowState : public MarioState
 {
+private:
+    float posBeforeY = 0;
+
 public:
     UnGrowState(Mario *_mario, int _delay = 3);
     void handleInput() override;

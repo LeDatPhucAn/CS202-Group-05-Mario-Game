@@ -8,6 +8,8 @@
 #include "Spawner.hpp"
 #include "Projectile.hpp"
 #include "DrawDebug.hpp"
+#include "Score.hpp"
+
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
@@ -31,6 +33,13 @@ Game::Game(SceneManager *_mag)
     {
         TraceLog(LOG_WARNING, "Failed to load HUD Time texture");
     }
+
+    HUDCoin = LoadTexture("assets/Backgrounds/HUD/coin.png");
+    if (HUDCoin.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load HUD Coin texture");
+    }
+    
     
     init();
 }
@@ -70,6 +79,8 @@ void Game::init()
 
     gameTime = 0.0f;
     lives = 3;
+
+    Score::getInstance()->reset();
 }
 
 Game::~Game()
@@ -109,6 +120,16 @@ Game::~Game()
     if (HUDLives.id != 0){
         UnloadTexture(HUDLives);
         HUDLives.id = 0; 
+    }
+
+    if (HUDTime.id != 0){
+        UnloadTexture(HUDTime);
+        HUDTime.id = 0;
+    }
+
+    if (HUDCoin.id != 0){
+        UnloadTexture(HUDCoin);
+        HUDCoin.id = 0;
     }
 }
 
@@ -262,32 +283,50 @@ void Game::drawHUD()
     int remainingTime = (int)(maxTime - gameTime);
     if (remainingTime < 0) remainingTime = 0;
     
+    // Convert screen coordinates to world coordinates for HUD positioning
+    Vector2 screenTopLeft = {0, 0};
+    Vector2 worldTopLeft = GetScreenToWorld2D(screenTopLeft, cam);
     
-    // Draw Lives
+    // Draw Lives - positioned relative to camera view
     for (int i = 0; i < lives; i++)
     {
         Rectangle srcRec = {0, 0, (float)HUDLives.width, (float)HUDLives.height};
-        Rectangle destRec = {10 + i * 15, 5, 12, 12};
+        Vector2 lifePos = {worldTopLeft.x + 10 + i * 15, worldTopLeft.y + 5};
+        Rectangle destRec = {lifePos.x, lifePos.y, 12, 12};
         DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
     }
     
-    
-    
-    // Draw Score (later)
-    
-    // Draw Time
+    // Draw Time icon - positioned relative to camera view
     Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
-    Rectangle destRec = {100, 3, 15, 15};
+    Vector2 timeIconPos = {worldTopLeft.x + 70, worldTopLeft.y + 3};
+    Rectangle destRec = {timeIconPos.x, timeIconPos.y, 15, 15};
     DrawTexturePro(HUDTime, srcRec, destRec, {0, 0}, 0.0f, WHITE);
+    
     string timeText = to_string(remainingTime);
+    Vector2 timeTextPos = {worldTopLeft.x + 90, worldTopLeft.y + 7};
+    
     // Time warning - change color when time is low
     if (remainingTime <= 30)
     {
-        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, RED);
+        DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, RED);
+    }
+    else 
+    {
+        DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, WHITE); 
     }
 
-    else {
+    //Draw coin
+    Rectangle srcRecCoin = {0, 0, (float)HUDCoin.width, (float)HUDCoin.height};
+    Vector2 coinIconPos = {worldTopLeft.x + 120, worldTopLeft.y + 3};
+    Rectangle destRecCoin = {coinIconPos.x, coinIconPos.y, 15, 15};
+    DrawTexturePro(HUDCoin, srcRecCoin, destRecCoin, {0, 0}, 0.0f, WHITE);
+    
+    string coinText = to_string(Score::getInstance()->getCoins());
+    Vector2 coinTextPos = {worldTopLeft.x + 140, worldTopLeft.y + 7};
+    DrawTextEx(UI::font, coinText.c_str(), coinTextPos, 12, 2, WHITE);
 
-        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, WHITE);
-    }
+    // Draw Score
+    string scoreText = "SCORE: " + to_string(Score::getInstance()->getScore());
+    Vector2 scoreTextPos = {worldTopLeft.x + 160, worldTopLeft.y + 7};
+    DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 12, 2, YELLOW);
 }

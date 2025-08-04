@@ -380,8 +380,7 @@ void CrouchState::handleInput()
 GrowState::GrowState(Mario *_mario, int _delay)
     : MarioState((int)marioStateType::GROW, _mario, _delay)
 {
-    // if (mario->isGrounded)
-    //     mario->pos.y = mario->groundPosY - frameRec.height;
+    posBeforeY = mario->getPosition().y;
 }
 
 void GrowState::handleInput()
@@ -392,18 +391,29 @@ void GrowState::handleInput()
         return;
     }
     StartEndFrame se = mario->sprite.StartEndFrames[type];
-    // new collision box
-    mario->toNewBody();
-    cout << frameIndex << " " << frameRec.height << boolalpha << mario->isGrounded << "\n";
+
+    if (delayCounter == 0)
+    {
+        float thisHeight = mario->sprite.frameRecs[frameIndex + se.start - 1].height;
+        float nextHeight = mario->sprite.frameRecs[frameIndex + se.start].height;
+        float dif = nextHeight - thisHeight;
+
+        posBeforeY -= dif;
+    }
+    Vector2 pos = mario->getPosition();
+    mario->setPosition({pos.x, posBeforeY});
+
     if (se.start + frameIndex == se.end)
     {
 
         mario->form = static_cast<MarioForm>((mario->form + 1) % FORM_COUNT);
         mario->changeForm(mario->form);
 
+        // new collision box
+        mario->toNewBody();
+
         if (mario->isGrounded)
         {
-            // mario->pos.y = mario->groundPosY - frameRec.height;
             mario->changeState(new IdleState(mario));
         }
         else
@@ -417,25 +427,34 @@ void GrowState::handleInput()
 UnGrowState::UnGrowState(Mario *_mario, int _delay)
     : MarioState((int)marioStateType::UNGROW, _mario, _delay)
 {
-    // if (mario->isGrounded)
-    //     mario->pos.y = mario->groundPosY - frameRec.height;
+    posBeforeY = mario->getPosition().y;
 }
 
 void UnGrowState::handleInput()
 {
-    StartEndFrame se = mario->sprite.StartEndFrames[type];
     if (mario->form == SMALL)
     {
         mario->changeState(new DeadState(mario));
         return;
     }
-    // new collision box
-    mario->toNewBody();
+    StartEndFrame se = mario->sprite.StartEndFrames[type];
+
+    if (delayCounter == 0)
+    {
+        float thisHeight = mario->sprite.frameRecs[-frameIndex + se.start + 1].height;
+        float nextHeight = mario->sprite.frameRecs[-frameIndex + se.start].height;
+        float dif = nextHeight - thisHeight;
+
+        posBeforeY -= dif;
+    }
+    Vector2 pos = mario->getPosition();
+    mario->setPosition({pos.x, posBeforeY});
     if (se.start - frameIndex == se.end)
     {
         mario->form = static_cast<MarioForm>((mario->form - 1 + FORM_COUNT) % FORM_COUNT);
         mario->changeForm(mario->form);
-
+        // new collision box
+        mario->toNewBody();
         if (mario->isGrounded)
         {
             mario->changeState(new IdleState(mario));
@@ -483,7 +502,6 @@ void ThrowFBState::handleInput()
     if (delayCounter == delay)
     {
         mario->throwFireBall();
-
         mario->changeState(new WalkState(mario));
     }
 }

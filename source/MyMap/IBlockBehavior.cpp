@@ -5,7 +5,12 @@
 #include "Game.hpp"
 #include "Mario.hpp"
 #include "GameObject.hpp"
+#include "Score.hpp"
 
+IBlockBehavior::IBlockBehavior(Block *block) : block(block)
+{
+    prePos = block->getPositionAdapter();
+}
 void IBlockBehavior::makeBlockBounce(float dt)
 {
     // only bounce when the block is jumping
@@ -35,6 +40,10 @@ void IBlockBehavior::makeBlockBounce(float dt)
     Vec2Adapter adapter(block->body->GetPosition());
     block->setPositionAdapter(adapter);
 }
+void IBlockBehavior::setForBounce()
+{
+    block->isJumping = true;
+}
 // type của Mario đối với Block, Type = TOP là MArio nhảy lên đụng block
 void QuestionBehavior::reactToCollision(GameObject *p, int type)
 {
@@ -45,8 +54,7 @@ void QuestionBehavior::reactToCollision(GameObject *p, int type)
     if (type == BOTTOM)
     {
         cout << "Question Block hit!" << endl;
-        block->isJumping = true;
-        prePos = block->getPositionAdapter();
+        setForBounce();
     }
 }
 
@@ -63,8 +71,9 @@ void BrickBehavior::reactToCollision(GameObject *p, int type)
         return;
     // FEET = đụng từ dưới
     if (type == BOTTOM)
-    {
+    {   
         block->needDeletion = true;
+        Score::getInstance()->addScore(50); 
         Particle::spawnParticles(*block, Game::particles);
     }
 }

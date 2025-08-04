@@ -2,6 +2,7 @@
 #include "EnemyState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
+
 Koopa::Koopa()
     : Enemy()
 {

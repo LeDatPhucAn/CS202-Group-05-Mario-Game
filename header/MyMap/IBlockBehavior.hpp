@@ -11,8 +11,9 @@ struct IBlockBehavior
     float timeSinceHit = 0.0f;
     const float bounceVel = 3.5f;
     Vec2Adapter prePos;
-    IBlockBehavior(Block *block) : block(block) {}
+    IBlockBehavior(Block *block);
 
+    virtual void setForBounce();
     virtual void makeBlockBounce(float dt);
     virtual ~IBlockBehavior() {};
     virtual void reactToCollision(GameObject *p, int type) {

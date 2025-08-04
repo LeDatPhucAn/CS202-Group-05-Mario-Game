@@ -42,7 +42,7 @@ void SceneManager::goBackOfBaseScene() {
 
 void SceneManager::update()
 {
-    cout << "Scene.size()" << scenes.size() << " " << numBackToBaseScene << endl;
+    // cout << "Scene.size()" << scenes.size() << " " << numBackToBaseScene << endl;
     if (needBack > 0)
     {
         while(!scenes.empty() &&  needBack > 0)

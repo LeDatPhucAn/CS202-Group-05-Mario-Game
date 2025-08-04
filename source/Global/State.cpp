@@ -17,7 +17,6 @@ State::State(int _type, GameObject *_gameObject, int _delay)
 }
 State::~State()
 {
-    cout <<"DELETED CURRENT STATE\n";
     numFrames = 0;
     frameIndex = 0;
     delay = 0;

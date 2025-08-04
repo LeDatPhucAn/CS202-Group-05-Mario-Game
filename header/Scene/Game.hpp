@@ -14,6 +14,7 @@
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 #include "Projectile.hpp"
+
 class Spawner;
 class DrawDebug;
 class Game : public Scene
@@ -25,11 +26,13 @@ private:
     bool showDebugDraw = false;
     Texture2D HUDLives;
     Texture2D HUDTime;
+    Texture2D HUDCoin;
 
     //For display
     int lives = 3;
     float gameTime = 0.0f;
     float maxTime = 400.0f; 
+
 
 protected:
     Mario *mario = nullptr;
