@@ -53,7 +53,7 @@ public:
 
     void init();
     static void addGameObject(GameObject *gameObject);
-    static void removeGameObject(GameObject *gameObject);
+    void removeGameObject();
     // update
     void updateScene();
 
