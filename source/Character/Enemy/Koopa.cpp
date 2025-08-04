@@ -11,8 +11,8 @@ Koopa::Koopa()
     setFrame(enemyStateType::RUN, 50, 57);
     setFrame(enemyStateType::JUMP, 59, 59); 
     setFrame(enemyStateType::DEAD, 49, 49);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa"]);
-    this->sprite.texture = UI::textureMap["Koopa"];
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa2"]);
+    this->sprite.texture = UI::textureMap["Koopa2"];
     this->changeState(new EnemyWalkState(this));
 }
 
@@ -44,16 +44,16 @@ void Koopa::updateCollision(GameObject *other, int type)
         {
             return;
         }
+        // Use a cooldown to prevent multiple hits in one frame
+        static float lastHitTime = 0.0f;
+        float currentTime = GetTime();
+        if (currentTime - lastHitTime < 0.2f)
+        {
+            return;
+        }
+        lastHitTime = currentTime;
         if (type == TOP)
         {   
-            // Use a cooldown to prevent multiple hits in one frame
-            static float lastHitTime = 0.0f;
-            float currentTime = GetTime();
-            if (currentTime - lastHitTime < 0.2f)
-            {
-                return;
-            }
-            lastHitTime = currentTime;
             
             // Check if it's a Flying Koopa (which starts in JumpState)
             if (dynamic_cast<EnemyJumpState *>(this->currentState))
@@ -80,7 +80,7 @@ void Koopa::updateCollision(GameObject *other, int type)
         // If Mario hits an idle shell, it starts moving
         if (dynamic_cast<EnemyIdleState *>(this->currentState))
         {
-            this->direction = (mario->body->GetPosition().x < this->body->GetPosition().x) ? RIGHT : LEFT;
+            this->direction = (mario->body->GetPosition().x < this->body->GetPosition().x) ? LEFT : RIGHT;
             this->changeState(new EnemyRunState(this));
             return;
         }
@@ -90,11 +90,6 @@ void Koopa::updateCollision(GameObject *other, int type)
     Enemy *enemy = dynamic_cast<Enemy *>(other);
     if (block || enemy)
     {
-        // If a running shell hits another enemy, the other enemy is defeated
-        if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
-        {
-            enemy->changeState(new EnemyDeadState(enemy));
-        }
         // Standard wall collision logic
         if (type == LEFTSIDE)
         {
@@ -104,6 +99,11 @@ void Koopa::updateCollision(GameObject *other, int type)
         {
             this->direction = RIGHT;
         }
+    }
+    // If a running shell hits another enemy, the other enemy is defeated
+    if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
+    {
+        enemy->changeState(new EnemyDeadState(enemy));
     }
 }
 

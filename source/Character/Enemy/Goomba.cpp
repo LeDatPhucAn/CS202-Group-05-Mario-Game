@@ -8,8 +8,8 @@ Goomba::Goomba()
     setFrame(enemyStateType::IDLE, 2, 2);
     setFrame(enemyStateType::WALK, 2, 10);
     setFrame(enemyStateType::DEAD, 12, 12);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba"]);
-    this->sprite.texture = UI::textureMap["Goomba"];
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba2"]);
+    this->sprite.texture = UI::textureMap["Goomba2"];
     this->changeState(new EnemyWalkState(this));
 }
 

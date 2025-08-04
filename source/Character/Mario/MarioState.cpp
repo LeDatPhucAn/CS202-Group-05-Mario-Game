@@ -489,12 +489,13 @@ DeadState::DeadState(Mario *_mario, int _delay)
 
 void DeadState::handleInput()
 {
-    if (IsKeyPressed(KEY_R))
-    {
-        mario->toNewBody();
-        mario->changeState(new FallState(mario));
-        return;
-    }
+// No need for repspawing anymore
+//     if (IsKeyPressed(KEY_R))
+//     {
+//         mario->toNewBody();
+//         mario->changeState(new FallState(mario));
+//         return;
+//     }
 }
 
 ThrowFBState::ThrowFBState(Mario *_mario, int _delay)
