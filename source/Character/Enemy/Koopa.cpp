@@ -68,10 +68,10 @@ void Koopa::updateCollision(GameObject *other, int type)
                 this->changeState(new EnemyIdleState(this));
                 return;
             }
-            // Third hit: stops the shell if it's running
+            // Third hit: kills the shell if it's running
             else if (dynamic_cast<EnemyRunState *>(this->currentState))
             {
-                this->changeState(new EnemyIdleState(this));
+                this->changeState(new EnemyDeadState(this));
                 return;
             }
         }
@@ -90,18 +90,18 @@ void Koopa::updateCollision(GameObject *other, int type)
     if (block || enemy)
     {
         // If a running shell hits another enemy, the other enemy is defeated
-        if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy)
+        if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
         {
             enemy->changeState(new EnemyDeadState(enemy));
         }
         // Standard wall collision logic
         if (type == LEFTSIDE)
         {
-            this->direction = RIGHT;
+            this->direction = LEFT;
         }
         else if (type == RIGHTSIDE)
         {
-            this->direction = LEFT;
+            this->direction = RIGHT;
         }
     }
 }
