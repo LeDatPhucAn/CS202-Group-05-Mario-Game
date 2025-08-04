@@ -47,7 +47,7 @@ void Koopa::updateCollision(GameObject *other, int type)
         // Use a cooldown to prevent multiple hits in one frame
         static float lastHitTime = 0.0f;
         float currentTime = GetTime();
-        if (currentTime - lastHitTime < 0.2f)
+        if (currentTime - lastHitTime < 0.4f)
         {
             return;
         }

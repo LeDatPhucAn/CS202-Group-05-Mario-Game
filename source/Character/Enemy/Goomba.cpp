@@ -37,6 +37,14 @@ void Goomba::updateCollision(GameObject *other, int type)
         {
             return;
         }
+
+        static float lastHitTime = 0.0f;
+        float currentTime = GetTime();
+        if (currentTime - lastHitTime < 0.4f)
+        {
+            return;
+        }
+        lastHitTime = currentTime;
         if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
