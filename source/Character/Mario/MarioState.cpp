@@ -400,6 +400,7 @@ void GrowState::handleInput()
 
         posBeforeY -= dif;
     }
+    mario->body->SetLinearVelocity({0, 0});
     Vector2 pos = mario->getPosition();
     mario->setPosition({pos.x, posBeforeY});
 
@@ -447,6 +448,7 @@ void UnGrowState::handleInput()
 
         posBeforeY -= dif;
     }
+    mario->body->SetLinearVelocity({0, 0});
     Vector2 pos = mario->getPosition();
     mario->setPosition({pos.x, posBeforeY});
     if (se.start - frameIndex == se.end)

@@ -45,7 +45,7 @@ Game::Game(SceneManager *_mag)
     {
         TraceLog(LOG_WARNING, "Failed to load HUD Score texture");
     }
-    
+   
     init();
 }
 
@@ -79,13 +79,13 @@ void Game::init()
     // Initialize camera
     cam.offset = {0, 0};
     cam.target = {0, 0};
-    cam.zoom = static_cast<float>(screenHeight) / WorldHeight;
+    cam.zoom = static_cast<float>(UI::screenHeight) / WorldHeight;
     cam.rotation = 0;
 
     gameTime = 0.0f;
     lives = 3;
-
     Score::getInstance()->reset();
+
 }
 
 Game::~Game()
@@ -141,7 +141,6 @@ Game::~Game()
         UnloadTexture(HUDScore);
         HUDScore.id = 0;
     }
-}
 
 void Game::addGameObject(GameObject *gameObject)
 {
@@ -153,24 +152,49 @@ void Game::addGameObject(GameObject *gameObject)
         gameObjects.push_back(gameObject);
     }
 }
-void Game::removeGameObject(GameObject *gameObject)
+
+void Game::removeGameObject()
 {
-    if (gameObject)
+
+    //Delete non-Block
+    for (int i = 0; i < deleteLater.size(); i++)
     {
-        auto it = std::find(gameObjects.begin(), gameObjects.end(), gameObject);
+        auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
         if (it != gameObjects.end())
         {
             gameObjects.erase(it);
-            if (gameObject->getBody())
+            if (deleteLater[i]->getBody())
             {
-                world->DestroyBody(gameObject->getBody());
-                gameObject->attachBody(nullptr);
+                world->DestroyBody(deleteLater[i]->getBody());
+                deleteLater[i]->attachBody(nullptr);
             }
-            delete gameObject;
-            gameObject = nullptr;
         }
     }
+
+    //Delete Block
+     auto &blocks = curMap.tileBlocks;
+    vector<Block *> toDelete;
+
+    blocks.erase(
+        std::remove_if(blocks.begin(), blocks.end(), [&](Block *block)
+                       {
+        if (block->needDeletion) {
+            toDelete.push_back(block);
+            world->DestroyBody(block->getBody());
+            return true; // mark for removal
+        }
+        return false; }),
+        blocks.end());
+
+    for (Block *&block : toDelete)
+    {
+        block->behavior->block = nullptr;
+        delete block;
+        block = nullptr;
+    }
+
 }
+
 void Game::updateScene()
 {
 
@@ -189,15 +213,18 @@ void Game::updateScene()
     updateCharacters();
     updateMap();
 
+    removeGameObject();
+
     // Camera
     float delta = (float)mario->getPosition().x - prePosX;
-    if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.8 * screenWidth)
+    if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.5 * UI::screenWidth)
         cam.target.x += (delta > 1) ? delta : 0;
-    if (GetWorldToScreen2D(mario->getPosition(), cam).x < 0.2 * screenWidth)
+    if (GetWorldToScreen2D(mario->getPosition(), cam).x < 0.2 * UI::screenWidth)
         cam.target.x += (delta < -1) ? delta : 0;
 
     prePosX = mario->getPosition().x;
 }
+
 void Game::updateCharacters()
 {
     for (int i = 0; i < gameObjects.size(); i++)
@@ -219,48 +246,16 @@ void Game::updateCharacters()
             }
         }
     }
-    for (int i = 0; i < deleteLater.size(); i++)
-    {
-        auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
-        if (it != gameObjects.end())
-        {
-            gameObjects.erase(it);
-            if (deleteLater[i]->getBody())
-            {
-                world->DestroyBody(deleteLater[i]->getBody());
-                deleteLater[i]->attachBody(nullptr);
-            }
-        }
-    }
+
 }
 void Game::updateMap()
 {
-
     curMap.update();
 
     for (auto &x : particles)
         x.update();
 
-    auto &blocks = curMap.tileBlocks;
-    vector<Block *> toDelete;
-
-    blocks.erase(
-        std::remove_if(blocks.begin(), blocks.end(), [&](Block *block)
-                       {
-        if (block->needDeletion) {
-            toDelete.push_back(block);
-            world->DestroyBody(block->getBody());
-            return true; // mark for removal
-        }
-        return false; }),
-        blocks.end());
-
-    for (Block *&block : toDelete)
-    {
-        block->behavior->block = nullptr;
-        delete block;
-        block = nullptr;
-    }
+   
 }
 
 void Game::displayScene()
@@ -344,4 +339,32 @@ void Game::drawHUD()
     string scoreText = to_string(Score::getInstance()->getScore());
     Vector2 scoreTextPos = {worldTopLeft.x + 210, worldTopLeft.y + 7};
     DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
+    
+    // Draw Lives
+    for (int i = 0; i < lives; i++)
+    {
+        Rectangle srcRec = {0, 0, (float)HUDLives.width, (float)HUDLives.height};
+        Rectangle destRec = {10 + i * 15, 5, 12, 12};
+        DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
+    }
+    
+    
+    
+    // Draw Score (later)
+    
+    // Draw Time
+    Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
+    Rectangle destRec = {100, 3, 15, 15};
+    DrawTexturePro(HUDTime, srcRec, destRec, {0, 0}, 0.0f, WHITE);
+    string timeText = to_string(remainingTime);
+    // Time warning - change color when time is low
+    if (remainingTime <= 30)
+    {
+        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, RED);
+    }
+
+    else {
+
+        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, WHITE);
+    }
 }

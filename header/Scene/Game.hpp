@@ -28,12 +28,11 @@ private:
     Texture2D HUDTime;
     Texture2D HUDCoin;
     Texture2D HUDScore;
-
+    
     //For display
     int lives = 3;
     float gameTime = 0.0f;
     float maxTime = 400.0f; 
-
 
 protected:
     Mario *mario = nullptr;
@@ -57,7 +56,7 @@ public:
 
     void init();
     static void addGameObject(GameObject *gameObject);
-    static void removeGameObject(GameObject *gameObject);
+    void removeGameObject();
     // update
     void updateScene();
 

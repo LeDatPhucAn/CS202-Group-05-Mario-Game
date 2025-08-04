@@ -44,6 +44,10 @@ void IBlockBehavior::setForBounce()
 {
     block->isJumping = true;
 }
+void IBlockBehavior::setNoBounce()
+{
+    block->isJumping = false;
+}
 // type của Mario đối với Block, Type = TOP là MArio nhảy lên đụng block
 void QuestionBehavior::reactToCollision(GameObject *p, int type)
 {
@@ -71,15 +75,25 @@ void BrickBehavior::reactToCollision(GameObject *p, int type)
         return;
     // FEET = đụng từ dưới
     if (type == BOTTOM)
-    {   
-        block->needDeletion = true;
-        Score::getInstance()->addScore(50); 
-        Particle::spawnParticles(*block, Game::particles);
+    {
+        // bé thì ko phá dc
+        if (mario->getForm() == SMALL)
+        {
+            setForBounce();
+        }
+        else
+        {
+            setNoBounce();
+            block->needDeletion = true;
+            Score::getInstance()->addScore(50); 
+            Particle::spawnParticles(*block, Game::particles);
+        }
     }
 }
 
 void BrickBehavior::updateFrame(float dt)
 {
+    makeBlockBounce(dt);
 }
 
 void BrickBehavior::onDraw(float dt)

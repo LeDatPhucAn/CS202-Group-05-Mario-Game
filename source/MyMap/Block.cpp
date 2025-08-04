@@ -91,56 +91,11 @@ void Block::update()
 
 void Block::display()
 {
-    // if (isInvisible && !isUsed) return;
-
     if (currentState)
-    {
         currentState->displayState();
-    }
     else
         DrawTextureRec(texture, srcRec, getPosition(), color);
 
-    // float dt = GetFrameTime();
-
-    // // Animation Display
-    // if (srcRecs.size() == 0)
-    //     DrawTextureRec(texture, srcRec, getCenter(), color);
-    // else
-    // {
-    //     aniTimer += GetFrameTime() * 1000; // đổi qua mili giây vì duration ms
-    //     if (aniTimer > duration)
-    //     {
-    //         aniIndex = (aniIndex + 1) % srcRecs.size();
-    //         aniTimer = 0;
-    //     }
-    //     DrawTextureRec(texture, srcRecs[aniIndex], getCenter(), color);
-    //     // cout << aniTimer << endl;
-    // }
-    // b2Body *body = getBody();
-    // if (!body)
-    //     return;
-    // for (b2Fixture *f = body->GetFixtureList(); f; f = f->GetNext())
-    // {
-    //     if (f->GetType() != b2Shape::e_polygon)
-    //         continue;
-
-    //     b2PolygonShape *poly = static_cast<b2PolygonShape *>(f->GetShape());
-    //     int32 count = poly->m_count;
-
-    //     std::vector<Vector2> points(count);
-    //     for (int32 i = 0; i < count; ++i)
-    //     {
-    //         Vec2Adapter worldPoint(body->GetWorldPoint(poly->m_vertices[i]));
-    //         points[i] = worldPoint.toPixels();
-    //     }
-
-    //     // Draw loop
-    //     for (int i = 0; i < count; ++i)
-    //     {
-    //         DrawLineV(points[i], points[(i + 1) % count], RED);
-    //     }
-    //}
-    // behavior->onDraw(dt);
 }
 
 void Block::updateCollision(GameObject *other, int type)

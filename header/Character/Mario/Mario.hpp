@@ -34,6 +34,8 @@ public:
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
 
+    // getter
+    MarioForm getForm() const {return form;}
     // Override collision to handle enemies
     void throwFireBall();
     void update() override;
