@@ -97,7 +97,7 @@ void Block::display()
     {
         currentState->displayState();
     }
-    else 
+    else
         DrawTextureRec(texture, srcRec, getPosition(), color);
 
     // float dt = GetFrameTime();

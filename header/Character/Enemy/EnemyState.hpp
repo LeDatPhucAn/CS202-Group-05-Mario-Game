@@ -34,7 +34,7 @@ public:
 
 class EnemyDeadState : public EnemyState {
 private:
-    float delayCounter = 1.0f;
+    float delayCounter = 0.3f;
 public:
     EnemyDeadState(Character* character, int delay = 5);
     void handleInput() override;
