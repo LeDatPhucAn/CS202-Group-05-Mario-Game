@@ -141,6 +141,7 @@ Game::~Game()
         UnloadTexture(HUDScore);
         HUDScore.id = 0;
     }
+}
 
 void Game::addGameObject(GameObject *gameObject)
 {
@@ -340,31 +341,4 @@ void Game::drawHUD()
     Vector2 scoreTextPos = {worldTopLeft.x + 210, worldTopLeft.y + 7};
     DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
     
-    // Draw Lives
-    for (int i = 0; i < lives; i++)
-    {
-        Rectangle srcRec = {0, 0, (float)HUDLives.width, (float)HUDLives.height};
-        Rectangle destRec = {10 + i * 15, 5, 12, 12};
-        DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
-    }
-    
-    
-    
-    // Draw Score (later)
-    
-    // Draw Time
-    Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
-    Rectangle destRec = {100, 3, 15, 15};
-    DrawTexturePro(HUDTime, srcRec, destRec, {0, 0}, 0.0f, WHITE);
-    string timeText = to_string(remainingTime);
-    // Time warning - change color when time is low
-    if (remainingTime <= 30)
-    {
-        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, RED);
-    }
-
-    else {
-
-        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, WHITE);
-    }
 }

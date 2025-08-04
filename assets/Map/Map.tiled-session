@@ -20,11 +20,11 @@
             "scaleInEditor": 3
         },
         "Map1.1.json": {
-            "scale": 1.5,
+            "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 416,
-                "y": 135.99999999999997
+                "x": 243.5,
+                "y": 142.75
             }
         },
         "collided_animation.json": {
