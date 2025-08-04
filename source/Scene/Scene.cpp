@@ -50,9 +50,11 @@ void SceneManager::update()
             delete scenes.back();
             scenes.pop_back();
             needBack--;
+
             if(numBackToBaseScene > 0)
                 numBackToBaseScene--;
         }
+        cout << "Delete Scene" << endl;
     }
 
     if(!scenes.empty())
@@ -62,7 +64,6 @@ void SceneManager::update()
 
 void SceneManager::display()
 {
-
     for(int i = scenes.size()-1 - numBackToBaseScene; i < scenes.size(); i++) {
         Scene *currentScene = scenes[i];
         Game *gameScene = dynamic_cast<Game *>(currentScene);
