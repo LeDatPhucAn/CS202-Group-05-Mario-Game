@@ -8,12 +8,19 @@ namespace fs = std::filesystem;
 Font UI::font = {0};
 Font UI::boldFont = {0};
 int UI::screenWidth = 1600;
-int UI::screenHeight = 900;
+int UI::screenHeight = 800;
 int UI::lastScreenWidth = 1600;
-int UI::lastScreenHeight = 900;
+int UI::lastScreenHeight = 800;
 unordered_map<string, Texture2D> UI::textureMap;
 unordered_map<string, json> UI::jsonMap;
 unordered_map<string, Map> UI::gameMap;
+
+
+std::unordered_map<std::string, std::string> UI::mapPaths = {
+        {"Map1.1", "assets/Map/Map1.1.json"},
+        // Add the rest...
+    };
+
 UI::UI()
 {
 	cout << "UI CONSTRUCTOR\n";

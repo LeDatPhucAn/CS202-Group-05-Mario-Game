@@ -11,36 +11,34 @@
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
+
 Game::Game(SceneManager *_mag)
 {
     manager = _mag;
-    spawner = new Spawner(this);
-    curMap.setSpawner(spawner);
-    mapPaths = {
-        {"Map1.1", "assets/Map/Map1.1.json"},
-        // Add the rest...
-    };
-
+    
+    world = new b2World({0, fallGravity});
+    contactListener = new ContactListener();
+    world->SetContactListener(contactListener);
+    
     init();
 }
 
 void Game::init()
 {
 
-    // Instantiate main characters
+    // Instantiate main charact4ers
     mario = new Mario();
 
     // Set initial positions
     mario->setPosition({100, 50});
 
+    spawner = new Spawner(this);
+    curMap.setSpawner(spawner);
     // Load map
     current_Map = "Map1.1";
-    curMap.choose(mapPaths[current_Map]);
+    curMap.choose(UI::mapPaths[current_Map]);
 
-    // Initialize Box2D world and contact listener
-    world = new b2World({0, fallGravity});
-    contactListener = new ContactListener();
-    world->SetContactListener(contactListener);
+
     drawDebug = new DrawDebug();
     // Prepare map blocks
     for (auto &block : curMap.tileBlocks)
@@ -57,6 +55,41 @@ void Game::init()
     cam.target = {0, 0};
     cam.zoom = static_cast<float>(screenHeight) / WorldHeight;
     cam.rotation = 0;
+}
+
+Game::~Game()
+{
+    for (int i = 0; i < deleteLater.size(); i++)
+    {
+        if (deleteLater[i])
+        {
+            delete deleteLater[i];
+            deleteLater[i] = nullptr;
+        }
+    }
+    deleteLater.clear();
+
+    for (int i = 0; i < gameObjects.size(); i++)
+    {
+        if (gameObjects[i])
+        {
+            delete gameObjects[i];
+            gameObjects[i] = nullptr;
+        }
+    }
+    gameObjects.clear();
+
+    delete world;
+    world = nullptr;
+
+    delete drawDebug;
+    drawDebug = nullptr;
+
+    delete contactListener;
+    contactListener = nullptr;
+
+    delete spawner;
+    spawner = nullptr;
 }
 
 void Game::addGameObject(GameObject *gameObject)
@@ -102,7 +135,7 @@ void Game::updateScene()
     updateCharacters();
     updateMap();
 
-    // amera
+    // Camera
     float delta = (float)mario->getPosition().x - prePosX;
     if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.8 * screenWidth)
         cam.target.x += (delta > 1) ? delta : 0;
@@ -198,33 +231,3 @@ void Game::displayScene()
         drawDebug->DrawWorld(world);
 }
 
-Game::~Game()
-{
-
-    cout << "DELETED GAME\n";
-    for (int i = 0; i < deleteLater.size(); i++)
-    {
-        if (deleteLater[i])
-        {
-            delete deleteLater[i];
-            deleteLater[i] = nullptr;
-        }
-    }
-    deleteLater.clear();
-    for (int i = 0; i < gameObjects.size(); i++)
-    {
-        if (gameObjects[i])
-        {
-            delete gameObjects[i];
-            gameObjects[i] = nullptr;
-        }
-    }
-    curMap.clearAll();
-    gameObjects.clear();
-    delete world;
-    world = nullptr;
-    delete drawDebug;
-    drawDebug = nullptr;
-    delete contactListener;
-    contactListener = nullptr;
-}

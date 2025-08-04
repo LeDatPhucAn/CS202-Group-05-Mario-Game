@@ -1,5 +1,5 @@
 #pragma once
-#include <stack>
+#include <vector>
 #include "raylib.h"
 using namespace std;
 enum class sceneType
@@ -38,13 +38,13 @@ public:
 class SceneManager
 {
 public:
-	stack<Scene *> scenes;
-	sceneType nextScene = sceneType::NONE;
+	vector<Scene *> scenes;
 	Program *pro;
-	bool needBack = 0;
+	int needBack = 0;
 
-	void changeScene(sceneType nextScene);
+	void changeScene(sceneType _nextScene);
 	void goBack();
+	void goBackOfBaseScene();
 
 	void init();
 	void update();
@@ -53,6 +53,8 @@ public:
 	~SceneManager();
 
 	Camera2D getCamera();
+
+	int numBackToBaseScene = 0;
 };
 
 class SceneFactory

@@ -29,7 +29,6 @@ protected:
 
     Spawner *spawner = nullptr;
     // Character* MarioPointer = nullptr;
-    std::unordered_map<std::string, std::string> mapPaths;
     string current_Map;
     MyMap curMap;
 
