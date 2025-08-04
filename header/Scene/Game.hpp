@@ -32,8 +32,8 @@ private:
     //For display
     int lives = 3;
     float gameTime = 0.0f;
-    float maxTime = 400.0f; 
-
+    float maxTime = 400.0f;
+    
 protected:
     Mario *mario = nullptr;
 
@@ -56,6 +56,7 @@ public:
 
     void init();
     static void addGameObject(GameObject *gameObject);
+    void restartGame();
     void removeGameObject();
     // update
     void updateScene();
