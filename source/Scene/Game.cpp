@@ -110,6 +110,10 @@ Game::~Game()
         UnloadTexture(HUDLives);
         HUDLives.id = 0; 
     }
+    if (HUDTime.id != 0){
+        UnloadTexture(HUDTime);
+        HUDTime.id = 0;
+    }
 }
 
 void Game::addGameObject(GameObject *gameObject)
