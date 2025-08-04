@@ -22,17 +22,11 @@ void Goomba::updateCollision(GameObject *other, int type)
     {
         if (type == LEFTSIDE)
         {
-            this->direction = RIGHT;
-            b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(vel.x / PPM);
-            this->body->SetLinearVelocity(vel);
+            this->direction = LEFT;
         }
         else if (type == RIGHTSIDE)
         {
-            this->direction = LEFT;
-            b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(vel.x / PPM);
-            this->body->SetLinearVelocity(vel);
+            this->direction = RIGHT;
         }
     }
 

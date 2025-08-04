@@ -19,6 +19,18 @@ Game::Game(SceneManager *_mag)
     world = new b2World({0, fallGravity});
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
+
+    HUDLives = LoadTexture("assets/Backgrounds/HUD/lives.png");
+    if (HUDLives.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load HUD Lives texture");
+    }
+
+    HUDTime = LoadTexture("assets/Backgrounds/HUD/time.png");
+    if (HUDTime.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load HUD Time texture");
+    }
     
     init();
 }
@@ -55,6 +67,9 @@ void Game::init()
     cam.target = {0, 0};
     cam.zoom = static_cast<float>(screenHeight) / WorldHeight;
     cam.rotation = 0;
+
+    gameTime = 0.0f;
+    lives = 3;
 }
 
 Game::~Game()
@@ -90,6 +105,11 @@ Game::~Game()
 
     delete spawner;
     spawner = nullptr;
+
+    if (HUDLives.id != 0){
+        UnloadTexture(HUDLives);
+        HUDLives.id = 0; 
+    }
 }
 
 void Game::addGameObject(GameObject *gameObject)
@@ -127,6 +147,9 @@ void Game::updateScene()
         manager->changeScene(sceneType::PAUSE);
     if (IsKeyPressed(KEY_Q))
         showDebugDraw = !showDebugDraw;
+
+    //Update time
+    gameTime += GetFrameTime();
 
     // Step the world
     if (world) // 60 fps
@@ -229,5 +252,42 @@ void Game::displayScene()
 
     if (showDebugDraw)
         drawDebug->DrawWorld(world);
+    
+    drawHUD();
 }
 
+void Game::drawHUD()
+{
+    // Calculate remaining time
+    int remainingTime = (int)(maxTime - gameTime);
+    if (remainingTime < 0) remainingTime = 0;
+    
+    
+    // Draw Lives
+    for (int i = 0; i < lives; i++)
+    {
+        Rectangle srcRec = {0, 0, (float)HUDLives.width, (float)HUDLives.height};
+        Rectangle destRec = {10 + i * 15, 5, 12, 12};
+        DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
+    }
+    
+    
+    
+    // Draw Score (later)
+    
+    // Draw Time
+    Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
+    Rectangle destRec = {100, 3, 15, 15};
+    DrawTexturePro(HUDTime, srcRec, destRec, {0, 0}, 0.0f, WHITE);
+    string timeText = to_string(remainingTime);
+    // Time warning - change color when time is low
+    if (remainingTime <= 30)
+    {
+        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, RED);
+    }
+
+    else {
+
+        DrawTextEx(UI::font, timeText.c_str(), {120, 7}, 12, 2, WHITE);
+    }
+}
