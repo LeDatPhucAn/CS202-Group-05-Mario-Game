@@ -254,7 +254,7 @@ void Mario::createBody(b2World *world)
 
     // 5. Left wall sensor
     b2PolygonShape leftWallShape;
-    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 1.2, 0), 0);
+    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 2, 0), 0);
 
     b2FixtureDef leftWallFixture;
     leftWallFixture.shape = &leftWallShape;
@@ -266,7 +266,7 @@ void Mario::createBody(b2World *world)
 
     // 6. Right wall sensor
     b2PolygonShape rightWallShape;
-    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 1.2, 0), 0);
+    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 2, 0), 0);
 
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;
