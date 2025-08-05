@@ -16,7 +16,7 @@ class ChooseLevel : public Scene {
 private:
     Mario* mario;
     b2World* world;
-    Camera2D camera;
+    Camera2D cam; // Use cam like Game.cpp, not camera
     
     std::vector<LevelPortal> levelPortals;
     Texture2D backgroundTexture;
@@ -26,6 +26,7 @@ private:
     int selectedLevel;
     bool levelSelected;
     float interactionTimer;
+    float prePosX; // Add this like Game.cpp
     
     // UI elements
     std::string instructionText;
@@ -33,7 +34,6 @@ private:
     int hoveredLevel;
     
     void initializePortals();
-    void updateCamera();
     void checkPortalCollisions();
     void drawUI();
     void drawPortals();
