@@ -51,7 +51,6 @@ Game::Game(SceneManager *_mag)
 
 void Game::init()
 {
-
     // Instantiate main charact4ers
     mario = new Mario();
 
@@ -145,6 +144,43 @@ Game::~Game()
     }
 }
 
+void Game::restartGame()
+{
+
+    // Clear existing game objects (except Mario will be recreated)
+    for (auto &obj : gameObjects)
+    {
+        if (obj && obj != mario)
+        {
+            obj->needDeletion = true;
+        }
+    }
+
+    // Reset mario
+    if (mario->getBody())
+    {
+        world->DestroyBody(mario->getBody());
+        mario->attachBody(nullptr);
+    }
+
+    // Reset Mario's position and recreate physics body
+    mario->setPosition({100, 50});
+    mario->createBody(world); // Recreate the physics body
+    mario->changeState(new IdleState(mario));
+    mario->isGrounded = true; // Ensure Mario starts grounded
+    // reset camera
+    cam.target = {0, 0};
+    prePosX = 100;
+    // Reset game time
+    gameTime = 0.0f;
+
+    // Reset lives and coins but keep score
+    Score::getInstance()->resetGameOnly();
+
+    // Respawn enemies
+    spawner->spawnEnemy();
+}
+
 void Game::addGameObject(GameObject *gameObject)
 {
     if (gameObject)
@@ -199,6 +235,52 @@ void Game::removeGameObject()
 
 void Game::updateScene()
 {
+    // Handle death state
+    static float deathTimer = 3.0f;
+    static bool inDeathAnimation = false;
+
+    DeadState *deadState = dynamic_cast<DeadState *>(mario->currentState);
+    if (deadState)
+    {
+        if (!inDeathAnimation)
+        {
+            // Start death animation
+            inDeathAnimation = true;
+            deathTimer = 0.0f;
+            cout << "Death animation started!" << endl;
+        }
+
+        // Update death timer
+        deathTimer += GetFrameTime();
+
+        // Check if animation delay has passed (2 seconds)
+        if (deathTimer >= 2.0f)
+        {
+            int CurrentLives = Score::getInstance()->getLives();
+            Score::getInstance()->setLives(CurrentLives - 1);
+            CurrentLives = Score::getInstance()->getLives();
+
+            if (CurrentLives > 0)
+            {
+                restartGame();
+            }
+            else
+            {
+                restartGame();
+                manager->changeScene(sceneType::GAMEOVER);
+            }
+
+            // Reset the animation state after handling death
+            inDeathAnimation = false;
+            deathTimer = 0.0f;
+        }
+    }
+    else
+    {
+        // Reset animation state when not in dead state
+        inDeathAnimation = false;
+        deathTimer = 0.0f;
+    }
 
     if (IsKeyPressed(KEY_P))
     {
@@ -296,6 +378,7 @@ void Game::drawHUD()
     Vector2 worldTopLeft = GetScreenToWorld2D(screenTopLeft, cam);
 
     // Draw Lives - positioned relative to camera view
+    int lives = Score::getInstance()->getLives();
     for (int i = 0; i < lives; i++)
     {
         Rectangle srcRec = {0, 0, (float)HUDLives.width, (float)HUDLives.height};

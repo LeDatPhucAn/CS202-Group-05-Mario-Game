@@ -21,6 +21,7 @@ private:
     friend class DeadState;
     friend class Goomba;
     friend class Koopa;
+    friend class ChooseLevel;
 
     MarioForm form = SMALL;
     void changeForm(MarioForm form);

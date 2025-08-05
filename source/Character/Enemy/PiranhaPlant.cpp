@@ -93,6 +93,6 @@ void PiranhaPlant::updateCollision(GameObject *other, int type)
             return;
         }
 
-        mario->changeState(new DeadState(mario));
+        mario->changeState(new UnGrowState(mario));
     }
 }

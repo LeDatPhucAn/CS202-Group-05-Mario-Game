@@ -1,4 +1,4 @@
-#include "Pause.hpp"
+#include "GameOver.hpp"
 #include "raylib.h"
 #include <vector>
 #include <string>
@@ -7,101 +7,93 @@
 // Static variables for flash effect
 static bool        flashActive    = false;
 static float       flashTimer     = 0.0f;
-//static sceneType   nextScene      = sceneType::GAME;
 static const float flashDuration  = 0.6f;
 
-Pause::Pause(SceneManager* _manager) : Scene(_manager) {
-    // Load pause overlay texture (optional small panel)
-    pausePanel = LoadTexture("assets/Backgrounds/SettingsBoard.png");
+GameOver::GameOver(SceneManager* _manager) : Scene(_manager) {
+    // Load game over panel texture
+    gameOverPanel = LoadTexture("assets/Backgrounds/SettingsBoard.png");
     
-    if (pausePanel.id == 0) {
-        TraceLog(LOG_WARNING, "Failed to load pause panel texture");
+    if (gameOverPanel.id == 0) {
+        TraceLog(LOG_WARNING, "Failed to load game over panel texture");
     }
 
-   // Load button textures
+    // Load button textures
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
     buttonHoverTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButtonHovered.png");
 
-    if (buttonTexture.id == 0)
-    {
+    if (buttonTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load button texture");
     }
-    if (buttonHoverTexture.id == 0)
-    {
+    if (buttonHoverTexture.id == 0) {
         TraceLog(LOG_WARNING, "Failed to load button hover texture");
     }
     
     selectedButton = 0;
 }
 
-Pause::~Pause() {
-    if (pausePanel.id > 0) {
-        UnloadTexture(pausePanel);
+
+
+GameOver::~GameOver() {
+    if (gameOverPanel.id > 0) {
+        UnloadTexture(gameOverPanel);
     }
 }
 
-void Pause::updateScene() {
+void GameOver::updateScene() {
     // Handle flash effect
-    // if (flashActive) {
-    //     flashTimer += GetFrameTime();
-    //     if (flashTimer >= flashDuration) {
-    //         flashActive = false;
-    //         flashTimer = 0.0f;
-    //         manager->changeScene(nextScene);
-    //     }
-    //     return;
-    // }
+    if (flashActive) {
+        flashTimer += GetFrameTime();
+        if (flashTimer >= flashDuration) {
+            flashActive = false;
+            flashTimer = 0.0f;
+        }
+        return;
+    }
 
     // Navigation
     if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
-        selectedButton = (selectedButton - 1 + 4) % 4;
+        selectedButton = (selectedButton - 1 + 2) % 2;
     }
     if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-        selectedButton = (selectedButton + 1) % 4;
+        selectedButton = (selectedButton + 1) % 2;
     }
     
     // Activate button
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         switch(selectedButton) {
-            case 0: // Resume
+            case 0: // Play Again
+                Score::getInstance()->reset();
                 manager->goBack();
                 return;
-            case 1: // Save
-                // Add save functionality here
-                break;
-            case 2: // Settings
-                manager->changeScene(sceneType::SETTING);
-                return;
-            case 3: // Exit
+            case 1: // Back to Menu
                 Score::getInstance()->reset();
                 manager->goBackOfBaseScene();
-                flashActive = true;
-                flashTimer = 0.0f;
                 return;
         }
     }
 
-    // // ESC to resume game
-    // if (IsKeyPressed(KEY_ESCAPE)) {
-    //     nextScene = sceneType::GAME;
-    //     flashActive = true;
-    //     flashTimer = 0.0f;
-    //     return;
-    // }
+    // ESC to go back to menu
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        Score::getInstance()->reset();
+        manager->goBackOfBaseScene();
+        flashActive = true;
+        flashTimer = 0.0f;
+        return;
+    }
 
     // Mouse interaction
     Vector2 mousePos = GetMousePosition();
-    float panelWidth = 300;
-    float panelHeight = 350;
+    float panelWidth = 350;
+    float panelHeight = 400;
     float panelX = UI::screenWidth / 2 - panelWidth / 2;
     float panelY = UI::screenHeight / 2 - panelHeight / 2;
     float buttonWidth = 200;
     float buttonHeight = 50;
     float buttonX = panelX + (panelWidth - buttonWidth) / 2;
-    float startY = panelY + 80;
-    float spacing = 60;
+    float startY = panelY + 200;
+    float spacing = 70;
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 2; ++i) {
         Rectangle btnRect = {
             (float)buttonX,
             (float)(startY + i * spacing),
@@ -124,15 +116,14 @@ void Pause::updateScene() {
         };
         if (CheckCollisionPointRec(mousePos, btnRect)) {
             switch(selectedButton) {
-                case 0: // Resume
+                case 0: // Play Again
+                    Score::getInstance()->reset();
                     manager->goBack();
-                    break;
-                case 1: // Save
-                    // Add save functionality here
-                    break;
-                case 2: // Settings
-                    manager->changeScene(sceneType::SETTING);
-                case 3: // Exit
+                    flashActive = true;
+                    flashTimer = 0.0f;
+                    return;
+                case 1: // Back to Menu
+                    Score::getInstance()->reset();
                     manager->goBackOfBaseScene();
                     flashActive = true;
                     flashTimer = 0.0f;
@@ -142,30 +133,27 @@ void Pause::updateScene() {
     }
 }
 
-void Pause::displayScene() {
-    
-    std::string titleText = "PAUSED";
+void GameOver::displayScene() {
+    std::string titleText = "GAME OVER";
     std::vector<std::string> buttonTexts = {
-        "RESUME",
-        "SAVE",
-        "SETTINGS", 
-        "EXIT"
+        "PLAY AGAIN",
+        "BACK TO MENU"
     };
     
     // Draw semi-transparent overlay over the entire screen
-    DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 50});
+    DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 30});
     
-    // Calculate pause panel dimensions and position
-    float panelWidth = 300;
-    float panelHeight = 350;
+    // Calculate game over panel dimensions and position
+    float panelWidth = 350;
+    float panelHeight = 400;
     float panelX = UI::screenWidth / 2 - panelWidth / 2;
     float panelY = UI::screenHeight / 2 - panelHeight / 2;
     Rectangle panelRect = {panelX, panelY, panelWidth, panelHeight};
 
-    // Draw the pause panel
-    if (pausePanel.id > 0) {
-        DrawTexturePro(pausePanel,
-                      {0, 0, (float)pausePanel.width, (float)pausePanel.height},
+    // Draw the game over panel
+    if (gameOverPanel.id > 0) {
+        DrawTexturePro(gameOverPanel,
+                      {0, 0, (float)gameOverPanel.width, (float)gameOverPanel.height},
                       panelRect,
                       {0, 0}, 0.0f, WHITE);
     } else {
@@ -181,20 +169,36 @@ void Pause::displayScene() {
     float titleX = (UI::screenWidth - titleSize.x) / 2.0f;
     float titleY = panelY + 20;
 
-    // Title with shadow
+    // Title with shadow (red color for game over)
     DrawTextEx(UI::boldFont, titleText.c_str(),
                { titleX + 2, titleY + 2 }, titleFontSize, titleSpacing, BLACK);
     DrawTextEx(UI::boldFont, titleText.c_str(),
-               { titleX, titleY }, titleFontSize, titleSpacing, WHITE);
+               { titleX, titleY }, titleFontSize, titleSpacing, RED);
+
+    // Draw final score and lives
+    std::string scoreText = "Final Score: " + std::to_string(Score::getInstance()->getScore());
+
+    
+    Vector2 scoreSize = MeasureTextEx(UI::font, scoreText.c_str(), 24, 2);
+    
+    float scoreX = (UI::screenWidth - scoreSize.x) / 2.0f;
+    float statsY = panelY + 120;
+    
+    // Score text with shadow
+    DrawTextEx(UI::font, scoreText.c_str(),
+               { scoreX + 1, statsY + 1 }, 24, 2, BLACK);
+    DrawTextEx(UI::font, scoreText.c_str(),
+               { scoreX, statsY }, 24, 2, WHITE);
+    
     
     // Draw buttons
     float buttonWidth = 200;
     float buttonHeight = 50;
     float buttonX = panelX + (panelWidth - buttonWidth) / 2;
-    float startY = panelY + 80;
-    float spacing = 60;
+    float startY = panelY + 200;
+    float spacing = 70;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
         Rectangle buttonRect = {buttonX, startY + i * spacing, buttonWidth, buttonHeight};
         
         // Draw button texture background
@@ -231,33 +235,35 @@ void Pause::displayScene() {
         
         // Button text (centered)
         float buttonTextSpacing = 2.0f;
-        Vector2 textSize = MeasureTextEx(UI::font, buttonTexts[i].c_str(), 22, buttonTextSpacing);
+        Vector2 textSize = MeasureTextEx(UI::font, buttonTexts[i].c_str(), 20, buttonTextSpacing);
         float textX = buttonRect.x + (buttonRect.width - textSize.x) / 2;
         float textY = buttonRect.y + (buttonRect.height - textSize.y) / 2;
         
         // Text with shadow
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
-                  {textX + 1, textY + 1}, 22, buttonTextSpacing, WHITE);
+                  {textX + 1, textY + 1}, 20, buttonTextSpacing, BLACK);
         DrawTextEx(UI::font, buttonTexts[i].c_str(), 
-                  {textX, textY}, 22, buttonTextSpacing, BLACK);
+                  {textX, textY}, 20, buttonTextSpacing, WHITE);
         
         // Flash effect for selected button
         if (flashActive && i == selectedButton) {
-            float t = fmodf(flashTimer / flashDuration, 1.0f);
             float hue = fmodf(flashTimer * 360.0f / flashDuration, 360.0f);
             Color col = ColorFromHSV(hue, 1.0f, 1.0f);
-            DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 22, 2, col);
+            DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 20, 2, col);
         }
     }
     
     // Draw instructions
-    string instructions = "Use ARROW KEYS to navigate - ENTER to select - ESC to resume";
+    std::string instructions = "Use ARROW KEYS to navigate - ENTER to select - ESC for menu";
     Vector2 instrSize = MeasureTextEx(UI::font, instructions.c_str(), 16, 2);
     float instrX = (UI::screenWidth - instrSize.x) / 2;
     float instrY = panelY + panelHeight + 20;
     
     DrawTextEx(UI::font, instructions.c_str(), 
-              {instrX + 1, instrY + 1}, 20, 2, BLACK);
+              {instrX + 1, instrY + 1}, 16, 2, BLACK);
     DrawTextEx(UI::font, instructions.c_str(), 
-              {instrX, instrY}, 20, 2, WHITE);
+              {instrX, instrY}, 16, 2, WHITE);
 }
+
+
+

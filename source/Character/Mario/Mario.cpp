@@ -76,35 +76,69 @@ void Mario::updateCollision(GameObject *other, int type)
     }
     Character::updateCollision(other, type);
 
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
-    if (enemy)
-    {
-        if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
-        {
-            return;
-        }
-        if (type == BOTTOM)
-        {
-            float mass = this->body->GetMass();
-            b2Vec2 impulse(0, mass * jumpVel / 1.5f);
-            this->body->ApplyLinearImpulseToCenter(impulse, true);
-        }
+    // Enemy *enemy = dynamic_cast<Enemy *>(other);
+    // if (enemy)
+    // {
+    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
+    //     {
+    //         return;
+    //     }
+    //     if (type == BOTTOM)
+    //     {
+    //         float mass = this->body->GetMass();
+    //         b2Vec2 impulse(0, mass * jumpVel / 1.5f);
+    //         this->body->ApplyLinearImpulseToCenter(impulse, true);
+    //     }
 
-        else
-        {
-            if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
-            {
-                return;
-            }
-            if (form == SMALL)
-            {
-                this->changeState(new DeadState(this));
-                return;
-            }
-            this->changeState(new UnGrowState(this));
-        }
-    }
+    //     else
+    //     {
+    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+    //         {
+    //             return;
+    //         }
+    //         if (form == SMALL)
+    //         {
+    //             this->changeState(new DeadState(this));
+    //             return;
+    //         }
+    //         this->changeState(new UnGrowState(this));
+    //     }
+    // }
+
+    // Enemy *enemy = dynamic_cast<Enemy *>(other);
+    // if (enemy)
+    // {
+    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
+    //     {
+    //         return;
+    //     }
+    //     if (type == BOTTOM)
+    //     {
+    //         float mass = this->body->GetMass();
+    //         b2Vec2 impulse(0, mass * jumpVel / 1.5f);
+    //         this->body->ApplyLinearImpulseToCenter(impulse, true);
+    //     }
+    //     else
+    //     {
+    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+    //         {
+    //             return;
+    //         }
+
+    //         // Add delay for damage from side collisions
+    //         static float lastDamageTime = 0.0f;
+    //         float currentTime = GetTime();
+    //         if (currentTime - lastDamageTime < 0.5f) // 0.5 second delay
+    //         {
+    //             return;
+    //         }
+    //         lastDamageTime = currentTime;
+
+    //         this->changeState(new UnGrowState(this));
+    //     }
+    // }
 }
+
 void Mario::update()
 {
     Character::update();

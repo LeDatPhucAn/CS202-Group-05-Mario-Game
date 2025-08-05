@@ -37,10 +37,24 @@ void Goomba::updateCollision(GameObject *other, int type)
         {
             return;
         }
+        static float lastHitTime = 0.0f;
+        float currentTime = GetTime();
+        if (currentTime - lastHitTime < 0.4f)
+        {
+            return;
+        }
+        lastHitTime = currentTime;
+        // Only apply timing cooldown for side collisions (damage), not top collisions (stomp)
         if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
+            float mass = mario->body->GetMass();
+            b2Vec2 impulse(0, mass * jumpVel / 1.5f);
+            mario->body->ApplyLinearImpulseToCenter(impulse, true);
         }
-        return; 
-    }
+        else // type != TOP
+        {
+           mario->changeState(new UnGrowState(mario));
+        }
+    } 
 }
