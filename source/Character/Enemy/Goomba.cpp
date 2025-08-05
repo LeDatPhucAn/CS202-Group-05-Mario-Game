@@ -39,7 +39,7 @@ void Goomba::updateCollision(GameObject *other, int type)
         }
         static float lastHitTime = 0.0f;
         float currentTime = GetTime();
-        if (currentTime - lastHitTime < 0.4f)
+        if (currentTime - lastHitTime < 0.2f)
         {
             return;
         }
