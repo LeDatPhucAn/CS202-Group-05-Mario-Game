@@ -1,6 +1,7 @@
 #include "FireBall.hpp"
 #include "ProjectileState.hpp"
 #include "Enemy.hpp"
+#include "SoundController.hpp"
 FireBall::FireBall() : Projectile()
 {
     setFrame(projectileStateType::MOVE, 0, 3);

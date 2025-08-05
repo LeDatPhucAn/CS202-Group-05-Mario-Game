@@ -52,9 +52,5 @@ void Goomba::updateCollision(GameObject *other, int type)
             b2Vec2 impulse(0, mass * jumpVel / 1.5f);
             mario->body->ApplyLinearImpulseToCenter(impulse, true);
         }
-        else // type != TOP
-        {
-           mario->changeState(new UnGrowState(mario));
-        }
-    } 
+    }
 }

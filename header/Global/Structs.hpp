@@ -13,7 +13,7 @@ struct StartEndFrame
 };
 struct Sprite
 {
-    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(15);
+    vector<StartEndFrame> StartEndFrames = vector<StartEndFrame>(30);
     vector<Rectangle> frameRecs;
     Texture2D texture;
 };
@@ -33,6 +33,8 @@ enum class marioStateType
     RUN,
     JUMP,
     SMALLJUMP,
+    SQUISH_ENEMY,
+    KICK_SHELL,
     FALL,
     SKID,
     CROUCH,

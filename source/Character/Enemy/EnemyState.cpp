@@ -3,7 +3,7 @@
 #include "Character.hpp"
 #include "Game.hpp"
 #include "Score.hpp"
-
+#include "SoundController.hpp"
 EnemyState::EnemyState(int type, Character *_character, int _delay)
     : State(type, _character, _delay), character(_character) {}
 
@@ -47,6 +47,8 @@ void EnemyRunState::handleInput()
 EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::DEAD, _character, _delay)
 {
+    // make a sound when an enemy dies
+    SoundController::getInstance().playMarioStateSFX(marioStateType::SQUISH_ENEMY);
     Score::getInstance()->addScore(100); // Add score for defeating enemy
     character->isGrounded = false;
     character->body->SetLinearVelocity({0, -250.f / PPM});
@@ -88,7 +90,7 @@ void EnemyDeadState::handleInput()
 
 // --- FLY STATE IMPLEMENTATION ---
 
-EnemyFlyState::EnemyFlyState(Character* _character)
+EnemyFlyState::EnemyFlyState(Character *_character)
     : EnemyState((int)enemyStateType::FLY, _character, 5)
 {
     // On entering this state, ensure gravity is disabled.
@@ -109,16 +111,14 @@ EnemyFlyState::~EnemyFlyState()
 
 void EnemyFlyState::handleInput()
 {
-    
 }
-
 
 // --- JUMP STATE IMPLEMENTATION ---
 
-EnemyJumpState::EnemyJumpState(Character* _character, int delay)
-  : EnemyState((int)enemyStateType::JUMP, _character, delay)
+EnemyJumpState::EnemyJumpState(Character *_character, int delay)
+    : EnemyState((int)enemyStateType::JUMP, _character, delay)
 {
-    if (character && character->getBody()) 
+    if (character && character->getBody())
         character->getBody()->SetGravityScale(0.0f);
     initSineJump();
 }
@@ -132,14 +132,15 @@ EnemyJumpState::~EnemyJumpState()
 
 void EnemyJumpState::initSineJump()
 {
-    elapsed   = 0.0f;
-    if (character && character->getBody()) 
+    elapsed = 0.0f;
+    if (character && character->getBody())
         baselineY = character->getBody()->GetPosition().y;
 }
 
 void EnemyJumpState::handleInput()
 {
-    if (!character || !character->getBody()) return;
+    if (!character || !character->getBody())
+        return;
 
     // maintain horizontal patrol speed
     b2Vec2 v = character->getBody()->GetLinearVelocity();
@@ -164,5 +165,6 @@ void EnemyJumpState::updateState()
     character->getBody()->SetLinearVelocity(v);
 
     // (optional) wrap elapsed to avoid large floats
-    if (elapsed > period) elapsed -= period;
+    if (elapsed > period)
+        elapsed -= period;
 }

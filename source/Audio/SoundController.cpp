@@ -29,7 +29,9 @@ void SoundController::loadMarioStateSFX()
         {marioStateType::GROW, "change_big.wav"},
         {marioStateType::UNGROW, "change_small.wav"},
         {marioStateType::DEAD, "death.wav"},
-        {marioStateType::THROWFB, "throw_fireball.wav"}};
+        {marioStateType::THROWFB, "throw_fireball.wav"},
+        {marioStateType::SQUISH_ENEMY, "stomp.wav"},
+        {marioStateType::KICK_SHELL, "kick.wav"}};
 
     marioStateSFX.load(sfxFileMap);
 }
@@ -59,6 +61,7 @@ void SoundController::loadSceneMusic()
     unordered_map<sceneType, pair<string, bool>> sceneMusicMap = {
         {sceneType::MENU, {"Menu.mp3", true}},
         {sceneType::GAME, {"level_theme_1.mp3", true}},
+        {sceneType::GAMEOVER, {"GameOver.mp3", true}}
         // Add more sceneType mappings as needed
     };
 

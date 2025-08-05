@@ -24,7 +24,6 @@ std::unordered_map<std::string, std::string> UI::mapPaths = {
 UI::UI()
 {
 	cout << "UI CONSTRUCTOR\n";
-	SoundController::getInstance(); // run sound constructor
 	initGameMaps();
 	initSprites();
 	initBackgrounds();

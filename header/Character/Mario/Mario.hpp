@@ -25,7 +25,7 @@ private:
 
     MarioForm form = SMALL;
     void changeForm(MarioForm form);
-    float throwPerSecond = 0.5f;
+    float throwPerSecond = 2;
     float sinceLastThrow = 0;
 
 public:

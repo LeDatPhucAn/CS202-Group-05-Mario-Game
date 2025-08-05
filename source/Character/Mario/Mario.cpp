@@ -5,6 +5,7 @@
 #include "FireBall.hpp"
 #include "ProjectileState.hpp"
 #include "Game.hpp"
+#include "SoundController.hpp"
 Mario::Mario()
     : Character()
 {
@@ -76,34 +77,34 @@ void Mario::updateCollision(GameObject *other, int type)
     }
     Character::updateCollision(other, type);
 
-    // Enemy *enemy = dynamic_cast<Enemy *>(other);
-    // if (enemy)
-    // {
-    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
-    //     {
-    //         return;
-    //     }
-    //     if (type == BOTTOM)
-    //     {
-    //         float mass = this->body->GetMass();
-    //         b2Vec2 impulse(0, mass * jumpVel / 1.5f);
-    //         this->body->ApplyLinearImpulseToCenter(impulse, true);
-    //     }
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    if (enemy)
+    {
+        if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
+        {
+            return;
+        }
+        if (type == BOTTOM)
+        {
 
-    //     else
-    //     {
-    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
-    //         {
-    //             return;
-    //         }
-    //         if (form == SMALL)
-    //         {
-    //             this->changeState(new DeadState(this));
-    //             return;
-    //         }
-    //         this->changeState(new UnGrowState(this));
-    //     }
-    // }
+            float mass = this->body->GetMass();
+            b2Vec2 impulse(0, mass * jumpVel / 1.5f);
+            this->body->ApplyLinearImpulseToCenter(impulse, true);
+        }
+        else
+        {
+            if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+            {
+                return;
+            }
+            if (form == SMALL)
+            {
+                this->changeState(new DeadState(this));
+                return;
+            }
+            this->changeState(new UnGrowState(this));
+        }
+    }
 
     // Enemy *enemy = dynamic_cast<Enemy *>(other);
     // if (enemy)
@@ -226,7 +227,7 @@ void Mario::createBody(b2World *world)
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius - 0.5f / PPM;
-    footSensor.m_p.Set(0, legOffsetY + 1 / PPM); // Slightly below legs
+    footSensor.m_p.Set(0, legOffsetY + 2 / PPM); // Slightly below legs
 
     b2FixtureDef footFixture;
     footFixture.shape = &footSensor;

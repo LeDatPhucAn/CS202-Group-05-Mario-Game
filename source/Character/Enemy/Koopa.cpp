@@ -2,14 +2,14 @@
 #include "EnemyState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
-
+#include "SoundController.hpp"
 Koopa::Koopa()
     : Enemy()
 {
     setFrame(enemyStateType::IDLE, 49, 49);
     setFrame(enemyStateType::WALK, 26, 33);
     setFrame(enemyStateType::RUN, 50, 57);
-    setFrame(enemyStateType::JUMP, 59, 59); 
+    setFrame(enemyStateType::JUMP, 59, 59);
     setFrame(enemyStateType::DEAD, 49, 49);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa2"]);
     this->sprite.texture = UI::textureMap["Koopa2"];
@@ -22,12 +22,12 @@ Koopa::Koopa(bool isFlying)
     setFrame(enemyStateType::IDLE, 49, 49);
     setFrame(enemyStateType::WALK, 26, 33);
     setFrame(enemyStateType::RUN, 50, 57);
-    setFrame(enemyStateType::JUMP, 59, 59); 
+    setFrame(enemyStateType::JUMP, 59, 59);
     setFrame(enemyStateType::DEAD, 49, 49);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa2"]);
     this->sprite.texture = UI::textureMap["Koopa2"];
     this->changeState(new EnemyWalkState(this));
-    
+
     if (isFlying)
         this->changeState(new EnemyJumpState(this));
     else
@@ -52,9 +52,9 @@ void Koopa::updateCollision(GameObject *other, int type)
             return;
         }
         lastHitTime = currentTime;
-        
+
         if (type == TOP)
-        {   
+        {
             float mass = mario->body->GetMass();
             b2Vec2 impulse(0, mass * jumpVel / 1.5f);
             mario->body->ApplyLinearImpulseToCenter(impulse, true);
@@ -62,12 +62,14 @@ void Koopa::updateCollision(GameObject *other, int type)
             if (dynamic_cast<EnemyJumpState *>(this->currentState))
             {
                 // First hit: loses wings and becomes a walking Koopa
+                SoundController::getInstance().playMarioStateSFX(marioStateType::KICK_SHELL);
                 this->changeState(new EnemyWalkState(this));
                 return;
             }
             // Second hit: becomes a shell
             else if (dynamic_cast<EnemyWalkState *>(this->currentState))
             {
+                SoundController::getInstance().playMarioStateSFX(marioStateType::KICK_SHELL);
                 this->toNewBody();
                 this->changeState(new EnemyIdleState(this));
                 return;
@@ -79,19 +81,11 @@ void Koopa::updateCollision(GameObject *other, int type)
                 return;
             }
         }
-        else // Side collision with Mario
-        {
-            
-            // Mario takes damage from side collision with moving Koopa
-            if (!dynamic_cast<EnemyIdleState *>(this->currentState))
-            {
-                mario->changeState(new UnGrowState(mario));
-            }
-        }
-        
+
         // If Mario hits an idle shell, it starts moving
         if (dynamic_cast<EnemyIdleState *>(this->currentState))
         {
+            SoundController::getInstance().playMarioStateSFX(marioStateType::KICK_SHELL);
             this->direction = (mario->body->GetPosition().x < this->body->GetPosition().x) ? LEFT : RIGHT;
             this->changeState(new EnemyRunState(this));
             return;
@@ -118,9 +112,3 @@ void Koopa::updateCollision(GameObject *other, int type)
         enemy->changeState(new EnemyDeadState(enemy));
     }
 }
-
-
-
-
-
-
