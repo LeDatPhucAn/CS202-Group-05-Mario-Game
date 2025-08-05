@@ -8,12 +8,11 @@ ChooseLevel::ChooseLevel(SceneManager* _manager)
     : Scene(_manager), mario(nullptr), world(nullptr), selectedLevel(-1), 
       levelSelected(false), interactionTimer(0.0f), showLevelInfo(false), hoveredLevel(-1)
 {
-    // Create physics world exactly like Game.cpp
+    // Create physics world
     world = new b2World({0, 0}); 
 
 
-    
-    // Create Mario exactly like Game.cpp
+    // Create Mario 
     mario = new Mario();
     mario->setPosition({100, 350}); 
     mario->createBody(world);      
@@ -22,9 +21,9 @@ ChooseLevel::ChooseLevel(SceneManager* _manager)
 
 
     // Load textures
-    backgroundTexture = LoadTexture("assets/Backgrounds/LevelSelect.png");
-    groundTexture = LoadTexture("assets/Tiles/Ground.png");
-    portalTexture = LoadTexture("assets/Objects/Portal.png");
+    backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
+    // groundTexture = LoadTexture("assets/Tiles/Ground.png");
+    // portalTexture = LoadTexture("assets/Objects/Portal.png");
     
     // Initialize camera exactly like Game.cpp
     cam.offset = {0, 0};
@@ -68,17 +67,34 @@ void ChooseLevel::updateScene()
         return;
     }
 
-    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
-    {
-        // Do nothing - consume the jump input
-    }
     
     // Step the world exactly like Game.cpp
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
     
-    // Update Mario exactly like Game.cpp
+    // Make sure Mario doesn't go too far
     mario->update();
+    if (mario->getPosition().y > 350.0f){
+        mario->setPosition({mario->getPosition().x, 350.0f});
+        mario->body->SetTransform(b2Vec2(mario->getPosition().x / PPM, 350.0f / PPM), 0);
+        mario->isGrounded = true;
+        mario->body->SetLinearVelocity({mario->body->GetLinearVelocity().x, 0});
+        
+        // Force Mario back to idle state if he was falling
+        if (dynamic_cast<FallState*>(mario->currentState))
+        {
+            mario->changeState(new IdleState(mario));
+        }
+    }
+
+    if (mario->getPosition().x < 50) {
+        mario->setPosition({50, mario->getPosition().y});
+        mario->body->SetTransform(b2Vec2(50 / PPM, mario->getPosition().y / PPM), 0);
+    }
+    if (mario->getPosition().x > 800) {
+        mario->setPosition({800, mario->getPosition().y});
+        mario->body->SetTransform(b2Vec2(800 / PPM, mario->getPosition().y / PPM), 0);
+    }
     
     // Camera logic exactly like Game.cpp
     float delta = (float)mario->getPosition().x - prePosX;
@@ -110,8 +126,8 @@ void ChooseLevel::updateScene()
         // Increment timer
         transitionTimer += deltaTime;
 
-        // Wait 1.0 seconds before switching
-        if (transitionTimer >= 1.0f)
+        // Wait 0.5 seconds before switching
+        if (transitionTimer >= 0.5f)
         {
             // Score::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
             manager->changeScene(sceneType::GAME);
@@ -186,11 +202,30 @@ void ChooseLevel::displayScene()
     // Use Game.cpp's display pattern with camera
     BeginMode2D(cam);
     
-    
-    // Draw background
+    // Draw tiled background using GetScreenToWorld2D
     if (backgroundTexture.id > 0)
     {
-        DrawTexture(backgroundTexture, 0, 0, WHITE);
+        // Get world coordinates of screen corners
+        Vector2 topLeft = GetScreenToWorld2D({0, 0}, cam);
+        Vector2 bottomRight = GetScreenToWorld2D({(float) UI::screenWidth, (float) UI::screenHeight}, cam);
+        
+        // Calculate how many tiles we need
+        int startTileX = (int)floor(topLeft.x / backgroundTexture.width);
+        int endTileX = (int)ceil(bottomRight.x / backgroundTexture.width);
+        int startTileY = (int)floor(topLeft.y / backgroundTexture.height);
+        int endTileY = (int)ceil(bottomRight.y / backgroundTexture.height);
+        
+        // Draw tiles to cover the visible area
+        for (int x = startTileX; x <= endTileX; x++)
+        {
+            for (int y = startTileY; y <= endTileY; y++)
+            {
+                DrawTexture(backgroundTexture, 
+                           x * backgroundTexture.width, 
+                           y * backgroundTexture.height, 
+                           WHITE);
+            }
+        }
     }
     else
     {
