@@ -9,7 +9,7 @@
 #include "Projectile.hpp"
 #include "DrawDebug.hpp"
 #include "Score.hpp"
-
+#include "SoundController.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
@@ -17,7 +17,7 @@ vector<GameObject *> Game::gameObjects = {};
 Game::Game(SceneManager *_mag)
 {
     manager = _mag;
-    
+
     world = new b2World({0, fallGravity});
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
@@ -39,13 +39,13 @@ Game::Game(SceneManager *_mag)
     {
         TraceLog(LOG_WARNING, "Failed to load HUD Coin texture");
     }
-    
+
     HUDScore = LoadTexture("assets/Backgrounds/HUD/score.png");
     if (HUDScore.id == 0)
     {
         TraceLog(LOG_WARNING, "Failed to load HUD Score texture");
     }
-   
+
     init();
 }
 
@@ -63,7 +63,6 @@ void Game::init()
     // Load map
     current_Map = "Map1.1";
     curMap.choose(UI::mapPaths[current_Map]);
-
 
     drawDebug = new DrawDebug();
     // Prepare map blocks
@@ -85,7 +84,6 @@ void Game::init()
     gameTime = 0.0f;
     lives = 3;
     Score::getInstance()->reset();
-
 }
 
 Game::~Game()
@@ -122,22 +120,26 @@ Game::~Game()
     delete spawner;
     spawner = nullptr;
 
-    if (HUDLives.id != 0){
+    if (HUDLives.id != 0)
+    {
         UnloadTexture(HUDLives);
-        HUDLives.id = 0; 
+        HUDLives.id = 0;
     }
 
-    if (HUDTime.id != 0){
+    if (HUDTime.id != 0)
+    {
         UnloadTexture(HUDTime);
         HUDTime.id = 0;
     }
 
-    if (HUDCoin.id != 0){
+    if (HUDCoin.id != 0)
+    {
         UnloadTexture(HUDCoin);
         HUDCoin.id = 0;
     }
 
-    if (HUDScore.id != 0){
+    if (HUDScore.id != 0)
+    {
         UnloadTexture(HUDScore);
         HUDScore.id = 0;
     }
@@ -157,7 +159,7 @@ void Game::addGameObject(GameObject *gameObject)
 void Game::removeGameObject()
 {
 
-    //Delete non-Block
+    // Delete non-Block
     for (int i = 0; i < deleteLater.size(); i++)
     {
         auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
@@ -172,8 +174,8 @@ void Game::removeGameObject()
         }
     }
 
-    //Delete Block
-     auto &blocks = curMap.tileBlocks;
+    // Delete Block
+    auto &blocks = curMap.tileBlocks;
     vector<Block *> toDelete;
 
     blocks.erase(
@@ -193,18 +195,20 @@ void Game::removeGameObject()
         delete block;
         block = nullptr;
     }
-
 }
 
 void Game::updateScene()
 {
 
     if (IsKeyPressed(KEY_P))
+    {
+        SoundController::getInstance().playSceneSFX(sceneType::PAUSE);
         manager->changeScene(sceneType::PAUSE);
+    }
     if (IsKeyPressed(KEY_Q))
         showDebugDraw = !showDebugDraw;
 
-    //Update time
+    // Update time
     gameTime += GetFrameTime();
 
     // Step the world
@@ -247,7 +251,6 @@ void Game::updateCharacters()
             }
         }
     }
-
 }
 void Game::updateMap()
 {
@@ -255,8 +258,6 @@ void Game::updateMap()
 
     for (auto &x : particles)
         x.update();
-
-   
 }
 
 void Game::displayScene()
@@ -279,7 +280,7 @@ void Game::displayScene()
 
     if (showDebugDraw)
         drawDebug->DrawWorld(world);
-    
+
     drawHUD();
 }
 
@@ -287,12 +288,13 @@ void Game::drawHUD()
 {
     // Calculate remaining time
     int remainingTime = (int)(maxTime - gameTime);
-    if (remainingTime < 0) remainingTime = 0;
-    
+    if (remainingTime < 0)
+        remainingTime = 0;
+
     // Convert screen coordinates to world coordinates for HUD positioning
     Vector2 screenTopLeft = {0, 0};
     Vector2 worldTopLeft = GetScreenToWorld2D(screenTopLeft, cam);
-    
+
     // Draw Lives - positioned relative to camera view
     for (int i = 0; i < lives; i++)
     {
@@ -301,32 +303,32 @@ void Game::drawHUD()
         Rectangle destRec = {lifePos.x, lifePos.y, 12, 12};
         DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
     }
-    
+
     // Draw Time icon - positioned relative to camera view
     Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
     Vector2 timeIconPos = {worldTopLeft.x + 80, worldTopLeft.y + 3};
     Rectangle destRec = {timeIconPos.x, timeIconPos.y, 15, 15};
     DrawTexturePro(HUDTime, srcRec, destRec, {0, 0}, 0.0f, WHITE);
-    
+
     string timeText = to_string(remainingTime);
     Vector2 timeTextPos = {worldTopLeft.x + 100, worldTopLeft.y + 7};
-    
+
     // Time warning - change color when time is low
     if (remainingTime <= 30)
     {
         DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, RED);
     }
-    else 
+    else
     {
-        DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, WHITE); 
+        DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, WHITE);
     }
 
-    //Draw coin
+    // Draw coin
     Rectangle srcRecCoin = {0, 0, (float)HUDCoin.width, (float)HUDCoin.height};
     Vector2 coinIconPos = {worldTopLeft.x + 140, worldTopLeft.y + 3};
     Rectangle destRecCoin = {coinIconPos.x, coinIconPos.y, 18, 18};
     DrawTexturePro(HUDCoin, srcRecCoin, destRecCoin, {0, 0}, 0.0f, WHITE);
-    
+
     string coinText = to_string(Score::getInstance()->getCoins());
     Vector2 coinTextPos = {worldTopLeft.x + 160, worldTopLeft.y + 7};
     DrawTextEx(UI::font, coinText.c_str(), coinTextPos, 12, 2, WHITE);
@@ -340,5 +342,4 @@ void Game::drawHUD()
     string scoreText = to_string(Score::getInstance()->getScore());
     Vector2 scoreTextPos = {worldTopLeft.x + 210, worldTopLeft.y + 7};
     DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
-    
 }

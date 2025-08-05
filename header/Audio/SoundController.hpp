@@ -10,12 +10,16 @@ private:
 
     SFXGroup<marioStateType> marioStateSFX;
     SFXGroup<blockStateType> blockStateSFX;
+    SFXGroup<marioVoice> marioVoiceSFX;
+    SFXGroup<sceneType> sceneSFX;
     MusicGroup<sceneType> sceneMusic;
 
     SoundController();
     void loadMarioStateSFX();
     void loadBlockStateSFX();
+    void loadSceneSFX();
     void loadSceneMusic();
+    void loadMarioVoice();
 
 public:
     static SoundController &getInstance();
@@ -26,6 +30,8 @@ public:
     // chơi sound effect
     void playMarioStateSFX(marioStateType type);
     void playBlockStateSFX(blockStateType type);
+    void playMarioVoiceSFX(marioVoice type);
+    void playSceneSFX(sceneType type);
 
     // đổi scene nên đổi nhạc
     void playSceneMusic(sceneType type);

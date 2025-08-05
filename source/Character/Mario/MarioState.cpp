@@ -7,7 +7,12 @@
 MarioState::MarioState(int Type, Mario *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
 {
-    SoundController::getInstance().playMarioStateSFX((marioStateType)Type);
+    if (Type == (int)marioStateType::JUMP && mario->getForm() == SMALL)
+    {
+        SoundController::getInstance().playMarioStateSFX((marioStateType::SMALLJUMP));
+    }
+    else
+        SoundController::getInstance().playMarioStateSFX((marioStateType)Type);
 }
 void MarioState::HorizontalAccelerate(float speedCap, float accel)
 {

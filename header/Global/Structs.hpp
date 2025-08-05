@@ -32,6 +32,7 @@ enum class marioStateType
     WALK,
     RUN,
     JUMP,
+    SMALLJUMP,
     FALL,
     SKID,
     CROUCH,
@@ -85,4 +86,11 @@ enum CollisionType
     BOTTOM,    // BOTTOM là phần dưới của 1 object
     LEFTSIDE,  // LEFTSIDE là phần bên trái của 1 object
     RIGHTSIDE, // RIGHTSIDE là phần bên phải của 1 object
+};
+
+enum class marioVoice
+{
+    HURT,
+    JUMP,
+    LETSGO
 };

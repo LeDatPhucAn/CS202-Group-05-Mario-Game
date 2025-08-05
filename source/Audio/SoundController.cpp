@@ -3,11 +3,15 @@
 SoundController::SoundController()
     : marioStateSFX(generalPath + "Motion/"),
       blockStateSFX(generalPath + "Block/"),
-      sceneMusic(generalPath + "Scene/")
+      sceneMusic(generalPath + "Scene/"),
+      marioVoiceSFX(generalPath + "Mario/"),
+      sceneSFX(generalPath + "Scene/")
 {
     loadBlockStateSFX();
     loadMarioStateSFX();
+    loadSceneSFX();
     loadSceneMusic();
+    loadMarioVoice();
 }
 
 SoundController &SoundController::getInstance()
@@ -20,6 +24,7 @@ void SoundController::loadMarioStateSFX()
 {
     unordered_map<marioStateType, string> sfxFileMap = {
         {marioStateType::JUMP, "jump.wav"},
+        {marioStateType::SMALLJUMP, "jumpsmall.wav"},
         {marioStateType::CROUCH, "crouch.wav"},
         {marioStateType::GROW, "change_big.wav"},
         {marioStateType::UNGROW, "change_small.wav"},
@@ -38,16 +43,33 @@ void SoundController::loadBlockStateSFX()
 
     blockStateSFX.load(sfxFileMap);
 }
+void SoundController::loadMarioVoice()
+{
+    unordered_map<marioVoice, string> marioVoiceMap = {
+        {marioVoice::LETSGO, "here_we_go.wav"},
+        {marioVoice::JUMP, "hoo.wav"},
+        {marioVoice::HURT, "owowowow.wav"}
+        // Add more sceneType mappings as needed
+    };
+
+    marioVoiceSFX.load(marioVoiceMap);
+}
 void SoundController::loadSceneMusic()
 {
     unordered_map<sceneType, pair<string, bool>> sceneMusicMap = {
         {sceneType::MENU, {"Menu.mp3", true}},
         {sceneType::GAME, {"level_theme_1.mp3", true}},
-        {sceneType::PAUSE, {"Pause.wav", false}}
         // Add more sceneType mappings as needed
     };
 
     sceneMusic.load(sceneMusicMap);
+}
+void SoundController::loadSceneSFX()
+{
+    unordered_map<sceneType, string> sceneSFXMap = {
+        {sceneType::PAUSE, "Pause.wav"}};
+
+    sceneSFX.load(sceneSFXMap);
 }
 void SoundController::playMarioStateSFX(marioStateType type)
 {
@@ -58,13 +80,21 @@ void SoundController::playBlockStateSFX(blockStateType type)
 {
     blockStateSFX.play(type);
 }
-
+void SoundController::playMarioVoiceSFX(marioVoice type)
+{
+    marioVoiceSFX.play(type);
+}
+void SoundController::playSceneSFX(sceneType type)
+{
+    sceneSFX.play(type);
+}
 void SoundController::clearAll()
 {
-
+    marioVoiceSFX.clear();
     marioStateSFX.clear();
     blockStateSFX.clear();
     sceneMusic.clear();
+    sceneSFX.clear();
 }
 
 void SoundController::playSceneMusic(sceneType type)

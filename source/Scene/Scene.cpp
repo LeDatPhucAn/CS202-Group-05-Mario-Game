@@ -27,7 +27,6 @@ void SceneManager::changeScene(sceneType _nextScene)
 {
     if (_nextScene != sceneType::NONE)
     {
-        cout <<"CHANGE SCENE\n";
         SoundController::getInstance().playSceneMusic(_nextScene);
         if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING)
             numBackToBaseScene++;
