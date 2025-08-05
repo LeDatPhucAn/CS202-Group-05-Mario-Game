@@ -8,12 +8,11 @@ ChooseLevel::ChooseLevel(SceneManager* _manager)
     : Scene(_manager), mario(nullptr), world(nullptr), selectedLevel(-1), 
       levelSelected(false), interactionTimer(0.0f), showLevelInfo(false), hoveredLevel(-1)
 {
-    // Create physics world exactly like Game.cpp
+    // Create physics world
     world = new b2World({0, 0}); 
 
 
-    
-    // Create Mario exactly like Game.cpp
+    // Create Mario 
     mario = new Mario();
     mario->setPosition({100, 350}); 
     mario->createBody(world);      
@@ -22,10 +21,20 @@ ChooseLevel::ChooseLevel(SceneManager* _manager)
 
 
     // Load textures
-    backgroundTexture = LoadTexture("assets/Backgrounds/LevelSelect.png");
-    groundTexture = LoadTexture("assets/Tiles/Ground.png");
-    portalTexture = LoadTexture("assets/Objects/Portal.png");
-    
+    backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
+    if (backgroundTexture.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load background texture");
+    }
+
+    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Lv1.png"));
+    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Lv2.png"));
+    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Lv3.png"));
+    if (LevelTextures[0].id == 0 || LevelTextures[1].id == 0 || LevelTextures[2].id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load level textures");
+    }
+
     // Initialize camera exactly like Game.cpp
     cam.offset = {0, 0};
     cam.target = {0, 150};
@@ -52,8 +61,7 @@ ChooseLevel::~ChooseLevel()
     
     // Unload textures
     if (backgroundTexture.id > 0) UnloadTexture(backgroundTexture);
-    if (groundTexture.id > 0) UnloadTexture(groundTexture);
-    if (portalTexture.id > 0) UnloadTexture(portalTexture);
+
 }
 
 void ChooseLevel::updateScene()
@@ -68,17 +76,34 @@ void ChooseLevel::updateScene()
         return;
     }
 
-    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
-    {
-        // Do nothing - consume the jump input
-    }
     
     // Step the world exactly like Game.cpp
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
     
-    // Update Mario exactly like Game.cpp
+    // Make sure Mario doesn't go too far
     mario->update();
+    if (mario->getPosition().y > 350.0f){
+        mario->setPosition({mario->getPosition().x, 350.0f});
+        mario->body->SetTransform(b2Vec2(mario->getPosition().x / PPM, 350.0f / PPM), 0);
+        mario->isGrounded = true;
+        mario->body->SetLinearVelocity({mario->body->GetLinearVelocity().x, 0});
+        
+        // Force Mario back to idle state if he was falling
+        if (dynamic_cast<FallState*>(mario->currentState))
+        {
+            mario->changeState(new IdleState(mario));
+        }
+    }
+
+    if (mario->getPosition().x < 50) {
+        mario->setPosition({50, mario->getPosition().y});
+        mario->body->SetTransform(b2Vec2(50 / PPM, mario->getPosition().y / PPM), 0);
+    }
+    if (mario->getPosition().x > 800) {
+        mario->setPosition({800, mario->getPosition().y});
+        mario->body->SetTransform(b2Vec2(800 / PPM, mario->getPosition().y / PPM), 0);
+    }
     
     // Camera logic exactly like Game.cpp
     float delta = (float)mario->getPosition().x - prePosX;
@@ -110,7 +135,7 @@ void ChooseLevel::updateScene()
         // Increment timer
         transitionTimer += deltaTime;
 
-        // Wait 1.0 seconds before switching
+        // Wait 1 seconds before switching
         if (transitionTimer >= 1.0f)
         {
             // Score::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
@@ -138,7 +163,7 @@ void ChooseLevel::initializePortals()
     LevelPortal level1;
     level1.position = {300, 300}; // World coordinates like Game.cpp
     level1.levelNumber = 1;
-    level1.bounds = {level1.position.x - 50, level1.position.y - 30, 100, 60};
+    level1.bounds = {level1.position.x - 50, level1.position.y - 60, 100, 60};
     level1.levelName = "World 1-1";
     levelPortals.push_back(level1);
     
@@ -146,7 +171,7 @@ void ChooseLevel::initializePortals()
     LevelPortal level2;
     level2.position = {500, 300}; 
     level2.levelNumber = 2;
-    level2.bounds = {level2.position.x - 50, level2.position.y - 30, 100, 60};
+    level2.bounds = {level2.position.x - 50, level2.position.y - 60, 100, 60};
     level2.levelName = "World 1-2";
     levelPortals.push_back(level2);
     
@@ -154,7 +179,7 @@ void ChooseLevel::initializePortals()
     LevelPortal level3;
     level3.position = {700, 300}; 
     level3.levelNumber = 3;
-    level3.bounds = {level3.position.x - 50, level3.position.y - 30, 100, 60};
+    level3.bounds = {level3.position.x - 50, level3.position.y - 60, 100, 60};
     level3.levelName = "World 1-3";
     levelPortals.push_back(level3);
 }
@@ -186,11 +211,30 @@ void ChooseLevel::displayScene()
     // Use Game.cpp's display pattern with camera
     BeginMode2D(cam);
     
-    
-    // Draw background
+    // Draw tiled background using GetScreenToWorld2D
     if (backgroundTexture.id > 0)
     {
-        DrawTexture(backgroundTexture, 0, 0, WHITE);
+        // Get world coordinates of screen corners
+        Vector2 topLeft = GetScreenToWorld2D({0, 0}, cam);
+        Vector2 bottomRight = GetScreenToWorld2D({(float) UI::screenWidth, (float) UI::screenHeight}, cam);
+        
+        // Calculate how many tiles we need
+        int startTileX = (int)floor(topLeft.x / backgroundTexture.width);
+        int endTileX = (int)ceil(bottomRight.x / backgroundTexture.width);
+        int startTileY = (int)floor(topLeft.y / backgroundTexture.height);
+        int endTileY = (int)ceil(bottomRight.y / backgroundTexture.height);
+        
+        // Draw tiles to cover the visible area
+        for (int x = startTileX; x <= endTileX; x++)
+        {
+            for (int y = startTileY; y <= endTileY; y++)
+            {
+                DrawTexture(backgroundTexture, 
+                           x * backgroundTexture.width, 
+                           y * backgroundTexture.height, 
+                           WHITE);
+            }
+        }
     }
     else
     {
@@ -218,26 +262,55 @@ void ChooseLevel::drawPortals()
     {
         const LevelPortal& portal = levelPortals[i];
         
-        // Choose color based on selection
-        Color portalColor = GREEN;
-        if (hoveredLevel == i)
+        // Use level texture if available, otherwise draw colored rectangle
+        if (i < LevelTextures.size() && LevelTextures[i].id > 0)
         {
-            portalColor = YELLOW;
+            // Calculate scale to fit image within portal bounds
+            float scaleX = portal.bounds.width / (float)LevelTextures[i].width;
+            float scaleY = portal.bounds.height / (float)LevelTextures[i].height;
+            float scale = fmin(scaleX, scaleY); // Use smaller scale to fit entirely within bounds
+            
+            // Calculate scaled dimensions
+            float scaledWidth = LevelTextures[i].width * scale;
+            float scaledHeight = LevelTextures[i].height * scale;
+            
+            // Center the scaled image within the portal bounds
+            Vector2 imagePos = {portal.bounds.x + (portal.bounds.width - scaledWidth) / 2.0f,
+                               portal.bounds.y + (portal.bounds.height - scaledHeight) / 2.0f};
+            
+            // Add highlight effect if hovered
+            Color tint = (hoveredLevel == i) ? Color{255, 255, 0, 200} : WHITE; // Yellow tint when hovered
+            DrawTextureEx(LevelTextures[i], imagePos, 0, scale, tint);
+            
+            // Optional: Draw border if hovered
+            if (hoveredLevel == i)
+            {
+                DrawRectangleLinesEx(portal.bounds, 4, YELLOW);
+            }
+        }
+        else
+        {
+            // Fallback: Draw colored rectangle if texture not available
+            Color portalColor = GREEN;
+            if (hoveredLevel == i)
+            {
+                portalColor = YELLOW;
+            }
+            
+            // Draw rectangle
+            DrawRectangleRec(portal.bounds, portalColor);
+            DrawRectangleLinesEx(portal.bounds, 3, BLACK);
         }
         
-        // Draw rectangle
-        DrawRectangleRec(portal.bounds, portalColor);
-        DrawRectangleLinesEx(portal.bounds, 3, BLACK);
-        
-        // Draw level number
+        // Draw level number on top of the image/rectangle
         std::string levelText = std::to_string(portal.levelNumber);
         Vector2 textSize = MeasureTextEx(UI::boldFont, levelText.c_str(), 32, 2);
-        Vector2 textPos = {portal.position.x - textSize.x/2, portal.position.y - textSize.y/2};
+        Vector2 textPos = {portal.position.x - textSize.x/2, portal.position.y };
         
-        DrawTextEx(UI::boldFont, levelText.c_str(), 
-                  {textPos.x + 2, textPos.y + 2}, 32, 2, BLACK);
-        DrawTextEx(UI::boldFont, levelText.c_str(), 
-                  textPos, 32, 2, WHITE);
+       
+        
+        DrawTextEx(UI::boldFont, levelText.c_str(), {textPos.x + 2, textPos.y + 2}, 32, 2, BLACK);
+        DrawTextEx(UI::boldFont, levelText.c_str(), textPos, 32, 2, WHITE);
     }
 }
 

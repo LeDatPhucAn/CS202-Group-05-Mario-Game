@@ -137,6 +137,17 @@ void Mario::updateCollision(GameObject *other, int type)
 void Mario::update()
 {
     Character::update();
+
+    //Dead when falling below a certain height
+    Vector2 marioPos = this->getPosition();
+    float deathY = 500.0f;
+    
+    if (marioPos.y > deathY && !dynamic_cast<DeadState*>(this->currentState))
+    {
+        this->changeState(new DeadState(this));
+        return;
+    }
+
     sinceLastThrow += GetFrameTime();
     if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > throwPerSecond)
     {
