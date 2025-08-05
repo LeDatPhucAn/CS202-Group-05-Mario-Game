@@ -96,6 +96,11 @@ void Mario::updateCollision(GameObject *other, int type)
             {
                 return;
             }
+            if (form == SMALL)
+            {
+                this->changeState(new DeadState(this));
+                return;
+            }
             this->changeState(new UnGrowState(this));
         }
     }
@@ -117,7 +122,7 @@ void Mario::throwFireBall()
     pos.x += this->getDirection() * getSize().x;
     projectile->setPosition(pos);
     cout << "FireBall before: " << projectile << "\n";
-    
+
     Game::addGameObject(projectile);
 }
 

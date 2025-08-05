@@ -5,11 +5,13 @@
 #include "Pause.hpp"
 #include <iostream>
 #include <stack>
+#include "SoundController.hpp"
 using namespace std;
 Scene::Scene(SceneManager *_manager) : manager(_manager) {}
 
 void SceneManager::init()
 {
+    SoundController::getInstance().playSceneMusic(sceneType::MENU);
     scenes.push_back(SceneFactory::create(sceneType::MENU, this));
 }
 SceneManager::~SceneManager()
@@ -25,18 +27,21 @@ void SceneManager::changeScene(sceneType _nextScene)
 {
     if (_nextScene != sceneType::NONE)
     {
-        if(_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING)
+        cout <<"CHANGE SCENE\n";
+        SoundController::getInstance().playSceneMusic(_nextScene);
+        if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING)
             numBackToBaseScene++;
         scenes.push_back(SceneFactory::create(_nextScene, this));
-
     }
 }
 
-void SceneManager::goBack() {
+void SceneManager::goBack()
+{
     needBack = 1;
 }
 
-void SceneManager::goBackOfBaseScene() {
+void SceneManager::goBackOfBaseScene()
+{
     needBack = 1 + numBackToBaseScene;
 }
 
@@ -45,26 +50,29 @@ void SceneManager::update()
     // cout << "Scene.size()" << scenes.size() << " " << numBackToBaseScene << endl;
     if (needBack > 0)
     {
-        while(!scenes.empty() &&  needBack > 0)
+        while (!scenes.empty() && needBack > 0)
         {
             delete scenes.back();
             scenes.pop_back();
             needBack--;
 
-            if(numBackToBaseScene > 0)
+            if (numBackToBaseScene > 0)
                 numBackToBaseScene--;
         }
         cout << "Delete Scene" << endl;
     }
 
-    if(!scenes.empty())
+    if (!scenes.empty())
+    {
+        SoundController::getInstance().updateSceneMusic();
         scenes.back()->updateScene();
-
+    }
 }
 
 void SceneManager::display()
 {
-    for(int i = scenes.size()-1 - numBackToBaseScene; i < scenes.size(); i++) {
+    for (int i = scenes.size() - 1 - numBackToBaseScene; i < scenes.size(); i++)
+    {
         Scene *currentScene = scenes[i];
         Game *gameScene = dynamic_cast<Game *>(currentScene);
         if (gameScene)

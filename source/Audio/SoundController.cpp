@@ -1,50 +1,92 @@
 #include "SoundController.hpp"
 
+SoundController::SoundController()
+    : marioStateSFX(generalPath + "Motion/"),
+      blockStateSFX(generalPath + "Block/"),
+      sceneMusic(generalPath + "Scene/")
+{
+    loadBlockStateSFX();
+    loadMarioStateSFX();
+    loadSceneMusic();
+}
+
+SoundController &SoundController::getInstance()
+{
+    static SoundController instance;
+    return instance;
+}
+
 void SoundController::loadMarioStateSFX()
 {
-    string path = generalPath + "Motion/";
     unordered_map<marioStateType, string> sfxFileMap = {
         {marioStateType::JUMP, "jump.wav"},
-        {marioStateType::SKID, "Skid.wav"},
         {marioStateType::CROUCH, "crouch.wav"},
         {marioStateType::GROW, "change_big.wav"},
         {marioStateType::UNGROW, "change_small.wav"},
         {marioStateType::DEAD, "death.wav"},
         {marioStateType::THROWFB, "throw_fireball.wav"}};
-    loadStateSFX(marioStateSFX, path, sfxFileMap);
+
+    marioStateSFX.load(sfxFileMap);
 }
 
-void SoundController::playMarioStateSFX(marioStateType type)
-{
-    playStateSFX(marioStateSFX, type);
-}
 void SoundController::loadBlockStateSFX()
 {
-    string path = generalPath + "Block/";
-
     unordered_map<blockStateType, string> sfxFileMap = {
         {blockStateType::BOUNCE, "bounce_block.wav"},
         {blockStateType::BREAK, "break_block.wav"},
         {blockStateType::SPAWNITEM, "spawn_item.wav"}};
 
-    loadStateSFX(blockStateSFX, path, sfxFileMap);
+    blockStateSFX.load(sfxFileMap);
 }
+void SoundController::loadSceneMusic()
+{
+    unordered_map<sceneType, pair<string, bool>> sceneMusicMap = {
+        {sceneType::MENU, {"Menu.mp3", true}},
+        {sceneType::GAME, {"level_theme_1.mp3", true}},
+        {sceneType::PAUSE, {"Pause.wav", false}}
+        // Add more sceneType mappings as needed
+    };
+
+    sceneMusic.load(sceneMusicMap);
+}
+void SoundController::playMarioStateSFX(marioStateType type)
+{
+    marioStateSFX.play(type);
+}
+
 void SoundController::playBlockStateSFX(blockStateType type)
 {
-    playStateSFX(blockStateSFX, type);
+    blockStateSFX.play(type);
 }
 
 void SoundController::clearAll()
 {
-    auto unloadAll = [](auto &sfxMap)
-    {
-        for (auto &pair : sfxMap)
-        {
-            UnloadSound(pair.second);
-        }
-        sfxMap.clear();
-    };
 
-    unloadAll(marioStateSFX);
-    unloadAll(blockStateSFX);
+    marioStateSFX.clear();
+    blockStateSFX.clear();
+    sceneMusic.clear();
+}
+
+void SoundController::playSceneMusic(sceneType type)
+{
+    sceneMusic.play(type);
+}
+
+void SoundController::updateSceneMusic()
+{
+    sceneMusic.update();
+}
+void SoundController::pauseSceneMusic()
+{
+    sceneMusic.pause();
+}
+
+void SoundController::resumeSceneMusic()
+{
+    sceneMusic.resume();
+}
+
+void SoundController::stopSceneMusic()
+{
+    sceneMusic.stop();
 }

@@ -1,64 +1,39 @@
 #include "raylib.h"
 #include "Structs.hpp"
-#include <unordered_map>
-#include <string>
+#include "AudioGroup.hpp"
 using namespace std;
 
 class SoundController
 {
 private:
-    unordered_map<marioStateType, Sound> marioStateSFX;
-    unordered_map<blockStateType, Sound> blockStateSFX;
+    std::string generalPath = "assets/Audio/";
 
-    // Private constructor
-    SoundController()
-    {
-        loadMarioStateSFX();
-        loadBlockStateSFX();
-    }
-    string generalPath = "assets/Audio/";
-    // Delete Copy Constructor and Assignment Operator
-    SoundController(const SoundController &) = delete;
-    SoundController &operator=(const SoundController &) = delete;
-    void loadSoundTrack();
-    void loadMarioVoice();
+    SFXGroup<marioStateType> marioStateSFX;
+    SFXGroup<blockStateType> blockStateSFX;
+    MusicGroup<sceneType> sceneMusic;
+
+    SoundController();
     void loadMarioStateSFX();
     void loadBlockStateSFX();
-
-private:
-    template <typename StateType>
-    void loadStateSFX(unordered_map<StateType, Sound> &sfxMap, const string &path, const unordered_map<StateType, string> &sfxFileMap)
-    {
-        for (const auto &pair : sfxFileMap)
-        {
-            string fullPath = path + pair.second;
-            sfxMap[pair.first] = LoadSound(fullPath.c_str());
-        }
-    }
-    template <typename StateType>
-    void playStateSFX(unordered_map<StateType, Sound> &sfxMap, StateType type, float minPitch = 0.95f, float maxPitch = 1.05f)
-    {
-        if (sfxMap.count(type))
-        {
-            float randomPitch = minPitch + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxPitch - minPitch)));
-            SetSoundPitch(sfxMap[type], randomPitch);
-            PlaySound(sfxMap[type]);
-        }
-    }
+    void loadSceneMusic();
 
 public:
-    // Singleton Accessor
-    static SoundController &getInstance()
-    {
-        static SoundController instance;
-        return instance;
-    }
+    static SoundController &getInstance();
 
-    void playBlockStateSFX(blockStateType type);
+    SoundController(const SoundController &) = delete;
+    SoundController &operator=(const SoundController &) = delete;
+
+    // chơi sound effect
     void playMarioStateSFX(marioStateType type);
-    void playMarioVoice();
-    void playSoundTrack();
-    void pause();
-    void resume();
+    void playBlockStateSFX(blockStateType type);
+
+    // đổi scene nên đổi nhạc
+    void playSceneMusic(sceneType type);
+
+    // tác động nhạc của scene hiện tại
+    void updateSceneMusic();
+    void pauseSceneMusic();
+    void resumeSceneMusic();
+    void stopSceneMusic();
     void clearAll();
 };

@@ -2,6 +2,7 @@
 #include "ProcessJson.hpp"
 #include "raylib-tileson.h"
 #include <filesystem>
+#include "SoundController.hpp"
 namespace fs = std::filesystem;
 
 // initialize static members
@@ -15,15 +16,15 @@ unordered_map<string, Texture2D> UI::textureMap;
 unordered_map<string, json> UI::jsonMap;
 unordered_map<string, Map> UI::gameMap;
 
-
 std::unordered_map<std::string, std::string> UI::mapPaths = {
-        {"Map1.1", "assets/Map/Map1.1.json"},
-        // Add the rest...
-    };
+	{"Map1.1", "assets/Map/Map1.1.json"},
+	// Add the rest...
+};
 
 UI::UI()
 {
 	cout << "UI CONSTRUCTOR\n";
+	SoundController::getInstance(); // run sound constructor
 	initGameMaps();
 	initSprites();
 	initBackgrounds();
