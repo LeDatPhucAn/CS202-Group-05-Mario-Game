@@ -20,13 +20,12 @@ private:
     
     std::vector<LevelPortal> levelPortals;
     Texture2D backgroundTexture;
-    Texture2D groundTexture;
-    Texture2D portalTexture;
+    vector<Texture2D> LevelTextures;
     
     int selectedLevel;
     bool levelSelected;
     float interactionTimer;
-    float prePosX; // Add this like Game.cpp
+    float prePosX; 
     
     // UI elements
     std::string instructionText;
