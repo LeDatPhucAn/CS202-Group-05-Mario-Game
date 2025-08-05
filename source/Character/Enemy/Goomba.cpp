@@ -8,8 +8,8 @@ Goomba::Goomba()
     setFrame(enemyStateType::IDLE, 2, 2);
     setFrame(enemyStateType::WALK, 2, 10);
     setFrame(enemyStateType::DEAD, 12, 12);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba2"]);
-    this->sprite.texture = UI::textureMap["Goomba2"];
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba"]);
+    this->sprite.texture = UI::textureMap["Goomba"];
     this->changeState(new EnemyWalkState(this));
 }
 
@@ -37,7 +37,6 @@ void Goomba::updateCollision(GameObject *other, int type)
         {
             return;
         }
-
         static float lastHitTime = 0.0f;
         float currentTime = GetTime();
         if (currentTime - lastHitTime < 0.4f)
@@ -45,10 +44,17 @@ void Goomba::updateCollision(GameObject *other, int type)
             return;
         }
         lastHitTime = currentTime;
+        // Only apply timing cooldown for side collisions (damage), not top collisions (stomp)
         if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
+            float mass = mario->body->GetMass();
+            b2Vec2 impulse(0, mass * jumpVel / 1.5f);
+            mario->body->ApplyLinearImpulseToCenter(impulse, true);
         }
-        return; 
-    }
+        else // type != TOP
+        {
+           mario->changeState(new UnGrowState(mario));
+        }
+    } 
 }

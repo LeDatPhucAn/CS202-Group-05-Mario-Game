@@ -24,8 +24,8 @@ Koopa::Koopa(bool isFlying)
     setFrame(enemyStateType::RUN, 50, 57);
     setFrame(enemyStateType::JUMP, 59, 59); 
     setFrame(enemyStateType::DEAD, 49, 49);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa"]);
-    this->sprite.texture = UI::textureMap["Koopa"];
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Koopa2"]);
+    this->sprite.texture = UI::textureMap["Koopa2"];
     this->changeState(new EnemyWalkState(this));
     
     if (isFlying)
@@ -44,7 +44,7 @@ void Koopa::updateCollision(GameObject *other, int type)
         {
             return;
         }
-        // Use a cooldown to prevent multiple hits in one frame
+
         static float lastHitTime = 0.0f;
         float currentTime = GetTime();
         if (currentTime - lastHitTime < 0.4f)
@@ -52,9 +52,12 @@ void Koopa::updateCollision(GameObject *other, int type)
             return;
         }
         lastHitTime = currentTime;
+        
         if (type == TOP)
         {   
-            
+            float mass = mario->body->GetMass();
+            b2Vec2 impulse(0, mass * jumpVel / 1.5f);
+            mario->body->ApplyLinearImpulseToCenter(impulse, true);
             // Check if it's a Flying Koopa (which starts in JumpState)
             if (dynamic_cast<EnemyJumpState *>(this->currentState))
             {
@@ -74,6 +77,15 @@ void Koopa::updateCollision(GameObject *other, int type)
             {
                 this->changeState(new EnemyDeadState(this));
                 return;
+            }
+        }
+        else // Side collision with Mario
+        {
+            
+            // Mario takes damage from side collision with moving Koopa
+            if (!dynamic_cast<EnemyIdleState *>(this->currentState))
+            {
+                mario->changeState(new UnGrowState(mario));
             }
         }
         
