@@ -6,7 +6,7 @@
 #include "Mario.hpp"
 #include "GameObject.hpp"
 #include "Score.hpp"
-
+#include "SoundController.hpp"
 IBlockBehavior::IBlockBehavior(Block *block) : block(block)
 {
     prePos = block->getPositionAdapter();
@@ -42,6 +42,7 @@ void IBlockBehavior::makeBlockBounce(float dt)
 }
 void IBlockBehavior::setForBounce()
 {
+    SoundController::getInstance().playBlockStateSFX(blockStateType::BOUNCE);
     block->isJumping = true;
 }
 void IBlockBehavior::setNoBounce()
@@ -84,8 +85,9 @@ void BrickBehavior::reactToCollision(GameObject *p, int type)
         else
         {
             setNoBounce();
+            SoundController::getInstance().playBlockStateSFX(blockStateType::BREAK);
             block->needDeletion = true;
-            Score::getInstance()->addScore(50); 
+            Score::getInstance()->addScore(50);
             Particle::spawnParticles(*block, Game::particles);
         }
     }

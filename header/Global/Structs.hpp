@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 struct StartEndFrame
 {
     int start = 0;
@@ -56,11 +54,9 @@ enum class blockStateType
 {
     IDLE,
     ACTIVE,
-    BREAKABLE,
-    QUESTION,
-    PIPE,
-    FLAGPOLE,
-    INACTIVE
+    BOUNCE,
+    BREAK,
+    SPAWNITEM
 };
 enum class itemStateType
 {

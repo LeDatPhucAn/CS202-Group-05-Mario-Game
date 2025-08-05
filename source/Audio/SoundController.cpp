@@ -2,8 +2,7 @@
 
 void SoundController::loadMarioStateSFX()
 {
-    string path = "assets/Audio/motion/";
-
+    string path = generalPath + "Motion/";
     unordered_map<marioStateType, string> sfxFileMap = {
         {marioStateType::JUMP, "jump.wav"},
         {marioStateType::SKID, "Skid.wav"},
@@ -12,29 +11,40 @@ void SoundController::loadMarioStateSFX()
         {marioStateType::UNGROW, "change_small.wav"},
         {marioStateType::DEAD, "death.wav"},
         {marioStateType::THROWFB, "throw_fireball.wav"}};
-
-    for (const auto &pair : sfxFileMap)
-    {
-        string fullPath = path + pair.second;
-        marioStateSFX[pair.first] = LoadSound(fullPath.c_str());
-    }
+    loadStateSFX(marioStateSFX, path, sfxFileMap);
 }
 
 void SoundController::playMarioStateSFX(marioStateType type)
 {
-    if (marioStateSFX.count(type))
-    {
-        float randomPitch = 0.9f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (1.1f - 1.0f)));
-        SetSoundPitch(marioStateSFX[type], randomPitch);
-        PlaySound(marioStateSFX[type]);
-    }
+    playStateSFX(marioStateSFX, type);
+}
+void SoundController::loadBlockStateSFX()
+{
+    string path = generalPath + "Block/";
+
+    unordered_map<blockStateType, string> sfxFileMap = {
+        {blockStateType::BOUNCE, "bounce_block.wav"},
+        {blockStateType::BREAK, "break_block.wav"},
+        {blockStateType::SPAWNITEM, "spawn_item.wav"}};
+
+    loadStateSFX(blockStateSFX, path, sfxFileMap);
+}
+void SoundController::playBlockStateSFX(blockStateType type)
+{
+    playStateSFX(blockStateSFX, type);
 }
 
 void SoundController::clearAll()
 {
-    for (auto &pair : marioStateSFX)
+    auto unloadAll = [](auto &sfxMap)
     {
-        UnloadSound(pair.second);
-    }
-    marioStateSFX.clear();
+        for (auto &pair : sfxMap)
+        {
+            UnloadSound(pair.second);
+        }
+        sfxMap.clear();
+    };
+
+    unloadAll(marioStateSFX);
+    unloadAll(blockStateSFX);
 }
