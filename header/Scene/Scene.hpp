@@ -9,7 +9,8 @@ enum class sceneType
 	GAME,
 	CHOOSE_LEVEL,
 	PAUSE,
-	SETTING
+	SETTING,
+	GAMEOVER,
 };
 
 class SceneManager;

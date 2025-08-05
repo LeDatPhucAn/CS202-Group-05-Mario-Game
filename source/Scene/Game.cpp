@@ -83,7 +83,6 @@ void Game::init()
 
     gameTime = 0.0f;
     Score::getInstance()->resetGameOnly();
-
 }
 
 Game::~Game()
@@ -255,8 +254,8 @@ void Game::updateScene()
             if (CurrentLives > 0) {
                 restartGame();
             } else {
-                Score::getInstance()->reset();
-                manager->goBackOfBaseScene();
+                restartGame();
+                manager->changeScene(sceneType::GAMEOVER);
             }
             
             // Reset the animation state after handling death
