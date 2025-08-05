@@ -60,7 +60,7 @@ void SoundController::loadSceneMusic()
 {
     unordered_map<sceneType, pair<string, bool>> sceneMusicMap = {
         {sceneType::MENU, {"Menu.mp3", true}},
-        {sceneType::GAME, {"level_theme_1.mp3", true}},
+        {sceneType::GAME, {"level_1(3).mp3", true}},
         {sceneType::GAMEOVER, {"GameOver.mp3", true}}
         // Add more sceneType mappings as needed
     };

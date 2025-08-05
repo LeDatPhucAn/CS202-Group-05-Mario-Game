@@ -68,13 +68,15 @@ void Character::createBody(b2World *world)
 
     // 1. Torso fixture (rectangle) - slightly shorter
     float radius = halfWidth * 0.75f;
+    float torsoWidth = halfWidth * 0.75f;
     float torsoHeight = halfHeight - radius;
+    float wallWidth = 2.0f / PPM;
 
     float legOffsetY = halfHeight - radius;
 
     b2PolygonShape torsoShape;
-    b2Vec2 torsoOffset(0.0f, 0);
-    torsoShape.SetAsBox(radius, torsoHeight, torsoOffset, 0.0f);
+    b2Vec2 torsoOffset(0.0f, -radius);
+    torsoShape.SetAsBox(torsoWidth, torsoHeight, torsoOffset, 0.0f);
 
     b2FixtureDef torsoFixture;
     torsoFixture.shape = &torsoShape;
@@ -109,17 +111,6 @@ void Character::createBody(b2World *world)
             fixture = fixture->GetNext();
         }
     }
-    // b2PolygonShape pelvisShape;
-    // b2Vec2 pelvisOffset(0, legOffsetY);
-    // pelvisShape.SetAsBox(radius-1/PPM, 2 / PPM, pelvisOffset, 0.0f);
-
-    // b2FixtureDef pelvisFixture;
-    // pelvisFixture.shape = &pelvisShape;
-    // pelvisFixture.isSensor = true;
-    // pelvisFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
-    // pelvisFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-    // pelvisFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
-    // body->CreateFixture(&pelvisFixture);
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius;
@@ -136,7 +127,7 @@ void Character::createBody(b2World *world)
     // 4. Head sensor
     b2PolygonShape headShape;
     float headHeight = 2 / PPM;
-    headShape.SetAsBox(halfWidth * 0.75f, headHeight, b2Vec2(0, -torsoHeight), 0);
+    headShape.SetAsBox(radius, headHeight, b2Vec2(0, -halfHeight), 0);
 
     b2FixtureDef headFixture;
     headFixture.shape = &headShape;
@@ -148,7 +139,7 @@ void Character::createBody(b2World *world)
 
     // 5. Left wall sensor
     b2PolygonShape leftWallShape;
-    leftWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(-halfWidth / 1.8, 0), 0);
+    leftWallShape.SetAsBox(wallWidth, size.y() * 0.2f, b2Vec2(-torsoWidth, 0), 0);
 
     b2FixtureDef leftWallFixture;
     leftWallFixture.shape = &leftWallShape;
@@ -160,7 +151,7 @@ void Character::createBody(b2World *world)
 
     // 6. Right wall sensor
     b2PolygonShape rightWallShape;
-    rightWallShape.SetAsBox(2.0f / PPM, size.y() * 0.2f, b2Vec2(halfWidth / 1.8, 0), 0);
+    rightWallShape.SetAsBox(wallWidth, size.y() * 0.2f, b2Vec2(torsoWidth, 0), 0);
 
     b2FixtureDef rightWallFixture;
     rightWallFixture.shape = &rightWallShape;

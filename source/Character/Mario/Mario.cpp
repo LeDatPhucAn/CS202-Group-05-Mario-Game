@@ -84,13 +84,7 @@ void Mario::updateCollision(GameObject *other, int type)
         {
             return;
         }
-        if (type == BOTTOM)
-        {
 
-            float mass = this->body->GetMass();
-            b2Vec2 impulse(0, mass * jumpVel / 1.5f);
-            this->body->ApplyLinearImpulseToCenter(impulse, true);
-        }
         else
         {
             if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
