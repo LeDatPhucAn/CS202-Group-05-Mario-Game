@@ -2,7 +2,9 @@
 #include "Mario.hpp"
 #include "Game.hpp"
 #include "GrowMushroom.hpp"
+#include "Score.hpp"
 #include "SoundController.hpp"
+
 // Base MarioState constructor
 MarioState::MarioState(int Type, Mario *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
@@ -490,12 +492,13 @@ DeadState::DeadState(Mario *_mario, int _delay)
 
 void DeadState::handleInput()
 {
-    if (IsKeyPressed(KEY_R))
-    {
-        mario->toNewBody();
-        mario->changeState(new FallState(mario));
-        return;
-    }
+// No need for repspawing anymore
+//     if (IsKeyPressed(KEY_R))
+//     {
+//         mario->toNewBody();
+//         mario->changeState(new FallState(mario));
+//         return;
+//     }
 }
 
 ThrowFBState::ThrowFBState(Mario *_mario, int _delay)

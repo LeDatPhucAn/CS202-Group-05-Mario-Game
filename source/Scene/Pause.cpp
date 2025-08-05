@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include <vector>
 #include <string>
+#include "Score.hpp"
 
 // Static variables for flash effect
 static bool        flashActive    = false;
@@ -59,27 +60,26 @@ void Pause::updateScene() {
         selectedButton = (selectedButton + 1) % 4;
     }
     
-    // // Activate button
-    // if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-    //     switch(selectedButton) {
-    //         case 0: // Resume
-    //             manager->goBack();
-    //             return;
-    //         case 1: // Save
-    //             // Add save functionality here
-    //             break;
-    //         case 2: // Settings
-    //             nextScene = sceneType::SETTING;
-    //             flashActive = true;
-    //             flashTimer = 0.0f;
-    //             return;
-    //         case 3: // Exit
-    //             manager->goBackOfBaseScene();
-    //             flashActive = true;
-    //             flashTimer = 0.0f;
-    //             return;
-    //     }
-    // }
+    // Activate button
+    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+        switch(selectedButton) {
+            case 0: // Resume
+                manager->goBack();
+                return;
+            case 1: // Save
+                // Add save functionality here
+                break;
+            case 2: // Settings
+                manager->changeScene(sceneType::SETTING);
+                return;
+            case 3: // Exit
+                Score::getInstance()->reset();
+                manager->goBackOfBaseScene();
+                flashActive = true;
+                flashTimer = 0.0f;
+                return;
+        }
+    }
 
     // // ESC to resume game
     // if (IsKeyPressed(KEY_ESCAPE)) {
@@ -131,11 +131,7 @@ void Pause::updateScene() {
                     // Add save functionality here
                     break;
                 case 2: // Settings
-                    //nextScene = sceneType::SETTING;
                     manager->changeScene(sceneType::SETTING);
-                    flashActive = true;
-                    flashTimer = 0.0f;
-                    return;
                 case 3: // Exit
                     manager->goBackOfBaseScene();
                     flashActive = true;

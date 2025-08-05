@@ -48,6 +48,18 @@ EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::DEAD, _character, _delay)
 {
     Score::getInstance()->addScore(100); // Add score for defeating enemy
+    character->isGrounded = false;
+    character->body->SetLinearVelocity({0, -250.f / PPM});
+    b2Body *body = character->getBody();
+    b2Filter filter;
+    filter.categoryBits = 0;
+    filter.maskBits = 0;
+
+    // Iterate over all fixtures attached to this body
+    for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+    {
+        fixture->SetFilterData(filter);
+    }
 }
 
 void EnemyDeadState::updateState()
