@@ -24,9 +24,14 @@ private:
     friend class ChooseLevel;
 
     MarioForm form = SMALL;
-    
-    float throwPerSecond = 2;
-    float sinceLastThrow = 0;
+    bool isInvincible = false;
+    float invincibleTime = 1.5f;
+    float beenInvincibleFor = 0.0f;
+    float invincibleDrawRate = 0.15f;
+    float invincibleDrawTimer = 0.0f;
+
+    float throwPerSecond = 2.0f;
+    float sinceLastThrow = 0.0f;
 
 public:
     Mario();
@@ -36,12 +41,18 @@ public:
     }
 
     // getter
-    MarioForm getForm() const {return form;}
+    MarioForm getForm() const { return form; }
+    bool getInvincibility() const { return isInvincible; }
+    void turnInvincible() { isInvincible = true; }
+    void hitByEnemy();
     void changeForm(MarioForm form);
+
+
     // Override collision to handle enemies
     void throwFireBall();
     void reset();
     void update() override;
+    void display() override;
     void updateCollision(GameObject *other, int type) override;
-    void createBody(b2World* world) override;
+    void createBody(b2World *world) override;
 };

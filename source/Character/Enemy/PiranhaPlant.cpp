@@ -92,6 +92,7 @@ void PiranhaPlant::updateCollision(GameObject *other, int type)
             return;
         }
 
-        mario->changeState(new UnGrowState(mario));
+        // change mario state accordingly when hit by enemy
+        mario->hitByEnemy();
     }
 }

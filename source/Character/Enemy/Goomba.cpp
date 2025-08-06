@@ -54,12 +54,8 @@ void Goomba::updateCollision(GameObject *other, int type)
         }
         else
         {
-            if (mario->getForm() == SMALL)
-            {
-                mario->changeState(new DeadState(mario));
-            }
-            else
-                mario->changeState(new UnGrowState(mario));
+            // change mario state accordingly when hit by enemy
+            mario->hitByEnemy();
         }
     }
 }

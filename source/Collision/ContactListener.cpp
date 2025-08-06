@@ -116,7 +116,8 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     // Implement your custom logic to determine if two objects should not collide
     if (MatchPair<Spiny, Lakitu>(objA, objB))
     {
-        return true; // Prevent collision between Character and Lakitu/Spiny
+        return true; // Prevent collision between Spiny and Lakitu/Spiny
     }
+
     return false; // Default behavior: allow collision
 }

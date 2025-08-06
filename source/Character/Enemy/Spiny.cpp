@@ -47,6 +47,6 @@ void Spiny::updateCollision(GameObject *other, int type)
         }
 
         // A Spiny hurts Mario even if he stomps on it.
-        mario->changeState(new DeadState(mario));
+        mario->hitByEnemy();
     }
 }

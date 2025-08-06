@@ -74,7 +74,7 @@ private:
     float posBeforeY = 0;
 
 public:
-    GrowState(Mario *_mario, int _delay = 5);
+    GrowState(Mario *_mario, int _delay = 3);
     void handleInput() override;
 };
 class UnGrowState : public MarioState

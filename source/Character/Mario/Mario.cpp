@@ -14,6 +14,20 @@ Mario::Mario()
     changeState(new IdleState(this));
     changeForm(SMALL);
 }
+void Mario::hitByEnemy()
+{
+    if (isInvincible)
+        return;
+    if (form == SMALL)
+    {
+        changeState(new DeadState(this));
+    }
+    else
+    {
+        turnInvincible();
+        changeState(new UnGrowState(this));
+    }
+}
 void Mario::changeForm(MarioForm form)
 {
     switch (form)
@@ -132,6 +146,16 @@ void Mario::update()
 {
     Character::update();
 
+    float deltaTime = GetFrameTime();
+    if (isInvincible)
+    {
+        beenInvincibleFor += deltaTime;
+        if (beenInvincibleFor >= invincibleTime)
+        {
+            isInvincible = false;
+            beenInvincibleFor = 0.0f;
+        }
+    }
     // Dead when falling below a certain height
     Vector2 marioPos = this->getPosition();
     float deathY = 500.0f;
@@ -142,10 +166,26 @@ void Mario::update()
         return;
     }
 
-    sinceLastThrow += GetFrameTime();
+    sinceLastThrow += deltaTime;
     if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > throwPerSecond)
     {
         changeState(new ThrowFBState(this));
+    }
+}
+void Mario::display()
+{
+    if (isInvincible)
+    {
+        invincibleDrawTimer += GetFrameTime();
+        if (invincibleDrawTimer >= invincibleDrawRate)
+        {
+            invincibleDrawTimer = 0.0f;
+            Character::display();
+        }
+    }
+    else
+    {
+        Character::display();
     }
 }
 void Mario::throwFireBall()
@@ -177,7 +217,6 @@ void Mario::reset()
     setPosition({80, 50});
     createBody(Game::world); // Recreate the physics body
     changeForm(SMALL);
-
     changeState(new IdleState(this));
 }
 void Mario::createBody(b2World *world)
