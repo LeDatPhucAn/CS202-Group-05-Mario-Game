@@ -12,7 +12,6 @@ Mario::Mario()
     changeForm(SMALL);
     setTexture("Mario2D");
     changeState(new IdleState(this));
-    changeForm(SMALL);
 }
 void Mario::hitByEnemy()
 {
@@ -28,8 +27,9 @@ void Mario::hitByEnemy()
         changeState(new UnGrowState(this));
     }
 }
-void Mario::changeForm(MarioForm form)
+void Mario::changeForm(MarioForm _form)
 {
+    form = _form;
     switch (form)
     {
     case SMALL:
@@ -215,8 +215,8 @@ void Mario::reset()
     }
     // Reset Mario's position and recreate physics body
     setPosition({80, 50});
-    createBody(Game::world); // Recreate the physics body
     changeForm(SMALL);
+    createBody(Game::world); // Recreate the physics body
     changeState(new IdleState(this));
 }
 void Mario::createBody(b2World *world)

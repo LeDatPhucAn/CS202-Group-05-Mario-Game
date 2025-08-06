@@ -39,18 +39,22 @@ public:
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
+    void throwFireBall();
 
+    void reset();
     // getter
     MarioForm getForm() const { return form; }
+    void changeForm(MarioForm _form);
+
+    // Invincible
     bool getInvincibility() const { return isInvincible; }
     void turnInvincible() { isInvincible = true; }
-    void hitByEnemy();
-    void changeForm(MarioForm form);
 
+    // enemy tác động
+    void hitByEnemy();
 
     // Override collision to handle enemies
-    void throwFireBall();
-    void reset();
+
     void update() override;
     void display() override;
     void updateCollision(GameObject *other, int type) override;

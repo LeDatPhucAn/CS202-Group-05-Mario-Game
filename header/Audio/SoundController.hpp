@@ -16,11 +16,13 @@ private:
     MusicGroup<sceneType> sceneMusic;
 
     SoundController();
+    ~SoundController();
     void loadMarioStateSFX();
     void loadBlockStateSFX();
     void loadSceneSFX();
     void loadSceneMusic();
     void loadMarioVoice();
+    void clearAll();
 
 public:
     static SoundController &getInstance();
@@ -42,7 +44,6 @@ public:
     void pauseSceneMusic();
     void resumeSceneMusic();
     void stopSceneMusic();
-    void clearAll();
 
     // chỉnh volume
     void setMasterSFXVolume(float vol);

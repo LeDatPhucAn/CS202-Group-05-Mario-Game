@@ -13,7 +13,10 @@ SoundController::SoundController()
     loadSceneMusic();
     loadMarioVoice();
 }
-
+SoundController::~SoundController()
+{
+    clearAll();
+}
 SoundController &SoundController::getInstance()
 {
     static SoundController instance;
