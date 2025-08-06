@@ -9,17 +9,7 @@
 Mario::Mario()
     : Character()
 {
-    setFrame(marioStateType::IDLE, 0, 0);
-    setFrame(marioStateType::WALK, 1, 3);
-    setFrame(marioStateType::RUN, 1, 3);
-    setFrame(marioStateType::JUMP, 5, 5);
-    setFrame(marioStateType::FALL, 5, 5);
-    setFrame(marioStateType::SKID, 4, 4);
-    setFrame(marioStateType::CROUCH, 0, 0);
-    setFrame(marioStateType::GROW, 57, 63);
-    setFrame(marioStateType::UNGROW, 63, 57);
-    setFrame(marioStateType::DEAD, 6, 6);
-    setFrame(marioStateType::THROWFB, 52, 52);
+    changeForm(SMALL);
     setTexture("Mario2D");
     changeState(new IdleState(this));
 }
@@ -38,6 +28,7 @@ void Mario::changeForm(MarioForm form)
         setFrame(marioStateType::GROW, 57, 63);
         setFrame(marioStateType::UNGROW, 0, 0);
         setFrame(marioStateType::DEAD, 6, 6);
+        setFrame(marioStateType::THROWFB, 52, 52);
         break;
 
     case BIG:
@@ -168,7 +159,20 @@ void Mario::throwFireBall()
 
     // Game::addGameObject(projectile);
 }
-
+void Mario::reset()
+{
+    // Reset mario
+    if (body)
+    {
+        Game::world->DestroyBody(body);
+        attachBody(nullptr);
+    }
+    // Reset Mario's position and recreate physics body
+    setPosition({80, 50});
+    changeForm(SMALL);
+    createBody(Game::world); // Recreate the physics body
+    changeState(new IdleState(this));
+}
 void Mario::createBody(b2World *world)
 {
 

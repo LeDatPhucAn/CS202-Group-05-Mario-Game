@@ -87,23 +87,6 @@ void Game::init()
 
 Game::~Game()
 {
-    // for (int i = 0; i < deleteLater.size(); i++)
-    // {
-    //     if (deleteLater[i])
-    //     {
-    //         delete deleteLater[i];
-    //         deleteLater[i] = nullptr;
-    //     }
-    // }
-    // for (GameObject *obj : deleteLater)
-    // {
-    //     if (obj)
-    //     {
-    //         delete obj;
-    //         obj = nullptr;
-    //     }
-    // }
-    // deleteLater.clear();
 
     for (int i = 0; i < gameObjects.size(); i++)
     {
@@ -165,16 +148,8 @@ void Game::restartGame()
     }
 
     // Reset mario
-    if (mario->getBody())
-    {
-        world->DestroyBody(mario->getBody());
-        mario->attachBody(nullptr);
-    }
+    mario->reset();
 
-    // Reset Mario's position and recreate physics body
-    mario->setPosition({80, 50});
-    mario->createBody(world); // Recreate the physics body
-    mario->changeState(new IdleState(mario));
     // reset camera
     cam.target = {0, 0};
     prePosX = 100;
@@ -269,7 +244,6 @@ void Game::removeGameObject()
         block = nullptr;
     }
     // Delete projectiles
-    // vector<unique_ptr<Projectile>> toDelete;
 
     projectiles.erase(
         std::remove_if(projectiles.begin(), projectiles.end(),

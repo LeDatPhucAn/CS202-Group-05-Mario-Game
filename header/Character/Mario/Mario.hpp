@@ -39,6 +39,7 @@ public:
     MarioForm getForm() const {return form;}
     // Override collision to handle enemies
     void throwFireBall();
+    void reset();
     void update() override;
     void updateCollision(GameObject *other, int type) override;
     void createBody(b2World* world) override;
