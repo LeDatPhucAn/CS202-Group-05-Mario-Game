@@ -52,5 +52,10 @@ void Goomba::updateCollision(GameObject *other, int type)
             b2Vec2 impulse(0, mass * jumpVel / 1.2f);
             mario->body->ApplyLinearImpulseToCenter(impulse, true);
         }
+        else
+        {
+            // change mario state accordingly when hit by enemy
+            mario->hitByEnemy();
+        }
     }
 }

@@ -162,7 +162,7 @@ void ChooseLevel::initializePortals()
     
     // Level 1-1
     LevelPortal level1;
-    level1.position = {300, 300}; // World coordinates like Game.cpp
+    level1.position = {300, 325}; // World coordinates like Game.cpp
     level1.levelNumber = 1;
     level1.bounds = {level1.position.x - 50, level1.position.y - 60, 100, 60};
     level1.levelName = "World 1-1";
@@ -170,7 +170,7 @@ void ChooseLevel::initializePortals()
     
     // Level 1-2
     LevelPortal level2;
-    level2.position = {500, 300}; 
+    level2.position = {500, 325}; 
     level2.levelNumber = 2;
     level2.bounds = {level2.position.x - 50, level2.position.y - 60, 100, 60};
     level2.levelName = "World 1-2";
@@ -178,7 +178,7 @@ void ChooseLevel::initializePortals()
     
     // Level 1-3
     LevelPortal level3;
-    level3.position = {700, 300}; 
+    level3.position = {700, 325}; 
     level3.levelNumber = 3;
     level3.bounds = {level3.position.x - 50, level3.position.y - 60, 100, 60};
     level3.levelName = "World 1-3";

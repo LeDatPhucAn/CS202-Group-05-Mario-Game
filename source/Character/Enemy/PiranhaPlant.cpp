@@ -9,10 +9,9 @@
 PiranhaPlant::PiranhaPlant()
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 9, 10);
-    setFrame(enemyStateType::DEAD, 9, 10);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 0, 2);
+    setFrame(enemyStateType::DEAD, 0, 0);
+    setTexture("Piranha");
 
     // // Piranha Plants do not move via physics
     // this->movement.velocity = {0, 0};
@@ -31,7 +30,7 @@ void PiranhaPlant::update(const Vector2 &marioPos)
     if (!isSetup)
     {
 
-        this->emergedPos = this->getPosition();
+        this->emergedPos = {this->getPosition().x, this->getPosition().y - 24.0f};
         this->hiddenPos = {this->getPosition().x, this->getPosition().y + 24.0f};
         this->pos = this->hiddenPos;
         isSetup = true;
@@ -93,6 +92,7 @@ void PiranhaPlant::updateCollision(GameObject *other, int type)
             return;
         }
 
-        mario->changeState(new UnGrowState(mario));
+        // change mario state accordingly when hit by enemy
+        mario->hitByEnemy();
     }
 }

@@ -90,6 +90,12 @@ void Koopa::updateCollision(GameObject *other, int type)
             this->changeState(new EnemyRunState(this));
             return;
         }
+
+        if (!dynamic_cast<EnemyIdleState *>(this->currentState) && !dynamic_cast<EnemyDeadState *>(this->currentState))
+        {
+            // change mario state accordingly when hit by enemy
+            mario->hitByEnemy();
+        }
     }
 
     Block *block = dynamic_cast<Block *>(other);
