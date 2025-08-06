@@ -9,15 +9,16 @@ namespace fs = std::filesystem;
 Font UI::font = {0};
 Font UI::boldFont = {0};
 int UI::screenWidth = 1600;
-int UI::screenHeight = 800;
+int UI::screenHeight = 840;
 int UI::lastScreenWidth = 1600;
-int UI::lastScreenHeight = 800;
+int UI::lastScreenHeight = 840;
 unordered_map<string, Texture2D> UI::textureMap;
 unordered_map<string, json> UI::jsonMap;
 unordered_map<string, Map> UI::gameMap;
 
 std::unordered_map<std::string, std::string> UI::mapPaths = {
-	{"Map1.1", "assets/Map/Map1.1.json"},
+	{"Map1", "assets/Map/Map1/Map1.1.json"},
+	{"Map2", "assets/Map/Map2/Map2.json"}
 	// Add the rest...
 };
 

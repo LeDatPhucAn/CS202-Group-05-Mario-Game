@@ -162,7 +162,7 @@ void Settings::updateScene()
         }
     }
 
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         if (selectedButton == 0 || selectedButton == 1)
         {
