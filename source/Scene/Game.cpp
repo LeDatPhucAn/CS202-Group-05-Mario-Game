@@ -60,7 +60,7 @@ void Game::init()
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
     // Load map
-    current_Map = "Map1.1";
+    current_Map = manager->curMap;
     curMap.choose(UI::mapPaths[current_Map]);
 
     drawDebug = new DrawDebug();
@@ -87,7 +87,6 @@ void Game::init()
 
 Game::~Game()
 {
-
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
@@ -137,7 +136,6 @@ Game::~Game()
 
 void Game::restartGame()
 {
-
     // Clear existing game objects (except Mario will be recreated)
     for (auto &obj : gameObjects)
     {

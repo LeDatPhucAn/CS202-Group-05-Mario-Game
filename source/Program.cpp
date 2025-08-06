@@ -11,6 +11,7 @@ Program::Program()
     mySceneManager.pro = this;
 }
 
+
 void Program::update()
 {
     mySceneManager.update();

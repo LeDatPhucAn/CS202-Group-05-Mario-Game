@@ -3,7 +3,7 @@
 #include "UI.hpp"
 #include "Score.hpp"
 #include <algorithm>
-
+#include <string>
 ChooseLevel::ChooseLevel(SceneManager* _manager) 
     : Scene(_manager), mario(nullptr), world(nullptr), selectedLevel(-1), 
       levelSelected(false), interactionTimer(0.0f), showLevelInfo(false), hoveredLevel(-1)
@@ -139,6 +139,7 @@ void ChooseLevel::updateScene()
         if (transitionTimer >= 1.0f)
         {
             // Score::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
+            manager->curMap = "Map" + to_string(selectedLevel+1);
             manager->changeScene(sceneType::GAME);
             transitionTimer = 0.0f; // Reset for next time
             return;

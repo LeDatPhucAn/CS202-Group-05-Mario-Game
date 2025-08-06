@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "raylib.h"
+#include <string>
 using namespace std;
 enum class sceneType
 {
@@ -42,6 +43,7 @@ public:
 	vector<Scene *> scenes;
 	Program *pro;
 	int needBack = 0;
+	string curMap = "Map1";
 
 	void changeScene(sceneType _nextScene);
 	void goBack();
