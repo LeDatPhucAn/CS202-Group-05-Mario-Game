@@ -90,6 +90,16 @@ void Koopa::updateCollision(GameObject *other, int type)
             this->changeState(new EnemyRunState(this));
             return;
         }
+
+        if (!dynamic_cast<EnemyIdleState *>(this->currentState) && !dynamic_cast<EnemyDeadState *>(this->currentState))
+        {
+            if (mario->getForm() == SMALL)
+            {
+                mario->changeState(new DeadState(mario));
+            }
+            else
+                mario->changeState(new UnGrowState(mario));
+        }
     }
 
     Block *block = dynamic_cast<Block *>(other);

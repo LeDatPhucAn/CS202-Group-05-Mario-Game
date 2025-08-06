@@ -12,6 +12,7 @@ Mario::Mario()
     changeForm(SMALL);
     setTexture("Mario2D");
     changeState(new IdleState(this));
+    changeForm(SMALL);
 }
 void Mario::changeForm(MarioForm form)
 {
@@ -68,25 +69,30 @@ void Mario::updateCollision(GameObject *other, int type)
     }
     Character::updateCollision(other, type);
 
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
-    if (enemy)
-    {
-        if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState) || dynamic_cast<EnemyIdleState *>(enemy->currentState) || type == BOTTOM)
+    // Ko cần cái này nữa, chuyển sang để trong enemy
 
-        {
-            return;
-        }
+    // Enemy *enemy = dynamic_cast<Enemy *>(other);
+    // if (enemy)
+    // {
+    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
+    //     {
+    //         return;
+    //     }
 
-        else
-        {
-            if (form == SMALL)
-            {
-                this->changeState(new DeadState(this));
-                return;
-            }
-            this->changeState(new UnGrowState(this));
-        }
-    }
+    //     else
+    //     {
+    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+    //         {
+    //             return;
+    //         }
+    //         if (form == SMALL)
+    //         {
+    //             this->changeState(new DeadState(this));
+    //             return;
+    //         }
+    //         this->changeState(new UnGrowState(this));
+    //     }
+    // }
 
     // Enemy *enemy = dynamic_cast<Enemy *>(other);
     // if (enemy)
@@ -169,8 +175,9 @@ void Mario::reset()
     }
     // Reset Mario's position and recreate physics body
     setPosition({80, 50});
-    changeForm(SMALL);
     createBody(Game::world); // Recreate the physics body
+    changeForm(SMALL);
+
     changeState(new IdleState(this));
 }
 void Mario::createBody(b2World *world)
