@@ -43,7 +43,7 @@ public:
 	vector<Scene *> scenes;
 	Program *pro;
 	int needBack = 0;
-	string curMap;
+	string curMap = "Map1";
 
 	void changeScene(sceneType _nextScene);
 	void goBack();

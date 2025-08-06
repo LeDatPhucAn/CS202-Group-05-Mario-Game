@@ -15,7 +15,7 @@ void Particle::spawnParticles(const Block& block, std::vector<Particle>& particl
     };
 
     // load texture 1 lần (không trong vòng for)
-    static Texture2D debrisTex = LoadTexture("assets/Map/image/collided_animation.png");
+    static Texture2D debrisTex = LoadTexture("assets/Map/Map1/image/collided_animation.png");
 
     for (int i = 0; i < 4; ++i) {
         Particle p{
