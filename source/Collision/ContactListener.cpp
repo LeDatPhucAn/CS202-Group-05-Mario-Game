@@ -118,6 +118,18 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     {
         return true; // Prevent collision between Spiny and Lakitu/Spiny
     }
-
+    if (MatchPair<Mario, Enemy>(objA, objB))
+    {
+        Mario *marioA = dynamic_cast<Mario *>(objA);
+        Mario *marioB = dynamic_cast<Mario *>(objB);
+        if (marioA)
+        {
+            return marioA->getInvincibility();
+        }
+        else if (marioB)
+        {
+            return marioB->getInvincibility();
+        }
+    }
     return false; // Default behavior: allow collision
 }

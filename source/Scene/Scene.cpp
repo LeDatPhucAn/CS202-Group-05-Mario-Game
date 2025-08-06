@@ -7,13 +7,11 @@
 #include "ChooseLevel.hpp"
 #include <iostream>
 #include <stack>
-#include "SoundController.hpp"
 using namespace std;
 Scene::Scene(SceneManager *_manager) : manager(_manager) {}
 
 void SceneManager::init()
 {
-    SoundController::getInstance().playSceneMusic(sceneType::MENU);
     scenes.push_back(SceneFactory::create(sceneType::MENU, this));
 }
 SceneManager::~SceneManager()
@@ -29,7 +27,6 @@ void SceneManager::changeScene(sceneType _nextScene)
 {
     if (_nextScene != sceneType::NONE)
     {
-        SoundController::getInstance().playSceneMusic(_nextScene);
         if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING || _nextScene == sceneType::GAMEOVER || _nextScene == sceneType::CHOOSE_LEVEL)
             numBackToBaseScene++;
         scenes.push_back(SceneFactory::create(_nextScene, this));
@@ -104,7 +101,7 @@ Scene *SceneFactory::create(sceneType newScene, SceneManager *mag)
         return new GameOver(mag);
     if (newScene == sceneType::CHOOSE_LEVEL)
         return new ChooseLevel(mag);
-    
+
     if (newScene == sceneType::GAME)
         return new Game(mag);
 

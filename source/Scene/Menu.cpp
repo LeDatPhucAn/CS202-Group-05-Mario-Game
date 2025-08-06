@@ -66,6 +66,8 @@ Menu::Menu(SceneManager *_manager) : Scene(_manager)
     {
         TraceLog(LOG_WARNING, "Failed to load selection icon texture");
     }
+    
+    SoundController::getInstance().playSceneMusic(sceneType::MENU);
 }
 
 Menu::~Menu()
@@ -419,11 +421,11 @@ void Menu::displayScene()
     }
 
     float instrSpacing = 2.0f;
-   float instrX = UI::screenWidth - 350;
+    float instrX = UI::screenWidth - 350;
     float instrY = UI::screenHeight - 200;
 
     DrawTextEx(UI::font, instructionsText.c_str(),
-              {instrX + 1, instrY + 1}, 20, 2, DARKGRAY);
+               {instrX + 1, instrY + 1}, 20, 2, DARKGRAY);
     DrawTextEx(UI::font, instructionsText.c_str(),
-              {instrX, instrY}, 20, 2, WHITE);
+               {instrX, instrY}, 20, 2, WHITE);
 }

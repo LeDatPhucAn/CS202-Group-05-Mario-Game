@@ -9,7 +9,6 @@
 #include "Projectile.hpp"
 #include "DrawDebug.hpp"
 #include "Score.hpp"
-#include "SoundController.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
@@ -83,6 +82,7 @@ void Game::init()
     gameTime = 0.0f;
     lives = 3;
     Score::getInstance()->reset();
+    SoundController::getInstance().playSceneMusic(sceneType::GAME);
 }
 
 Game::~Game()
@@ -145,6 +145,7 @@ void Game::restartGame()
         }
     }
 
+    SoundController::getInstance().playSceneMusic(sceneType::GAME);
     // Reset mario
     mario->reset();
 
@@ -313,7 +314,6 @@ void Game::updateScene()
 
     if (IsKeyPressed(KEY_P))
     {
-        SoundController::getInstance().playSceneSFX(sceneType::PAUSE);
         manager->changeScene(sceneType::PAUSE);
     }
     if (IsKeyPressed(KEY_Q))

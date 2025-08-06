@@ -96,3 +96,14 @@ enum class marioVoice
     JUMP,
     LETSGO
 };
+
+enum class sceneType
+{
+    NONE,
+    MENU,
+    GAME,
+    CHOOSE_LEVEL,
+    PAUSE,
+    SETTING,
+    GAMEOVER,
+};

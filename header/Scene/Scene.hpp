@@ -2,17 +2,9 @@
 #include <vector>
 #include "raylib.h"
 #include <string>
+#include "SoundController.hpp"
 using namespace std;
-enum class sceneType
-{
-	NONE,
-	MENU,
-	GAME,
-	CHOOSE_LEVEL,
-	PAUSE,
-	SETTING,
-	GAMEOVER,
-};
+
 
 class SceneManager;
 class Program;

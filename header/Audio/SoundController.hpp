@@ -1,3 +1,4 @@
+#pragma once
 #include "raylib.h"
 #include "Structs.hpp"
 #include "AudioGroup.hpp"
@@ -46,5 +47,4 @@ public:
     // chỉnh volume
     void setMasterSFXVolume(float vol);
     void setMasterMusicVolume(float vol);
-
 };

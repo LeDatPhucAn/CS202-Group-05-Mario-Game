@@ -127,7 +127,7 @@ void Character::createBody(b2World *world)
 
     // 4. Head sensor
     b2PolygonShape headShape;
-    headShape.SetAsBox(radius, headHeight, b2Vec2(0, -halfHeight), 0);
+    headShape.SetAsBox(halfWidth*0.7, headHeight, b2Vec2(0, -halfHeight), 0);
 
     b2FixtureDef headFixture;
     headFixture.shape = &headShape;

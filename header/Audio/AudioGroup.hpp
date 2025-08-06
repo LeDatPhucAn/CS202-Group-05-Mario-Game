@@ -79,6 +79,8 @@ public:
     {
         if (bgmTracks.count(type))
         {
+            StopMusicStream(bgmTracks[type].track);       // This ensures it stops and resets position
+            SeekMusicStream(bgmTracks[type].track, 0.0f); // Ensure seek to 0 even after stop (extra safety)
             SetMusicVolume(bgmTracks[type].track, volume);
             PlayMusicStream(bgmTracks[type].track);
             currentlyPlaying = type;
