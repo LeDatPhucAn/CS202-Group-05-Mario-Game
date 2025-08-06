@@ -9,6 +9,7 @@ class State
 private:
     friend class Mario;
     friend class Character;
+    friend class Projectile;
 
 protected:
     int numFrames = 0;
@@ -22,6 +23,10 @@ protected:
 public:
     State();
     State(int _type, GameObject *_gameObject, int _delay);
+    void setObjNull()
+    {
+        gameObject = nullptr;
+    }
     virtual ~State();
     virtual int getType() const { return type; }
     // salient

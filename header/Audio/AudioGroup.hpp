@@ -9,6 +9,7 @@ class SFXGroup
 private:
     unordered_map<EnumType, Sound> stateSFX;
     string path;
+    float volume = 0.5f;
 
 public:
     SFXGroup(const string &basePath) : path(basePath) {}
@@ -28,6 +29,7 @@ public:
         {
             float randomPitch = minPitch + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxPitch - minPitch)));
             SetSoundPitch(stateSFX[type], randomPitch);
+            SetSoundVolume(stateSFX[type], volume);
             PlaySound(stateSFX[type]);
         }
     }
@@ -40,6 +42,10 @@ public:
         }
         stateSFX.clear();
     }
+    void setVolume(float newVolume)
+    {
+        volume = newVolume;
+    }
 };
 template <typename EnumType>
 class MusicGroup
@@ -50,6 +56,7 @@ private:
         Music track;
         bool loop;
     };
+    float volume = 0.5f;
 
     unordered_map<EnumType, MusicData> bgmTracks;
     string path;
@@ -72,6 +79,7 @@ public:
     {
         if (bgmTracks.count(type))
         {
+            SetMusicVolume(bgmTracks[type].track, volume);
             PlayMusicStream(bgmTracks[type].track);
             currentlyPlaying = type;
         }
@@ -130,5 +138,14 @@ public:
             UnloadMusicStream(pair.second.track);
         }
         bgmTracks.clear();
+    }
+
+    void setVolume(float newVolume)
+    {
+        volume = newVolume;
+        if (currentlyPlaying.has_value())
+        {
+            SetMusicVolume(bgmTracks[currentlyPlaying.value()].track, volume);
+        }
     }
 };

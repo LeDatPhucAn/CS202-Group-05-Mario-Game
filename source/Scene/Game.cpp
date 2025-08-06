@@ -13,7 +13,7 @@
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
-
+vector<unique_ptr<Projectile>> Game::projectiles = {};
 Game::Game(SceneManager *_mag)
 {
     manager = _mag;
@@ -55,7 +55,7 @@ void Game::init()
     mario = new Mario();
 
     // Set initial positions
-    mario->setPosition({100, 50});
+    mario->setPosition({80, 50});
 
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
@@ -87,15 +87,23 @@ void Game::init()
 
 Game::~Game()
 {
-    for (int i = 0; i < deleteLater.size(); i++)
-    {
-        if (deleteLater[i])
-        {
-            delete deleteLater[i];
-            deleteLater[i] = nullptr;
-        }
-    }
-    deleteLater.clear();
+    // for (int i = 0; i < deleteLater.size(); i++)
+    // {
+    //     if (deleteLater[i])
+    //     {
+    //         delete deleteLater[i];
+    //         deleteLater[i] = nullptr;
+    //     }
+    // }
+    // for (GameObject *obj : deleteLater)
+    // {
+    //     if (obj)
+    //     {
+    //         delete obj;
+    //         obj = nullptr;
+    //     }
+    // }
+    // deleteLater.clear();
 
     for (int i = 0; i < gameObjects.size(); i++)
     {
@@ -164,10 +172,9 @@ void Game::restartGame()
     }
 
     // Reset Mario's position and recreate physics body
-    mario->setPosition({100, 50});
+    mario->setPosition({80, 50});
     mario->createBody(world); // Recreate the physics body
     mario->changeState(new IdleState(mario));
-    mario->isGrounded = true; // Ensure Mario starts grounded
     // reset camera
     cam.target = {0, 0};
     prePosX = 100;
@@ -185,10 +192,16 @@ void Game::addGameObject(GameObject *gameObject)
 {
     if (gameObject)
     {
-        if (dynamic_cast<Projectile *>(gameObject))
-            cout << "FireBall After: " << gameObject << "\n";
         gameObject->createBody(world);
         gameObjects.push_back(gameObject);
+    }
+}
+void Game::addProjectile(unique_ptr<Projectile> proj)
+{
+    if (proj)
+    {
+        proj->createBody(world);
+        projectiles.push_back(std::move(proj));
     }
 }
 
@@ -196,20 +209,44 @@ void Game::removeGameObject()
 {
 
     // Delete non-Block
-    for (int i = 0; i < deleteLater.size(); i++)
+    // for (int i = 0; i < deleteLater.size(); i++)
+    // {
+    //     auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
+    //     if (it != gameObjects.end())
+    //     {
+    //         gameObjects.erase(it);
+    //         if (dynamic_cast<Projectile *>(deleteLater[i]))
+    //         {
+    //             cout << "FireBall: " << deleteLater[i] << "\n";
+    //         }
+    //         if (deleteLater[i]->getBody())
+    //         {
+    //             world->DestroyBody(deleteLater[i]->getBody());
+    //             deleteLater[i]->attachBody(nullptr);
+    //         }
+    //     }
+    // }
+    for (GameObject *obj : deleteLater)
     {
-        auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
+        // a) erase from the main list
+        auto it = std::find(gameObjects.begin(), gameObjects.end(), obj);
         if (it != gameObjects.end())
         {
             gameObjects.erase(it);
-            if (deleteLater[i]->getBody())
+            // c) debug print for FireBall
+            if (dynamic_cast<Projectile *>(obj))
+                cout << "FireBall: " << obj << "\n";
+            // b) destroy its physics body
+            if (obj->getBody())
             {
-                world->DestroyBody(deleteLater[i]->getBody());
-                deleteLater[i]->attachBody(nullptr);
+                world->DestroyBody(obj->getBody());
+                obj->attachBody(nullptr);
             }
+            delete obj;
+            obj = nullptr;
         }
     }
-
+    deleteLater.clear();
     // Delete Block
     auto &blocks = curMap.tileBlocks;
     vector<Block *> toDelete;
@@ -231,6 +268,26 @@ void Game::removeGameObject()
         delete block;
         block = nullptr;
     }
+    // Delete projectiles
+    // vector<unique_ptr<Projectile>> toDelete;
+
+    projectiles.erase(
+        std::remove_if(projectiles.begin(), projectiles.end(),
+                       [&](std::unique_ptr<Projectile> &proj)
+                       {
+                           if (proj->needDeletion)
+                           {
+                               if (proj->getBody())
+                               {
+                                   world->DestroyBody(proj->getBody());
+                                   proj->attachBody(nullptr);
+                               }
+                               proj->currentState->setObjNull();
+                               return true; // Mark for deletion (unique_ptr will delete)
+                           }
+                           return false;
+                       }),
+        projectiles.end());
 }
 
 void Game::updateScene()
@@ -314,6 +371,13 @@ void Game::updateScene()
 
 void Game::updateCharacters()
 {
+    for (int i = 0; i < projectiles.size(); i++)
+    {
+        if (projectiles[i])
+        {
+            projectiles[i]->update();
+        }
+    }
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
@@ -329,7 +393,7 @@ void Game::updateCharacters()
             if (gameObjects[i]->needDeletion)
             {
                 gameObjects[i]->needDeletion = false;
-                deleteLater.push_back(gameObjects[i]);
+                deleteLater.insert(gameObjects[i]);
             }
         }
     }
@@ -351,6 +415,14 @@ void Game::displayScene()
         {
 
             gameObjects[i]->display();
+        }
+    }
+    for (int i = 0; i < projectiles.size(); i++)
+    {
+        if (projectiles[i])
+        {
+
+            projectiles[i]->display();
         }
     }
 

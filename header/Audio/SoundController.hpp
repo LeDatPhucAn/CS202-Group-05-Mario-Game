@@ -42,4 +42,9 @@ public:
     void resumeSceneMusic();
     void stopSceneMusic();
     void clearAll();
+
+    // chỉnh volume
+    void setMasterSFXVolume(float vol);
+    void setMasterMusicVolume(float vol);
+
 };

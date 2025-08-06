@@ -1,11 +1,11 @@
 #pragma once
 #include "State.hpp"
-#include "Projectile.hpp"
 
+class Projectile;
 class ProjectileState : public State
 {
 protected:
-    Projectile *projectile;
+    Projectile *projectile = nullptr;
 
 public:
     ProjectileState(int Type, Projectile *_projectile, int _delay);
@@ -22,6 +22,7 @@ class ProjectileStopState : public ProjectileState
 {
 private:
     bool removed = false;
+
 public:
     ProjectileStopState(Projectile *_projectile, int _delay = 5);
     void handleInput() override;

@@ -123,3 +123,15 @@ void SoundController::stopSceneMusic()
 {
     sceneMusic.stop();
 }
+void SoundController::setMasterSFXVolume(float vol)
+{
+    marioStateSFX.setVolume(vol);
+    blockStateSFX.setVolume(vol);
+    marioVoiceSFX.setVolume(vol);
+    sceneSFX.setVolume(vol);
+}
+
+void SoundController::setMasterMusicVolume(float vol)
+{
+    sceneMusic.setVolume(vol);
+}
