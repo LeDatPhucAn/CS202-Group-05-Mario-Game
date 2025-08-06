@@ -142,11 +142,11 @@ void Mario::update()
 {
     Character::update();
 
-    //Dead when falling below a certain height
+    // Dead when falling below a certain height
     Vector2 marioPos = this->getPosition();
     float deathY = 500.0f;
-    
-    if (marioPos.y > deathY && !dynamic_cast<DeadState*>(this->currentState))
+
+    if (marioPos.y > deathY && !dynamic_cast<DeadState *>(this->currentState))
     {
         this->changeState(new DeadState(this));
         return;
@@ -160,14 +160,20 @@ void Mario::update()
 }
 void Mario::throwFireBall()
 {
-    FireBall *projectile = new FireBall();
-    projectile->setDirection(this->getDirection());
+    unique_ptr<FireBall> fireball = make_unique<FireBall>();
+    fireball->setDirection(this->getDirection());
     Vector2 pos = this->getPositionAdapter().toPixels();
     pos.x += this->getDirection() * getSize().x;
-    projectile->setPosition(pos);
-    cout << "FireBall before: " << projectile << "\n";
+    fireball->setPosition(pos);
 
-    Game::addGameObject(projectile);
+    Game::addProjectile(std::unique_ptr<Projectile>(std::move(fireball)));
+    // FireBall *projectile = new FireBall();
+    // projectile->setDirection(this->getDirection());
+    // Vector2 pos = this->getPositionAdapter().toPixels();
+    // pos.x += this->getDirection() * getSize().x;
+    // projectile->setPosition(pos);
+
+    // Game::addGameObject(projectile);
 }
 
 void Mario::createBody(b2World *world)

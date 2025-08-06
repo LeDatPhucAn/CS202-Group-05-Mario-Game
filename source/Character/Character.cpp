@@ -71,6 +71,7 @@ void Character::createBody(b2World *world)
     float torsoWidth = halfWidth * 0.75f;
     float torsoHeight = halfHeight - radius;
     float wallWidth = 2.0f / PPM;
+    float headHeight = 2 / PPM;
 
     float legOffsetY = halfHeight - radius;
 
@@ -126,7 +127,6 @@ void Character::createBody(b2World *world)
 
     // 4. Head sensor
     b2PolygonShape headShape;
-    float headHeight = 2 / PPM;
     headShape.SetAsBox(radius, headHeight, b2Vec2(0, -halfHeight), 0);
 
     b2FixtureDef headFixture;

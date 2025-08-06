@@ -16,6 +16,7 @@ State::State(int _type, GameObject *_gameObject, int _delay)
     frameRec.width = gameObject->direction * abs(frameRec.width);
     gameObject->setSize({fabs(frameRec.width), frameRec.height});
 }
+
 State::~State()
 {
     numFrames = 0;
