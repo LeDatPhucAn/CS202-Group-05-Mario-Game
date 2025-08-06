@@ -24,7 +24,7 @@ private:
     friend class ChooseLevel;
 
     MarioForm form = SMALL;
-    void changeForm(MarioForm form);
+    
     float throwPerSecond = 2;
     float sinceLastThrow = 0;
 
@@ -37,6 +37,7 @@ public:
 
     // getter
     MarioForm getForm() const {return form;}
+    void changeForm(MarioForm form);
     // Override collision to handle enemies
     void throwFireBall();
     void update() override;

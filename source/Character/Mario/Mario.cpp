@@ -22,6 +22,7 @@ Mario::Mario()
     setFrame(marioStateType::THROWFB, 52, 52);
     setTexture("Mario2D");
     changeState(new IdleState(this));
+    changeForm(SMALL);
 }
 void Mario::changeForm(MarioForm form)
 {
@@ -77,28 +78,31 @@ void Mario::updateCollision(GameObject *other, int type)
     }
     Character::updateCollision(other, type);
 
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
-    if (enemy)
-    {
-        if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
-        {
-            return;
-        }
 
-        else
-        {
-            if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
-            {
-                return;
-            }
-            if (form == SMALL)
-            {
-                this->changeState(new DeadState(this));
-                return;
-            }
-            this->changeState(new UnGrowState(this));
-        }
-    }
+    //Ko cần cái này nữa, chuyển sang để trong enemy
+
+    // Enemy *enemy = dynamic_cast<Enemy *>(other);
+    // if (enemy)
+    // {
+    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
+    //     {
+    //         return;
+    //     }
+
+    //     else
+    //     {
+    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
+    //         {
+    //             return;
+    //         }
+    //         if (form == SMALL)
+    //         {
+    //             this->changeState(new DeadState(this));
+    //             return;
+    //         }
+    //         this->changeState(new UnGrowState(this));
+    //     }
+    // }
 
     // Enemy *enemy = dynamic_cast<Enemy *>(other);
     // if (enemy)

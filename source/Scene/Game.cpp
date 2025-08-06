@@ -167,6 +167,7 @@ void Game::restartGame()
     mario->setPosition({100, 50});
     mario->createBody(world); // Recreate the physics body
     mario->changeState(new IdleState(mario));
+    mario->changeForm(SMALL);
     mario->isGrounded = true; // Ensure Mario starts grounded
     // reset camera
     cam.target = {0, 0};
