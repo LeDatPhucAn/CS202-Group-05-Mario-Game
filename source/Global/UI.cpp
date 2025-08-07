@@ -18,7 +18,8 @@ unordered_map<string, Map> UI::gameMap;
 
 std::unordered_map<std::string, std::string> UI::mapPaths = {
 	{"Map1", "assets/Map/Map1/Map1.1.json"},
-	{"Map2", "assets/Map/Map2/Map2.json"}
+	{"Map2", "assets/Map/Map2/Map2.json"},
+	{"Map3", "assets/Map/Map3/Map3.json"}
 	// Add the rest...
 };
 

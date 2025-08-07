@@ -213,10 +213,10 @@ void MyMap::handleObjectLayer(tson::Layer &layer)
 {
     for (auto &obj : layer.getObjects())
     {
-        int gid = obj.getGid();
-        if (gid == 0)
-            continue;
-        const TSInfo *info = selectTSInfo(gid);
+        // int gid = obj.getGid();
+        // if   (gid == 0)
+        //     continue;
+        // const TSInfo *info = selectTSInfo(gid);
         // if (!info)
         //     continue;
         // Rectangle src = calcSrcRect(*info, gid);
