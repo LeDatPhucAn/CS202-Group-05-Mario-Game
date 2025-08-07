@@ -1,0 +1,15 @@
+{ "columns":2,
+ "image":"image\/new_blocks1_doors.png",
+ "imageheight":48,
+ "imagewidth":66,
+ "margin":0,
+ "name":"new_blocks1_doors",
+ "spacing":2,
+ "tilecount":2,
+ "tiledversion":"1.11.2",
+ "tileheight":48,
+ "tilewidth":32,
+ "transparentcolor":"#0000ff",
+ "type":"tileset",
+ "version":"1.10"
+}

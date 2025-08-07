@@ -1,0 +1,15 @@
+{ "columns":1,
+ "image":"image\/new_intro_smallbush.png",
+ "imageheight":26,
+ "imagewidth":33,
+ "margin":0,
+ "name":"new_intro_smallbush",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.11.2",
+ "tileheight":26,
+ "tilewidth":33,
+ "transparentcolor":"#0000ff",
+ "type":"tileset",
+ "version":"1.10"
+}

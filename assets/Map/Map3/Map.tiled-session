@@ -1,0 +1,133 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Map3.json",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "8415.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "Enemies2D.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "Map1.1.json": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 976,
+                "y": 93
+            }
+        },
+        "Map3.json": {
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1672,
+                "y": 62
+            }
+        },
+        "collided_animation.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "ground_tileset.json": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "muilti_tileset.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "new_blocks1_blocks.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 8
+        },
+        "new_blocks1_doors.json": {
+            "scaleInDock": 1
+        },
+        "new_blocks2_items.json": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 5.5
+        },
+        "new_intro_largebush.json": {
+            "scaleInDock": 1
+        },
+        "new_intro_mushroom.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "new_intro_smallbush.json": {
+            "scaleInDock": 1
+        },
+        "new_items_powerups.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 8
+        },
+        "pipes.json": {
+            "scaleInDock": 1
+        },
+        "question.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tileset.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        }
+    },
+    "frame.defaultDuration": 150,
+    "last.imagePath": "D:/Tuan/Project/My Game/assets/Map/image",
+    "map.height": 14,
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 53,
+    "openFiles": [
+        "new_blocks1_blocks.json",
+        "new_blocks2_items.json",
+        "ground_tileset.json",
+        "collided_animation.json",
+        "new_items_powerups.json",
+        "Enemies2D.json",
+        "Map3.json",
+        "new_intro_mushroom.json"
+    ],
+    "project": "Map.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "new_blocks1_blocks.json",
+        "new_blocks2_items.json",
+        "ground_tileset.json",
+        "collided_animation.json",
+        "new_items_powerups.json",
+        "Enemies2D.json",
+        "new_intro_mushroom.json",
+        "Map3.json",
+        "Map1.1.json",
+        "muilti_tileset.json",
+        "question.tsj",
+        "8415.tsj"
+    ],
+    "resizeMap.removeObjects": true,
+    "tileset.lastUsedFormat": "json",
+    "tileset.margin": 0,
+    "tileset.spacing": 2,
+    "tileset.tileSize": {
+        "height": 48,
+        "width": 32
+    },
+    "tileset.transparentColor": "#0000ff",
+    "tileset.useTransparentColor": true
+}

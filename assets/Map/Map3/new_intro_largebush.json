@@ -1,0 +1,15 @@
+{ "columns":1,
+ "image":"image\/new_intro_largebush.png",
+ "imageheight":44,
+ "imagewidth":87,
+ "margin":0,
+ "name":"new_intro_largebush",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.11.2",
+ "tileheight":44,
+ "tilewidth":87,
+ "transparentcolor":"#0000ff",
+ "type":"tileset",
+ "version":"1.10"
+}
