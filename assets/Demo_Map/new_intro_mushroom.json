@@ -1,0 +1,15 @@
+{ "columns":1,
+ "image":"image\/new_intro_mushroom.png",
+ "imageheight":20,
+ "imagewidth":32,
+ "margin":0,
+ "name":"new_intro_mushroom",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.11.2",
+ "tileheight":20,
+ "tilewidth":32,
+ "transparentcolor":"#0000ff",
+ "type":"tileset",
+ "version":"1.10"
+}

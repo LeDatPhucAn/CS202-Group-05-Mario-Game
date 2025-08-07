@@ -1,0 +1,15 @@
+{ "columns":15,
+ "image":"image\/pipes.png",
+ "imageheight":86,
+ "imagewidth":256,
+ "margin":1,
+ "name":"pipes",
+ "spacing":1,
+ "tilecount":75,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "transparentcolor":"#02007c",
+ "type":"tileset",
+ "version":"1.10"
+}
