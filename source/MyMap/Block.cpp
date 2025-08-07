@@ -99,8 +99,8 @@ void Block::display()
 {
     if (currentState)
         currentState->displayState();
-    //else
-        //DrawTextureRec(sprite.texture, srcRec, getPosition(), color);
+    else
+        DrawTextureRec(texture, srcRec, getPosition(), color);
 
 }
 
