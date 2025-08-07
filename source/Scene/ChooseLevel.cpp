@@ -137,7 +137,7 @@ void ChooseLevel::updateScene()
         transitionTimer += deltaTime;
 
         // Wait 1 seconds before switching
-        if (transitionTimer >= 1.0f)
+        if (transitionTimer >= 0.7f)
         {
             // Score::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
             manager->curMap = "Map" + to_string(selectedLevel + 1);
