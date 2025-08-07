@@ -96,9 +96,9 @@
     "resizeMap.removeObjects": true,
     "tileset.lastUsedFormat": "json",
     "tileset.margin": 0,
-    "tileset.spacing": 0,
+    "tileset.spacing": 2,
     "tileset.tileSize": {
-        "height": 20,
+        "height": 48,
         "width": 32
     },
     "tileset.transparentColor": "#0000ff",
