@@ -7,6 +7,10 @@
 #include "GameObject.hpp"
 #include "Score.hpp"
 #include "SoundController.hpp"
+#include "BlockState.hpp"
+
+class QuestionBehavior;
+
 IBlockBehavior::IBlockBehavior(Block *block) : block(block)
 {
     prePos = block->getPositionAdapter();
@@ -32,6 +36,11 @@ void IBlockBehavior::makeBlockBounce(float dt)
     if (timeSinceHit > 0.3f)
     {
         block->isJumping = false;
+        if(block->isQuestion) {
+            block->isUsed = true;    
+            this->block->changeState(new BlockUsedState(this->block));
+        }
+
         block->body->SetType(b2_staticBody);
         block->body->SetLinearVelocity(b2Vec2_zero);        // Reset velocity
         block->body->SetTransform(prePos.toMeters(), 0.0f); // Reset position
@@ -49,17 +58,18 @@ void IBlockBehavior::setNoBounce()
 {
     block->isJumping = false;
 }
-// type của Mario đối với Block, Type = TOP là MArio nhảy lên đụng block
+// type của Mario đối với Block, Type = Bottom là MArio nhảy lên đụng block
 void QuestionBehavior::reactToCollision(GameObject *p, int type)
 {
     Mario *mario = dynamic_cast<Mario *>(p);
     if (!mario)
         return;
 
-    if (type == BOTTOM)
+    if (type == BOTTOM && !this->block->isUsed)
     {
         cout << "Question Block hit!" << endl;
         setForBounce();
+        
     }
 }
 

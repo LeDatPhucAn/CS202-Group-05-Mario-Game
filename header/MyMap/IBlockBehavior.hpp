@@ -20,6 +20,7 @@ struct IBlockBehavior
     virtual void reactToCollision(GameObject *p, int type) {
 
     };
+
     virtual void updateFrame(float dt) {}
     virtual void onDraw(float dt) {};
 

@@ -16,6 +16,17 @@ public:
     }
 };
 
+class BlockUsedState : public BlockState {
+public:
+    BlockUsedState(Block *_block, int _delay = 5)
+        : BlockState((int)blockStateType::USED, _block, _delay) {}
+
+    void handleInput() override
+    {
+        // Handle input specific to idle block state
+    }
+};
+
 class BlockIdleState : public BlockState
 {
 public:
