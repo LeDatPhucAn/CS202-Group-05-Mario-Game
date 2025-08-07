@@ -39,7 +39,7 @@ public:
 
     GameObject(const Vector2 &_position, const Vector2 &_size)
         : pos(_position), size(_size) {}
-    virtual ~GameObject()
+    ~GameObject()
     {
         if (currentState)
         {
@@ -70,7 +70,6 @@ public:
             currentState->displayState();
         }
     };
-
 
     // Xử lý khi va chạm với một object khác
     virtual void updateCollision(GameObject *other, int type) {}
@@ -117,12 +116,13 @@ public:
         return {p.x - s.x / 2, p.y - s.y / 2};
     }
 
-    void setGamePtr(Game* _game) {
+    void setGamePtr(Game *_game)
+    {
         gamePtr = _game;
     }
 
-    virtual void MyDelete(int Index) {
-        
+    virtual void MyDelete(int Index)
+    {
     }
 
     float slice = 2;
@@ -136,7 +136,7 @@ protected:
     b2Body *body = nullptr;
     Sprite sprite;
     Direction direction = RIGHT;
-    Game* gamePtr = nullptr;
+    Game *gamePtr = nullptr;
 
 private:
     friend class State;

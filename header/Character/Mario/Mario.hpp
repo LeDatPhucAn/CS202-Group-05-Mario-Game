@@ -30,7 +30,7 @@ private:
     float invincibleDrawRate = 0.15f;
     float invincibleDrawTimer = 0.0f;
 
-    float throwPerSecond = 2.0f;
+    float secondsPerThrow = 1.5f;
     float sinceLastThrow = 0.0f;
 
 public:

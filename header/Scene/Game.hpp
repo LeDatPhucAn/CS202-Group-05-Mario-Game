@@ -13,8 +13,8 @@
 #include "Spiny.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
-#include "Projectile.hpp"
 #include <unordered_set>
+#include "FireBall.hpp"
 class Spawner;
 class DrawDebug;
 class Game : public Scene
@@ -46,8 +46,11 @@ protected:
     ContactListener *contactListener = nullptr;
     float prePosX = 0;
 
+private:
+
 public:
-    static vector<unique_ptr<Projectile>> projectiles;
+
+    static unordered_set<shared_ptr<FireBall>> projectiles;
     static vector<GameObject *> gameObjects;
     static b2World *world;
     unordered_set<GameObject *> deleteLater;
@@ -56,7 +59,7 @@ public:
     Game(SceneManager *_mag);
 
     void init();
-    static void addProjectile(unique_ptr<Projectile> proj);
+    static void addFireBall(shared_ptr<FireBall> proj);
     static void addGameObject(GameObject *gameObject);
     void restartGame();
     void removeGameObject();

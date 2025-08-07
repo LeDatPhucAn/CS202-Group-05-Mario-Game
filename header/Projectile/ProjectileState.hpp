@@ -5,7 +5,6 @@ class Projectile;
 class ProjectileState : public State
 {
 protected:
-    Projectile *projectile = nullptr;
 
 public:
     ProjectileState(int Type, Projectile *_projectile, int _delay);

@@ -98,7 +98,12 @@ void Koopa::updateCollision(GameObject *other, int type)
 
     Block *block = dynamic_cast<Block *>(other);
     Enemy *enemy = dynamic_cast<Enemy *>(other);
-    if (block || enemy)
+        // If a running shell hits another enemy, the other enemy is defeated
+    if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
+    {
+        enemy->changeState(new EnemyDeadState(enemy));
+    }
+    else if (block || enemy)
     {
         // Standard wall collision logic
         if (type == LEFTSIDE)
@@ -110,9 +115,5 @@ void Koopa::updateCollision(GameObject *other, int type)
             this->direction = RIGHT;
         }
     }
-    // If a running shell hits another enemy, the other enemy is defeated
-    if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
-    {
-        enemy->changeState(new EnemyDeadState(enemy));
-    }
+
 }

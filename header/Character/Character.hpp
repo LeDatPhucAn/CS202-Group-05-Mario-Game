@@ -25,10 +25,6 @@ private:
     friend class HammerBro;
     friend class Mario;
 
-protected:
-    // Common state properties
-    float groundPosY = 0;
-
 public:
     bool changeBody = false; // Check when the character's body needs to be changed
     bool isGrounded = false;
@@ -36,7 +32,6 @@ public:
 
 public:
     Character() = default;
-
 
     // Collision handling
     virtual void updateCollision(GameObject *other, int type) override;

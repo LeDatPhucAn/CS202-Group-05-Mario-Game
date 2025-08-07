@@ -1,7 +1,7 @@
 #include "ProjectileState.hpp"
 #include "Game.hpp"
 ProjectileState::ProjectileState(int Type, Projectile *_projectile, int _delay)
-    : State(Type, _projectile, _delay), projectile(_projectile)
+    : State(Type, _projectile, _delay)
 {
 }
 
@@ -12,9 +12,9 @@ ProjectileMoveState::ProjectileMoveState(Projectile *_projectile, int _delay)
 }
 void ProjectileMoveState::handleInput()
 {
-    b2Vec2 vel = projectile->getBody()->GetLinearVelocity();
-    vel.x = projectile->getDirection() * 8;
-    projectile->getBody()->SetLinearVelocity({vel.x, vel.y});
+    b2Vec2 vel = gameObject->getBody()->GetLinearVelocity();
+    vel.x = gameObject->getDirection() * 8;
+    gameObject->getBody()->SetLinearVelocity({vel.x, vel.y});
 }
 
 // Stop State
@@ -27,15 +27,12 @@ void ProjectileStopState::handleInput()
 {
     if (!removed)
     {
-        projectile->getBody()->SetLinearVelocity({0, 0});
+        gameObject->getBody()->SetLinearVelocity({0, 0});
 
         if (frameIndex == numFrames - 1)
         {
             removed = true;
-            projectile->needDeletion = true;
+            gameObject->needDeletion = true;
         }
-    }
-    else{
-        cout << "PROJECTILE REMOVED\n";
     }
 }

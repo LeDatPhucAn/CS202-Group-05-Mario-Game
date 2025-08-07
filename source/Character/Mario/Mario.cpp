@@ -116,10 +116,20 @@ void Mario::update()
     }
 
     sinceLastThrow += deltaTime;
-    if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > throwPerSecond)
+    if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > 1)
     {
+        sinceLastThrow = 0;
         changeState(new ThrowFBState(this));
     }
+}
+void Mario::throwFireBall()
+{
+    shared_ptr<FireBall> fireball = make_shared<FireBall>();
+    fireball->setDirection(this->getDirection());
+    Vector2 pos = this->getPositionAdapter().toPixels();
+    pos.x += this->getDirection() * getSize().x;
+    fireball->setPosition(pos);
+    Game::addFireBall(fireball);
 }
 void Mario::display()
 {
@@ -137,16 +147,7 @@ void Mario::display()
         Character::display();
     }
 }
-void Mario::throwFireBall()
-{
-    unique_ptr<FireBall> fireball = make_unique<FireBall>();
-    fireball->setDirection(this->getDirection());
-    Vector2 pos = this->getPositionAdapter().toPixels();
-    pos.x += this->getDirection() * getSize().x;
-    fireball->setPosition(pos);
 
-    Game::addProjectile(std::unique_ptr<Projectile>(std::move(fireball)));
-}
 void Mario::reset()
 {
     // Reset mario

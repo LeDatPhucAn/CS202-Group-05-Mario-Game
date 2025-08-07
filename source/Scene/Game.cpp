@@ -12,7 +12,8 @@
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
-vector<unique_ptr<Projectile>> Game::projectiles = {};
+unordered_set<shared_ptr<FireBall>> Game::projectiles = {};
+
 Game::Game(SceneManager *_mag)
 {
     manager = _mag;
@@ -170,12 +171,12 @@ void Game::addGameObject(GameObject *gameObject)
         gameObjects.push_back(gameObject);
     }
 }
-void Game::addProjectile(unique_ptr<Projectile> proj)
+void Game::addFireBall(shared_ptr<FireBall> proj)
 {
     if (proj)
     {
         proj->createBody(world);
-        projectiles.push_back(std::move(proj));
+        projectiles.insert(proj); // no need for std::move
     }
 }
 
@@ -183,23 +184,6 @@ void Game::removeGameObject()
 {
 
     // Delete non-Block
-    // for (int i = 0; i < deleteLater.size(); i++)
-    // {
-    //     auto it = std::find(gameObjects.begin(), gameObjects.end(), deleteLater[i]);
-    //     if (it != gameObjects.end())
-    //     {
-    //         gameObjects.erase(it);
-    //         if (dynamic_cast<Projectile *>(deleteLater[i]))
-    //         {
-    //             cout << "FireBall: " << deleteLater[i] << "\n";
-    //         }
-    //         if (deleteLater[i]->getBody())
-    //         {
-    //             world->DestroyBody(deleteLater[i]->getBody());
-    //             deleteLater[i]->attachBody(nullptr);
-    //         }
-    //     }
-    // }
     for (GameObject *obj : deleteLater)
     {
         // a) erase from the main list
@@ -207,10 +191,6 @@ void Game::removeGameObject()
         if (it != gameObjects.end())
         {
             gameObjects.erase(it);
-            // c) debug print for FireBall
-            if (dynamic_cast<Projectile *>(obj))
-                cout << "FireBall: " << obj << "\n";
-            // b) destroy its physics body
             if (obj->getBody())
             {
                 world->DestroyBody(obj->getBody());
@@ -243,24 +223,30 @@ void Game::removeGameObject()
         block = nullptr;
     }
     // Delete projectiles
+    std::vector<std::shared_ptr<FireBall>> toRemove;
 
-    projectiles.erase(
-        std::remove_if(projectiles.begin(), projectiles.end(),
-                       [&](std::unique_ptr<Projectile> &proj)
-                       {
-                           if (proj->needDeletion)
-                           {
-                               if (proj->getBody())
-                               {
-                                   world->DestroyBody(proj->getBody());
-                                   proj->attachBody(nullptr);
-                               }
-                               proj->currentState->setObjNull();
-                               return true; // Mark for deletion (unique_ptr will delete)
-                           }
-                           return false;
-                       }),
-        projectiles.end());
+    for (const auto &proj : projectiles)
+    {
+        if (proj->needDeletion)
+        {
+            if (proj->getBody())
+            {
+                world->DestroyBody(proj->getBody());
+                proj->attachBody(nullptr);
+            }
+
+            if (proj->currentState)
+                proj->currentState->setObjNull();
+
+            toRemove.push_back(proj);
+        }
+    }
+
+    // Now remove from the unordered_set
+    for (const auto &proj : toRemove)
+    {
+        projectiles.erase(proj);
+    }
 }
 
 void Game::updateScene()
@@ -343,12 +329,9 @@ void Game::updateScene()
 
 void Game::updateCharacters()
 {
-    for (int i = 0; i < projectiles.size(); i++)
+    for (shared_ptr<FireBall> fb : projectiles)
     {
-        if (projectiles[i])
-        {
-            projectiles[i]->update();
-        }
+        fb->update();
     }
     for (int i = 0; i < gameObjects.size(); i++)
     {
@@ -389,13 +372,9 @@ void Game::displayScene()
             gameObjects[i]->display();
         }
     }
-    for (int i = 0; i < projectiles.size(); i++)
+    for (shared_ptr<FireBall> fb : projectiles)
     {
-        if (projectiles[i])
-        {
-
-            projectiles[i]->display();
-        }
+        fb->display();
     }
 
     float dt = GetFrameTime();
