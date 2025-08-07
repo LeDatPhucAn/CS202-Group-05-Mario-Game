@@ -1,0 +1,14 @@
+{ "columns":37,
+ "image":"..\/Sprites\/Enemies2D.png",
+ "imageheight":227,
+ "imagewidth":639,
+ "margin":0,
+ "name":"enemies",
+ "spacing":1,
+ "tilecount":481,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

@@ -1,5 +1,5 @@
 { "columns":6,
- "image":"..\/..\/..\/..\/tiled\/sprites\/new_items_powerups.png",
+ "image":"image\/new_items_powerups.png",
  "imageheight":33,
  "imagewidth":101,
  "margin":0,
@@ -9,7 +9,7 @@
  "tiledversion":"1.11.2",
  "tileheight":16,
  "tilewidth":16,
- "transparentcolor":"#04007d",
+ "transparentcolor":"#0000ff",
  "type":"tileset",
  "version":"1.10"
 }

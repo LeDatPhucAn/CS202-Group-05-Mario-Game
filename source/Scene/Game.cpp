@@ -19,6 +19,7 @@ Game::Game(SceneManager *_mag) : Mario(),
     manager = _mag;
     mapPaths = {
         {"Map1.1", "assets/Map/Map1.1.json"},
+		{"Map_Real_1_1", "assets/Map_Real/Map_1_1.json"},
         // Add the rest...
     };
     Mario.setPosition({100, 50});
@@ -31,8 +32,8 @@ Game::Game(SceneManager *_mag) : Mario(),
 
 void Game::init()
 {
-
-    current_Map = "Map1.1";
+	//current_Map = "Map1.1";
+    current_Map = "Map_Real_1_1";
     curMap.choose(mapPaths[current_Map]);
 
     world = new b2World({0, fallGravity});

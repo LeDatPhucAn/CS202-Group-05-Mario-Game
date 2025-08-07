@@ -3,10 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "collided_animation.json",
+    "activeFile": "new_blocks2_items.json",
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1
@@ -17,10 +18,10 @@
         },
         "Map1.1.json": {
             "scale": 1,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 436.5,
-                "y": 111.5
+                "x": 100,
+                "y": 69.5
             }
         },
         "collided_animation.json": {
@@ -75,9 +76,9 @@
         "Map1.1.json",
         "muilti_tileset.json",
         "new_blocks1_blocks.json",
-        "new_blocks2_items.json",
-        "ground_tileset.json",
         "collided_animation.json",
+        "ground_tileset.json",
+        "new_blocks2_items.json",
         "question.tsj",
         "8415.tsj",
         "tileset.json"
