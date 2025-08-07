@@ -27,6 +27,14 @@ void Mario::hitByEnemy()
         changeState(new UnGrowState(this));
     }
 }
+void Mario::jumpFromEnemy()
+{
+    b2Vec2 vel = body->GetLinearVelocity();
+    body->SetLinearVelocity({vel.x, 0});
+    float mass = body->GetMass();
+    b2Vec2 impulse(0, mass * jumpVel / 1.4f);
+    body->ApplyLinearImpulseToCenter(impulse, true);
+}
 void Mario::changeForm(MarioForm _form)
 {
     form = _form;
@@ -82,70 +90,11 @@ void Mario::updateCollision(GameObject *other, int type)
         return;
     }
     Character::updateCollision(other, type);
-
-    // Ko cần cái này nữa, chuyển sang để trong enemy
-
-    // Enemy *enemy = dynamic_cast<Enemy *>(other);
-    // if (enemy)
-    // {
-    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
-    //     {
-    //         return;
-    //     }
-
-    //     else
-    //     {
-    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
-    //         {
-    //             return;
-    //         }
-    //         if (form == SMALL)
-    //         {
-    //             this->changeState(new DeadState(this));
-    //             return;
-    //         }
-    //         this->changeState(new UnGrowState(this));
-    //     }
-    // }
-
-    // Enemy *enemy = dynamic_cast<Enemy *>(other);
-    // if (enemy)
-    // {
-    //     if (dynamic_cast<DeadState *>(this->currentState) || dynamic_cast<EnemyDeadState *>(enemy->currentState))
-    //     {
-    //         return;
-    //     }
-    //     if (type == BOTTOM)
-    //     {
-    //         float mass = this->body->GetMass();
-    //         b2Vec2 impulse(0, mass * jumpVel / 1.5f);
-    //         this->body->ApplyLinearImpulseToCenter(impulse, true);
-    //     }
-    //     else
-    //     {
-    //         if (dynamic_cast<EnemyIdleState *>(enemy->currentState))
-    //         {
-    //             return;
-    //         }
-
-    //         // Add delay for damage from side collisions
-    //         static float lastDamageTime = 0.0f;
-    //         float currentTime = GetTime();
-    //         if (currentTime - lastDamageTime < 0.5f) // 0.5 second delay
-    //         {
-    //             return;
-    //         }
-    //         lastDamageTime = currentTime;
-
-    //         this->changeState(new UnGrowState(this));
-    //     }
-    // }
 }
 
 void Mario::update()
 {
     Character::update();
-
     float deltaTime = GetFrameTime();
     if (isInvincible)
     {
@@ -197,13 +146,6 @@ void Mario::throwFireBall()
     fireball->setPosition(pos);
 
     Game::addProjectile(std::unique_ptr<Projectile>(std::move(fireball)));
-    // FireBall *projectile = new FireBall();
-    // projectile->setDirection(this->getDirection());
-    // Vector2 pos = this->getPositionAdapter().toPixels();
-    // pos.x += this->getDirection() * getSize().x;
-    // projectile->setPosition(pos);
-
-    // Game::addGameObject(projectile);
 }
 void Mario::reset()
 {
@@ -301,16 +243,6 @@ void Mario::createBody(b2World *world)
 
         // b2PolygonShape headShape;
         float headHeight = 2 / PPM;
-        // headShape.SetAsBox(halfWidth * 0.75f, headHeight, b2Vec2(0, -torsoHeight + headHeight), 0);
-
-        // b2FixtureDef headFixture;
-        // headFixture.shape = &headShape;
-        // headFixture.density = 1.0f;
-        // headFixture.friction = 0.2f;
-        // headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
-        // headFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
-        // headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
-        // body->CreateFixture(&headFixture);
 
         b2PolygonShape head1Shape;
         head1Shape.SetAsBox(halfWidth * 0.6f, headHeight, b2Vec2(0, -torsoHeight), 0);
@@ -327,16 +259,6 @@ void Mario::createBody(b2World *world)
     {
         // b2PolygonShape headShape;
         float headHeight = 2 / PPM;
-        // headShape.SetAsBox(halfWidth * 0.75f, headHeight, b2Vec2(0, -halfHeight + 2 * headHeight), 0);
-
-        // b2FixtureDef headFixture;
-        // headFixture.shape = &headShape;
-        // headFixture.density = 1.0f;
-        // headFixture.friction = 0.2f;
-        // headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
-        // headFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
-        // headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
-        // body->CreateFixture(&headFixture);
 
         b2PolygonShape head1Shape;
         head1Shape.SetAsBox(halfWidth * 0.6f, headHeight, b2Vec2(0, -halfHeight + headHeight), 0);

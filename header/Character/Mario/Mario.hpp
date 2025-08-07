@@ -52,7 +52,7 @@ public:
 
     // enemy tác động
     void hitByEnemy();
-
+    void jumpFromEnemy();
     // Override collision to handle enemies
 
     void update() override;

@@ -48,9 +48,7 @@ void Goomba::updateCollision(GameObject *other, int type)
         if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
-            float mass = mario->body->GetMass();
-            b2Vec2 impulse(0, mass * jumpVel / 1.2f);
-            mario->body->ApplyLinearImpulseToCenter(impulse, true);
+            mario->jumpFromEnemy();
         }
         else
         {

@@ -55,9 +55,7 @@ void Koopa::updateCollision(GameObject *other, int type)
 
         if (type == TOP)
         {
-            float mass = mario->body->GetMass();
-            b2Vec2 impulse(0, mass * jumpVel / 1.2f);
-            mario->body->ApplyLinearImpulseToCenter(impulse, true);
+            mario->jumpFromEnemy();
             // Check if it's a Flying Koopa (which starts in JumpState)
             if (dynamic_cast<EnemyJumpState *>(this->currentState))
             {

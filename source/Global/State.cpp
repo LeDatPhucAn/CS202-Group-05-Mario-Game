@@ -78,7 +78,7 @@ void State::updateState()
     // Update the gameObject's position based on Box2D body
     Vec2Adapter adapter(gameObject->body->GetPosition());
     gameObject->setPositionAdapter(adapter);
-
+    
     // Check if the character's body needs to be changed
     if (dynamic_cast<Character *>(gameObject))
     {
