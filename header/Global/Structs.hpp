@@ -41,7 +41,8 @@ enum class marioStateType
     GROW,
     UNGROW,
     DEAD,
-    THROWFB
+    THROWFB,
+    STAR
 };
 enum class enemyStateType
 {
@@ -104,4 +105,5 @@ enum class sceneType
     PAUSE,
     SETTING,
     GAMEOVER,
+    STAR
 };

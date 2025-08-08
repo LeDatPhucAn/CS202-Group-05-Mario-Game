@@ -14,7 +14,6 @@ private:
     SFXGroup<marioVoice> marioVoiceSFX;
     SFXGroup<sceneType> sceneSFX;
     MusicGroup<sceneType> sceneMusic;
-
     SoundController();
     ~SoundController();
     void loadMarioStateSFX();
@@ -38,6 +37,9 @@ public:
 
     // đổi scene nên đổi nhạc
     void playSceneMusic(sceneType type);
+    void playSceneMusicFromStart(sceneType type);
+    // Play a temporary scene music (pause current, play temp, auto-restore when done)
+    void playTemporarySceneMusic(sceneType temp);
 
     // tác động nhạc của scene hiện tại
     void updateSceneMusic();

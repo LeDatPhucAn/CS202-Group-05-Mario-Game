@@ -67,7 +67,7 @@ Menu::Menu(SceneManager *_manager) : Scene(_manager)
         TraceLog(LOG_WARNING, "Failed to load selection icon texture");
     }
     
-    SoundController::getInstance().playSceneMusic(sceneType::MENU);
+    SoundController::getInstance().playSceneMusicFromStart(sceneType::MENU);
 }
 
 Menu::~Menu()

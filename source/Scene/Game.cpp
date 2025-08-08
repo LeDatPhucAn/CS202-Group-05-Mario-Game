@@ -81,7 +81,7 @@ void Game::init()
     gameTime = 0.0f;
     lives = 3;
     Score::getInstance()->reset();
-    SoundController::getInstance().playSceneMusic(sceneType::GAME);
+    SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
 }
 
 Game::~Game()
@@ -144,7 +144,7 @@ void Game::restartGame()
         }
     }
 
-    SoundController::getInstance().playSceneMusic(sceneType::GAME);
+    SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
     // Reset mario
     mario->reset();
 

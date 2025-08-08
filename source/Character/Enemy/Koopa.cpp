@@ -98,7 +98,7 @@ void Koopa::updateCollision(GameObject *other, int type)
 
     Block *block = dynamic_cast<Block *>(other);
     Enemy *enemy = dynamic_cast<Enemy *>(other);
-        // If a running shell hits another enemy, the other enemy is defeated
+    // If a running shell hits another enemy, the other enemy is defeated
     if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
     {
         enemy->changeState(new EnemyDeadState(enemy));
@@ -115,5 +115,4 @@ void Koopa::updateCollision(GameObject *other, int type)
             this->direction = RIGHT;
         }
     }
-
 }

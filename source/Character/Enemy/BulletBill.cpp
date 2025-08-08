@@ -8,17 +8,16 @@ BulletBill::BulletBill()
     : Enemy()
 {
     setFrame(enemyStateType::IDLE, 19, 19);
-    setFrame(enemyStateType::FLY, 20, 20); 
-    setFrame(enemyStateType::DEAD, 19, 19); 
+    setFrame(enemyStateType::FLY, 20, 20);
+    setFrame(enemyStateType::DEAD, 19, 19);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
-    
-    
+
     this->isActivated = false;
     this->changeState(new EnemyIdleState(this));
 }
 
-void BulletBill::update(const Vector2& marioPos)
+void BulletBill::update(const Vector2 &marioPos)
 {
     b2Vec2 vel = this->body->GetLinearVelocity();
     vel.x = this->direction * fabs(100.f / PPM);
@@ -46,7 +45,7 @@ void BulletBill::update(const Vector2& marioPos)
 void BulletBill::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
-    
+
     // Handle collision with Mario
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
@@ -55,7 +54,7 @@ void BulletBill::updateCollision(GameObject *other, int type)
         {
             return;
         }
-        
+
         // BulletBill can only be defeated by stomping from above
         if (type == TOP)
         {
@@ -63,7 +62,7 @@ void BulletBill::updateCollision(GameObject *other, int type)
             return;
         }
     }
-    
+
     // BulletBill destroys other enemies on contact (only when activated)
     if (isActivated)
     {

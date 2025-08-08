@@ -481,6 +481,7 @@ void UnGrowState::handleInput()
 DeadState::DeadState(Mario *_mario, int _delay)
     : MarioState((int)marioStateType::DEAD, _mario, _delay)
 {
+    SoundController::getInstance().stopSceneMusic();
     mario->isGrounded = false;
     mario->body->SetLinearVelocity({0, -250.f / PPM});
     b2Body *body = mario->getBody();

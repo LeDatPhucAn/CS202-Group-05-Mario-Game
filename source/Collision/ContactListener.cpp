@@ -127,11 +127,11 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
         Mario *marioB = dynamic_cast<Mario *>(objB);
         if (marioA)
         {
-            return marioA->getInvincibility();
+            return marioA->getInvincibility() || marioA->getStarMode();
         }
         else if (marioB)
         {
-            return marioB->getInvincibility();
+            return marioB->getInvincibility() || marioB->getStarMode();
         }
     }
     return false; // Default behavior: allow collision

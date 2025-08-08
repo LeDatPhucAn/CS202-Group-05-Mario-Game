@@ -70,7 +70,7 @@ void PiranhaPlant::update(const Vector2 &marioPos)
     }
     else
     {
-        vel.y = 0.0f; 
+        vel.y = 0.0f;
     }
 
     body->SetLinearVelocity(vel);

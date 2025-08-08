@@ -4,20 +4,26 @@
 #include "Block.hpp"
 #include "Game.hpp"
 
-Vector2 getBodySize(b2Body* body)
+Vector2 getBodySize(b2Body *body)
 {
-    b2Fixture* fixture = body->GetFixtureList();
-    if (!fixture) return {0, 0};
-    b2PolygonShape* poly = dynamic_cast<b2PolygonShape*>(fixture->GetShape());
-    if (!poly) return {0, 0};
+    b2Fixture *fixture = body->GetFixtureList();
+    if (!fixture)
+        return {0, 0};
+    b2PolygonShape *poly = dynamic_cast<b2PolygonShape *>(fixture->GetShape());
+    if (!poly)
+        return {0, 0};
     float minX = poly->m_vertices[0].x, maxX = poly->m_vertices[0].x;
     float minY = poly->m_vertices[0].y, maxY = poly->m_vertices[0].y;
     for (int i = 1; i < poly->m_count; i++)
     {
-        if (poly->m_vertices[i].x < minX) minX = poly->m_vertices[i].x;
-        if (poly->m_vertices[i].x > maxX) maxX = poly->m_vertices[i].x;
-        if (poly->m_vertices[i].y < minY) minY = poly->m_vertices[i].y;
-        if (poly->m_vertices[i].y > maxY) maxY = poly->m_vertices[i].y;
+        if (poly->m_vertices[i].x < minX)
+            minX = poly->m_vertices[i].x;
+        if (poly->m_vertices[i].x > maxX)
+            maxX = poly->m_vertices[i].x;
+        if (poly->m_vertices[i].y < minY)
+            minY = poly->m_vertices[i].y;
+        if (poly->m_vertices[i].y > maxY)
+            maxY = poly->m_vertices[i].y;
     }
     return {maxX - minX, maxY - minY};
 }
@@ -31,12 +37,9 @@ Hammer::Hammer()
     setFrame(enemyStateType::DEAD, 25, 25);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
-    
 }
 
-
-
-void Hammer::update(const Vector2& marioPos)
+void Hammer::update(const Vector2 &marioPos)
 {
     // A hammer is a simple projectile, its state update is just checking its age.
     Character::update();
@@ -50,7 +53,7 @@ void Hammer::update(const Vector2& marioPos)
     if (this->body)
     {
 
-        const float rotationSpeed = 40.0f; 
+        const float rotationSpeed = 40.0f;
         this->body->SetAngularVelocity(rotationSpeed);
     }
 }
@@ -67,9 +70,9 @@ void Hammer::updateCollision(GameObject *other, int type)
 HammerBro::HammerBro()
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 21, 22);   // Hopping animation
-    setFrame(enemyStateType::JUMP, 23, 23);   // Frame for throwing
-    setFrame(enemyStateType::DEAD, 22, 22);   // Use one of the frames, will be flipped
+    setFrame(enemyStateType::IDLE, 21, 22); // Hopping animation
+    setFrame(enemyStateType::JUMP, 23, 23); // Frame for throwing
+    setFrame(enemyStateType::DEAD, 22, 22); // Use one of the frames, will be flipped
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
 
@@ -78,13 +81,13 @@ HammerBro::HammerBro()
     this->throwTimer = (float)(GetRandomValue(0, 100)) / 100.0f;
 }
 
-void HammerBro::update(const Vector2& marioPos)
+void HammerBro::update(const Vector2 &marioPos)
 {
     Character::update();
 
     if (dynamic_cast<EnemyDeadState *>(this->currentState))
     {
-        return; 
+        return;
     }
 
     // Always face Mario
@@ -106,8 +109,8 @@ void HammerBro::update(const Vector2& marioPos)
     {
         throwTimer = 0.0f;
 
-        Hammer* hammer = new Hammer();
-        
+        Hammer *hammer = new Hammer();
+
         Vector2 startPos = this->getPosition();
         startPos.y -= getBodySize(this->body).y / 2;
         startPos.x += (this->direction == RIGHT ? getBodySize(this->body).x / 2 : -getBodySize(this->body).x / 2);
@@ -142,7 +145,7 @@ void HammerBro::updateCollision(GameObject *other, int type)
             return;
         }
     }
-    if (dynamic_cast<Enemy*>(other))
+    if (dynamic_cast<Enemy *>(other))
     {
         return;
     }
