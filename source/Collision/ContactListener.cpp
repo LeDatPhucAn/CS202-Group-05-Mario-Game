@@ -5,6 +5,7 @@
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
 #include "Mario.hpp"
+#include "FireBall.hpp"
 void ContactListener::BeginContact(b2Contact *contact)
 {
     b2Fixture *fixtureA = contact->GetFixtureA();
@@ -118,6 +119,8 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     {
         return true; // Prevent collision between Spiny and Lakitu/Spiny
     }
+    if (MatchPair<FireBall, Mario>(objA, objB))
+        return true;
     if (MatchPair<Mario, Enemy>(objA, objB))
     {
         Mario *marioA = dynamic_cast<Mario *>(objA);

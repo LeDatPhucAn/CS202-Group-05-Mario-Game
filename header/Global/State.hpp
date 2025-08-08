@@ -9,7 +9,6 @@ class State
 private:
     friend class Mario;
     friend class Character;
-    friend class Projectile;
 
 protected:
     int numFrames = 0;

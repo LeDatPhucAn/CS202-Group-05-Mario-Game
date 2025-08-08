@@ -11,7 +11,7 @@ SoundController::SoundController()
     loadMarioStateSFX();
     loadSceneSFX();
     loadSceneMusic();
-    loadMarioVoice();
+    // loadMarioVoice();
 }
 SoundController::~SoundController()
 {

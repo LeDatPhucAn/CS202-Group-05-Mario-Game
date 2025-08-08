@@ -6,13 +6,11 @@
 #include <thread>
 #include "BlockState.hpp"
 #include "Spawner.hpp"
-#include "Projectile.hpp"
 #include "DrawDebug.hpp"
 #include "Score.hpp"
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
-unordered_set<shared_ptr<FireBall>> Game::projectiles = {};
 
 Game::Game(SceneManager *_mag)
 {
@@ -171,14 +169,6 @@ void Game::addGameObject(GameObject *gameObject)
         gameObjects.push_back(gameObject);
     }
 }
-void Game::addFireBall(shared_ptr<FireBall> proj)
-{
-    if (proj)
-    {
-        proj->createBody(world);
-        projectiles.insert(proj); // no need for std::move
-    }
-}
 
 void Game::removeGameObject()
 {
@@ -221,31 +211,6 @@ void Game::removeGameObject()
         block->behavior->block = nullptr;
         delete block;
         block = nullptr;
-    }
-    // Delete projectiles
-    std::vector<std::shared_ptr<FireBall>> toRemove;
-
-    for (const auto &proj : projectiles)
-    {
-        if (proj->needDeletion)
-        {
-            if (proj->getBody())
-            {
-                world->DestroyBody(proj->getBody());
-                proj->attachBody(nullptr);
-            }
-
-            if (proj->currentState)
-                proj->currentState->setObjNull();
-
-            toRemove.push_back(proj);
-        }
-    }
-
-    // Now remove from the unordered_set
-    for (const auto &proj : toRemove)
-    {
-        projectiles.erase(proj);
     }
 }
 
@@ -329,10 +294,7 @@ void Game::updateScene()
 
 void Game::updateCharacters()
 {
-    for (shared_ptr<FireBall> fb : projectiles)
-    {
-        fb->update();
-    }
+
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
@@ -371,10 +333,6 @@ void Game::displayScene()
 
             gameObjects[i]->display();
         }
-    }
-    for (shared_ptr<FireBall> fb : projectiles)
-    {
-        fb->display();
     }
 
     float dt = GetFrameTime();

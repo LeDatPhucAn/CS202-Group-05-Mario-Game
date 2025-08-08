@@ -51,7 +51,8 @@ enum class enemyStateType
     DEAD,
     FLY,
     FALL,
-    JUMP
+    JUMP,
+    STOP
 };
 enum class blockStateType
 {
@@ -70,11 +71,7 @@ enum class itemStateType
     MOVE,
     JUMP
 };
-enum class projectileStateType
-{
-    MOVE,
-    STOP
-};
+
 enum Direction
 {
     LEFT = -1,
