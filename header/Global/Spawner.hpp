@@ -45,7 +45,16 @@ public:
                     tmp->setPosition(pos);
                     game->addGameObject(tmp);
                 }
-                
+                if(typeName == "BulletBill") {
+                    BulletBill* tmp = new BulletBill();
+                    tmp->setPosition(pos);
+                    game->addGameObject(tmp);
+                }
+                if(typeName == "HammerBro") {
+                    HammerBro* tmp = new HammerBro();
+                    tmp->setPosition(pos);
+                    game->addGameObject(tmp);
+                }
             }
         }
     }

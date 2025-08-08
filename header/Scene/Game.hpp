@@ -11,6 +11,8 @@
 #include "PiranhaPlant.hpp"
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
+#include "BulletBill.hpp"
+#include "HammerBro.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 #include <unordered_set>
