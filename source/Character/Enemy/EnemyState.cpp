@@ -89,6 +89,7 @@ void EnemyDeadState::handleInput()
 EnemyStopState::EnemyStopState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::STOP, _character, _delay)
 {
+    character->isGrounded = true;
     b2Body *body = character->getBody();
     body->SetLinearVelocity({0, 0});
     b2Filter filter;
@@ -121,9 +122,7 @@ void EnemyStopState::updateState()
 
 void EnemyStopState::handleInput()
 {
-    b2Vec2 vel = character->getBody()->GetLinearVelocity();
-    vel.x = 0.0f; // Ensure no horizontal movement
-    character->getBody()->SetLinearVelocity(vel);
+    character->getBody()->SetLinearVelocity({0, 0});
 }
 
 // --- FLY STATE IMPLEMENTATION ---

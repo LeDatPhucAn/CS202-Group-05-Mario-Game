@@ -34,7 +34,7 @@ int Score::getLives() {
 void Score::reset(){
     score=0;
     coins=0;
-    lives=3;
+    lives=5;
 }
 
 void Score::resetGameOnly(){

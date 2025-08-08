@@ -2,6 +2,7 @@
 #include "Mushroom.hpp"
 #include "EnemyState.hpp"
 #include "Mario.hpp"
+#include "Score.hpp"
 
 Mushroom::Mushroom()
 {
@@ -31,6 +32,7 @@ void Mushroom::updateCollision(GameObject *other, int type)
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
+        Score::getInstance()->addScore(100);
         mario->changeState(new GrowState(mario));
         changeState(new EnemyStopState(this));
     }

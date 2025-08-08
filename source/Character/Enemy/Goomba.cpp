@@ -45,6 +45,7 @@ void Goomba::updateCollision(GameObject *other, int type)
         }
         lastHitTime = currentTime;
         // Only apply timing cooldown for side collisions (damage), not top collisions (stomp)
+
         if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));

@@ -12,9 +12,15 @@ Mario::Mario()
     setTexture("Mario2D");
     changeState(new IdleState(this));
 }
+void Mario::EatStar()
+{
+    starTimer = 12.0f; // star lasts 12 seconds
+    starMode = true;
+    SoundController::getInstance().playTemporarySceneMusic(sceneType::STAR);
+}
 void Mario::hitByEnemy()
 {
-    if (isInvincible)
+    if (isInvincible || starMode)
         return;
     if (form == SMALL)
     {
@@ -28,6 +34,8 @@ void Mario::hitByEnemy()
 }
 void Mario::jumpFromEnemy()
 {
+    if (starMode)
+        return;
     b2Vec2 vel = body->GetLinearVelocity();
     body->SetLinearVelocity({vel.x, 0});
     float mass = body->GetMass();
@@ -89,12 +97,30 @@ void Mario::updateCollision(GameObject *other, int type)
         return;
     }
     Character::updateCollision(other, type);
+    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    if (enemy && starMode)
+    {
+        enemy->changeState(new EnemyDeadState(enemy));
+        return;
+    }
 }
 
 void Mario::update()
 {
     Character::update();
     float deltaTime = GetFrameTime();
+
+    // star
+    if (starTimer > 0)
+    {
+        starTimer -= deltaTime;
+        starColorTime += deltaTime * 10; // speed of flashing
+    }
+    else
+    {
+        starMode = false;
+    }
+
     if (isInvincible)
     {
         beenInvincibleFor += deltaTime;
@@ -120,6 +146,33 @@ void Mario::update()
         sinceLastThrow = 0;
         throwFireBall();
     }
+
+    if (IsKeyPressed(KEY_X))
+    {
+        EatStar();
+    }
+}
+
+void Mario::DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position)
+{
+    Color tint = WHITE;
+    if (starTimer > 0)
+    {
+        // Simple rainbow cycling
+        float r = (sinf(starColorTime) + 1) * 127;
+        float g = (sinf(starColorTime + 2.094f) + 1) * 127; // offset by 120 degrees
+        float b = (sinf(starColorTime + 4.188f) + 1) * 127;
+        tint = Color{(unsigned char)r, (unsigned char)g, (unsigned char)b, 255};
+    }
+
+    DrawTexturePro(
+        texture,                                                 // sprite sheet
+        srcRect,                                                 // which part of the sheet
+        {position.x, position.y, srcRect.width, srcRect.height}, // destination
+        {0, 0},                                                  // origin
+        0,                                                       // rotation
+        tint                                                     // tint color
+    );
 }
 void Mario::throwFireBall()
 {
@@ -141,17 +194,28 @@ void Mario::throwFireBall()
 }
 void Mario::display()
 {
+    // global powerups
+
     if (throwingFireBall)
     {
         Rectangle frameRec = sprite.frameRecs[52];
         frameRec.width = direction * fabs(frameRec.width);
-        DrawTextureRec(sprite.texture, frameRec, getCenter(), WHITE);
+        if (starMode)
+        {
+            DrawLGBT(sprite.texture, frameRec, getCenter());
+        }
+        else
+            DrawTextureRec(sprite.texture, frameRec, getCenter(), WHITE);
         currentDelayTime++;
         if (currentDelayTime == throwDelay)
         {
             throwingFireBall = false;
             currentDelayTime = 0;
         }
+    }
+    else if (starMode)
+    {
+        DrawLGBT(sprite.texture, currentState->frameRec, getCenter());
     }
     else if (isInvincible)
     {
@@ -176,6 +240,9 @@ void Mario::reset()
         Game::world->DestroyBody(body);
         attachBody(nullptr);
     }
+    isInvincible = false;
+    starMode = false;
+    throwingFireBall = false;
     // Reset Mario's position and recreate physics body
     setPosition({80, 50});
     changeForm(SMALL);

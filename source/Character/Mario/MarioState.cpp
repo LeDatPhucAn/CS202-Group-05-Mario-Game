@@ -475,6 +475,7 @@ void UnGrowState::handleInput()
 DeadState::DeadState(Mario *_mario, int _delay)
     : MarioState((int)marioStateType::DEAD, _mario, _delay)
 {
+    SoundController::getInstance().stopSceneMusic();
     mario->isGrounded = false;
     mario->body->SetLinearVelocity({0, -250.f / PPM});
     b2Body *body = mario->getBody();
@@ -491,7 +492,7 @@ DeadState::DeadState(Mario *_mario, int _delay)
 
 void DeadState::handleInput()
 {
-// No need for repspawing anymore
+// No need for respawning anymore
 //     if (IsKeyPressed(KEY_R))
 //     {
 //         mario->toNewBody();

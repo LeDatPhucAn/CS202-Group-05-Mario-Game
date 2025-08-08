@@ -24,34 +24,47 @@ private:
     friend class ChooseLevel;
 
     MarioForm form = SMALL;
+
+    // Invincibility
     bool isInvincible = false;
     float invincibleTime = 1.5f;
     float beenInvincibleFor = 0.0f;
     float invincibleDrawRate = 0.15f;
     float invincibleDrawTimer = 0.0f;
 
+    // Fireball related
     bool throwingFireBall = false;
     int throwDelay = 5;
     int currentDelayTime = 0;
     float secondsPerThrow = 1.5f;
     float sinceLastThrow = 0.0f;
 
+    // Star related
+    bool starMode = false;
+    float starTimer = 0.0f;     // seconds remaining
+    float starColorTime = 0.0f; // for color cycling
 public:
     Mario();
     void setFrame(marioStateType type, int start, int end)
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
+    // fireball
     void throwFireBall();
 
+    // Star
+    void DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position);
+    void EatStar();
+    bool getStarMode() const { return starMode; }
+    // Invincible
+    bool getInvincibility() const { return isInvincible; }
+    void turnInvincible() { isInvincible = true; }
+
+    // reset game
     void reset();
     // getter
     MarioForm getForm() const { return form; }
     void changeForm(MarioForm _form);
-
-    // Invincible
-    bool getInvincibility() const { return isInvincible; }
-    void turnInvincible() { isInvincible = true; }
 
     // enemy tác động
     void hitByEnemy();

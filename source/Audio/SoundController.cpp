@@ -65,12 +65,12 @@ void SoundController::loadSceneMusic()
         {sceneType::MENU, {"Menu.mp3", true}},
         {sceneType::GAME, {"level_1(3).mp3", true}},
         {sceneType::GAMEOVER, {"GameOver.mp3", true}},
-        {sceneType::CHOOSE_LEVEL, {"ChooseLevel.mp3", true}}
-        // Add more sceneType mappings as needed
-    };
+        {sceneType::CHOOSE_LEVEL, {"ChooseLevel.mp3", true}},
+        {sceneType::STAR, {"star_man.mp3", false}}};
 
+    // Add more sceneType mappings as needed
     sceneMusic.load(sceneMusicMap);
-}
+};
 void SoundController::loadSceneSFX()
 {
     unordered_map<sceneType, string> sceneSFXMap = {
@@ -103,15 +103,23 @@ void SoundController::clearAll()
     sceneMusic.clear();
     sceneSFX.clear();
 }
+void SoundController::playTemporarySceneMusic(sceneType temp)
+{
+    sceneMusic.playTemporary(temp);
+}
 
 void SoundController::playSceneMusic(sceneType type)
 {
     sceneMusic.play(type);
 }
-
+void SoundController::playSceneMusicFromStart(sceneType type)
+{
+    sceneMusic.playFromStart(type);
+}
 void SoundController::updateSceneMusic()
 {
     sceneMusic.update();
+
 }
 void SoundController::pauseSceneMusic()
 {

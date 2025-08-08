@@ -3,7 +3,7 @@
 FireBall::FireBall()
 {
     setFrame(enemyStateType::RUN, 0, 3);
-    setFrame(enemyStateType::STOP, 4, 6);
+    setFrame(enemyStateType::STOP, 4, 7);
     setTexture("Projectiles2D");
 
     changeState(new EnemyRunState(this));

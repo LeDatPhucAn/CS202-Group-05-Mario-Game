@@ -9,7 +9,7 @@ Lakitu::Lakitu()
 {
 
     setFrame(enemyStateType::IDLE, 15, 15); // Normal flying
-    setFrame(enemyStateType::FLY, 15, 15); // Using FLY state for flying animation
+    setFrame(enemyStateType::FLY, 15, 15);  // Using FLY state for flying animation
     setFrame(enemyStateType::DEAD, 16, 16);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
     this->sprite.texture = UI::textureMap["Enemies2D"];
@@ -19,8 +19,7 @@ Lakitu::Lakitu()
     this->changeState(new EnemyIdleState(this));
 }
 
-
-void Lakitu::update(const Vector2& marioPos)
+void Lakitu::update(const Vector2 &marioPos)
 {
     Character::update();
     if (dynamic_cast<EnemyDeadState *>(this->currentState))
@@ -77,6 +76,9 @@ void Lakitu::updateCollision(GameObject *other, int type)
         if (type == TOP)
         {
             this->changeState(new EnemyDeadState(this));
+        }
+        else {
+            mario->hitByEnemy();
         }
     }
 }

@@ -50,11 +50,12 @@ public:
                     tmp->setPosition(pos);
                     game->addGameObject(tmp);
                 }
-                if(typeName == "HammerBro") {
-                    HammerBro* tmp = new HammerBro();
-                    tmp->setPosition(pos);
-                    game->addGameObject(tmp);
-                }
+                
+                // if(typeName == "HammerBro") {
+                //     HammerBro* tmp = new HammerBro();
+                //     tmp->setPosition(pos);
+                //     game->addGameObject(tmp);
+                // }
             }
         }
     }

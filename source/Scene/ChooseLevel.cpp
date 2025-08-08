@@ -43,7 +43,7 @@ ChooseLevel::ChooseLevel(SceneManager *_manager)
 
     // Initialize level portals
     initializePortals();
-    SoundController::getInstance().playSceneMusic(sceneType::CHOOSE_LEVEL);
+    SoundController::getInstance().playSceneMusicFromStart(sceneType::CHOOSE_LEVEL);
     instructionText = "Use ARROW KEYS to move Mario - Walk into rectangles to select level - ESC to go back";
 }
 

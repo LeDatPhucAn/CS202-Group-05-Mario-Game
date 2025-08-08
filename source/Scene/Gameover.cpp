@@ -33,7 +33,7 @@ GameOver::GameOver(SceneManager *_manager) : Scene(_manager)
     }
 
     selectedButton = 0;
-    SoundController::getInstance().playSceneMusic(sceneType::GAMEOVER);
+    SoundController::getInstance().playSceneMusicFromStart(sceneType::GAMEOVER);
 }
 
 GameOver::~GameOver()
