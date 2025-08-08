@@ -99,10 +99,3 @@ public:
     DeadState(Mario *_mario, int _delay = 5);
     void handleInput() override;
 };
-
-class ThrowFBState : public MarioState
-{
-public:
-    ThrowFBState(Mario *_mario, int _delay = 5);
-    void handleInput() override;
-};

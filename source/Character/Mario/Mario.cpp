@@ -118,11 +118,13 @@ void Mario::update()
     if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > 0.25f)
     {
         sinceLastThrow = 0;
-        changeState(new ThrowFBState(this));
+        throwFireBall();
     }
 }
 void Mario::throwFireBall()
 {
+    SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    throwingFireBall = true;
     FireBall *fireball = new FireBall();
 
     if (direction == LEFT)
@@ -139,7 +141,19 @@ void Mario::throwFireBall()
 }
 void Mario::display()
 {
-    if (isInvincible)
+    if (throwingFireBall)
+    {
+        Rectangle frameRec = sprite.frameRecs[52];
+        frameRec.width = direction * fabs(frameRec.width);
+        DrawTextureRec(sprite.texture, frameRec, getCenter(), WHITE);
+        currentDelayTime++;
+        if (currentDelayTime == throwDelay)
+        {
+            throwingFireBall = false;
+            currentDelayTime = 0;
+        }
+    }
+    else if (isInvincible)
     {
         invincibleDrawTimer += GetFrameTime();
         if (invincibleDrawTimer >= invincibleDrawRate)
