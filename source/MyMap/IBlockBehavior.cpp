@@ -6,6 +6,7 @@
 #include "Mario.hpp"
 #include "GameObject.hpp"
 #include "Score.hpp"
+#include "Mushroom.hpp"
 #include "SoundController.hpp"
 #include "BlockState.hpp"
 
@@ -39,6 +40,7 @@ void IBlockBehavior::makeBlockBounce(float dt)
         if(block->isQuestion) {
             block->isUsed = true;    
             this->block->changeState(new BlockUsedState(this->block));
+            throwMushroom(this->direction);
         }
 
         block->body->SetType(b2_staticBody);
@@ -58,6 +60,26 @@ void IBlockBehavior::setNoBounce()
 {
     block->isJumping = false;
 }
+
+void IBlockBehavior::throwMushroom(int direction)
+{
+    //SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    //throwingFireBall = true;
+    Mushroom *mushroom = new Mushroom();
+
+    if (direction == LEFT)
+    {
+        mushroom->setDirection(RIGHT);
+    }
+    else
+        mushroom->setDirection(LEFT);
+    // mushroom->setDirection(this->getDirection());
+    Vector2 pos = this->block->getPositionAdapter().toPixels();
+    pos.x += -mushroom->getDirection() * block->getSize().x;
+    pos.y -= block->getSize().y *2; 
+    mushroom->setPosition(pos);
+    Game::addGameObject(mushroom);
+}
 // type của Mario đối với Block, Type = Bottom là MArio nhảy lên đụng block
 void QuestionBehavior::reactToCollision(GameObject *p, int type)
 {
@@ -69,7 +91,7 @@ void QuestionBehavior::reactToCollision(GameObject *p, int type)
     {
         cout << "Question Block hit!" << endl;
         setForBounce();
-        
+        this->direction = p->getDirection();
     }
 }
 
