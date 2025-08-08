@@ -13,6 +13,10 @@ struct IBlockBehavior
     Vec2Adapter prePos;
     IBlockBehavior(Block *block);
 
+    int direction = 1;
+
+    virtual void throwMushroom(int direction = 1);
+
     virtual void setForBounce();
     virtual void setNoBounce();
     virtual void makeBlockBounce(float dt);
@@ -58,7 +62,6 @@ public:
     void updateFrame(float dt) override;
     // void onDraw(float dt) override;
 };
-
 class GroundBehavior : public IBlockBehavior
 {
 public:

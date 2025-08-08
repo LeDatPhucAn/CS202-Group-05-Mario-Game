@@ -285,9 +285,9 @@ void Game::updateScene()
     // Camera
     float delta = (float)mario->getPosition().x - prePosX;
     if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.5 * UI::screenWidth)
-        cam.target.x += (delta > 1) ? delta : 0;
+        cam.target.x += (delta > 0.5) ? delta : 0;
     if (GetWorldToScreen2D(mario->getPosition(), cam).x < 0.2 * UI::screenWidth)
-        cam.target.x += (delta < -1) ? delta : 0;
+        cam.target.x += (delta < -0.5) ? delta : 0;
 
     prePosX = mario->getPosition().x;
 }
@@ -325,7 +325,8 @@ void Game::updateMap()
 
 void Game::displayScene()
 {
-    curMap.display();
+    for (auto *b : curMap.imageBlocks)
+        b->display();
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
@@ -334,6 +335,8 @@ void Game::displayScene()
             gameObjects[i]->display();
         }
     }
+    for (auto *b : curMap.tileBlocks)
+        b->display();
 
     float dt = GetFrameTime();
     for (auto &x : particles)

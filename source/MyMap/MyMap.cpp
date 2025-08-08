@@ -130,7 +130,7 @@ void MyMap::handleImageLayer(const tson::Layer &layer)
     Vector2 basePos{layer.getOffset().x, layer.getOffset().y};
     float w = float(tex.width), h = float(tex.height);
 
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 13; ++i)
     {
         Vector2 p = {basePos.x + i * w - 200.f, basePos.y};
         imageBlocks.push_back(

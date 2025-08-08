@@ -1,7 +1,6 @@
 #include "MarioState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
-#include "GrowMushroom.hpp"
 #include "Score.hpp"
 #include "SoundController.hpp"
 
@@ -63,11 +62,6 @@ void IdleState::handleInput()
     else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         mario->changeState(new WalkState(mario));
-    }
-    else if ((IsKeyDown(KEY_M)))
-    {
-        GrowMushroom *newMushroom = new GrowMushroom();
-        newMushroom->test_appear();
     }
     else
     {
