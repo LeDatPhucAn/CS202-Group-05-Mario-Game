@@ -1,6 +1,7 @@
 #include "Block.hpp"
 #include <iostream>
 #include "Mario.hpp"
+#include "BlockState.hpp"
 using namespace std;
 
 Block::Block(int _gid, Vector2 _pos, Vector2 _size,
@@ -64,6 +65,7 @@ Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
     sprite.frameRecs = _fullFrame;
 
     sprite.StartEndFrames[(int)blockStateType::IDLE] = {(int)(StartEnd.x), (int)StartEnd.y};
+    sprite.StartEndFrames[(int)blockStateType::USED] = {(int)(StartEnd.y+1), (int)StartEnd.y+1};
     sprite.texture = _tex;
 
     isSolid = inforTile->get<bool>("isSolid");
@@ -82,7 +84,11 @@ Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
 void Block::update()
 {
     float dt = GetFrameTime();
+    
+    
     behavior->updateFrame(dt);
+
+
     if (currentState)
     {
         currentState->updateState();
@@ -104,6 +110,14 @@ void Block::updateCollision(GameObject *other, int type)
     if (!player)
         return;
     behavior->reactToCollision(player, type);
+    
+    if(isUsed) {
+        behavior = shared_ptr<IBlockBehavior>(
+        FactoryIBlockBehavior::create("GroundBlock", this));
+    
+        
+        this->behavior->setNoBounce();
+    }
 }
 
 void Block::createBody(b2World *world)

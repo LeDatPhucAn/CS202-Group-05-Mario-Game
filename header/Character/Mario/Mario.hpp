@@ -30,6 +30,9 @@ private:
     float invincibleDrawRate = 0.15f;
     float invincibleDrawTimer = 0.0f;
 
+    bool throwingFireBall = false;
+    int throwDelay = 5;
+    int currentDelayTime = 0;
     float secondsPerThrow = 1.5f;
     float sinceLastThrow = 0.0f;
 

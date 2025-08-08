@@ -2,10 +2,9 @@
 #include "Enemy.hpp" // Needed for dynamic_cast to Enemy
 #include "EnemyState.hpp"
 #include "Structs.hpp"
-#include "FireBall.hpp"
-#include "ProjectileState.hpp"
 #include "Game.hpp"
 #include "SoundController.hpp"
+#include "FireBall.hpp"
 Mario::Mario()
     : Character()
 {
@@ -116,24 +115,45 @@ void Mario::update()
     }
 
     sinceLastThrow += deltaTime;
-    if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > 1)
+    if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > 0.25f)
     {
         sinceLastThrow = 0;
-        changeState(new ThrowFBState(this));
+        throwFireBall();
     }
 }
 void Mario::throwFireBall()
 {
-    shared_ptr<FireBall> fireball = make_shared<FireBall>();
-    fireball->setDirection(this->getDirection());
+    SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    throwingFireBall = true;
+    FireBall *fireball = new FireBall();
+
+    if (direction == LEFT)
+    {
+        fireball->setDirection(RIGHT);
+    }
+    else
+        fireball->setDirection(LEFT);
+    // fireball->setDirection(this->getDirection());
     Vector2 pos = this->getPositionAdapter().toPixels();
-    pos.x += this->getDirection() * getSize().x;
+    pos.x += -fireball->getDirection() * getSize().x;
     fireball->setPosition(pos);
-    Game::addFireBall(fireball);
+    Game::addGameObject(fireball);
 }
 void Mario::display()
 {
-    if (isInvincible)
+    if (throwingFireBall)
+    {
+        Rectangle frameRec = sprite.frameRecs[52];
+        frameRec.width = direction * fabs(frameRec.width);
+        DrawTextureRec(sprite.texture, frameRec, getCenter(), WHITE);
+        currentDelayTime++;
+        if (currentDelayTime == throwDelay)
+        {
+            throwingFireBall = false;
+            currentDelayTime = 0;
+        }
+    }
+    else if (isInvincible)
     {
         invincibleDrawTimer += GetFrameTime();
         if (invincibleDrawTimer >= invincibleDrawRate)

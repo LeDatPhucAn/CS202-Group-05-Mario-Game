@@ -2,7 +2,6 @@
 #include "Game.hpp"
 #include "Character.hpp"
 #include "Program.hpp"
-#include "ProjectileState.hpp"
 #include "SoundController.hpp"
 // ---------- Base State ----------
 State::State() : delay(0), gameObject(nullptr), delayCounter(0), frameIndex(0), numFrames(0) {}

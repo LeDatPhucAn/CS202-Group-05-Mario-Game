@@ -80,8 +80,46 @@ void EnemyDeadState::updateState()
         }
     }
 }
-
 void EnemyDeadState::handleInput()
+{
+    b2Vec2 vel = character->getBody()->GetLinearVelocity();
+    vel.x = 0.0f; // Ensure no horizontal movement
+    character->getBody()->SetLinearVelocity(vel);
+}
+EnemyStopState::EnemyStopState(Character *_character, int _delay)
+    : EnemyState((int)enemyStateType::STOP, _character, _delay)
+{
+    b2Body *body = character->getBody();
+    body->SetLinearVelocity({0, 0});
+    b2Filter filter;
+    filter.categoryBits = 0;
+    filter.maskBits = 0;
+
+    // Iterate over all fixtures attached to this body
+    for (b2Fixture *fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+    {
+        fixture->SetFilterData(filter);
+    }
+}
+
+void EnemyStopState::updateState()
+{
+    State::updateState();
+    delayCounter -= GetFrameTime();
+    if (frameIndex == numFrames - 1)
+    {
+        Enemy *enemy = dynamic_cast<Enemy *>(character);
+        if (enemy)
+        {
+            // delete body of enemy
+            enemy->beCleared = true;
+            cout << "REMOVED\n";
+            enemy->needDeletion = true;
+        }
+    }
+}
+
+void EnemyStopState::handleInput()
 {
     b2Vec2 vel = character->getBody()->GetLinearVelocity();
     vel.x = 0.0f; // Ensure no horizontal movement
