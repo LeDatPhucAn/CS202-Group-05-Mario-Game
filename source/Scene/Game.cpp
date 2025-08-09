@@ -54,7 +54,7 @@ void Game::init()
     luigi = new PlayerLuigi();
     // Set initial positions
     mario->setPosition({80, 50});
-    luigi->setPosition({60, 50});
+    luigi->setPosition({200, 50});
 
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);

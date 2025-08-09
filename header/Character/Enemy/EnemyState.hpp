@@ -42,6 +42,13 @@ public:
     FireBallMoveState(Character *character, int delay = 5);
     void handleInput() override;
 };
+class StarMoveState : public EnemyState
+{
+private:
+public:
+    StarMoveState(Character *character, int delay = 5);
+    void handleInput() override;
+};
 
 class EnemyDeadState : public EnemyState
 {

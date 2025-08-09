@@ -6,10 +6,10 @@
 
 Star::Star()
 {
-    setFrame(enemyStateType::RUN, 1,1);
+    setFrame(enemyStateType::STAR_MOVE, 3, 3);
     setTexture("Items");
 
-    changeState(new EnemyWalkState(this));
+    changeState(new StarMoveState(this));
 }
 
 void Star::updateCollision(GameObject *other, int type)

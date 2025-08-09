@@ -6,7 +6,7 @@
 
 Mushroom::Mushroom()
 {
-    setFrame(enemyStateType::RUN, 0, 0);
+    setFrame(enemyStateType::WALK, 0, 0);
     setTexture("Items");
 
     changeState(new EnemyWalkState(this));

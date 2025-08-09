@@ -54,7 +54,8 @@ enum class enemyStateType
     FALL,
     JUMP,
     STOP,
-    FB_MOVE
+    FB_MOVE,
+    STAR_MOVE
 };
 enum class blockStateType
 {
