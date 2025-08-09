@@ -16,6 +16,7 @@ struct IBlockBehavior
     int direction = 1;
 
     virtual void throwMushroom(int direction = 1);
+    virtual void throwStar(int direction = 1);
 
     virtual void setForBounce();
     virtual void setNoBounce();
