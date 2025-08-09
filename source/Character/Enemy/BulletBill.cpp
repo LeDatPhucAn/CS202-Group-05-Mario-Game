@@ -7,11 +7,11 @@
 BulletBill::BulletBill()
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 19, 19);
-    setFrame(enemyStateType::FLY, 20, 20);
-    setFrame(enemyStateType::DEAD, 19, 19);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 0, 0);
+    setFrame(enemyStateType::FLY, 1, 7);
+    setFrame(enemyStateType::DEAD, 18, 18);
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["BulletBill"]);
+    this->sprite.texture = UI::textureMap["BulletBill"];
 
     this->isActivated = false;
     this->changeState(new EnemyIdleState(this));
@@ -21,7 +21,7 @@ void BulletBill::update(const Vector2 &marioPos)
 {
     b2Vec2 vel = this->body->GetLinearVelocity();
     vel.x = this->direction * fabs(100.f / PPM);
-    vel.y = -0.7f;
+    vel.y = -0.75f;
     this->body->SetLinearVelocity(vel);
 
     // Check distance to Mario and activate if close enough

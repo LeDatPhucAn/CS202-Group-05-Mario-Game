@@ -4,7 +4,7 @@
 class BulletBill : public Enemy
 {
 private:
-    float activationDistance = 150.0f; // Distance in pixels to activate
+    float activationDistance = 200.0f; // Distance in pixels to activate
     bool isActivated = false;
 
 public:

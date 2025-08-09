@@ -27,7 +27,7 @@ void Lakitu::update(const Vector2 &marioPos)
 
     // --- Movement Logic ---
     b2Vec2 vel = this->body->GetLinearVelocity();
-    vel.y = -0.75f;
+    vel.y =-0.85f;
 
     // Use the marioPos parameter for movement
     b2Vec2 currentPos = body->GetPosition();

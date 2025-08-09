@@ -31,9 +31,9 @@ private:
     Texture2D HUDScore;
 
     // For display
-    int lives = 3;
+    int lives = 5;
     float gameTime = 0.0f;
-    float maxTime = 400.0f;
+    float maxTime = 300.0f;
 
 protected:
     // Mario *mario = nullptr;
