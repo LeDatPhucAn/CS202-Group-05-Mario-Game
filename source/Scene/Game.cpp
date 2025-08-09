@@ -50,10 +50,11 @@ Game::Game(SceneManager *_mag)
 void Game::init()
 {
     // Instantiate main charact4ers
-    mario = new Mario();
-
+    mario = new PlayerMario();
+    luigi = new PlayerLuigi();
     // Set initial positions
     mario->setPosition({80, 50});
+    luigi->setPosition({60, 50});
 
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
@@ -71,6 +72,7 @@ void Game::init()
 
     // Add enemies to game
     spawner->spawnEnemy();
+    addGameObject(luigi);
     addGameObject(mario);
     // Initialize camera
     cam.offset = {0, 0};
@@ -147,7 +149,7 @@ void Game::restartGame()
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
     // Reset mario
     mario->reset();
-
+    luigi->reset();
     // reset camera
     cam.target = {0, 0};
     prePosX = 100;
@@ -221,7 +223,8 @@ void Game::updateScene()
     static bool inDeathAnimation = false;
 
     DeadState *deadState = dynamic_cast<DeadState *>(mario->currentState);
-    if (deadState)
+    DeadState *deadState2 = dynamic_cast<DeadState *>(luigi->currentState);
+    if (deadState || deadState2)
     {
         if (!inDeathAnimation)
         {
@@ -331,7 +334,6 @@ void Game::displayScene()
     {
         if (gameObjects[i])
         {
-
             gameObjects[i]->display();
         }
     }
@@ -343,10 +345,8 @@ void Game::displayScene()
     {
         x.display(dt);
     }
-
     if (showDebugDraw)
         drawDebug->DrawWorld(world);
-
     drawHUD();
 }
 
@@ -392,6 +392,7 @@ void Game::drawHUD()
     }
     if (remainingTime==0){
         mario->changeState(new DeadState(mario)); // Trigger death state when time runs out
+        luigi->changeState(new DeadState(luigi));
     }
 
     // Draw coin

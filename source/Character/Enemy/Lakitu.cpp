@@ -1,22 +1,39 @@
 #include "Lakitu.hpp"
-#include "Spiny.hpp" // Lakitu needs to know about Spiny to throw it
+#include "Spiny.hpp"
 #include "EnemyState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
+#include "UI.hpp"
+#include "raylib.h"
 
-Lakitu::Lakitu()
-    : Enemy()
+// LakituThrowState Implementation
+LakituThrowState::LakituThrowState(Lakitu* character)
+    : EnemyThrowState(character, 5), lakitu(character)
 {
+}
 
-    setFrame(enemyStateType::IDLE, 15, 15); // Normal flying
-    setFrame(enemyStateType::FLY, 15, 15);  // Using FLY state for flying animation
-    setFrame(enemyStateType::DEAD, 16, 16);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+void LakituThrowState::executeThrow()
+{
+    if (lakitu)
+    {
+        Spiny *newSpiny = new Spiny();
+        newSpiny->setPosition(lakitu->getPosition());
+        newSpiny->changeState(new EnemyWalkState(newSpiny));
+        Game::addGameObject(newSpiny);
+    }
+}
 
-    // Lakitu flies, so it is not affected by gravity
+Lakitu::Lakitu(): Enemy()
+{
+    setFrame(enemyStateType::IDLE, 0, 0);
+    setFrame(enemyStateType::FLY, 0, 0);
+    setFrame(enemyStateType::THROW, 1, 5);
+    setFrame(enemyStateType::DEAD, 6, 6);
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Lakitu"]);
+    this->sprite.texture = UI::textureMap["Lakitu"];
+
     this->throwTimer = 0.0f;
-    this->changeState(new EnemyIdleState(this));
+    this->changeState(new EnemyFlyState(this));
 }
 
 void Lakitu::update(const Vector2 &marioPos)
@@ -27,12 +44,13 @@ void Lakitu::update(const Vector2 &marioPos)
 
     // --- Movement Logic ---
     b2Vec2 vel = this->body->GetLinearVelocity();
-    vel.y =-0.85f;
-
-    // Use the marioPos parameter for movement
     b2Vec2 currentPos = body->GetPosition();
-    float targetX = (marioPos.x - 32.0f) / PPM;
 
+    // Target position
+    float targetX = (marioPos.x + 60.0f) / PPM;
+    float targetY = 10.0f / PPM; // Fixed Y position
+
+    // Horizontal movement
     float desiredSpeed = 4.0f;
     float dx = targetX - currentPos.x;
     float epsilon = 0.1f;
@@ -46,40 +64,42 @@ void Lakitu::update(const Vector2 &marioPos)
         vel.x = 0.0f;
     }
 
+    // Vertical movement - keep at target Y
+    float dy = targetY - currentPos.y;
+    vel.y = dy * 10.0f; // Adjust multiplier for faster/slower Y correction
+
     body->SetLinearVelocity(vel);
-    // Apply an UPWARD force to counteract gravity
-    this->body->ApplyForceToCenter({0, this->body->GetMass() * fallGravity}, true);
+    
 
     // --- Throwing Logic ---
-    throwTimer += GetFrameTime();
-    if (throwTimer > throwCooldown)
+    if (!dynamic_cast<EnemyThrowState*>(this->currentState))
     {
-        throwTimer = 0.0f;
-
-        Spiny *newSpiny = new Spiny();
-        newSpiny->setPosition(this->getPosition());
-        newSpiny->changeState(new EnemyWalkState(newSpiny));
-        Game::addGameObject(newSpiny);
+        throwTimer += GetFrameTime();
+        if (throwTimer > throwCooldown)
+        {
+            throwTimer = 0.0f;
+            this->changeState(new LakituThrowState(this));
+        }
     }
 }
 
 void Lakitu::updateCollision(GameObject *other, int type)
 {
-    Mario *mario = dynamic_cast<Mario *>(other);
-    if (mario)
-    {
-        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
-        {
-            return;
-        }
+    // Mario *mario = dynamic_cast<Mario *>(other);
+    // if (mario)
+    // {
+    //     if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+    //     {
+    //         return;
+    //     }
 
-        if (type == TOP)
-        {
-            this->changeState(new EnemyDeadState(this));
-        }
-        else
-        {
-            mario->hitByEnemy();
-        }
-    }
+    //     if (type == TOP)
+    //     {
+    //         this->changeState(new EnemyDeadState(this));
+    //     }
+    //     else 
+    //     {
+    //         mario->hitByEnemy();
+    //     }
+    // }
 }

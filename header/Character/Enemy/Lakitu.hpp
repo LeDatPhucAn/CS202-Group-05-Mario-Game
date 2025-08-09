@@ -1,6 +1,6 @@
 #pragma once
 #include "Enemy.hpp"
-
+#include "EnemyState.hpp"
 
 class Lakitu : public Enemy
 {
@@ -10,7 +10,18 @@ private:
 
 public:
     Lakitu();
-
     void update(const Vector2& marioPos) override;
     void updateCollision(GameObject *other, int type) override;
+    
+    friend class LakituThrowState; // Allow throw state to access Lakitu's members
 };
+class LakituThrowState : public EnemyThrowState
+{
+private:
+    Lakitu* lakitu;
+
+public:
+    LakituThrowState(Lakitu* character);
+    void executeThrow() override;
+};
+

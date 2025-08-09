@@ -12,7 +12,7 @@ ChooseLevel::ChooseLevel(SceneManager *_manager)
     world = new b2World({0, 0});
 
     // Create Mario
-    mario = new Mario();
+    mario = new PlayerMario();
     mario->setPosition({100, 350});
     mario->createBody(world);
     mario->isGrounded = true;

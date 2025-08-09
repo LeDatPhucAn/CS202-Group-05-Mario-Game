@@ -93,3 +93,19 @@ private:
 
     void initSineJump();
 };
+
+class EnemyThrowState : public EnemyState
+{
+private:
+    float throwDuration = 0.5f; // Duration of throw animation
+    float throwTimer = 0.0f;
+    bool hasThrown = false;
+
+public:
+    EnemyThrowState(Character *character, int delay = 5);
+    void handleInput() override;
+    void updateState() override;
+    
+    // Called by the character when it's time to actually throw
+    virtual void executeThrow() = 0;
+};

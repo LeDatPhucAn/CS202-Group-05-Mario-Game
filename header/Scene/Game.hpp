@@ -1,6 +1,6 @@
 #pragma once
 #include "Character.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "MyMap.hpp"
 #include "Scene.hpp"
 #include "raylib-tileson.h"
@@ -36,8 +36,9 @@ private:
     float maxTime = 300.0f;
 
 protected:
-    Mario *mario = nullptr;
-
+    // Mario *mario = nullptr;
+    PlayerMario *mario = nullptr;
+    PlayerLuigi *luigi = nullptr;
     Spawner *spawner = nullptr;
     // Character* MarioPointer = nullptr;
     string current_Map;

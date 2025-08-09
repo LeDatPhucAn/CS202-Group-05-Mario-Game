@@ -54,7 +54,8 @@ enum class enemyStateType
     FALL,
     JUMP,
     STOP,
-    FB_MOVE
+    FB_MOVE,
+    THROW
 };
 enum class blockStateType
 {
@@ -107,4 +108,15 @@ enum class sceneType
     SETTING,
     GAMEOVER,
     STAR
+};
+
+enum class Action
+{
+    BUTTON_LEFT,
+    BUTTON_RIGHT,
+    BUTTON_UP,
+    BUTTON_DOWN,
+    BUTTON_RUN,
+    BUTTON_THROW_FIREBALL
+    // ... add more as needed
 };

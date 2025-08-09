@@ -223,3 +223,41 @@ void EnemyJumpState::updateState()
     if (elapsed > period)
         elapsed -= period;
 }
+
+// --- THROW STATE IMPLEMENTATION ---
+
+EnemyThrowState::EnemyThrowState(Character *character, int delay)
+    : EnemyState((int)enemyStateType::THROW, character, delay)
+{
+    throwTimer = 0.0f;
+    hasThrown = false;
+}
+
+void EnemyThrowState::handleInput()
+{
+    // Slow down or stop horizontal movement during throw
+    b2Vec2 vel = character->getBody()->GetLinearVelocity();
+    vel.x *= 0.5f; // Reduce speed by half during throw
+    character->getBody()->SetLinearVelocity(vel);
+}
+
+void EnemyThrowState::updateState()
+{
+    State::updateState();
+    
+    throwTimer += GetFrameTime();
+    
+    // Execute throw at mid-point of animation
+    if (!hasThrown && throwTimer >= throwDuration * 0.5f)
+    {
+        executeThrow();
+        hasThrown = true;
+    }
+    
+    // Return to previous state after throw duration
+    if (throwTimer >= throwDuration)
+    {
+        // Return to flying state (or appropriate state for the enemy)
+        character->changeState(new EnemyFlyState(character));
+    }
+}

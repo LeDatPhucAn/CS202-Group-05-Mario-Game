@@ -43,8 +43,22 @@ private:
     bool starMode = false;
     float starTimer = 0.0f;     // seconds remaining
     float starColorTime = 0.0f; // for color cycling
+protected:
+    unordered_map<Action, int> keyBindings;
+    
+    void bindKey(Action action, int key)
+    {
+        keyBindings[action] = key;
+    }
+
+    int getKey(Action action)
+    {
+        return keyBindings[action];
+    }
+
 public:
     Mario();
+
     void setFrame(marioStateType type, int start, int end)
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};
