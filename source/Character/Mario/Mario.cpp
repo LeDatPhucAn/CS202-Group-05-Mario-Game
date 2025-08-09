@@ -141,7 +141,7 @@ void Mario::update()
     }
 
     sinceLastThrow += deltaTime;
-    if (form == FIRE && IsKeyPressed(KEY_Z) && sinceLastThrow > 0.25f)
+    if (form == FIRE && IsKeyPressed(getKey(Action::BUTTON_THROW_FIREBALL)) && sinceLastThrow > 0.25f)
     {
         sinceLastThrow = 0;
         throwFireBall();
@@ -244,7 +244,7 @@ void Mario::reset()
     starMode = false;
     throwingFireBall = false;
     // Reset Mario's position and recreate physics body
-    setPosition({80, 50});
+    setPosition({200, 50});
     changeForm(SMALL);
     createBody(Game::world); // Recreate the physics body
     changeState(new IdleState(this));

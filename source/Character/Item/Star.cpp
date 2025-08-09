@@ -1,18 +1,18 @@
 
-#include "Mushroom.hpp"
+#include "Star.hpp"
 #include "EnemyState.hpp"
 #include "Mario.hpp"
 #include "Score.hpp"
 
-Mushroom::Mushroom()
+Star::Star()
 {
-    setFrame(enemyStateType::WALK, 0, 0);
+    setFrame(enemyStateType::STAR_MOVE, 3, 3);
     setTexture("Items");
 
-    changeState(new EnemyWalkState(this));
+    changeState(new StarMoveState(this));
 }
 
-void Mushroom::updateCollision(GameObject *other, int type)
+void Star::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
     Block *block = dynamic_cast<Block *>(other);
@@ -33,8 +33,7 @@ void Mushroom::updateCollision(GameObject *other, int type)
     if (mario)
     {
         Score::getInstance()->addScore(100);
-        if (mario->getForm() != FIRE)
-            mario->changeState(new GrowState(mario));
+        mario->EatStar();
         changeState(new EnemyStopState(this));
     }
 }

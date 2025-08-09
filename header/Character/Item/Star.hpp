@@ -1,8 +1,8 @@
 #pragma once
 #include "Enemy.hpp"
-class FireBall : public Enemy
+class Star : public Enemy
 {
 public:
-    FireBall();
+    Star();
     void updateCollision(GameObject *other, int type) override;
 };

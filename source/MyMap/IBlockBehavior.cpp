@@ -9,7 +9,7 @@
 #include "Mushroom.hpp"
 #include "SoundController.hpp"
 #include "BlockState.hpp"
-
+#include "Star.hpp"
 class QuestionBehavior;
 
 IBlockBehavior::IBlockBehavior(Block *block) : block(block)
@@ -40,7 +40,12 @@ void IBlockBehavior::makeBlockBounce(float dt)
         if(block->isQuestion) {
             block->isUsed = true;    
             this->block->changeState(new BlockUsedState(this->block));
-            throwMushroom(this->direction);
+            if(this->block->contain == "Mushroom")
+                throwMushroom(this->direction);
+            else if(this->block->contain == "Coin")
+                Score::getInstance()->addScore(200);
+            else if(this->block->contain == "Star")
+                throwStar(this->direction);
         }
 
         block->body->SetType(b2_staticBody);
@@ -61,10 +66,27 @@ void IBlockBehavior::setNoBounce()
     block->isJumping = false;
 }
 
+void IBlockBehavior::throwStar(int direction)
+{
+    //SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    Star* star = new Star();
+
+    if (direction == LEFT)
+    {
+        star->setDirection(RIGHT);
+    }
+    else
+        star->setDirection(LEFT);
+    // star->setDirection(this->getDirection());
+    Vector2 pos = this->block->getPositionAdapter().toPixels();
+    pos.x += -star->getDirection() * block->getSize().x;
+    pos.y -= block->getSize().y *2; 
+    star->setPosition(pos);
+    Game::addGameObject(star);
+}
 void IBlockBehavior::throwMushroom(int direction)
 {
     //SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
-    //throwingFireBall = true;
     Mushroom *mushroom = new Mushroom();
 
     if (direction == LEFT)

@@ -61,6 +61,27 @@ void FireBallMoveState::handleInput()
         body->ApplyLinearImpulseToCenter(impulse, true);
     }
 }
+StarMoveState::StarMoveState(Character *_character, int _delay)
+    : EnemyState((int)enemyStateType::STAR_MOVE, _character, _delay)
+{
+}
+
+void StarMoveState::handleInput()
+{
+    b2Body *body = character->getBody();
+    b2Vec2 vel = body->GetLinearVelocity();
+
+    // speed is 50 / PPM
+    vel.x = -character->getDirection() * fabs(50 / PPM);
+
+    body->SetLinearVelocity(vel);
+    if (character->isGrounded)
+    {
+        float mass = body->GetMass();
+        b2Vec2 impulse(0, mass * jumpVel / 4);
+        body->ApplyLinearImpulseToCenter(impulse, true);
+    }
+}
 
 EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::DEAD, _character, _delay)
