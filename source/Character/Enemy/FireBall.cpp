@@ -3,7 +3,7 @@
 FireBall::FireBall()
 {
     setFrame(enemyStateType::FB_MOVE, 0, 3);
-    setFrame(enemyStateType::FB_STOP, 4, 7);
+    setFrame(enemyStateType::STOP, 4, 7);
     setTexture("Projectiles2D");
 
     changeState(new FireBallMoveState(this));
@@ -26,11 +26,11 @@ void FireBall::updateCollision(GameObject *other, int type)
                 break;
             case LEFTSIDE:
             { // Handle left side collision with solid block
-                changeState(new FireBallStopState(this));
+                changeState(new EnemyStopState(this));
                 break;
             }
             case RIGHTSIDE:
-                changeState(new FireBallStopState(this));
+                changeState(new EnemyStopState(this));
                 break;
             }
         }
@@ -39,6 +39,6 @@ void FireBall::updateCollision(GameObject *other, int type)
     if (enemy)
     {
         enemy->changeState(new EnemyDeadState(enemy));
-        changeState(new FireBallStopState(this));
+        changeState(new EnemyStopState(this));
     }
 }
