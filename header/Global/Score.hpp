@@ -6,7 +6,7 @@ class Score {
         int coins;
         int lives;
 
-        Score() : score(0), coins(0), lives(3) {}
+        Score() : score(0), coins(0), lives(5) {}
     public:
         Score(const Score&) = delete;
         Score& operator=(const Score&) = delete;

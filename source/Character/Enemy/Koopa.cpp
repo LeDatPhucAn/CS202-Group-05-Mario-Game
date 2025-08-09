@@ -102,7 +102,7 @@ void Koopa::updateCollision(GameObject *other, int type)
     // If a running shell hits another enemy, the other enemy is defeated
     if (dynamic_cast<EnemyRunState *>(this->currentState) && enemy && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
     {
-        if(dynamic_cast<Mushroom *>(enemy))
+        if(dynamic_cast<Mushroom*>(enemy))
             return; // Don't defeat mushrooms
         enemy->changeState(new EnemyDeadState(enemy));
     }

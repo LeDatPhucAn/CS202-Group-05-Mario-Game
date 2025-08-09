@@ -21,7 +21,7 @@ void BulletBill::update(const Vector2 &marioPos)
 {
     b2Vec2 vel = this->body->GetLinearVelocity();
     vel.x = this->direction * fabs(100.f / PPM);
-    vel.y = -0.55f;
+    vel.y = -0.7f;
     this->body->SetLinearVelocity(vel);
 
     // Check distance to Mario and activate if close enough
@@ -60,6 +60,9 @@ void BulletBill::updateCollision(GameObject *other, int type)
         {
             this->changeState(new EnemyDeadState(this));
             return;
+        }
+        else {
+            mario->hitByEnemy();
         }
     }
 

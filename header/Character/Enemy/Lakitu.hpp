@@ -6,7 +6,7 @@ class Lakitu : public Enemy
 {
 private:
     float throwTimer;
-    float throwCooldown = 4.0f; // Throws a Spiny every 4 seconds
+    float throwCooldown = 6.0f; // Throws a Spiny every 6 seconds
 
 public:
     Lakitu();

@@ -262,7 +262,8 @@ void FallState::handleInput()
     b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = airAccel;
     float speedCap = walkSpeed;
-    if(!mario->isGrounded) cout << "AIR: "<< fabs(vel.x) << "\n";
+    if (!mario->isGrounded)
+        cout << "AIR: " << fabs(vel.x) << "\n";
 
     if (IsKeyDown(KEY_LEFT_CONTROL))
     {

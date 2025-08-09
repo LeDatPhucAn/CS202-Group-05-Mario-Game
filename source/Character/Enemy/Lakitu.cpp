@@ -77,5 +77,8 @@ void Lakitu::updateCollision(GameObject *other, int type)
         {
             this->changeState(new EnemyDeadState(this));
         }
+        else {
+            mario->hitByEnemy();
+        }
     }
 }

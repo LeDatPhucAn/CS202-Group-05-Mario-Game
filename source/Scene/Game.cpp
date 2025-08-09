@@ -373,12 +373,12 @@ void Game::drawHUD()
 
     // Draw Time icon - positioned relative to camera view
     Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
-    Vector2 timeIconPos = {worldTopLeft.x + 80, worldTopLeft.y + 3};
+    Vector2 timeIconPos = {worldTopLeft.x + 100, worldTopLeft.y + 3};
     Rectangle destRec = {timeIconPos.x, timeIconPos.y, 15, 15};
     DrawTexturePro(HUDTime, srcRec, destRec, {0, 0}, 0.0f, WHITE);
 
     string timeText = to_string(remainingTime);
-    Vector2 timeTextPos = {worldTopLeft.x + 100, worldTopLeft.y + 7};
+    Vector2 timeTextPos = {worldTopLeft.x + 120, worldTopLeft.y + 7};
 
     // Time warning - change color when time is low
     if (remainingTime <= 30)
@@ -392,21 +392,21 @@ void Game::drawHUD()
 
     // Draw coin
     Rectangle srcRecCoin = {0, 0, (float)HUDCoin.width, (float)HUDCoin.height};
-    Vector2 coinIconPos = {worldTopLeft.x + 140, worldTopLeft.y + 3};
+    Vector2 coinIconPos = {worldTopLeft.x + 150, worldTopLeft.y + 3};
     Rectangle destRecCoin = {coinIconPos.x, coinIconPos.y, 18, 18};
     DrawTexturePro(HUDCoin, srcRecCoin, destRecCoin, {0, 0}, 0.0f, WHITE);
 
     string coinText = to_string(Score::getInstance()->getCoins());
-    Vector2 coinTextPos = {worldTopLeft.x + 160, worldTopLeft.y + 7};
+    Vector2 coinTextPos = {worldTopLeft.x + 170, worldTopLeft.y + 7};
     DrawTextEx(UI::font, coinText.c_str(), coinTextPos, 12, 2, WHITE);
 
     // Draw Score
     Rectangle srcRecScore = {0, 0, (float)HUDScore.width, (float)HUDScore.height};
-    Vector2 scoreIconPos = {worldTopLeft.x + 190, worldTopLeft.y + 3};
+    Vector2 scoreIconPos = {worldTopLeft.x + 200, worldTopLeft.y + 3};
     Rectangle destRecScore = {scoreIconPos.x, scoreIconPos.y, 18, 18};
     DrawTexturePro(HUDScore, srcRecScore, destRecScore, {0, 0}, 0.0f, WHITE);
 
     string scoreText = to_string(Score::getInstance()->getScore());
-    Vector2 scoreTextPos = {worldTopLeft.x + 210, worldTopLeft.y + 7};
+    Vector2 scoreTextPos = {worldTopLeft.x + 220, worldTopLeft.y + 7};
     DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
 }
