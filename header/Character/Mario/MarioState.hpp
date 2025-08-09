@@ -22,6 +22,8 @@ protected:
     const float airFriction = 3.125f;
     const float skidDecel = 56.25f;
 
+    const float speedTransition = 0.3f;
+
 public:
     MarioState(int Type, Mario *_mario, int _delay);
 

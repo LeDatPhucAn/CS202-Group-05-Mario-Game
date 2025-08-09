@@ -43,6 +43,24 @@ void EnemyRunState::handleInput()
     vel.x = -character->direction * fabs(200 / PPM); // Ensure correct direction
     character->getBody()->SetLinearVelocity(vel);
 }
+FireBallMoveState::FireBallMoveState(Character *_character, int _delay)
+    : EnemyState((int)enemyStateType::FB_MOVE, _character, _delay)
+{
+}
+
+void FireBallMoveState::handleInput()
+{
+    b2Body *body = character->getBody();
+    b2Vec2 vel = body->GetLinearVelocity();
+    vel.x = -character->getDirection() * fabs(200 / PPM);
+    body->SetLinearVelocity(vel);
+    if (character->isGrounded)
+    {
+        float mass = body->GetMass();
+        b2Vec2 impulse(0, mass * jumpVel / 4);
+        body->ApplyLinearImpulseToCenter(impulse, true);
+    }
+}
 
 EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
     : EnemyState((int)enemyStateType::DEAD, _character, _delay)
@@ -86,8 +104,8 @@ void EnemyDeadState::handleInput()
     vel.x = 0.0f; // Ensure no horizontal movement
     character->getBody()->SetLinearVelocity(vel);
 }
-EnemyStopState::EnemyStopState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::STOP, _character, _delay)
+FireBallStopState::FireBallStopState(Character *_character, int _delay)
+    : EnemyState((int)enemyStateType::FB_STOP, _character, _delay)
 {
     character->isGrounded = true;
     b2Body *body = character->getBody();
@@ -103,7 +121,7 @@ EnemyStopState::EnemyStopState(Character *_character, int _delay)
     }
 }
 
-void EnemyStopState::updateState()
+void FireBallStopState::updateState()
 {
     State::updateState();
     delayCounter -= GetFrameTime();
@@ -120,7 +138,7 @@ void EnemyStopState::updateState()
     }
 }
 
-void EnemyStopState::handleInput()
+void FireBallStopState::handleInput()
 {
     character->getBody()->SetLinearVelocity({0, 0});
 }

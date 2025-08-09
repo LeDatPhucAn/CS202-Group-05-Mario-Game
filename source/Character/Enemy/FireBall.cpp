@@ -2,11 +2,11 @@
 #include "FireBall.hpp"
 FireBall::FireBall()
 {
-    setFrame(enemyStateType::RUN, 0, 3);
-    setFrame(enemyStateType::STOP, 4, 7);
+    setFrame(enemyStateType::FB_MOVE, 0, 3);
+    setFrame(enemyStateType::FB_STOP, 4, 7);
     setTexture("Projectiles2D");
 
-    changeState(new EnemyRunState(this));
+    changeState(new FireBallMoveState(this));
 }
 
 void FireBall::updateCollision(GameObject *other, int type)
@@ -22,19 +22,15 @@ void FireBall::updateCollision(GameObject *other, int type)
                 // Handle top collision with solid block
                 break;
             case BOTTOM:
-            { // Handle bottom collision with solid
-                float mass = getBody()->GetMass();
-                b2Vec2 impulse(0, mass * jumpVel / 8);
-                getBody()->ApplyLinearImpulseToCenter(impulse, true);
+                // Handle bottom collision with solid
                 break;
-            }
             case LEFTSIDE:
             { // Handle left side collision with solid block
-                changeState(new EnemyStopState(this));
+                changeState(new FireBallStopState(this));
                 break;
             }
             case RIGHTSIDE:
-                changeState(new EnemyStopState(this));
+                changeState(new FireBallStopState(this));
                 break;
             }
         }
@@ -43,6 +39,6 @@ void FireBall::updateCollision(GameObject *other, int type)
     if (enemy)
     {
         enemy->changeState(new EnemyDeadState(enemy));
-        changeState(new EnemyStopState(this));
+        changeState(new FireBallStopState(this));
     }
 }

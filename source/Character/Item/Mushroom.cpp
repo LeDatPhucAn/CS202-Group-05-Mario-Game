@@ -31,7 +31,8 @@ void Mushroom::updateCollision(GameObject *other, int type)
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
-        mario->changeState(new GrowState(mario));
-        changeState(new EnemyStopState(this));
+        if (mario->getForm() != FIRE)
+            mario->changeState(new GrowState(mario));
+        changeState(new FireBallStopState(this));
     }
 }

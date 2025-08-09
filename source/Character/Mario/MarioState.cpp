@@ -115,7 +115,7 @@ void WalkState::handleInput()
 
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
-        if (mario->direction == LEFT && fabsf(vel.x) > 0.6f)
+        if (mario->direction == LEFT && fabsf(vel.x) > speedTransition)
         {
             mario->changeState(new SkidState(mario));
             return;
@@ -125,7 +125,7 @@ void WalkState::handleInput()
     }
     else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        if (mario->direction == RIGHT && fabsf(vel.x) > 0.6f)
+        if (mario->direction == RIGHT && fabsf(vel.x) > speedTransition)
         {
             mario->changeState(new SkidState(mario));
             return;
@@ -171,7 +171,7 @@ void RunState::handleInput()
     }
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
-        if (mario->direction == LEFT && fabsf(vel.x) > 0.6f)
+        if (mario->direction == LEFT && fabsf(vel.x) > speedTransition)
         {
             mario->changeState(new SkidState(mario));
             return;
@@ -181,7 +181,7 @@ void RunState::handleInput()
     }
     else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        if (mario->direction == RIGHT && fabsf(vel.x) > 0.6f)
+        if (mario->direction == RIGHT && fabsf(vel.x) > speedTransition)
         {
             mario->changeState(new SkidState(mario));
             return;
@@ -220,7 +220,7 @@ void JumpState::handleInput()
 
     if (mario->isGrounded)
     {
-        if (fabsf(vel.x) < 0.6f)
+        if (fabsf(vel.x) < speedTransition)
             mario->changeState(new IdleState(mario));
         else
             mario->changeState(new WalkState(mario));
@@ -245,7 +245,7 @@ void JumpState::handleInput()
     {
         float drag = airFriction * GetFrameTime();
         float newVelX = vel.x - copysignf(drag, vel.x);
-        if (fabsf(newVelX) < 0.05f)
+        if (fabsf(newVelX) < 0.05f / PPM)
             newVelX = 0;
         mario->body->SetLinearVelocity({newVelX, vel.y});
     }
@@ -262,6 +262,8 @@ void FallState::handleInput()
     b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = airAccel;
     float speedCap = walkSpeed;
+    if(!mario->isGrounded) cout << "AIR: "<< fabs(vel.x) << "\n";
+
     if (IsKeyDown(KEY_LEFT_CONTROL))
     {
         accel = walkAccel;
@@ -269,7 +271,8 @@ void FallState::handleInput()
     }
     if (mario->isGrounded)
     {
-        if (fabsf(vel.x) < 0.6f)
+        cout << fabs(vel.x) << "\n";
+        if (fabsf(vel.x) < speedTransition)
             mario->changeState(new IdleState(mario));
         else
             mario->changeState(new WalkState(mario));
@@ -289,7 +292,7 @@ void FallState::handleInput()
     {
         float drag = airFriction * GetFrameTime();
         float newVelX = vel.x - copysignf(drag, vel.x);
-        if (fabsf(newVelX) < 0.05f)
+        if (fabsf(newVelX) < 0.05f / PPM)
             newVelX = 0;
         mario->body->SetLinearVelocity({newVelX, vel.y});
     }
@@ -492,11 +495,11 @@ DeadState::DeadState(Mario *_mario, int _delay)
 
 void DeadState::handleInput()
 {
-// No need for repspawing anymore
-//     if (IsKeyPressed(KEY_R))
-//     {
-//         mario->toNewBody();
-//         mario->changeState(new FallState(mario));
-//         return;
-//     }
+    // No need for repspawing anymore
+    //     if (IsKeyPressed(KEY_R))
+    //     {
+    //         mario->toNewBody();
+    //         mario->changeState(new FallState(mario));
+    //         return;
+    //     }
 }

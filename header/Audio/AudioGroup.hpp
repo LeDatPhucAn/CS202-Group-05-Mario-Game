@@ -14,6 +14,11 @@ private:
 
 public:
     SFXGroup(const string &basePath) : path(basePath) {}
+    void loadSingle(EnumType type, const string &filename)
+    {
+        string fullPath = path + filename;
+        stateSFX[type] = LoadSound(fullPath.c_str());
+    }
 
     void load(const unordered_map<EnumType, string> &sfxFileMap)
     {
@@ -69,6 +74,12 @@ private:
 
 public:
     MusicGroup(const string &basePath) : path(basePath) {}
+    void loadSingle(EnumType type, const string &filename, bool loop)
+    {
+        string fullPath = path + filename;
+        Music music = LoadMusicStream(fullPath.c_str());
+        bgmTracks[type] = {music, loop, 0.0f, false};
+    }
 
     void load(const unordered_map<EnumType, pair<string, bool>> &musicFileMap)
     {

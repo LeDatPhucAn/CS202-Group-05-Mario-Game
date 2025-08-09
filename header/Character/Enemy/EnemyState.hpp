@@ -35,6 +35,13 @@ public:
     EnemyRunState(Character *character, int delay = 5);
     void handleInput() override;
 };
+class FireBallMoveState : public EnemyState
+{
+private:
+public:
+    FireBallMoveState(Character *character, int delay = 5);
+    void handleInput() override;
+};
 
 class EnemyDeadState : public EnemyState
 {
@@ -46,13 +53,13 @@ public:
     void handleInput() override;
     void updateState() override;
 };
-class EnemyStopState : public EnemyState
+class FireBallStopState : public EnemyState
 {
 private:
     float delayCounter = 0.2f;
 
 public:
-    EnemyStopState(Character *character, int delay = 5);
+    FireBallStopState(Character *character, int delay = 5);
     void handleInput() override;
     void updateState() override;
 };

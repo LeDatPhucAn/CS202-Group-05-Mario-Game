@@ -290,7 +290,7 @@ void Mario::createBody(b2World *world)
     torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&torsoFixture);
 
-    // 2.a Legs (circle) - real collision feet // 2.b Pelvis(rectangle) - to prevent getting stuck on blocks
+    // 2.a Legs (circle) - real collision feet
 
     b2CircleShape legsShape;
     legsShape.m_radius = radius;
@@ -298,20 +298,12 @@ void Mario::createBody(b2World *world)
     b2FixtureDef legsFixture;
     legsFixture.shape = &legsShape;
     legsFixture.density = 1.0f;
-    legsFixture.friction = 0.2f; // May adjust if sliding on slopes
+    legsFixture.friction = 0.1f; // May adjust if sliding on slopes
     legsFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
     legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
-    if (dynamic_cast<PiranhaPlant *>(this))
-    {
-        b2Fixture *fixture = body->GetFixtureList();
-        while (fixture)
-        {
-            fixture->SetSensor(true);
-            fixture = fixture->GetNext();
-        }
-    }
+
     // 3. Foot sensor (same size as legs, but offset slightly lower)
     b2CircleShape footSensor;
     footSensor.m_radius = radius - 0.5f / PPM;

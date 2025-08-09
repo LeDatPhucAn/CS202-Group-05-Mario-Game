@@ -7,11 +7,6 @@ SoundController::SoundController()
       marioVoiceSFX(generalPath + "Mario/"),
       sceneSFX(generalPath + "Scene/")
 {
-    loadBlockStateSFX();
-    loadMarioStateSFX();
-    loadSceneSFX();
-    loadSceneMusic();
-    // loadMarioVoice();
 }
 SoundController::~SoundController()
 {
@@ -23,77 +18,77 @@ SoundController &SoundController::getInstance()
     return instance;
 }
 
-void SoundController::loadMarioStateSFX()
-{
-    unordered_map<marioStateType, string> sfxFileMap = {
-        {marioStateType::JUMP, "jump.wav"},
-        {marioStateType::SMALLJUMP, "jumpsmall.wav"},
-        {marioStateType::CROUCH, "crouch.wav"},
-        {marioStateType::GROW, "change_big.wav"},
-        {marioStateType::UNGROW, "change_small.wav"},
-        {marioStateType::DEAD, "death.wav"},
-        {marioStateType::THROWFB, "throw_fireball.wav"},
-        {marioStateType::SQUISH_ENEMY, "stomp.wav"},
-        {marioStateType::KICK_SHELL, "kick.wav"}};
-
-    marioStateSFX.load(sfxFileMap);
-}
-
-void SoundController::loadBlockStateSFX()
-{
-    unordered_map<blockStateType, string> sfxFileMap = {
-        {blockStateType::BOUNCE, "bounce_block.wav"},
-        {blockStateType::BREAK, "break_block.wav"},
-        {blockStateType::SPAWNITEM, "spawn_item.wav"}};
-
-    blockStateSFX.load(sfxFileMap);
-}
-void SoundController::loadMarioVoice()
-{
-    unordered_map<marioVoice, string> marioVoiceMap = {
-        {marioVoice::LETSGO, "here_we_go.wav"},
-        {marioVoice::JUMP, "hoo.wav"},
-        {marioVoice::HURT, "owowowow.wav"}
-        // Add more sceneType mappings as needed
-    };
-
-    marioVoiceSFX.load(marioVoiceMap);
-}
-void SoundController::loadSceneMusic()
-{
-    unordered_map<sceneType, pair<string, bool>> sceneMusicMap = {
-        {sceneType::MENU, {"Menu.mp3", true}},
-        {sceneType::GAME, {"level_1(3).mp3", true}},
-        {sceneType::GAMEOVER, {"GameOver.mp3", true}},
-        {sceneType::CHOOSE_LEVEL, {"ChooseLevel.mp3", true}},
-        {sceneType::STAR, {"star_man.mp3", false}}};
-
-    // Add more sceneType mappings as needed
-    sceneMusic.load(sceneMusicMap);
-};
-void SoundController::loadSceneSFX()
-{
-    unordered_map<sceneType, string> sceneSFXMap = {
-        {sceneType::PAUSE, "Pause.wav"}};
-
-    sceneSFX.load(sceneSFXMap);
-}
 void SoundController::playMarioStateSFX(marioStateType type)
 {
+    if (loadedMarioStates.count(type) == 0 && marioStatePaths.count(type) != 0)
+    {
+        marioStateSFX.loadSingle(type, marioStatePaths.at(type));
+        loadedMarioStates.insert(type);
+    }
     marioStateSFX.play(type);
 }
 
 void SoundController::playBlockStateSFX(blockStateType type)
 {
+    if (loadedBlockStates.count(type) == 0 && blockStatePaths.count(type) != 0)
+    {
+        blockStateSFX.loadSingle(type, blockStatePaths.at(type));
+        loadedBlockStates.insert(type);
+    }
     blockStateSFX.play(type);
 }
+
 void SoundController::playMarioVoiceSFX(marioVoice type)
 {
+    if (loadedMarioVoices.count(type) == 0 && marioVoiceMap.count(type) != 0)
+    {
+        marioVoiceSFX.loadSingle(type, marioVoiceMap.at(type));
+        loadedMarioVoices.insert(type);
+    }
     marioVoiceSFX.play(type);
 }
+
 void SoundController::playSceneSFX(sceneType type)
 {
+    if (loadedSceneSFX.count(type) == 0 && sceneSFXMap.count(type) != 0)
+    {
+        sceneSFX.loadSingle(type, sceneSFXMap.at(type));
+        loadedSceneSFX.insert(type);
+    }
     sceneSFX.play(type);
+}
+
+void SoundController::playSceneMusic(sceneType type)
+{
+    if (loadedSceneMusic.count(type) == 0 && sceneMusicMap.count(type) != 0)
+    {
+        auto [filePath, loop] = sceneMusicMap.at(type);
+        sceneMusic.loadSingle(type, filePath, loop);
+        loadedSceneMusic.insert(type);
+    }
+    sceneMusic.play(type);
+}
+
+void SoundController::playSceneMusicFromStart(sceneType type)
+{
+    if (loadedSceneMusic.count(type) == 0 && sceneMusicMap.count(type) != 0)
+    {
+        auto [filePath, loop] = sceneMusicMap.at(type);
+        sceneMusic.loadSingle(type, filePath, loop);
+        loadedSceneMusic.insert(type);
+    }
+    sceneMusic.playFromStart(type);
+}
+
+void SoundController::playTemporarySceneMusic(sceneType temp)
+{
+    if (loadedSceneMusic.count(temp) == 0 && sceneMusicMap.count(temp) != 0)
+    {
+        auto [filePath, loop] = sceneMusicMap.at(temp);
+        sceneMusic.loadSingle(temp, filePath, loop);
+        loadedSceneMusic.insert(temp);
+    }
+    sceneMusic.playTemporary(temp);
 }
 void SoundController::clearAll()
 {
@@ -103,23 +98,10 @@ void SoundController::clearAll()
     sceneMusic.clear();
     sceneSFX.clear();
 }
-void SoundController::playTemporarySceneMusic(sceneType temp)
-{
-    sceneMusic.playTemporary(temp);
-}
 
-void SoundController::playSceneMusic(sceneType type)
-{
-    sceneMusic.play(type);
-}
-void SoundController::playSceneMusicFromStart(sceneType type)
-{
-    sceneMusic.playFromStart(type);
-}
 void SoundController::updateSceneMusic()
 {
     sceneMusic.update();
-
 }
 void SoundController::pauseSceneMusic()
 {
