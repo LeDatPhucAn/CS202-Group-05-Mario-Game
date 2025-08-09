@@ -55,7 +55,7 @@ void IdleState::handleInput()
     {
         mario->changeState(new FallState(mario));
     }
-    else if (IsKeyPressed(mario->getKey(Action::BUTTON_DOWN)) && mario->form != SMALL)
+    else if (IsKeyDown(mario->getKey(Action::BUTTON_DOWN)) && mario->form != SMALL)
     {
         mario->changeState(new CrouchState(mario));
     }
@@ -105,7 +105,7 @@ void WalkState::handleInput()
         mario->changeState(new RunState(mario));
         return;
     }
-    else if (IsKeyPressed(mario->getKey(Action::BUTTON_DOWN)) && mario->form != SMALL)
+    else if (IsKeyDown(mario->getKey(Action::BUTTON_DOWN)) && mario->form != SMALL)
     {
         mario->changeState(new CrouchState(mario));
         return;
@@ -164,7 +164,7 @@ void RunState::handleInput()
         mario->changeState(new FallState(mario));
         return;
     }
-    if (IsKeyPressed(mario->getKey(Action::BUTTON_DOWN)) && mario->form != SMALL)
+    if (IsKeyDown(mario->getKey(Action::BUTTON_DOWN)) && mario->form != SMALL)
     {
         mario->changeState(new CrouchState(mario));
         return;
@@ -349,7 +349,7 @@ void CrouchState::handleInput()
     b2Vec2 vel = mario->body->GetLinearVelocity();
     float accel = mario->direction * (-friction);
 
-    if (!IsKeyPressed(mario->getKey(Action::BUTTON_DOWN)))
+    if (!IsKeyDown(mario->getKey(Action::BUTTON_DOWN)))
     {
         mario->toNewBody(); // Reset to normal body size
         if (!mario->isGrounded)

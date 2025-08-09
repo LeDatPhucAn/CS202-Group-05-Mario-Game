@@ -223,7 +223,8 @@ void Game::updateScene()
     static bool inDeathAnimation = false;
 
     DeadState *deadState = dynamic_cast<DeadState *>(mario->currentState);
-    if (deadState)
+    DeadState *deadState2 = dynamic_cast<DeadState *>(luigi->currentState);
+    if (deadState || deadState2)
     {
         if (!inDeathAnimation)
         {
@@ -394,6 +395,7 @@ void Game::drawHUD()
     }
     if (remainingTime==0){
         mario->changeState(new DeadState(mario)); // Trigger death state when time runs out
+        luigi->changeState(new DeadState(luigi));
     }
 
     // Draw coin
