@@ -48,7 +48,7 @@ void Lakitu::update(const Vector2 &marioPos)
 
     // Target position
     float targetX = (marioPos.x + 60.0f) / PPM;
-    float targetY = 10.0f / PPM; // Fixed Y position
+    float targetY = 15.0f / PPM; // Fixed Y position
 
     // Horizontal movement
     float desiredSpeed = 4.0f;

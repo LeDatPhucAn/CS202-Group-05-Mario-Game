@@ -81,7 +81,7 @@ void Game::init()
     cam.rotation = 0;
 
     gameTime = 0.0f;
-    lives = 3;
+    lives = 5;
     Score::getInstance()->reset();
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
 }
@@ -224,7 +224,7 @@ void Game::updateScene()
 
     DeadState *deadState = dynamic_cast<DeadState *>(mario->currentState);
     DeadState *deadState2 = dynamic_cast<DeadState *>(luigi->currentState);
-    if (deadState || deadState2)
+    if (deadState)
     {
         if (!inDeathAnimation)
         {

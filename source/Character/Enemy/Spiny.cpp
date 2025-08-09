@@ -5,12 +5,12 @@
 Spiny::Spiny()
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 131, 131);
-    setFrame(enemyStateType::WALK, 131, 132);
-    setFrame(enemyStateType::DEAD, 131, 131);
-    setFrame(enemyStateType::FALL, 129, 130);
-    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Enemies2D"]);
-    this->sprite.texture = UI::textureMap["Enemies2D"];
+    setFrame(enemyStateType::IDLE, 0, 0);
+    setFrame(enemyStateType::WALK, 0, 3);
+    setFrame(enemyStateType::DEAD, 4, 4);
+    setFrame(enemyStateType::FALL, 4, 4);
+    this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Spiny"]);
+    this->sprite.texture = UI::textureMap["Spiny"];
 }
 
 void Spiny::updateCollision(GameObject *other, int type)
@@ -23,17 +23,11 @@ void Spiny::updateCollision(GameObject *other, int type)
     {
         if (type == LEFTSIDE)
         {
-            this->direction = RIGHT;
-            b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(vel.x / PPM);
-            this->body->SetLinearVelocity(vel);
+            this->direction = LEFT;
         }
         else if (type == RIGHTSIDE)
         {
-            this->direction = LEFT;
-            b2Vec2 vel = this->body->GetLinearVelocity();
-            vel.x = this->direction * fabs(vel.x / PPM);
-            this->body->SetLinearVelocity(vel);
+            this->direction = RIGHT;
         }
     }
 
