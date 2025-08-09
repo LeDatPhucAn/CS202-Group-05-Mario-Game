@@ -49,7 +49,7 @@ public:
       bool isQuestion = false;            // Là ô dấu hỏi? hay ko
       bool isInvisible = false;           // true thì không vẽ (ví dụ Coin đã ăn rồi thì bật true)
       bool isUsed = false;                // Đã chạm vào chưa (Coin)
-      Contains contains = Contains::None; // Trong ô question chứa những thứ gì (Coin, Mushroom, Star,..)
+      string contain = "";
       bool isPipeEntrance = false;        // Đánh dấu nếu ống nước có đường bí mật
       bool isFlagPole = false;            // Đánh dấu cây cờ
 

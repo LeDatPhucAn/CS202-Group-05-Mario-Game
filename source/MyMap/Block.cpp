@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Mario.hpp"
 #include "BlockState.hpp"
+#include <string>
 using namespace std;
 
 Block::Block(int _gid, Vector2 _pos, Vector2 _size,
@@ -20,9 +21,6 @@ Block::Block(tson::Object &obj, Vector2 _pos, Vector2 _size,
     isInvisible = obj.get<bool>("isInvisible");
     isUsed = obj.get<bool>("isUsed");
 
-    // containsItem trong Tiled lưu dưới dạng int
-    int iv = obj.get<int>("containsItem");
-    contains = static_cast<Contains>(iv);
 
     isPipeEntrance = obj.get<bool>("isPipeEntrance");
     isFlagPole = obj.get<bool>("isFlagPole");
@@ -70,12 +68,12 @@ Block::Block(tson::Tile *inforTile, Vector2 _pos, Vector2 _size,
 
     isSolid = inforTile->get<bool>("isSolid");
     isBreakable = inforTile->get<bool>("isBreakable");
-    isQuestion = inforTile->get<bool>("isQuestion");
+    isQuestion = inforTile->get<bool>("isQuestion");  
     isInvisible = inforTile->get<bool>("isInvisible");
     isUsed = inforTile->get<bool>("isUsed");
 
-    int iv = inforTile->get<int>("containsItem");
-    contains = static_cast<Contains>(iv);
+    contain = inforTile->get<string>("Contain");
+    
 
     isPipeEntrance = inforTile->get<bool>("isPipeEntrance");
     isFlagPole = inforTile->get<bool>("isFlagPole");
