@@ -35,6 +35,6 @@ void Mushroom::updateCollision(GameObject *other, int type)
         Score::getInstance()->addScore(100);
         if (mario->getForm() != FIRE)
             mario->changeState(new GrowState(mario));
-        changeState(new FireBallStopState(this));
+        changeState(new EnemyStopState(this));
     }
 }

@@ -53,13 +53,13 @@ public:
     void handleInput() override;
     void updateState() override;
 };
-class FireBallStopState : public EnemyState
+class EnemyStopState : public EnemyState
 {
 private:
     float delayCounter = 0.2f;
 
 public:
-    FireBallStopState(Character *character, int delay = 5);
+    EnemyStopState(Character *character, int delay = 5);
     void handleInput() override;
     void updateState() override;
 };
