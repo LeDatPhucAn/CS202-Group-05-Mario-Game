@@ -108,3 +108,14 @@ enum class sceneType
     GAMEOVER,
     STAR
 };
+
+enum class Action
+{
+    BUTTON_LEFT,
+    BUTTON_RIGHT,
+    BUTTON_UP,
+    BUTTON_DOWN,
+    BUTTON_RUN,
+    BUTTON_THROW_FIREBALL
+    // ... add more as needed
+};

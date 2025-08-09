@@ -50,10 +50,11 @@ Game::Game(SceneManager *_mag)
 void Game::init()
 {
     // Instantiate main charact4ers
-    mario = new Mario();
-
+    mario = new PlayerMario();
+    luigi = new PlayerLuigi();
     // Set initial positions
     mario->setPosition({80, 50});
+    luigi->setPosition({60, 50});
 
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
@@ -71,6 +72,7 @@ void Game::init()
 
     // Add enemies to game
     addGameObject(mario);
+    addGameObject(luigi);
     spawner->spawnEnemy();
     // Initialize camera
     cam.offset = {0, 0};
@@ -147,7 +149,7 @@ void Game::restartGame()
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
     // Reset mario
     mario->reset();
-
+    luigi->reset();
     // reset camera
     cam.target = {0, 0};
     prePosX = 100;

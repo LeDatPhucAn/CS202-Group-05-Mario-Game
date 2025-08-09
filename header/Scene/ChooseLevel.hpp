@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "raylib.h"
 #include <vector>
 
@@ -14,7 +14,7 @@ struct LevelPortal {
 
 class ChooseLevel : public Scene {
 private:
-    Mario* mario;
+    PlayerMario* mario;
     b2World* world;
     Camera2D cam; // Use cam like Game.cpp, not camera
     

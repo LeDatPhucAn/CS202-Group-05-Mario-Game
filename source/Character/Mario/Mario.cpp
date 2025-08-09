@@ -9,8 +9,8 @@ Mario::Mario()
     : Character()
 {
     changeForm(SMALL);
-    setTexture("Mario2D");
-    changeState(new IdleState(this));
+    // setTexture("Luigi2D");
+    // setTexture("Mario2D");
 }
 void Mario::EatStar()
 {
