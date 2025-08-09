@@ -7,9 +7,9 @@
 BulletBill::BulletBill()
     : Enemy()
 {
-    setFrame(enemyStateType::IDLE, 0, 0);
-    setFrame(enemyStateType::FLY, 1, 7);
-    setFrame(enemyStateType::DEAD, 18, 18);
+    setFrame(enemyStateType::IDLE, 1, 1);
+    setFrame(enemyStateType::FLY, 6, 1);
+    setFrame(enemyStateType::DEAD, 1, 1);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["BulletBill"]);
     this->sprite.texture = UI::textureMap["BulletBill"];
 
@@ -21,7 +21,7 @@ void BulletBill::update(const Vector2 &marioPos)
 {
     b2Vec2 vel = this->body->GetLinearVelocity();
     vel.x = this->direction * fabs(100.f / PPM);
-    vel.y = -0.75f;
+    vel.y = -0.73f;
     this->body->SetLinearVelocity(vel);
 
     // Check distance to Mario and activate if close enough
@@ -57,7 +57,8 @@ void BulletBill::updateCollision(GameObject *other, int type)
 
         // BulletBill can only be defeated by stomping from above
         if (type == TOP)
-        {
+        {   
+            mario->jumpFromEnemy();
             this->changeState(new EnemyDeadState(this));
             return;
         }
@@ -77,5 +78,12 @@ void BulletBill::updateCollision(GameObject *other, int type)
                 otherEnemy->changeState(new EnemyDeadState(otherEnemy));
             }
         }
+        // BulletBill dies when hitting blocks
+        Block *block = dynamic_cast<Block *>(other);
+        if (block && (type == LEFTSIDE || type == RIGHTSIDE))
+        {
+            this->changeState(new EnemyDeadState(this));
+        }
     }
+    
 }

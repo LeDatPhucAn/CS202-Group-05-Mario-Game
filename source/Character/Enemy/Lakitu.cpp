@@ -31,7 +31,7 @@ void Lakitu::update(const Vector2 &marioPos)
 
     // Use the marioPos parameter for movement
     b2Vec2 currentPos = body->GetPosition();
-    float targetX = (marioPos.x + 32.0f) / PPM;
+    float targetX = (marioPos.x - 32.0f) / PPM;
 
     float desiredSpeed = 4.0f;
     float dx = targetX - currentPos.x;

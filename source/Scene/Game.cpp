@@ -70,8 +70,8 @@ void Game::init()
     }
 
     // Add enemies to game
-    addGameObject(mario);
     spawner->spawnEnemy();
+    addGameObject(mario);
     // Initialize camera
     cam.offset = {0, 0};
     cam.target = {0, 0};
