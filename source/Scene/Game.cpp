@@ -140,7 +140,7 @@ void Game::restartGame()
     // Clear existing game objects (except Mario will be recreated)
     for (auto &obj : gameObjects)
     {
-        if (obj && obj != mario)
+        if (obj && obj != mario && obj != luigi)
         {
             obj->needDeletion = true;
         }
@@ -222,8 +222,16 @@ void Game::updateScene()
     static float deathTimer = 3.0f;
     static bool inDeathAnimation = false;
 
-    DeadState *deadState = dynamic_cast<DeadState *>(mario->currentState);
-    DeadState *deadState2 = dynamic_cast<DeadState *>(luigi->currentState);
+    DeadState *deadState = nullptr;
+    DeadState *deadState2 = nullptr;
+    if (mario->currentState)
+    {
+        deadState = dynamic_cast<DeadState *>(mario->currentState);
+    }
+    if (luigi->currentState)
+    {
+        deadState2 = dynamic_cast<DeadState *>(luigi->currentState);
+    }
     if (deadState || deadState2)
     {
         if (!inDeathAnimation)
@@ -374,7 +382,6 @@ void Game::drawHUD()
         DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
     }
 
-
     // Draw Time icon - positioned relative to camera view
     Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
     Vector2 timeIconPos = {worldTopLeft.x + 100, worldTopLeft.y + 3};
@@ -393,7 +400,8 @@ void Game::drawHUD()
     {
         DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, WHITE);
     }
-    if (remainingTime==0){
+    if (remainingTime == 0)
+    {
         mario->changeState(new DeadState(mario)); // Trigger death state when time runs out
         luigi->changeState(new DeadState(luigi));
     }

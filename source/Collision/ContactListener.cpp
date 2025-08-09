@@ -4,8 +4,8 @@
 #include "Character.hpp"
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
-#include "Mario.hpp"
 #include "FireBall.hpp"
+#include "Player.hpp"
 void ContactListener::BeginContact(b2Contact *contact)
 {
     b2Fixture *fixtureA = contact->GetFixtureA();
@@ -121,10 +121,23 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     }
     if (MatchPair<FireBall, Mario>(objA, objB))
         return true;
-    if (MatchPair<Mario, Enemy>(objA, objB))
+    if (MatchPair<PlayerMario, Enemy>(objA, objB))
     {
-        Mario *marioA = dynamic_cast<Mario *>(objA);
-        Mario *marioB = dynamic_cast<Mario *>(objB);
+        PlayerMario *marioA = dynamic_cast<PlayerMario *>(objA);
+        PlayerMario *marioB = dynamic_cast<PlayerMario *>(objB);
+        if (marioA)
+        {
+            return marioA->getInvincibility() || marioA->getStarMode();
+        }
+        else if (marioB)
+        {
+            return marioB->getInvincibility() || marioB->getStarMode();
+        }
+    }
+    if (MatchPair<PlayerLuigi, Enemy>(objA, objB))
+    {
+        PlayerLuigi *marioA = dynamic_cast<PlayerLuigi *>(objA);
+        PlayerLuigi *marioB = dynamic_cast<PlayerLuigi *>(objB);
         if (marioA)
         {
             return marioA->getInvincibility() || marioA->getStarMode();
