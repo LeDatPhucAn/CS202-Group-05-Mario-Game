@@ -5,9 +5,9 @@
 
 Hammer::Hammer() : Enemy()
 {
-    // Spin while RUN, inert when STOP (same layout as FireBall)
+    // Spin while RUN, inert when DEAD (same layout as FireBall)
     setFrame(enemyStateType::RUN, 11, 11);
-    setFrame(enemyStateType::STOP, 11, 11);
+    setFrame(enemyStateType::DEAD, 11, 11);
     setTexture("HammerBro"); // change to "Hammer" if you have a dedicated atlas
     changeState(new EnemyRunState(this));
 }
@@ -34,7 +34,7 @@ void Hammer::updateCollision(GameObject *other, int type)
             case BOTTOM:
             case LEFTSIDE:
             case RIGHTSIDE:
-                changeState(new EnemyStopState(this));
+                changeState(new EnemyDeadState(this));
                 break;
             default:
                 break;
@@ -48,14 +48,14 @@ void Hammer::updateCollision(GameObject *other, int type)
         {
             enemy->changeState(new EnemyDeadState(enemy));
         }
-        changeState(new EnemyStopState(this));
+        changeState(new EnemyDeadState(this));
     }
 
     if (auto *mario = dynamic_cast<Mario *>(other))
     {
         if (type == TOP)
         {
-            changeState(new EnemyStopState(this));
+            changeState(new EnemyDeadState(this));
             mario->jumpFromEnemy();
         }
     }

@@ -371,6 +371,7 @@ void Game::drawHUD()
         DrawTexturePro(HUDLives, srcRec, destRec, {0, 0}, 0.0f, WHITE);
     }
 
+
     // Draw Time icon - positioned relative to camera view
     Rectangle srcRec = {0, 0, (float)HUDTime.width, (float)HUDTime.height};
     Vector2 timeIconPos = {worldTopLeft.x + 100, worldTopLeft.y + 3};
@@ -388,6 +389,9 @@ void Game::drawHUD()
     else
     {
         DrawTextEx(UI::font, timeText.c_str(), timeTextPos, 12, 2, WHITE);
+    }
+    if (remainingTime==0){
+        mario->changeState(new DeadState(mario)); // Trigger death state when time runs out
     }
 
     // Draw coin
