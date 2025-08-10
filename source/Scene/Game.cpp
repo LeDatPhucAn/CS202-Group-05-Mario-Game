@@ -43,7 +43,6 @@ Game::Game(SceneManager *_mag)
     {
         TraceLog(LOG_WARNING, "Failed to load HUD Score texture");
     }
-
     init();
 }
 

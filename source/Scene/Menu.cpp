@@ -49,6 +49,7 @@ Menu::Menu(SceneManager *_manager) : Scene(_manager)
         "assets/Backgrounds/Buttons/StartButtonIcon.png",
         "assets/Backgrounds/Buttons/ChooseLVButtonIcon.png",
         "assets/Backgrounds/Buttons/SettingButtonIcon.png",
+        "assets/Backgrounds/Buttons/SettingButtonIcon.png", // Tutorial uses settings icon for now
         "assets/Backgrounds/Buttons/ExitButtonIcon.png"};
 
     for (const auto &path : iconPaths)
@@ -137,6 +138,7 @@ void Menu::updateScene()
             "START GAME",
             "CHOOSE LEVEL",
             "SETTINGS",
+            "TUTORIAL",
             "EXIT GAME"};
 
         // init buttons(color not important)
@@ -153,11 +155,11 @@ void Menu::updateScene()
     // Selection based on keyboard input
     if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
     {
-        selectedButton = (selectedButton - 1 + 4) % 4;
+        selectedButton = (selectedButton - 1 + 5) % 5;
     }
     if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
     {
-        selectedButton = (selectedButton + 1) % 4;
+        selectedButton = (selectedButton + 1) % 5;
     }
 
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
@@ -174,6 +176,9 @@ void Menu::updateScene()
             nextScene = sceneType::SETTING;
             break;
         case 3:
+            nextScene = sceneType::TUTORIAL;
+            break;
+        case 4:
             CloseWindow();
             break;
         }
@@ -190,7 +195,7 @@ void Menu::updateScene()
     int startY = UI::screenHeight / 2 - 100;
     int spacing = 80;
 
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         Rectangle btnRect = {
             (float)buttonX,
@@ -206,7 +211,7 @@ void Menu::updateScene()
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             Rectangle buttonRect = {buttonX, startY + i * spacing, buttonWidth, buttonHeight};
             if (CheckCollisionPointRec(mousePos, buttonRect))
@@ -225,6 +230,9 @@ void Menu::updateScene()
                     nextScene = sceneType::SETTING;
                     break;
                 case 3:
+                    nextScene = sceneType::TUTORIAL;
+                    break;
+                case 4:
                     CloseWindow();
                     break;
                 }
@@ -263,6 +271,7 @@ void Menu::displayScene()
         "START GAME",
         "CHOOSE LEVEL",
         "SETTINGS",
+        "TUTORIAL",
         "EXIT GAME"};
 
     // Load background textures
@@ -329,7 +338,7 @@ void Menu::displayScene()
     float startY = UI::screenHeight / 2 - 100;
     float spacing = 80;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         Rectangle buttonRect = {buttonX, startY + i * spacing, buttonWidth, buttonHeight};
 

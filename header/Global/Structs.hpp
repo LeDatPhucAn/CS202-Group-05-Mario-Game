@@ -108,6 +108,7 @@ enum class sceneType
     PAUSE,
     SETTING,
     GAMEOVER,
+    TUTORIAL,
     STAR
 };
 

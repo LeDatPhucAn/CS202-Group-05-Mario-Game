@@ -8,6 +8,14 @@
 Player::Player()
     : Character()
 {
+    // Initialize KeyBindingManager if not already done
+    static bool initialized = false;
+    if (!initialized)
+    {
+        KeyBindingManager::loadFromFile();
+        initialized = true;
+    }
+    
     changeForm(SMALL);
 }
 void Player::EatStar()

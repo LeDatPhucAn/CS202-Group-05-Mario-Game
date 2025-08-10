@@ -22,9 +22,12 @@ void BulletBill::update(const Vector2 &marioPos)
     b2Vec2 vel = this->body->GetLinearVelocity();
     b2Vec2 pos = this->body->GetPosition();
     vel.x = this->direction * fabs(100.f / PPM);
-    float targetY = pos.y;
+    if (!targetYSet) {
+        targetY = pos.y;
+        targetYSet=true;
+    }
     float dy = targetY - pos.y;
-    vel.y = dy * 20.0f;
+    vel.y = dy * 10.0f;
     this->body->SetLinearVelocity(vel);
 
     // Check distance to Player and activate if close enough

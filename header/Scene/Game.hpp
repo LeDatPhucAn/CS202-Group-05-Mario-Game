@@ -34,13 +34,13 @@ private:
     int lives = 5;
     float gameTime = 0.0f;
     float maxTime = 300.0f;
-
+    friend class Tutorial;
 protected:
-    // Player *mario = nullptr;
+
     PlayerMario *mario = nullptr;
     PlayerLuigi *luigi = nullptr;
     Spawner *spawner = nullptr;
-    // Character* PlayerPointer = nullptr;
+
     string current_Map;
     MyMap curMap;
 

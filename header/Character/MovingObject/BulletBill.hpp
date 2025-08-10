@@ -6,6 +6,8 @@ class BulletBill : public MovingObject
 private:
     float activationDistance = 250.0f; // Distance in pixels to activate
     bool isActivated = false;
+    bool targetYSet = false; //giữ cho nó luôn trên 1 đường thẳng
+    float targetY;
 
 public:
     BulletBill();
