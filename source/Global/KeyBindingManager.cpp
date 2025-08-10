@@ -4,7 +4,7 @@
 #include <iostream>
 
 std::unordered_map<std::string, std::unordered_map<Action, int>> KeyBindingManager::playerKeyBindings;
-const std::string KeyBindingManager::KEYBINDINGS_FILE = "keybindings.dat";
+const std::string KeyBindingManager::KEYBINDINGS_FILE = "assets/keybindings.dat";
 
 void KeyBindingManager::initializeDefaultBindings()
 {

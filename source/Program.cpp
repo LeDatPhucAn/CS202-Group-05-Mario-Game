@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Structs.hpp"
 #include "UI.hpp"
+#include "KeyBindingManager.hpp"
 using namespace std;
 Program::Program()
 {   
@@ -25,6 +26,7 @@ void Program::display()
 void Program::run()
 {
     /// main functions
+    KeyBindingManager::loadFromFile();
     while (!WindowShouldClose())
     {
         update();
