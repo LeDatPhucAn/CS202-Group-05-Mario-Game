@@ -352,7 +352,7 @@ void Tutorial::drawKeyBindingTable()
         }
         
         // Draw action name
-        DrawTextEx(UI::font, actionList[i].second.c_str(), {col1X, rowY + 10}, 18, 1, WHITE);
+        DrawTextEx(UI::font, actionList[i].second.c_str(), {col1X, rowY + 10}, 18, 1, BLACK);
 
         // Draw Mario key
         int marioKeyCode = getCurrentKeyForAction(actionList[i].first, 0);
