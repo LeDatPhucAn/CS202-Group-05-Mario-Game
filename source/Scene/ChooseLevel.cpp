@@ -141,7 +141,7 @@ void ChooseLevel::updateScene()
         {
             // GameInfo::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
             manager->curMap = "Map" + to_string(selectedLevel + 1);
-            manager->changeScene(sceneType::GAME);
+            manager->changeScene(sceneType::PRE_GAME);
             transitionTimer = 0.0f; // Reset for next time
             return;
         }

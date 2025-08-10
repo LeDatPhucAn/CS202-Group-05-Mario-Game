@@ -63,8 +63,15 @@ void PreGame::updateScene() {
         else if( (mode==Mode::SINGLE && selectionIndex==2) || (mode==Mode::DUAL && selectionIndex==1) ) toggleDifficulty();
     }
     if(IsKeyPressed(KEY_ESCAPE)) manager->goBack();
-}void PreGame::displayScene() {
+}
+
+void PreGame::displayScene() {
 	ClearBackground(Color{25,25,40,255});
+
+    Rectangle gradientRect = {0, 0, (float)UI::screenWidth, (float)UI::screenHeight};
+    DrawRectangleGradientV(0, 0, UI::screenWidth, UI::screenHeight, 
+                           Color{25,25,40,255}, Color{15,15,30,255});
+                
 	std::string title = "GAME SETUP";
 	Vector2 tSize = MeasureTextEx(UI::boldFont, title.c_str(), 46, 4);
 	DrawTextEx(UI::boldFont, title.c_str(), {(float)(UI::screenWidth - tSize.x)/2, 70}, 46, 4, WHITE);

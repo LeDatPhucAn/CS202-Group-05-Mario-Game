@@ -272,7 +272,8 @@ void Menu::displayScene()
         "CHOOSE LEVEL",
         "SETTINGS",
         "CONTROLS",
-        "EXIT GAME"};
+        "EXIT GAME"
+};
 
     // Load background textures
     if (backgroundTexture.id > 0)

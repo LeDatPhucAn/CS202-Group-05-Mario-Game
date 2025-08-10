@@ -34,11 +34,21 @@ int GameInfo::getLives() {
 void GameInfo::reset(){
     score=0;
     coins=0;
-    lives=5;
-    // Reset PreGame settings to defaults
-    mode = Mode::DUAL;
-    chooseMario = true;
-    difficulty = Difficulty::EASY;
+    //set lives based on difficulty
+    switch(difficulty) {
+        case Difficulty::EASY:
+            lives = 5;
+            break;
+        case Difficulty::HARD:
+            lives = 3;
+            break;
+        case Difficulty::HARDCORE:
+            lives = 1;
+            break;
+        default:
+            lives = 5;
+            break;
+    }
 }
 
 void GameInfo::resetGameOnly(){
