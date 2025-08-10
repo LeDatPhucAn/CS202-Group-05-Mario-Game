@@ -4,7 +4,7 @@
 class BulletBill : public MovingObject
 {
 private:
-    float activationDistance = 200.0f; // Distance in pixels to activate
+    float activationDistance = 250.0f; // Distance in pixels to activate
     bool isActivated = false;
 
 public:
