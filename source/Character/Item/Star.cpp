@@ -32,7 +32,7 @@ void Star::updateCollision(GameObject *other, int type)
     Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
-        Score::getInstance()->addScore(100);
+        GameInfo::getInstance()->addScore(100);
         mario->EatStar();
         changeState(new MovingObjectStopState(this));
     }

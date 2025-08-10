@@ -88,7 +88,7 @@ MovingObjectDeadState::MovingObjectDeadState(Character *_character, int _delay)
 {
     // make a sound when an MovingObject dies
     SoundController::getInstance().playPlayerStateSFX(playerStateType::SQUISH_ENEMY);
-    Score::getInstance()->addScore(100); // Add score for defeating MovingObject
+    GameInfo::getInstance()->addScore(100); // Add score for defeating MovingObject
     character->isGrounded = false;
     character->body->SetLinearVelocity({0, -250.f / PPM});
     b2Body *body = character->getBody();

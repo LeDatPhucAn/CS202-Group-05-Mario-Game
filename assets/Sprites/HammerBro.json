@@ -392,18 +392,18 @@
         "y": 198
     },
     {
-        "height": 8,
-        "name": "sprite72",
-        "width": 5,
-        "x": 4,
-        "y": 237
-    },
-    {
         "height": 33,
         "name": "sprite88",
         "width": 34,
         "x": 4,
         "y": 267
+    },
+    {
+        "height": 8,
+        "name": "sprite72",
+        "width": 5,
+        "x": 4,
+        "y": 237
     },
     {
         "height": 6,

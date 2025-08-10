@@ -167,7 +167,7 @@ void Menu::updateScene()
         switch (selectedButton)
         {
         case 0:
-            nextScene = sceneType::GAME;
+            nextScene = sceneType::PRE_GAME;
             break;
         case 1:
             nextScene = sceneType::CHOOSE_LEVEL;
@@ -221,7 +221,7 @@ void Menu::updateScene()
                 switch (i)
                 {
                 case 0:
-                    nextScene = sceneType::GAME;
+                    nextScene = sceneType::PRE_GAME;
                     break;
                 case 1:
                     nextScene = sceneType::CHOOSE_LEVEL;
@@ -271,7 +271,7 @@ void Menu::displayScene()
         "START GAME",
         "CHOOSE LEVEL",
         "SETTINGS",
-        "CONTROLS",
+        "TUTORIAL",
         "EXIT GAME"};
 
     // Load background textures

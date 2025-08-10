@@ -1,51 +1,56 @@
 #include "Score.hpp"
 
-Score* Score::getInstance() {
+GameInfo* GameInfo::getInstance() {
     if (instance == nullptr) {
-        instance = new Score();
+        instance = new GameInfo();
     }
     return instance;
 }
 
-void Score::addScore(int points) {
+void GameInfo::addScore(int points) {
     score += points;
 }
 
-void Score::addCoin() {
+void GameInfo::addCoin() {
     coins++;
 }
 
-void Score::setLives(int newLives) {
+void GameInfo::setLives(int newLives) {
     lives = newLives;
 }
 
-int Score::getScore() {
+int GameInfo::getScore() {
     return score;
 }
 
-int Score::getCoins(){
+int GameInfo::getCoins(){
     return coins;
 }
 
-int Score::getLives() {
+int GameInfo::getLives() {
     return lives;
 }
 
-void Score::reset(){
+void GameInfo::reset(){
     score=0;
     coins=0;
     lives=5;
+    // Reset PreGame settings to defaults
+    mode = Mode::DUAL;
+    chooseMario = true;
+    difficulty = Difficulty::EASY;
 }
 
-void Score::resetGameOnly(){
+void GameInfo::resetGameOnly(){
     coins=0;
+    // Keep PreGame settings intact during game reset
 }
 
-void Score::destroyInstance(){
+void GameInfo::destroyInstance(){
     delete instance;
     instance = nullptr;
 }
 
-Score* Score::instance = nullptr;
+GameInfo* GameInfo::instance = nullptr;
 
 

@@ -103,6 +103,7 @@ enum class sceneType
 {
     NONE,
     MENU,
+    PRE_GAME,
     GAME,
     CHOOSE_LEVEL,
     PAUSE,
@@ -110,6 +111,11 @@ enum class sceneType
     GAMEOVER,
     TUTORIAL,
     STAR
+};
+
+enum class Mode 
+{
+    SINGLE, DUAL
 };
 
 enum class Action

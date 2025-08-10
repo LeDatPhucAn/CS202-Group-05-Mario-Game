@@ -34,6 +34,7 @@ private:
     int lives = 5;
     float gameTime = 0.0f;
     float maxTime = 300.0f;
+    bool dual = false;
     friend class Tutorial;
 protected:
 

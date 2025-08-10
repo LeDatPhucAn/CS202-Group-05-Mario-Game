@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 #include "Menu.hpp"
 #include "Game.hpp"
+#include "PreGame.hpp"
 #include "Settings.hpp"
 #include "Pause.hpp"
 #include "GameOver.hpp"
@@ -28,7 +29,7 @@ void SceneManager::changeScene(sceneType _nextScene)
 {
     if (_nextScene != sceneType::NONE)
     {
-        if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING || _nextScene == sceneType::GAMEOVER || _nextScene == sceneType::CHOOSE_LEVEL || _nextScene == sceneType::TUTORIAL)
+        if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING || _nextScene == sceneType::GAMEOVER || _nextScene == sceneType::CHOOSE_LEVEL || _nextScene == sceneType::TUTORIAL || _nextScene == sceneType::PRE_GAME)
             numBackToBaseScene++;
         scenes.push_back(SceneFactory::create(_nextScene, this));
     }
@@ -96,6 +97,8 @@ Scene *SceneFactory::create(sceneType newScene, SceneManager *mag)
         return new Menu(mag);
     if (newScene == sceneType::SETTING)
         return new Settings(mag);
+    if (newScene == sceneType::PRE_GAME)
+        return new PreGame(mag);
     if (newScene == sceneType::PAUSE)
         return new Pause(mag);
     if (newScene == sceneType::GAMEOVER)

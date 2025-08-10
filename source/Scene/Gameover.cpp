@@ -74,11 +74,11 @@ void GameOver::updateScene()
         switch (selectedButton)
         {
         case 0: // Play Again
-            Score::getInstance()->reset();
+            GameInfo::getInstance()->reset();
             manager->goBack();
             return;
         case 1: // Back to Menu
-            Score::getInstance()->reset();
+            GameInfo::getInstance()->reset();
             manager->goBackOfBaseScene();
             return;
         }
@@ -87,7 +87,7 @@ void GameOver::updateScene()
     // ESC to go back to menu
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        Score::getInstance()->reset();
+        GameInfo::getInstance()->reset();
         manager->goBackOfBaseScene();
         flashActive = true;
         flashTimer = 0.0f;
@@ -133,13 +133,13 @@ void GameOver::updateScene()
             switch (selectedButton)
             {
             case 0: // Play Again
-                Score::getInstance()->reset();
+                GameInfo::getInstance()->reset();
                 manager->goBack();
                 flashActive = true;
                 flashTimer = 0.0f;
                 return;
             case 1: // Back to Menu
-                Score::getInstance()->reset();
+                GameInfo::getInstance()->reset();
                 manager->goBackOfBaseScene();
                 flashActive = true;
                 flashTimer = 0.0f;
@@ -195,7 +195,7 @@ void GameOver::displayScene()
                {titleX, titleY}, titleFontSize, titleSpacing, RED);
 
     // Draw final score and lives
-    std::string scoreText = "Final Score: " + std::to_string(Score::getInstance()->getScore());
+    std::string scoreText = "Final Score: " + std::to_string(GameInfo::getInstance()->getScore());
 
     Vector2 scoreSize = MeasureTextEx(UI::font, scoreText.c_str(), 24, 2);
 

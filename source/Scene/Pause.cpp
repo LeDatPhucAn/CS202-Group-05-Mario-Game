@@ -86,7 +86,7 @@ void Pause::updateScene()
             manager->changeScene(sceneType::SETTING);
             return;
         case 3: // Exit
-            Score::getInstance()->reset();
+            GameInfo::getInstance()->reset();
             manager->goBackOfBaseScene();
             flashActive = true;
             flashTimer = 0.0f;
@@ -150,7 +150,7 @@ void Pause::updateScene()
                 manager->changeScene(sceneType::SETTING);
                 return;
             case 3: // Exit
-                Score::getInstance()->reset();
+                GameInfo::getInstance()->reset();
                 manager->goBackOfBaseScene();
                 flashActive = true;
                 flashTimer = 0.0f;

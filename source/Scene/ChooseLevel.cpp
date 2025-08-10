@@ -139,7 +139,7 @@ void ChooseLevel::updateScene()
         // Wait 1 seconds before switching
         if (transitionTimer >= 0.7f)
         {
-            // Score::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
+            // GameInfo::getInstance()->setCurrentLevel(levelPortals[selectedLevel].levelNumber);
             manager->curMap = "Map" + to_string(selectedLevel + 1);
             manager->changeScene(sceneType::GAME);
             transitionTimer = 0.0f; // Reset for next time

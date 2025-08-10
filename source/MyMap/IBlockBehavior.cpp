@@ -43,7 +43,7 @@ void IBlockBehavior::makeBlockBounce(float dt)
             if(this->block->contain == "Mushroom")
                 throwMushroom(this->direction);
             else if(this->block->contain == "Coin")
-                Score::getInstance()->addScore(200);
+                GameInfo::getInstance()->addScore(200);
             else if(this->block->contain == "Star")
                 throwStar(this->direction);
         }
@@ -141,7 +141,7 @@ void BrickBehavior::reactToCollision(GameObject *p, int type)
             setNoBounce();
             SoundController::getInstance().playBlockStateSFX(blockStateType::BREAK);
             block->needDeletion = true;
-            Score::getInstance()->addScore(50);
+            GameInfo::getInstance()->addScore(50);
             Particle::spawnParticles(*block, Game::particles);
         }
     }

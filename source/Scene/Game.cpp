@@ -8,6 +8,7 @@
 #include "Spawner.hpp"
 #include "DrawDebug.hpp"
 #include "Score.hpp"
+
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
 vector<GameObject *> Game::gameObjects = {};
@@ -48,12 +49,28 @@ Game::Game(SceneManager *_mag)
 
 void Game::init()
 {
-    // Instantiate main charact4ers
-    mario = new PlayerMario();
-    luigi = new PlayerLuigi();
-    // Set initial positions
-    mario->setPosition({2400, 50});
-    luigi->setPosition({2400, 50});
+    // Get game settings
+    GameInfo* gameInfo = GameInfo::getInstance();
+    
+    // Instantiate main characters based on mode
+    if(gameInfo->isDualMode()) {
+        mario = new PlayerMario();
+        luigi = new PlayerLuigi();
+        mario->setPosition({80, 50});
+        luigi->setPosition({60, 50});
+    } else {
+        // Single player mode - spawn only chosen character
+        if(gameInfo->isMario()) {
+            mario = new PlayerMario();
+            mario->setPosition({80, 50});
+            luigi = nullptr;
+        } else {
+            luigi = new PlayerLuigi();
+            luigi->setPosition({80, 50}); // Luigi takes Mario's default position in single mode
+            mario = nullptr;
+        }
+    }
+
 
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
@@ -71,8 +88,8 @@ void Game::init()
 
     // Add enemies to game
     spawner->spawnEnemy();
-    addGameObject(luigi);
-    addGameObject(mario);
+    if(luigi) addGameObject(luigi);
+    if(mario) addGameObject(mario);
     // Initialize camera
     cam.offset = {0, 0};
     cam.target = {0, 0};
@@ -81,7 +98,7 @@ void Game::init()
 
     gameTime = 0.0f;
     lives = 5;
-    Score::getInstance()->reset();
+    GameInfo::getInstance()->reset();
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
 }
 
@@ -156,7 +173,7 @@ void Game::restartGame()
     gameTime = 0.0f;
 
     // Reset lives and coins but keep score
-    Score::getInstance()->resetGameOnly();
+    GameInfo::getInstance()->resetGameOnly();
 
     // Respawn enemies
     spawner->spawnEnemy();
@@ -223,15 +240,15 @@ void Game::updateScene()
 
     DeadState *deadState = nullptr;
     DeadState *deadState2 = nullptr;
-    if (mario->currentState)
+    if (mario && mario->currentState)
     {
         deadState = dynamic_cast<DeadState *>(mario->currentState);
     }
-    if (luigi->currentState)
+    if (luigi && luigi->currentState)
     {
         deadState2 = dynamic_cast<DeadState *>(luigi->currentState);
     }
-    if (deadState || deadState2)
+    if ((mario && deadState) || (luigi && deadState2))
     {
         if (!inDeathAnimation)
         {
@@ -247,9 +264,9 @@ void Game::updateScene()
         // Check if animation delay has passed (2 seconds)
         if (deathTimer >= 2.0f)
         {
-            int CurrentLives = Score::getInstance()->getLives();
-            Score::getInstance()->setLives(CurrentLives - 1);
-            CurrentLives = Score::getInstance()->getLives();
+            int CurrentLives = GameInfo::getInstance()->getLives();
+            GameInfo::getInstance()->setLives(CurrentLives - 1);
+            CurrentLives = GameInfo::getInstance()->getLives();
 
             if (CurrentLives > 0)
             {
@@ -369,7 +386,7 @@ void Game::drawHUD()
     Vector2 worldTopLeft = GetScreenToWorld2D(screenTopLeft, cam);
 
     // Draw Lives - positioned relative to camera view
-    int lives = Score::getInstance()->getLives();
+    int lives = GameInfo::getInstance()->getLives();
     for (int i = 0; i < lives; i++)
     {
         Rectangle srcRec = {0, 0, (float)HUDLives.width, (float)HUDLives.height};
@@ -408,7 +425,7 @@ void Game::drawHUD()
     Rectangle destRecCoin = {coinIconPos.x, coinIconPos.y, 18, 18};
     DrawTexturePro(HUDCoin, srcRecCoin, destRecCoin, {0, 0}, 0.0f, WHITE);
 
-    string coinText = to_string(Score::getInstance()->getCoins());
+    string coinText = to_string(GameInfo::getInstance()->getCoins());
     Vector2 coinTextPos = {worldTopLeft.x + 170, worldTopLeft.y + 7};
     DrawTextEx(UI::font, coinText.c_str(), coinTextPos, 12, 2, WHITE);
 
@@ -418,7 +435,7 @@ void Game::drawHUD()
     Rectangle destRecScore = {scoreIconPos.x, scoreIconPos.y, 18, 18};
     DrawTexturePro(HUDScore, srcRecScore, destRecScore, {0, 0}, 0.0f, WHITE);
 
-    string scoreText = to_string(Score::getInstance()->getScore());
+    string scoreText = to_string(GameInfo::getInstance()->getScore());
     Vector2 scoreTextPos = {worldTopLeft.x + 220, worldTopLeft.y + 7};
     DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
 }
