@@ -66,19 +66,29 @@ void Tutorial::initializeActionList()
 
 void Tutorial::updateScene()
 {
+    // Update swap message timer
+    if (showSwapMessage)
+    {
+        swapMessageTimer -= GetFrameTime();
+        if (swapMessageTimer <= 0.0f)
+        {
+            showSwapMessage = false;
+        }
+    }
+    
     // Handle key binding editing
     if (isEditing)
     {
         // Use GetKeyPressed() to get the key that was pressed
         int newKey = GetKeyPressed();
-        
-        if (newKey != 0 && newKey != KEY_ESCAPE)
+
+        if (newKey != 0 && newKey != KEY_BACKSPACE)
         {
             updateKeyBinding(editingAction, selectedColumn, newKey);
             isEditing = false;
             editingAction = -1;
         }
-        else if (IsKeyPressed(KEY_ESCAPE))
+        else if (IsKeyPressed(KEY_BACKSPACE))
         {
             isEditing = false;
             editingAction = -1;
@@ -213,9 +223,9 @@ void Tutorial::updateScene()
             manager->goBack();
         }
     }
-    
-    // ESC to go back
-    if (IsKeyPressed(KEY_ESCAPE))
+
+    // BACKSPACE to go back
+    if (IsKeyPressed(KEY_BACKSPACE))
     {
         manager->goBack();
     }
@@ -294,7 +304,7 @@ void Tutorial::displayScene()
     // Draw editing prompt if in edit mode
     if (isEditing)
     {
-        std::string editText = "Press any key to bind (ESC to cancel)";
+        std::string editText = "Press any key to bind (BACKSPACE to cancel)";
         float editFontSize = 24.0f;
         Vector2 editTextSize = MeasureTextEx(UI::boldFont, editText.c_str(), editFontSize, 3);
         float editX = (UI::screenWidth - editTextSize.x) / 2.0f;
@@ -309,6 +319,28 @@ void Tutorial::displayScene()
                    {editX + 2, editY + 2}, editFontSize, 3, BLACK);
         DrawTextEx(UI::boldFont, editText.c_str(),
                    {editX, editY}, editFontSize, 3, WHITE);
+    }
+    
+    // Draw key swap notification if active
+    if (showSwapMessage)
+    {
+        float swapFontSize = 20.0f;
+        Vector2 swapTextSize = MeasureTextEx(UI::font, swapMessage.c_str(), swapFontSize, 2);
+        float swapX = (UI::screenWidth - swapTextSize.x) / 2.0f;
+        float swapY = UI::screenHeight - 140;
+        
+        // Calculate alpha based on remaining time
+        float alpha = (swapMessageTimer > 1.0f) ? 255 : (swapMessageTimer * 255);
+        
+        // Background
+        Rectangle swapBg = {swapX - 15, swapY - 8, swapTextSize.x + 30, swapTextSize.y + 16};
+        DrawRectangleRounded(swapBg, 0.3f, 8, Color{0, 200, 0, (unsigned char)(alpha * 0.8f)});
+        DrawRectangleRoundedLines(swapBg, 0.3f, 8, Color{255, 255, 255, (unsigned char)alpha});
+        
+        DrawTextEx(UI::font, swapMessage.c_str(),
+                   {swapX + 1, swapY + 1}, swapFontSize, 2, Color{0, 0, 0, (unsigned char)alpha});
+        DrawTextEx(UI::font, swapMessage.c_str(),
+                   {swapX, swapY}, swapFontSize, 2, Color{255, 255, 255, (unsigned char)alpha});
     }
 }
 
@@ -395,11 +427,11 @@ void Tutorial::drawInstructions()
     std::string instructions;
     if (isEditing)
     {
-        instructions = "Press the key you want to assign (ESC to cancel)";
+        instructions = "Press the key you want to assign (backspace to cancel)";
     }
     else
     {
-        instructions = "ARROWS: Navigate • ENTER: Edit key • TAB: Switch focus • ESC: Back";
+        instructions = "ARROWS: Navigate . ENTER: Edit key . TAB: Finish . BACKSPACE: Cancel";
     }
     
     float instrX = UI::screenWidth / 2 - 350;
@@ -416,6 +448,22 @@ void Tutorial::updateKeyBinding(int actionIndex, int player, int newKey)
     if (actionIndex < 0 || actionIndex >= actionList.size()) return;
     
     Action action = actionList[actionIndex].first;
+    std::string playerName = (player == 0) ? "Mario" : "Luigi";
+    
+    // Check if this key is already bound to another action for this player
+    Action conflictingAction = static_cast<Action>(-1);
+    std::string conflictingActionName = "";
+    
+    // Find all actions for this player to check for conflicts
+    for (const auto& actionPair : actionList)
+    {
+        if (KeyBindingManager::getKeyBinding(playerName, actionPair.first) == newKey && actionPair.first != action)
+        {
+            conflictingAction = actionPair.first;
+            conflictingActionName = actionPair.second;
+            break;
+        }
+    }
     
     if (player == 0) // Mario
     {
@@ -424,6 +472,15 @@ void Tutorial::updateKeyBinding(int actionIndex, int player, int newKey)
     else // Luigi
     {
         KeyBindingManager::setKeyBinding("Luigi", action, newKey);
+    }
+    
+    // Show swap message if there was a conflict
+    if (conflictingAction != static_cast<Action>(-1))
+    {
+        std::string currentActionName = actionList[actionIndex].second;
+        swapMessage = "Swapped keys: " + currentActionName + " <-> " + conflictingActionName;
+        showSwapMessage = true;
+        swapMessageTimer = 3.0f; // Show for 3 seconds
     }
 }
 

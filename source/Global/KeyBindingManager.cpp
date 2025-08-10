@@ -31,6 +31,40 @@ void KeyBindingManager::initializeDefaultBindings()
 
 void KeyBindingManager::setKeyBinding(const std::string& playerName, Action action, int key)
 {
+    // Check if this key is already bound to another action for this player
+    auto playerIt = playerKeyBindings.find(playerName);
+    if (playerIt != playerKeyBindings.end())
+    {
+        Action conflictingAction = static_cast<Action>(-1); // Invalid action
+        int oldKey = 0;
+        
+        // Find if the new key is already bound to another action
+        for (const auto& binding : playerIt->second)
+        {
+            if (binding.second == key && binding.first != action)
+            {
+                conflictingAction = binding.first;
+                break;
+            }
+        }
+        
+        // Get the old key for the current action
+        auto actionIt = playerIt->second.find(action);
+        if (actionIt != playerIt->second.end())
+        {
+            oldKey = actionIt->second;
+        }
+        
+        // If there's a conflict, swap the keys
+        if (conflictingAction != static_cast<Action>(-1))
+        {
+            std::cout << "Key conflict detected! Swapping keys between actions." << std::endl;
+            // Set the conflicting action to use the old key
+            playerKeyBindings[playerName][conflictingAction] = oldKey;
+        }
+    }
+    
+    // Set the new key binding
     playerKeyBindings[playerName][action] = key;
     saveToFile(); // Auto-save when changed
 }
@@ -140,4 +174,12 @@ void KeyBindingManager::loadFromFile()
     }
 
     file.close();
+}
+
+void KeyBindingManager::resetToDefaults()
+{
+    std::cout << "Resetting to default key bindings..." << std::endl;
+    initializeDefaultBindings();
+    saveToFile(); // Save the defaults to file
+    std::cout << "Reset to defaults complete" << std::endl;
 }

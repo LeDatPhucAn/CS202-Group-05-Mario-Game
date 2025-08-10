@@ -49,7 +49,7 @@ Menu::Menu(SceneManager *_manager) : Scene(_manager)
         "assets/Backgrounds/Buttons/StartButtonIcon.png",
         "assets/Backgrounds/Buttons/ChooseLVButtonIcon.png",
         "assets/Backgrounds/Buttons/SettingButtonIcon.png",
-        "assets/Backgrounds/Buttons/SettingButtonIcon.png", // Tutorial uses settings icon for now
+        "assets/Backgrounds/Buttons/ControlsButtonIcon.png", 
         "assets/Backgrounds/Buttons/ExitButtonIcon.png"};
 
     for (const auto &path : iconPaths)
@@ -271,7 +271,7 @@ void Menu::displayScene()
         "START GAME",
         "CHOOSE LEVEL",
         "SETTINGS",
-        "TUTORIAL",
+        "CONTROLS",
         "EXIT GAME"};
 
     // Load background textures

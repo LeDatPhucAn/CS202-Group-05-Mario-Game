@@ -11,6 +11,7 @@ private:
 
 public:
     static void initializeDefaultBindings();
+    static void resetToDefaults();
     static void setKeyBinding(const std::string& playerName, Action action, int key);
     static int getKeyBinding(const std::string& playerName, Action action);
     static std::unordered_map<Action, int> getPlayerBindings(const std::string& playerName);

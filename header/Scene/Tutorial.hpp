@@ -19,6 +19,11 @@ private:
     bool isEditing = false;
     int editingAction = -1;
     
+    // Key swap notification
+    bool showSwapMessage = false;
+    float swapMessageTimer = 0.0f;
+    std::string swapMessage = "";
+    
 
     std::vector<std::pair<Action, std::string>> actionList;
 
