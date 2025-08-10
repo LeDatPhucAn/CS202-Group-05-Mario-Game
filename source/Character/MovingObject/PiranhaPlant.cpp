@@ -1,7 +1,7 @@
 
 #include "PiranhaPlant.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 
 PiranhaPlant::PiranhaPlant()
     : MovingObject()
@@ -81,7 +81,7 @@ void PiranhaPlant::updateCollision(GameObject *other, int type)
         return;
     }
 
-    Mario *mario = dynamic_cast<Mario *>(other);
+    Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
         if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))

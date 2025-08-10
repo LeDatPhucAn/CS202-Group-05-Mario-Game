@@ -1,11 +1,11 @@
 #pragma once
 #include "State.hpp"
 #include "GameObject.hpp"
-class Mario;
-class MarioState : public State
+class Player;
+class PlayerState : public State
 {
 protected:
-    Mario *mario;
+    Player *mario;
 
     // 16 pixels = 1 meter
 
@@ -25,7 +25,7 @@ protected:
     const float speedTransition = 0.3f;
 
 public:
-    MarioState(int Type, Mario *_mario, int _delay);
+    PlayerState(int Type, Player *_mario, int _delay);
 
     // direction : facing left or right
     // speedCap : the maximum speed
@@ -33,71 +33,71 @@ public:
     virtual void HorizontalAccelerate(float speedCap, float accel);
 };
 
-class IdleState : public MarioState
+class IdleState : public PlayerState
 {
 public:
-    IdleState(Mario *_mario, int _delay = 5);
+    IdleState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };
 
-class WalkState : public MarioState
+class WalkState : public PlayerState
 {
 public:
-    WalkState(Mario *_mario, int _delay = 5);
+    WalkState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };
-class RunState : public MarioState
+class RunState : public PlayerState
 {
 public:
-    RunState(Mario *_mario, int _delay = 3);
+    RunState(Player *_mario, int _delay = 3);
     void handleInput() override;
 };
-class JumpState : public MarioState
+class JumpState : public PlayerState
 {
 public:
-    JumpState(Mario *_mario, int _delay = 5);
+    JumpState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };
-class FallState : public MarioState
+class FallState : public PlayerState
 {
 public:
-    FallState(Mario *_mario, int _delay = 5);
+    FallState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };
-class SkidState : public MarioState
+class SkidState : public PlayerState
 {
 public:
-    SkidState(Mario *_mario, int _delay = 5);
+    SkidState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };
-class GrowState : public MarioState
+class GrowState : public PlayerState
 {
 private:
     float posBeforeY = 0;
 
 public:
-    GrowState(Mario *_mario, int _delay = 3);
+    GrowState(Player *_mario, int _delay = 3);
     void handleInput() override;
 };
-class UnGrowState : public MarioState
+class UnGrowState : public PlayerState
 {
 private:
     float posBeforeY = 0;
 
 public:
-    UnGrowState(Mario *_mario, int _delay = 3);
+    UnGrowState(Player *_mario, int _delay = 3);
     void handleInput() override;
 };
-class CrouchState : public MarioState
+class CrouchState : public PlayerState
 {
 public:
-    CrouchState(Mario *_mario, int _delay = 5);
+    CrouchState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };
 
-class DeadState : public MarioState
+class DeadState : public PlayerState
 {
 public:
-    DeadState(Mario *_mario, int _delay = 5);
+    DeadState(Player *_mario, int _delay = 5);
     void handleInput() override;
 };

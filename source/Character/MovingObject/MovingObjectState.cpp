@@ -87,7 +87,7 @@ MovingObjectDeadState::MovingObjectDeadState(Character *_character, int _delay)
     : MovingObjectState((int)movingObjectStateType::DEAD, _character, _delay)
 {
     // make a sound when an MovingObject dies
-    SoundController::getInstance().playMarioStateSFX(marioStateType::SQUISH_ENEMY);
+    SoundController::getInstance().playPlayerStateSFX(playerStateType::SQUISH_ENEMY);
     Score::getInstance()->addScore(100); // Add score for defeating MovingObject
     character->isGrounded = false;
     character->body->SetLinearVelocity({0, -250.f / PPM});

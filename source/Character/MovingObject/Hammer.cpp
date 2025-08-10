@@ -1,7 +1,7 @@
 #include "Hammer.hpp"
 #include "MovingObjectState.hpp"
 #include "Block.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 
 Hammer::Hammer() : MovingObject()
 {
@@ -51,7 +51,7 @@ void Hammer::updateCollision(GameObject *other, int type)
         changeState(new MovingObjectDeadState(this));
     }
 
-    if (auto *mario = dynamic_cast<Mario *>(other))
+    if (auto *mario = dynamic_cast<Player *>(other))
     {
         if (type == TOP)
         {

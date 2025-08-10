@@ -1,6 +1,6 @@
 #include "BulletBill.hpp"
 
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "Game.hpp"
 #include <cmath>
 
@@ -24,7 +24,7 @@ void BulletBill::update(const Vector2 &marioPos)
     vel.y = -0.73f;
     this->body->SetLinearVelocity(vel);
 
-    // Check distance to Mario and activate if close enough
+    // Check distance to Player and activate if close enough
     if (!isActivated)
     {
         Vector2 bulletPos = this->getPosition();
@@ -46,8 +46,8 @@ void BulletBill::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
 
-    // Handle collision with Mario
-    Mario *mario = dynamic_cast<Mario *>(other);
+    // Handle collision with Player
+    Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
         if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))

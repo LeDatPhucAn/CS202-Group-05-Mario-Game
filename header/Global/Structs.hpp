@@ -18,7 +18,7 @@ struct Sprite
     Texture2D texture;
 };
 
-enum MarioForm
+enum PlayerForm
 {
     SMALL = 0,
     BIG = 1,
@@ -26,7 +26,7 @@ enum MarioForm
     FORM_COUNT
 };
 
-enum class marioStateType
+enum class playerStateType
 {
     IDLE,
     WALK,

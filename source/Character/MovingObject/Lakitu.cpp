@@ -1,7 +1,7 @@
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "Game.hpp"
 #include "UI.hpp"
 #include "raylib.h"
@@ -85,7 +85,7 @@ void Lakitu::update(const Vector2 &marioPos)
 
 void Lakitu::updateCollision(GameObject *other, int type)
 {
-    // Mario *mario = dynamic_cast<Mario *>(other);
+    // Player *mario = dynamic_cast<Player *>(other);
     // if (mario)
     // {
     //     if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))

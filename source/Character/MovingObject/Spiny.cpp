@@ -1,6 +1,6 @@
 #include "Spiny.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 
 Spiny::Spiny()
     : MovingObject()
@@ -31,8 +31,8 @@ void Spiny::updateCollision(GameObject *other, int type)
         }
     }
 
-    // --- Mario Collision Logic (Different from Goomba) ---
-    Mario *mario = dynamic_cast<Mario *>(other);
+    // --- Player Collision Logic (Different from Goomba) ---
+    Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
         if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
@@ -40,7 +40,7 @@ void Spiny::updateCollision(GameObject *other, int type)
             return;
         }
 
-        // A Spiny hurts Mario even if he stomps on it.
+        // A Spiny hurts Player even if he stomps on it.
         mario->hitByEnemy();
     }
 }

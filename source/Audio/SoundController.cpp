@@ -1,10 +1,10 @@
 #include "SoundController.hpp"
 
 SoundController::SoundController()
-    : marioStateSFX(generalPath + "Motion/"),
+    : playerStateSFX(generalPath + "Motion/"),
       blockStateSFX(generalPath + "Block/"),
       sceneMusic(generalPath + "Scene/"),
-      marioVoiceSFX(generalPath + "Mario/"),
+      marioVoiceSFX(generalPath + "Player/"),
       sceneSFX(generalPath + "Scene/")
 {
 }
@@ -18,14 +18,14 @@ SoundController &SoundController::getInstance()
     return instance;
 }
 
-void SoundController::playMarioStateSFX(marioStateType type)
+void SoundController::playPlayerStateSFX(playerStateType type)
 {
-    if (loadedMarioStates.count(type) == 0 && marioStatePaths.count(type) != 0)
+    if (loadedPlayerStates.count(type) == 0 && playerStatePaths.count(type) != 0)
     {
-        marioStateSFX.loadSingle(type, marioStatePaths.at(type));
-        loadedMarioStates.insert(type);
+        playerStateSFX.loadSingle(type, playerStatePaths.at(type));
+        loadedPlayerStates.insert(type);
     }
-    marioStateSFX.play(type);
+    playerStateSFX.play(type);
 }
 
 void SoundController::playBlockStateSFX(blockStateType type)
@@ -38,12 +38,12 @@ void SoundController::playBlockStateSFX(blockStateType type)
     blockStateSFX.play(type);
 }
 
-void SoundController::playMarioVoiceSFX(marioVoice type)
+void SoundController::playPlayerVoiceSFX(marioVoice type)
 {
-    if (loadedMarioVoices.count(type) == 0 && marioVoiceMap.count(type) != 0)
+    if (loadedPlayerVoices.count(type) == 0 && marioVoiceMap.count(type) != 0)
     {
         marioVoiceSFX.loadSingle(type, marioVoiceMap.at(type));
-        loadedMarioVoices.insert(type);
+        loadedPlayerVoices.insert(type);
     }
     marioVoiceSFX.play(type);
 }
@@ -93,7 +93,7 @@ void SoundController::playTemporarySceneMusic(sceneType temp)
 void SoundController::clearAll()
 {
     marioVoiceSFX.clear();
-    marioStateSFX.clear();
+    playerStateSFX.clear();
     blockStateSFX.clear();
     sceneMusic.clear();
     sceneSFX.clear();
@@ -119,7 +119,7 @@ void SoundController::stopSceneMusic()
 }
 void SoundController::setMasterSFXVolume(float vol)
 {
-    marioStateSFX.setVolume(vol);
+    playerStateSFX.setVolume(vol);
     blockStateSFX.setVolume(vol);
     marioVoiceSFX.setVolume(vol);
     sceneSFX.setVolume(vol);

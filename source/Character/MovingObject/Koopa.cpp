@@ -1,6 +1,6 @@
 #include "Koopa.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "Game.hpp"
 #include "SoundController.hpp"
 #include "Mushroom.hpp"
@@ -39,7 +39,7 @@ Koopa::Koopa(bool isFlying)
 void Koopa::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
-    Mario *mario = dynamic_cast<Mario *>(other);
+    Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
         if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
@@ -62,14 +62,14 @@ void Koopa::updateCollision(GameObject *other, int type)
             if (dynamic_cast<MovingObjectJumpState *>(this->currentState))
             {
                 // First hit: loses wings and becomes a walking Koopa
-                SoundController::getInstance().playMarioStateSFX(marioStateType::KICK_SHELL);
+                SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
                 this->changeState(new MovingObjectWalkState(this));
                 return;
             }
             // Second hit: becomes a shell
             else if (dynamic_cast<MovingObjectWalkState *>(this->currentState))
             {
-                SoundController::getInstance().playMarioStateSFX(marioStateType::KICK_SHELL);
+                SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
                 this->toNewBody();
                 this->changeState(new MovingObjectIdleState(this));
                 return;
@@ -82,10 +82,10 @@ void Koopa::updateCollision(GameObject *other, int type)
             }
         }
 
-        // If Mario hits an idle shell, it starts moving
+        // If Player hits an idle shell, it starts moving
         if (dynamic_cast<MovingObjectIdleState *>(this->currentState))
         {
-            SoundController::getInstance().playMarioStateSFX(marioStateType::KICK_SHELL);
+            SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
             this->direction = (mario->body->GetPosition().x < this->body->GetPosition().x) ? LEFT : RIGHT;
             this->changeState(new MovingObjectRunState(this));
             return;

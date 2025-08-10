@@ -36,31 +36,31 @@ void State::animate()
         frameRec = (se.start <= se.end) ? gameObject->sprite.frameRecs[se.start + frameIndex] : gameObject->sprite.frameRecs[se.start - frameIndex];
     }
 }
-std::string marioStateToString(marioStateType state)
+std::string playerStateToString(playerStateType state)
 {
     switch (state)
     {
-    case marioStateType::IDLE:
+    case playerStateType::IDLE:
         return "IDLE";
-    case marioStateType::WALK:
+    case playerStateType::WALK:
         return "WALK";
-    case marioStateType::RUN:
+    case playerStateType::RUN:
         return "RUN";
-    case marioStateType::JUMP:
+    case playerStateType::JUMP:
         return "JUMP";
-    case marioStateType::FALL:
+    case playerStateType::FALL:
         return "FALL";
-    case marioStateType::SKID:
+    case playerStateType::SKID:
         return "SKID";
-    case marioStateType::CROUCH:
+    case playerStateType::CROUCH:
         return "CROUCH";
-    case marioStateType::GROW:
+    case playerStateType::GROW:
         return "GROW";
-    case marioStateType::UNGROW:
+    case playerStateType::UNGROW:
         return "UNGROW";
-    case marioStateType::DEAD:
+    case playerStateType::DEAD:
         return "DEAD";
-    case marioStateType::THROWFB:
+    case playerStateType::THROWFB:
         return "THROWFB";
     default:
         return "UNKNOWN";
@@ -70,9 +70,9 @@ std::string marioStateToString(marioStateType state)
 void State::updateState()
 {
 
-    // if (dynamic_cast<MarioState *>(this))
+    // if (dynamic_cast<PlayerState *>(this))
     // {
-    //     cout << "current state is: " << marioStateToString(static_cast<marioStateType>(type)) << "\n";
+    //     cout << "current state is: " << playerStateToString(static_cast<playerStateType>(type)) << "\n";
     // }
     // Update the gameObject's position based on Box2D body
     Vec2Adapter adapter(gameObject->body->GetPosition());

@@ -1,6 +1,6 @@
 #include "Game.hpp"
 #include "UI.hpp"
-#include "MarioState.hpp"
+#include "PlayerState.hpp"
 #include "Pause.hpp"
 #include <chrono>
 #include <thread>
@@ -137,7 +137,7 @@ Game::~Game()
 
 void Game::restartGame()
 {
-    // Clear existing game objects (except Mario will be recreated)
+    // Clear existing game objects (except Player will be recreated)
     for (auto &obj : gameObjects)
     {
         if (obj && obj != mario && obj != luigi)

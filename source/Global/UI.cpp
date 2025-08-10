@@ -101,7 +101,7 @@ void UI::initSprites()
 	{
 		if (entry.path().extension() == ".json")
 		{
-			std::string name = entry.path().stem().string(); // e.g., "Mario2D"
+			std::string name = entry.path().stem().string(); // e.g., "Player2D"
 			fs::path pngFile = spritePath + name + ".png";
 			cout << "Processing sprite: " << pngFile.string() << "\n";
 			if (fs::exists(pngFile))

@@ -36,7 +36,7 @@ private:
     void checkPortalCollisions();
     void drawUI();
     void drawPortals();
-    void drawMario();
+    void drawPlayer();
     
 public:
     ChooseLevel(SceneManager* _manager);

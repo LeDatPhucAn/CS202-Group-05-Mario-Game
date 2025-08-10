@@ -1,6 +1,6 @@
 #include "Goomba.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 
 Goomba::Goomba()
     : MovingObject()
@@ -30,7 +30,7 @@ void Goomba::updateCollision(GameObject *other, int type)
         }
     }
 
-    Mario *mario = dynamic_cast<Mario *>(other);
+    Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
         if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))

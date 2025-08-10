@@ -7,7 +7,7 @@ class GameObject;
 class State
 {
 private:
-    friend class Mario;
+    friend class Player;
     friend class Character;
 
 protected:
@@ -35,7 +35,7 @@ public:
     void gameObjectDebug(GameObject *gameObject);
     void drawDebug(GameObject *gameObject);
     // Đối với Enemy thì Input là Map collision
-    // Đối với Mario thì Input từ bàn phím
+    // Đối với Player thì Input từ bàn phím
     virtual void handleInput() = 0;
 
     // constantly changing frames to run sprite

@@ -36,11 +36,11 @@ private:
     float maxTime = 300.0f;
 
 protected:
-    // Mario *mario = nullptr;
+    // Player *mario = nullptr;
     PlayerMario *mario = nullptr;
     PlayerLuigi *luigi = nullptr;
     Spawner *spawner = nullptr;
-    // Character* MarioPointer = nullptr;
+    // Character* PlayerPointer = nullptr;
     string current_Map;
     MyMap curMap;
 

@@ -2,7 +2,7 @@
 #include "Hammer.hpp"
 #include "Game.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "Block.hpp"
 #include <raylib.h>
 
@@ -52,7 +52,7 @@ void HammerBro::updateCollision(GameObject *other, int type)
         }
     }
 
-    if (auto *mario = dynamic_cast<Mario *>(other))
+    if (auto *mario = dynamic_cast<Player *>(other))
     {
         if (dynamic_cast<DeadState *>(mario->currentState) ||
             dynamic_cast<MovingObjectDeadState *>(this->currentState))

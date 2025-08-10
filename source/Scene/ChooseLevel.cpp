@@ -11,7 +11,7 @@ ChooseLevel::ChooseLevel(SceneManager *_manager)
     // Create physics world
     world = new b2World({0, 0});
 
-    // Create Mario
+    // Create Player
     mario = new PlayerMario();
     mario->setPosition({100, 350});
     mario->createBody(world);
@@ -44,7 +44,7 @@ ChooseLevel::ChooseLevel(SceneManager *_manager)
     // Initialize level portals
     initializePortals();
     SoundController::getInstance().playSceneMusicFromStart(sceneType::CHOOSE_LEVEL);
-    instructionText = "Use ARROW KEYS to move Mario - Walk into rectangles to select level - ESC to go back";
+    instructionText = "Use ARROW KEYS to move Player - Walk into rectangles to select level - ESC to go back";
 }
 
 ChooseLevel::~ChooseLevel()
@@ -79,7 +79,7 @@ void ChooseLevel::updateScene()
     if (world) // 60 fps
         world->Step(1.0f / 60.0f, 6, 2);
 
-    // Make sure Mario doesn't go too far
+    // Make sure Player doesn't go too far
     mario->update();
     if (mario->getPosition().y > 350.0f)
     {
@@ -88,7 +88,7 @@ void ChooseLevel::updateScene()
         mario->isGrounded = true;
         mario->body->SetLinearVelocity({mario->body->GetLinearVelocity().x, 0});
 
-        // Force Mario back to idle state if he was falling
+        // Force Player back to idle state if he was falling
         if (dynamic_cast<FallState *>(mario->currentState))
         {
             mario->changeState(new IdleState(mario));
@@ -110,7 +110,7 @@ void ChooseLevel::updateScene()
     float delta = (float)mario->getPosition().x - prePosX;
     Vector2 screenPos = GetWorldToScreen2D(mario->getPosition(), cam);
 
-    // Always keep Mario roughly centered
+    // Always keep Player roughly centered
     if (screenPos.x > 0.6 * UI::screenWidth || screenPos.x < 0.4 * UI::screenWidth)
         cam.target.x += delta;
 
@@ -119,7 +119,7 @@ void ChooseLevel::updateScene()
     // Check portal collisions
     checkPortalCollisions();
 
-    // Auto-select level when Mario touches a rectangle
+    // Auto-select level when Player touches a rectangle
     if (selectedLevel != -1)
     {
         // Start the transition timer when a level is first selected
@@ -158,7 +158,7 @@ void ChooseLevel::updateScene()
 
 void ChooseLevel::initializePortals()
 {
-    // Create only 3 level rectangles at Mario's feet level
+    // Create only 3 level rectangles at Player's feet level
     levelPortals.clear();
 
     // Level 1-1
@@ -189,7 +189,7 @@ void ChooseLevel::initializePortals()
 void ChooseLevel::checkPortalCollisions()
 {
     Vector2 marioPos = mario->getPosition();
-    Rectangle marioRect = {marioPos.x - 16, marioPos.y - 16, 32, 32}; // Normal Mario collision
+    Rectangle marioRect = {marioPos.x - 16, marioPos.y - 16, 32, 32}; // Normal Player collision
 
     selectedLevel = -1;
     hoveredLevel = -1;
@@ -197,7 +197,7 @@ void ChooseLevel::checkPortalCollisions()
 
     for (int i = 0; i < levelPortals.size(); i++)
     {
-        // Check if Mario's rectangle overlaps with portal rectangle
+        // Check if Player's rectangle overlaps with portal rectangle
         if (CheckCollisionRecs(marioRect, levelPortals[i].bounds))
         {
             selectedLevel = i;
@@ -249,7 +249,7 @@ void ChooseLevel::displayScene()
     // Draw level rectangles
     drawPortals();
 
-    // Draw Mario exactly like Game.cpp
+    // Draw Player exactly like Game.cpp
     mario->display();
 
     EndMode2D();
@@ -314,7 +314,7 @@ void ChooseLevel::drawPortals()
     }
 }
 
-void ChooseLevel::drawMario()
+void ChooseLevel::drawPlayer()
 {
     // Just use mario->display() like Game.cpp
     mario->display();

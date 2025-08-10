@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     srand(time(NULL));
-    InitWindow(UI::screenWidth, UI::screenHeight, "Game Mario");
+    InitWindow(UI::screenWidth, UI::screenHeight, "Game Player");
     InitAudioDevice();
     SetTargetFPS(60);
 

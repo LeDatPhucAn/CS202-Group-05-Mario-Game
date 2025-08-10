@@ -10,7 +10,7 @@ class SoundController
 private:
     string generalPath = "assets/Audio/";
 
-    SFXGroup<marioStateType> marioStateSFX;
+    SFXGroup<playerStateType> playerStateSFX;
     SFXGroup<blockStateType> blockStateSFX;
     SFXGroup<marioVoice> marioVoiceSFX;
     SFXGroup<sceneType> sceneSFX;
@@ -19,16 +19,16 @@ private:
     ~SoundController();
 
     void clearAll();
-    const unordered_map<marioStateType, string> marioStatePaths = {
-        {marioStateType::JUMP, "jump.wav"},
-        {marioStateType::SMALLJUMP, "jumpsmall.wav"},
-        {marioStateType::CROUCH, "crouch.wav"},
-        {marioStateType::GROW, "change_big.wav"},
-        {marioStateType::UNGROW, "change_small.wav"},
-        {marioStateType::DEAD, "death.wav"},
-        {marioStateType::THROWFB, "throw_fireball.wav"},
-        {marioStateType::SQUISH_ENEMY, "stomp.wav"},
-        {marioStateType::KICK_SHELL, "kick.wav"}};
+    const unordered_map<playerStateType, string> playerStatePaths = {
+        {playerStateType::JUMP, "jump.wav"},
+        {playerStateType::SMALLJUMP, "jumpsmall.wav"},
+        {playerStateType::CROUCH, "crouch.wav"},
+        {playerStateType::GROW, "change_big.wav"},
+        {playerStateType::UNGROW, "change_small.wav"},
+        {playerStateType::DEAD, "death.wav"},
+        {playerStateType::THROWFB, "throw_fireball.wav"},
+        {playerStateType::SQUISH_ENEMY, "stomp.wav"},
+        {playerStateType::KICK_SHELL, "kick.wav"}};
 
     const unordered_map<blockStateType, string> blockStatePaths = {
         {blockStateType::BOUNCE, "bounce_block.wav"},
@@ -52,9 +52,9 @@ private:
     const unordered_map<sceneType, string> sceneSFXMap = {
         {sceneType::PAUSE, "Pause.wav"}};
     // same for marioVoice and sceneMusic
-    unordered_set<marioStateType> loadedMarioStates;
+    unordered_set<playerStateType> loadedPlayerStates;
     unordered_set<blockStateType> loadedBlockStates;
-    unordered_set<marioVoice> loadedMarioVoices;
+    unordered_set<marioVoice> loadedPlayerVoices;
     unordered_set<sceneType> loadedSceneSFX;
     unordered_set<sceneType> loadedSceneMusic;
 
@@ -65,9 +65,9 @@ public:
     SoundController &operator=(const SoundController &) = delete;
 
     // chơi sound effect
-    void playMarioStateSFX(marioStateType type);
+    void playPlayerStateSFX(playerStateType type);
     void playBlockStateSFX(blockStateType type);
-    void playMarioVoiceSFX(marioVoice type);
+    void playPlayerVoiceSFX(marioVoice type);
     void playSceneSFX(sceneType type);
 
     // đổi scene nên đổi nhạc

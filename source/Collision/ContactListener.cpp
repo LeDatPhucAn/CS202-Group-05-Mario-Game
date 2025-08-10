@@ -119,7 +119,7 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     {
         return true; // Prevent collision between Spiny and Lakitu/Spiny
     }
-    if (MatchPair<FireBall, Mario>(objA, objB))
+    if (MatchPair<FireBall, Player>(objA, objB))
         return true;
     if (MatchPair<PlayerMario, MovingObject>(objA, objB))
     {

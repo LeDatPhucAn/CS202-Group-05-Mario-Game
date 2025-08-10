@@ -23,7 +23,7 @@ private:
     friend class Spiny;
     friend class BulletBill;
     friend class HammerBro;
-    friend class Mario;
+    friend class Player;
 
 public:
     bool changeBody = false; // Check when the character's body needs to be changed

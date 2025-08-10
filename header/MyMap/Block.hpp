@@ -44,7 +44,7 @@ public:
       int aniIndex = 0;
 
       // // Block Properties for Behavior
-      bool isSolid = false;               // Có thể đi xuyên k (Mario đứng lên, va chạm)
+      bool isSolid = false;               // Có thể đi xuyên k (Player đứng lên, va chạm)
       bool isBreakable = false;           // Có thể phá vỡ được (bricks, question block)
       bool isQuestion = false;            // Là ô dấu hỏi? hay ko
       bool isInvisible = false;           // true thì không vẽ (ví dụ Coin đã ăn rồi thì bật true)

@@ -1,24 +1,22 @@
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "MovingObject.hpp" // Needed for dynamic_cast to Enemy
 #include "MovingObjectState.hpp"
 #include "Structs.hpp"
 #include "Game.hpp"
 #include "SoundController.hpp"
 #include "FireBall.hpp"
-Mario::Mario()
+Player::Player()
     : Character()
 {
     changeForm(SMALL);
-    // setTexture("Luigi2D");
-    // setTexture("Mario2D");
 }
-void Mario::EatStar()
+void Player::EatStar()
 {
     starTimer = 12.0f; // star lasts 12 seconds
     starMode = true;
     SoundController::getInstance().playTemporarySceneMusic(sceneType::STAR);
 }
-void Mario::hitByEnemy()
+void Player::hitByEnemy()
 {
     if (isInvincible || starMode)
         return;
@@ -32,7 +30,7 @@ void Mario::hitByEnemy()
         changeState(new UnGrowState(this));
     }
 }
-void Mario::jumpFromEnemy()
+void Player::jumpFromEnemy()
 {
     if (starMode)
         return;
@@ -42,47 +40,47 @@ void Mario::jumpFromEnemy()
     b2Vec2 impulse(0, mass * jumpVel / 1.4f);
     body->ApplyLinearImpulseToCenter(impulse, true);
 }
-void Mario::changeForm(MarioForm _form)
+void Player::changeForm(PlayerForm _form)
 {
     form = _form;
     switch (form)
     {
     case SMALL:
-        setFrame(marioStateType::IDLE, 0, 0);
-        setFrame(marioStateType::WALK, 1, 3);
-        setFrame(marioStateType::RUN, 1, 3);
-        setFrame(marioStateType::JUMP, 5, 5);
-        setFrame(marioStateType::FALL, 5, 5);
-        setFrame(marioStateType::SKID, 4, 4);
-        setFrame(marioStateType::CROUCH, 0, 0);
-        setFrame(marioStateType::GROW, 57, 63);
-        setFrame(marioStateType::UNGROW, 0, 0);
-        setFrame(marioStateType::DEAD, 6, 6);
-        setFrame(marioStateType::THROWFB, 52, 52);
+        setFrame(playerStateType::IDLE, 0, 0);
+        setFrame(playerStateType::WALK, 1, 3);
+        setFrame(playerStateType::RUN, 1, 3);
+        setFrame(playerStateType::JUMP, 5, 5);
+        setFrame(playerStateType::FALL, 5, 5);
+        setFrame(playerStateType::SKID, 4, 4);
+        setFrame(playerStateType::CROUCH, 0, 0);
+        setFrame(playerStateType::GROW, 57, 63);
+        setFrame(playerStateType::UNGROW, 0, 0);
+        setFrame(playerStateType::DEAD, 6, 6);
+        setFrame(playerStateType::THROWFB, 52, 52);
         break;
 
     case BIG:
-        setFrame(marioStateType::IDLE, 17, 17);
-        setFrame(marioStateType::WALK, 18, 20);
-        setFrame(marioStateType::JUMP, 22, 22);
-        setFrame(marioStateType::FALL, 22, 22);
-        setFrame(marioStateType::SKID, 21, 21);
-        setFrame(marioStateType::RUN, 18, 20);
-        setFrame(marioStateType::CROUCH, 23, 23);
-        setFrame(marioStateType::GROW, 64, 70);
-        setFrame(marioStateType::UNGROW, 63, 57);
+        setFrame(playerStateType::IDLE, 17, 17);
+        setFrame(playerStateType::WALK, 18, 20);
+        setFrame(playerStateType::JUMP, 22, 22);
+        setFrame(playerStateType::FALL, 22, 22);
+        setFrame(playerStateType::SKID, 21, 21);
+        setFrame(playerStateType::RUN, 18, 20);
+        setFrame(playerStateType::CROUCH, 23, 23);
+        setFrame(playerStateType::GROW, 64, 70);
+        setFrame(playerStateType::UNGROW, 63, 57);
         break;
 
     case FIRE:
-        setFrame(marioStateType::IDLE, 37, 37);
-        setFrame(marioStateType::WALK, 38, 40);
-        setFrame(marioStateType::JUMP, 42, 42);
-        setFrame(marioStateType::FALL, 42, 42);
-        setFrame(marioStateType::SKID, 41, 41);
-        setFrame(marioStateType::RUN, 38, 40);
-        setFrame(marioStateType::CROUCH, 43, 43);
-        setFrame(marioStateType::GROW, 37, 37);
-        setFrame(marioStateType::UNGROW, 70, 64);
+        setFrame(playerStateType::IDLE, 37, 37);
+        setFrame(playerStateType::WALK, 38, 40);
+        setFrame(playerStateType::JUMP, 42, 42);
+        setFrame(playerStateType::FALL, 42, 42);
+        setFrame(playerStateType::SKID, 41, 41);
+        setFrame(playerStateType::RUN, 38, 40);
+        setFrame(playerStateType::CROUCH, 43, 43);
+        setFrame(playerStateType::GROW, 37, 37);
+        setFrame(playerStateType::UNGROW, 70, 64);
         break;
 
     default:
@@ -90,7 +88,7 @@ void Mario::changeForm(MarioForm _form)
     }
 }
 
-void Mario::updateCollision(GameObject *other, int type)
+void Player::updateCollision(GameObject *other, int type)
 {
     if (dynamic_cast<DeadState *>(this->currentState))
     {
@@ -105,7 +103,7 @@ void Mario::updateCollision(GameObject *other, int type)
     }
 }
 
-void Mario::update()
+void Player::update()
 {
     Character::update();
     float deltaTime = GetFrameTime();
@@ -153,7 +151,7 @@ void Mario::update()
     }
 }
 
-void Mario::DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position)
+void Player::DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position)
 {
     Color tint = WHITE;
     if (starTimer > 0)
@@ -174,9 +172,9 @@ void Mario::DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position)
         tint                                                     // tint color
     );
 }
-void Mario::throwFireBall()
+void Player::throwFireBall()
 {
-    SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
     throwingFireBall = true;
     FireBall *fireball = new FireBall();
 
@@ -192,7 +190,7 @@ void Mario::throwFireBall()
     fireball->setPosition(pos);
     Game::addGameObject(fireball);
 }
-void Mario::display()
+void Player::display()
 {
     // global powerups
 
@@ -232,7 +230,7 @@ void Mario::display()
     }
 }
 
-void Mario::reset()
+void Player::reset()
 {
     // Reset mario
     if (body)
@@ -243,13 +241,13 @@ void Mario::reset()
     isInvincible = false;
     starMode = false;
     throwingFireBall = false;
-    // Reset Mario's position and recreate physics body
+    // Reset Player's position and recreate physics body
     setPosition({200, 50});
     changeForm(SMALL);
     createBody(Game::world); // Recreate the physics body
     changeState(new IdleState(this));
 }
-void Mario::createBody(b2World *world)
+void Player::createBody(b2World *world)
 {
 
     StartEndFrame se = sprite.StartEndFrames[currentState->type];

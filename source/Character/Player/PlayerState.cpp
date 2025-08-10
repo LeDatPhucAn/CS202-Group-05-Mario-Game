@@ -1,21 +1,21 @@
-#include "MarioState.hpp"
-#include "Mario.hpp"
+#include "PlayerState.hpp"
+#include "Player.hpp"
 #include "Game.hpp"
 #include "Score.hpp"
 #include "SoundController.hpp"
 
-// Base MarioState constructor
-MarioState::MarioState(int Type, Mario *_mario, int _delay)
+// Base PlayerState constructor
+PlayerState::PlayerState(int Type, Player *_mario, int _delay)
     : State(Type, _mario, _delay), mario(_mario) // Initialize both base and mario pointers
 {
-    if (Type == (int)marioStateType::JUMP && mario->getForm() == SMALL)
+    if (Type == (int)playerStateType::JUMP && mario->getForm() == SMALL)
     {
-        SoundController::getInstance().playMarioStateSFX((marioStateType::SMALLJUMP));
+        SoundController::getInstance().playPlayerStateSFX((playerStateType::SMALLJUMP));
     }
     else
-        SoundController::getInstance().playMarioStateSFX((marioStateType)Type);
+        SoundController::getInstance().playPlayerStateSFX((playerStateType)Type);
 }
-void MarioState::HorizontalAccelerate(float speedCap, float accel)
+void PlayerState::HorizontalAccelerate(float speedCap, float accel)
 {
     float deltaTime = GetFrameTime();
     b2Vec2 vel = mario->body->GetLinearVelocity(); // current velocity
@@ -32,8 +32,8 @@ void MarioState::HorizontalAccelerate(float speedCap, float accel)
 }
 
 // ---------- IdleState ----------
-IdleState::IdleState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::IDLE, _mario, _delay)
+IdleState::IdleState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::IDLE, _mario, _delay)
 {
 }
 
@@ -73,8 +73,8 @@ void IdleState::handleInput()
 
 // ---------- WalkState ----------
 
-WalkState::WalkState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::WALK, _mario, _delay)
+WalkState::WalkState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::WALK, _mario, _delay)
 {
 }
 
@@ -141,8 +141,8 @@ void WalkState::handleInput()
 }
 // ---------- RunState ----------
 
-RunState::RunState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::RUN, _mario, _delay)
+RunState::RunState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::RUN, _mario, _delay)
 {
 }
 void RunState::handleInput()
@@ -198,8 +198,8 @@ void RunState::handleInput()
 
 // ---------- JumpState ----------
 
-JumpState::JumpState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::JUMP, _mario, _delay)
+JumpState::JumpState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::JUMP, _mario, _delay)
 {
     mario->isGrounded = false;
     float mass = mario->body->GetMass();
@@ -252,8 +252,8 @@ void JumpState::handleInput()
 }
 
 // ---------- FallState ----------
-FallState::FallState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::FALL, _mario, _delay)
+FallState::FallState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::FALL, _mario, _delay)
 {
 }
 
@@ -297,8 +297,8 @@ void FallState::handleInput()
 }
 // ---------- SkidState ----------
 
-SkidState::SkidState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::SKID, _mario, _delay)
+SkidState::SkidState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::SKID, _mario, _delay)
 {
 }
 
@@ -339,8 +339,8 @@ void SkidState::handleInput()
 }
 
 // ---------- CrouchState ----------
-CrouchState::CrouchState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::CROUCH, _mario, _delay)
+CrouchState::CrouchState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::CROUCH, _mario, _delay)
 {
     mario->toNewBody();
 }
@@ -381,8 +381,8 @@ void CrouchState::handleInput()
 
 // ---------- GrowState ----------
 
-GrowState::GrowState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::GROW, _mario, _delay)
+GrowState::GrowState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::GROW, _mario, _delay)
 {
     posBeforeY = mario->getPosition().y;
 }
@@ -411,7 +411,7 @@ void GrowState::handleInput()
     if (se.start + frameIndex == se.end)
     {
 
-        mario->form = static_cast<MarioForm>((mario->form + 1) % FORM_COUNT);
+        mario->form = static_cast<PlayerForm>((mario->form + 1) % FORM_COUNT);
         mario->changeForm(mario->form);
 
         // new collision box
@@ -429,8 +429,8 @@ void GrowState::handleInput()
         return;
     }
 }
-UnGrowState::UnGrowState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::UNGROW, _mario, _delay)
+UnGrowState::UnGrowState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::UNGROW, _mario, _delay)
 {
     posBeforeY = mario->getPosition().y;
 }
@@ -457,7 +457,7 @@ void UnGrowState::handleInput()
     mario->setPosition({pos.x, posBeforeY});
     if (se.start - frameIndex == se.end)
     {
-        mario->form = static_cast<MarioForm>((mario->form - 1 + FORM_COUNT) % FORM_COUNT);
+        mario->form = static_cast<PlayerForm>((mario->form - 1 + FORM_COUNT) % FORM_COUNT);
         mario->changeForm(mario->form);
         // new collision box
         mario->toNewBody();
@@ -473,8 +473,8 @@ void UnGrowState::handleInput()
     }
 }
 
-DeadState::DeadState(Mario *_mario, int _delay)
-    : MarioState((int)marioStateType::DEAD, _mario, _delay)
+DeadState::DeadState(Player *_mario, int _delay)
+    : PlayerState((int)playerStateType::DEAD, _mario, _delay)
 {
     SoundController::getInstance().stopSceneMusic();
     mario->isGrounded = false;

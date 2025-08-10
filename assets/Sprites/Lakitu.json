@@ -1,1 +1,51 @@
-[{"name":"sprite1","x":214,"y":1,"width":29,"height":47},{"name":"sprite2","x":85,"y":8,"width":30,"height":40},{"name":"sprite3","x":182,"y":8,"width":29,"height":40},{"name":"sprite4","x":118,"y":13,"width":28,"height":35},{"name":"sprite5","x":246,"y":13,"width":28,"height":35},{"name":"sprite6","x":149,"y":15,"width":30,"height":33},{"name":"sprite7","x":277,"y":19,"width":26,"height":30}]
+[
+    {
+        "height": 40,
+        "name": "sprite2",
+        "width": 30,
+        "x": 85,
+        "y": 8
+    },
+    {
+        "height": 35,
+        "name": "sprite4",
+        "width": 28,
+        "x": 118,
+        "y": 13
+    },
+    {
+        "height": 33,
+        "name": "sprite6",
+        "width": 30,
+        "x": 149,
+        "y": 15
+    },
+    {
+        "height": 40,
+        "name": "sprite3",
+        "width": 29,
+        "x": 182,
+        "y": 8
+    },
+    {
+        "height": 47,
+        "name": "sprite1",
+        "width": 29,
+        "x": 214,
+        "y": 1
+    },
+    {
+        "height": 35,
+        "name": "sprite5",
+        "width": 28,
+        "x": 246,
+        "y": 13
+    },
+    {
+        "height": 30,
+        "name": "sprite7",
+        "width": 26,
+        "x": 277,
+        "y": 19
+    }
+]

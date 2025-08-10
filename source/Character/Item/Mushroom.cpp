@@ -1,6 +1,6 @@
 #include "Mushroom.hpp"
 #include "MovingObjectState.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "Score.hpp"
 
 Mushroom::Mushroom()
@@ -28,7 +28,7 @@ void Mushroom::updateCollision(GameObject *other, int type)
         }
     }
 
-    Mario *mario = dynamic_cast<Mario *>(other);
+    Player *mario = dynamic_cast<Player *>(other);
     if (mario)
     {
         Score::getInstance()->addScore(100);

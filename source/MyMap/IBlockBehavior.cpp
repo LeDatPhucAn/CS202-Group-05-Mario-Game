@@ -3,7 +3,7 @@
 #include "Block.hpp"
 #include "Particle.hpp"
 #include "Game.hpp"
-#include "Mario.hpp"
+#include "Player.hpp"
 #include "GameObject.hpp"
 #include "Score.hpp"
 #include "Mushroom.hpp"
@@ -68,7 +68,7 @@ void IBlockBehavior::setNoBounce()
 
 void IBlockBehavior::throwStar(int direction)
 {
-    //SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    //SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
     Star* star = new Star();
 
     if (direction == LEFT)
@@ -86,7 +86,7 @@ void IBlockBehavior::throwStar(int direction)
 }
 void IBlockBehavior::throwMushroom(int direction)
 {
-    //SoundController::getInstance().playMarioStateSFX(marioStateType::THROWFB);
+    //SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
     Mushroom *mushroom = new Mushroom();
 
     if (direction == LEFT)
@@ -102,10 +102,10 @@ void IBlockBehavior::throwMushroom(int direction)
     mushroom->setPosition(pos);
     Game::addGameObject(mushroom);
 }
-// type của Mario đối với Block, Type = Bottom là MArio nhảy lên đụng block
+// type của Player đối với Block, Type = Bottom là MArio nhảy lên đụng block
 void QuestionBehavior::reactToCollision(GameObject *p, int type)
 {
-    Mario *mario = dynamic_cast<Mario *>(p);
+    Player *mario = dynamic_cast<Player *>(p);
     if (!mario)
         return;
 
@@ -124,8 +124,8 @@ void QuestionBehavior::updateFrame(float dt)
 
 void BrickBehavior::reactToCollision(GameObject *p, int type)
 {
-    // chỉ phản ứng khi va chạm với Mario từ dưới lên
-    Mario *mario = dynamic_cast<Mario *>(p);
+    // chỉ phản ứng khi va chạm với Player từ dưới lên
+    Player *mario = dynamic_cast<Player *>(p);
     if (!mario)
         return;
     // FEET = đụng từ dưới
