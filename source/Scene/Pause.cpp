@@ -141,14 +141,16 @@ void Pause::updateScene()
             switch (selectedButton)
             {
             case 0: // Resume
-                manager->goBack();
-                break;
+            manager->goBack();
+            return;
             case 1: // Save
                 // Add save functionality here
                 break;
             case 2: // Settings
                 manager->changeScene(sceneType::SETTING);
+                return;
             case 3: // Exit
+                Score::getInstance()->reset();
                 manager->goBackOfBaseScene();
                 flashActive = true;
                 flashTimer = 0.0f;

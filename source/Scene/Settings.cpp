@@ -141,7 +141,7 @@ void Settings::updateScene()
     float boardWidth = 600;
     float boardHeight = 525;
     float boardX = UI::screenWidth / 2 - boardWidth / 2;
-    float boardY = UI::screenHeight / 2 - 350;
+    float boardY = UI::screenHeight / 2 - 250;
     float buttonWidth = 400;
     float buttonHeight = 80;
     float buttonX = boardX + (boardWidth - buttonWidth) / 2; // Center buttons in board
@@ -242,7 +242,7 @@ void Settings::displayScene()
     float boardWidth = 600;
     float boardHeight = 525;
     float boardX = UI::screenWidth / 2 - boardWidth / 2;
-    float boardY = UI::screenHeight / 2 - 350;
+    float boardY = UI::screenHeight / 2 - 250;
     Rectangle boardRect = {boardX, boardY, boardWidth, boardHeight};
 
     // Draw the settings board texture first (contains all buttons)
