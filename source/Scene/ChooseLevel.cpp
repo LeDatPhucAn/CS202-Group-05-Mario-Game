@@ -1,7 +1,7 @@
 #include "ChooseLevel.hpp"
 #include "raylib.h"
 #include "UI.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 #include <algorithm>
 #include <string>
 ChooseLevel::ChooseLevel(SceneManager *_manager)

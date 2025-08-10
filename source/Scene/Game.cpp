@@ -7,7 +7,7 @@
 #include "BlockState.hpp"
 #include "Spawner.hpp"
 #include "DrawDebug.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
@@ -97,7 +97,6 @@ void Game::init()
     cam.rotation = 0;
 
     gameTime = 0.0f;
-    lives = 5;
     GameInfo::getInstance()->reset();
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
 }
@@ -164,8 +163,8 @@ void Game::restartGame()
 
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
     // Reset mario
-    mario->reset();
-    luigi->reset();
+    if (mario) mario->reset();
+    if (luigi) luigi->reset();
     // reset camera
     cam.target = {0, 0};
     prePosX = 100;
@@ -310,13 +309,16 @@ void Game::updateScene()
     removeGameObject();
 
     // Camera
-    float delta = (float)mario->getPosition().x - prePosX;
-    if (GetWorldToScreen2D(mario->getPosition(), cam).x > 0.5 * UI::screenWidth)
-        cam.target.x += (delta > 0.5) ? delta : 0;
-    if (GetWorldToScreen2D(mario->getPosition(), cam).x < 0.2 * UI::screenWidth)
-        cam.target.x += (delta < -0.5) ? delta : 0;
+    Player* activePlayer = mario ? static_cast<Player*>(mario) : static_cast<Player*>(luigi);
+    if (activePlayer) {
+        float delta = (float)activePlayer->getPosition().x - prePosX;
+        if (GetWorldToScreen2D(activePlayer->getPosition(), cam).x > 0.5 * UI::screenWidth)
+            cam.target.x += (delta > 0.5) ? delta : 0;
+        if (GetWorldToScreen2D(activePlayer->getPosition(), cam).x < 0.2 * UI::screenWidth)
+            cam.target.x += (delta < -0.5) ? delta : 0;
 
-    prePosX = mario->getPosition().x;
+        prePosX = activePlayer->getPosition().x;
+    }
 }
 
 void Game::updateCharacters()
@@ -329,7 +331,10 @@ void Game::updateCharacters()
             MovingObject *enemy = dynamic_cast<MovingObject *>(gameObjects[i]);
             if (enemy)
             {
-                enemy->update(mario->getPosition());
+                Player* activePlayer = mario ? static_cast<Player*>(mario) : static_cast<Player*>(luigi);
+                if (activePlayer) {
+                    enemy->update(activePlayer->getPosition());
+                }
             }
             else
                 gameObjects[i]->update();
@@ -415,8 +420,8 @@ void Game::drawHUD()
     }
     if (remainingTime == 0)
     {
-        mario->changeState(new DeadState(mario)); // Trigger death state when time runs out
-        luigi->changeState(new DeadState(luigi));
+        if (mario) mario->changeState(new DeadState(mario));
+    if (luigi) luigi->changeState(new DeadState(luigi));
     }
 
     // Draw coin

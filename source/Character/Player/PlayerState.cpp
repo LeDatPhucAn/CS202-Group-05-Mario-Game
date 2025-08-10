@@ -1,7 +1,7 @@
 #include "PlayerState.hpp"
 #include "Player.hpp"
 #include "Game.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 #include "SoundController.hpp"
 
 // Base PlayerState constructor

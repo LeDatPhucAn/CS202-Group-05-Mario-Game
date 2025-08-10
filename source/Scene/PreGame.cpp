@@ -1,7 +1,8 @@
-// New simplified PreGame without checkpoint/continue. Adds Difficulty.
+
 #include "PreGame.hpp"
 #include "UI.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
+#include "Structs.hpp"
 #include <raylib.h>
 #include <string>
 
@@ -16,8 +17,18 @@ void PreGame::updateScene() {
     if(IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) selectionIndex = (selectionIndex+1) % (maxIndex+1);
     if(IsKeyPressed(KEY_UP)   || IsKeyPressed(KEY_W)) selectionIndex = (selectionIndex-1 + (maxIndex+1)) % (maxIndex+1);
 
-    auto toggleDifficulty = [&](){ difficulty = (difficulty==Difficulty::EASY)?Difficulty::HARD:Difficulty::EASY; };
-    auto toggleMode = [&](){ mode = (mode==Mode::SINGLE)?Mode::DUAL:Mode::SINGLE; if(mode==Mode::DUAL && selectionIndex==1) { /* was character row */ } };    
+    auto toggleDifficulty = [&](){ 
+        if(difficulty == Difficulty::EASY) difficulty = Difficulty::HARD;
+        else if(difficulty == Difficulty::HARD) difficulty = Difficulty::HARDCORE;
+        else difficulty = Difficulty::EASY;
+    };
+    auto toggleMode = [&](){ 
+        mode = (mode==Mode::SINGLE)?Mode::DUAL:Mode::SINGLE; 
+        if(mode==Mode::DUAL && selectionIndex==1) { 
+            chooseMario = !chooseMario;
+        } 
+    };    
+   
 
     if(IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
         if(selectionIndex==0) toggleMode();
@@ -36,13 +47,9 @@ void PreGame::updateScene() {
         if(selectionIndex==startRow) {
             // Store settings in GameInfo singleton
             GameInfo* gameInfo = GameInfo::getInstance();
-            gameInfo->setMode(mode==Mode::SINGLE ? GameInfo::Mode::SINGLE : GameInfo::Mode::DUAL);
+            gameInfo->setMode(mode==Mode::SINGLE ? Mode::SINGLE : Mode::DUAL);
             gameInfo->setCharacter(chooseMario);
-            gameInfo->setDifficulty(difficulty==Difficulty::EASY ? GameInfo::Difficulty::EASY : GameInfo::Difficulty::HARD);
-            
-            // Apply difficulty: set lives baseline
-            if(difficulty==Difficulty::EASY) gameInfo->setLives(7); 
-            else gameInfo->setLives(3);
+            gameInfo->setDifficulty(difficulty);
             
             manager->changeScene(sceneType::GAME);
             return;
@@ -74,7 +81,13 @@ void PreGame::updateScene() {
 
 	drawRow("MODE", (mode==Mode::SINGLE?"SINGLE":"DUAL"), idx++);
 	if(mode==Mode::SINGLE) drawRow("CHARACTER", chooseMario?"MARIO":"LUIGI", idx++);
-	drawRow("DIFFICULTY", (difficulty==Difficulty::EASY?"EASY":"HARD"), idx++);
+
+	std::string difficultyText;
+    if(difficulty==Difficulty::EASY) difficultyText = "EASY (5 Lives)";
+    else if(difficulty==Difficulty::HARD) difficultyText = "HARD (3 Lives)";
+    else difficultyText = "HARDCORE (1 Life)";
+	drawRow("DIFFICULTY", difficultyText, idx++);
+
 	drawRow("START", "", idx++);
 	drawRow("BACK", "", idx++);
 

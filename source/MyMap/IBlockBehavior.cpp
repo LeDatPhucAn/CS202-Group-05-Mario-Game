@@ -5,7 +5,7 @@
 #include "Game.hpp"
 #include "Player.hpp"
 #include "GameObject.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 #include "Mushroom.hpp"
 #include "SoundController.hpp"
 #include "BlockState.hpp"

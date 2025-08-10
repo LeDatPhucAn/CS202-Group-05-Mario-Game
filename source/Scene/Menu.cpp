@@ -271,7 +271,7 @@ void Menu::displayScene()
         "START GAME",
         "CHOOSE LEVEL",
         "SETTINGS",
-        "TUTORIAL",
+        "CONTROLS",
         "EXIT GAME"};
 
     // Load background textures

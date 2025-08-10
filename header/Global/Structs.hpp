@@ -18,6 +18,18 @@ struct Sprite
     Texture2D texture;
 };
 
+
+enum class Mode 
+{ 
+    SINGLE, 
+    DUAL 
+};
+enum class Difficulty 
+{ 
+    EASY, 
+    HARD, 
+    HARDCORE 
+};
 enum PlayerForm
 {
     SMALL = 0,
@@ -111,11 +123,6 @@ enum class sceneType
     GAMEOVER,
     TUTORIAL,
     STAR
-};
-
-enum class Mode 
-{
-    SINGLE, DUAL
 };
 
 enum class Action

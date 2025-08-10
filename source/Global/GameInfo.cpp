@@ -1,4 +1,4 @@
-#include "Score.hpp"
+#include "GameInfo.hpp"
 
 GameInfo* GameInfo::getInstance() {
     if (instance == nullptr) {

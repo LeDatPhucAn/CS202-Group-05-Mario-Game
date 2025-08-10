@@ -2,10 +2,8 @@
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
+#include "Structs.hpp"
 class PreGame : public Scene {
-public:
-	enum class Mode { SINGLE, DUAL };
-	enum class Difficulty { EASY, HARD };
 private:
 	Mode mode = Mode::DUAL;        // single or dual
 	bool chooseMario = true;       // if single: true -> Mario, false -> Luigi

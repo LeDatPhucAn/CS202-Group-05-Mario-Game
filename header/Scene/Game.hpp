@@ -30,11 +30,8 @@ private:
     Texture2D HUDCoin;
     Texture2D HUDScore;
 
-    // For display
-    int lives = 5;
     float gameTime = 0.0f;
     float maxTime = 300.0f;
-    bool dual = false;
     friend class Tutorial;
 protected:
 

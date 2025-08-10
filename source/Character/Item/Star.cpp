@@ -2,7 +2,7 @@
 #include "Star.hpp"
 #include "MovingObjectState.hpp"
 #include "Player.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 
 Star::Star()
 {

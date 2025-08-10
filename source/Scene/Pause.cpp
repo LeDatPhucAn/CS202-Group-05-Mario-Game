@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include <vector>
 #include <string>
-#include "Score.hpp"
+#include "GameInfo.hpp"
 // Static variables for flash effect
 static bool flashActive = false;
 static float flashTimer = 0.0f;

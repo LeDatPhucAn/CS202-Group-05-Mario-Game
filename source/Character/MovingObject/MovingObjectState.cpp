@@ -2,7 +2,7 @@
 #include "MovingObject.hpp"
 #include "Character.hpp"
 #include "Game.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 #include "SoundController.hpp"
 MovingObjectState::MovingObjectState(int type, Character *_character, int _delay)
     : State(type, _character, _delay), character(_character) {}

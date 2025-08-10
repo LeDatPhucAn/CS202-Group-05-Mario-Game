@@ -1,7 +1,7 @@
 #include "Mushroom.hpp"
 #include "MovingObjectState.hpp"
 #include "Player.hpp"
-#include "Score.hpp"
+#include "GameInfo.hpp"
 
 Mushroom::Mushroom()
 {

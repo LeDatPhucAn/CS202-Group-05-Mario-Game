@@ -1,9 +1,6 @@
 #pragma once
-
+#include "Structs.hpp"
 class GameInfo {
-public:
-    enum class Mode { SINGLE, DUAL };
-    enum class Difficulty { EASY, HARD };
     
 private:
     static GameInfo* instance;
@@ -39,7 +36,14 @@ public:
     // PreGame settings methods
     void setMode(Mode m) { mode = m; }
     void setCharacter(bool mario) { chooseMario = mario; }
-    void setDifficulty(Difficulty d) { difficulty = d; }
+    void setDifficulty(Difficulty d) 
+    { 
+        difficulty = d;
+        // Set lives based on difficulty immediately
+        if(d == Difficulty::EASY) lives = 5;
+        else if(d == Difficulty::HARD) lives = 3;
+        else if(d == Difficulty::HARDCORE) lives = 1;
+    }
     
     Mode getMode() const { return mode; }
     bool isMario() const { return chooseMario; }
