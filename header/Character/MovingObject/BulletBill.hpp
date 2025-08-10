@@ -14,4 +14,5 @@ public:
 
     void update(const Vector2& marioPos) override;
     void updateCollision(GameObject *other, int type) override;
+    void display() override; // Add this line
 };

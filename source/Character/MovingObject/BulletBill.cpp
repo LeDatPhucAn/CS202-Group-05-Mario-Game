@@ -48,6 +48,14 @@ void BulletBill::update(const Vector2 &marioPos)
     MovingObject::update(marioPos);
 }
 
+void BulletBill::display()
+{
+    if (isActivated)
+    {
+        MovingObject::display();
+    }
+}
+
 void BulletBill::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
