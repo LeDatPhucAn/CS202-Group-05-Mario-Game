@@ -1,7 +1,7 @@
 #pragma once
-#include "Enemy.hpp"
+#include "MovingObject.hpp"
 
-class BulletBill : public Enemy
+class BulletBill : public MovingObject
 {
 private:
     float activationDistance = 200.0f; // Distance in pixels to activate

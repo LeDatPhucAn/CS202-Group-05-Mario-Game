@@ -1,16 +1,13 @@
-#include "PiranhaPlant.hpp"
-#include "EnemyState.hpp"
-#include "Mario.hpp"
 
 #include "PiranhaPlant.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Mario.hpp"
 
 PiranhaPlant::PiranhaPlant()
-    : Enemy()
+    : MovingObject()
 {
-    setFrame(enemyStateType::IDLE, 0, 2);
-    setFrame(enemyStateType::DEAD, 0, 0);
+    setFrame(movingObjectStateType::IDLE, 0, 2);
+    setFrame(movingObjectStateType::DEAD, 0, 0);
     setTexture("Piranha");
 
     // // Piranha Plants do not move via physics
@@ -21,7 +18,7 @@ PiranhaPlant::PiranhaPlant()
     this->timer = 0.0f;
     this->isHiding = true; // Start hidden inside the pipe
     this->isSetup = false;
-    this->changeState(new EnemyIdleState(this));
+    this->changeState(new MovingObjectIdleState(this));
 }
 
 void PiranhaPlant::update(const Vector2 &marioPos)
@@ -79,7 +76,7 @@ void PiranhaPlant::update(const Vector2 &marioPos)
 void PiranhaPlant::updateCollision(GameObject *other, int type)
 {
     // Piranha Plants do not react to blocks or other enemies
-    if (dynamic_cast<Block *>(other) || (dynamic_cast<Enemy *>(other) && other != this))
+    if (dynamic_cast<Block *>(other) || (dynamic_cast<MovingObject *>(other) && other != this))
     {
         return;
     }
@@ -87,7 +84,7 @@ void PiranhaPlant::updateCollision(GameObject *other, int type)
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
-        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
         {
             return;
         }

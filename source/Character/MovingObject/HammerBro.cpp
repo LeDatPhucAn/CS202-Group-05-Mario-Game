@@ -1,18 +1,18 @@
 #include "HammerBro.hpp"
 #include "Hammer.hpp"
 #include "Game.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Mario.hpp"
 #include "Block.hpp"
 #include <raylib.h>
 
-HammerBro::HammerBro() : Enemy()
+HammerBro::HammerBro() : MovingObject()
 {
     // Reuse walk animation while idle/jumping; no horizontal motion
-    setFrame(enemyStateType::IDLE, 12, 24);
-    setFrame(enemyStateType::DEAD, 10, 10);
+    setFrame(movingObjectStateType::IDLE, 12, 24);
+    setFrame(movingObjectStateType::DEAD, 10, 10);
     setTexture("HammerBro"); // change to "HammerBro" if you have a dedicated atlas
-    changeState(new EnemyIdleState(this));
+    changeState(new MovingObjectIdleState(this));
 }
 
 void HammerBro::update(const Vector2 &marioPos)
@@ -37,7 +37,7 @@ void HammerBro::update(const Vector2 &marioPos)
         lastThrowTime = now;
     }
 
-    Enemy::update(marioPos);
+    MovingObject::update(marioPos);
 }
 
 void HammerBro::updateCollision(GameObject *other, int type)
@@ -55,12 +55,12 @@ void HammerBro::updateCollision(GameObject *other, int type)
     if (auto *mario = dynamic_cast<Mario *>(other))
     {
         if (dynamic_cast<DeadState *>(mario->currentState) ||
-            dynamic_cast<EnemyDeadState *>(this->currentState))
+            dynamic_cast<MovingObjectDeadState *>(this->currentState))
             return;
 
         if (type == TOP)
         {
-            this->changeState(new EnemyDeadState(this));
+            this->changeState(new MovingObjectDeadState(this));
             mario->jumpFromEnemy();
         }
         else

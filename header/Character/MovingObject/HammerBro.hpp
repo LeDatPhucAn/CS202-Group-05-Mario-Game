@@ -1,7 +1,7 @@
 #pragma once
-#include "Enemy.hpp"
+#include "MovingObject.hpp"
 
-class HammerBro : public Enemy
+class HammerBro : public MovingObject
 {
 public:
     HammerBro();

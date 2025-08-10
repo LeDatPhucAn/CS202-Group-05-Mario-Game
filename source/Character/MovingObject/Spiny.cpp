@@ -1,14 +1,14 @@
 #include "Spiny.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Mario.hpp"
 
 Spiny::Spiny()
-    : Enemy()
+    : MovingObject()
 {
-    setFrame(enemyStateType::IDLE, 0, 0);
-    setFrame(enemyStateType::WALK, 0, 3);
-    setFrame(enemyStateType::DEAD, 4, 4);
-    setFrame(enemyStateType::FALL, 4, 4);
+    setFrame(movingObjectStateType::IDLE, 0, 0);
+    setFrame(movingObjectStateType::WALK, 0, 3);
+    setFrame(movingObjectStateType::DEAD, 4, 4);
+    setFrame(movingObjectStateType::FALL, 4, 4);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Spiny"]);
     this->sprite.texture = UI::textureMap["Spiny"];
 }
@@ -18,7 +18,7 @@ void Spiny::updateCollision(GameObject *other, int type)
     Character::updateCollision(other, type);
 
     Block *block = dynamic_cast<Block *>(other);
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
     if (block || enemy)
     {
         if (type == LEFTSIDE)
@@ -35,7 +35,7 @@ void Spiny::updateCollision(GameObject *other, int type)
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
-        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
         {
             return;
         }

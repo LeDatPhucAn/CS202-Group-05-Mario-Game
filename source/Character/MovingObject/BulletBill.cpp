@@ -1,20 +1,20 @@
 #include "BulletBill.hpp"
-#include "EnemyState.hpp"
+
 #include "Mario.hpp"
 #include "Game.hpp"
 #include <cmath>
 
 BulletBill::BulletBill()
-    : Enemy()
+    : MovingObject()
 {
-    setFrame(enemyStateType::IDLE, 1, 1);
-    setFrame(enemyStateType::FLY, 6, 1);
-    setFrame(enemyStateType::DEAD, 1, 1);
+    setFrame(movingObjectStateType::IDLE, 1, 1);
+    setFrame(movingObjectStateType::FLY, 6, 1);
+    setFrame(movingObjectStateType::DEAD, 1, 1);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["BulletBill"]);
     this->sprite.texture = UI::textureMap["BulletBill"];
 
     this->isActivated = false;
-    this->changeState(new EnemyIdleState(this));
+    this->changeState(new MovingObjectIdleState(this));
 }
 
 void BulletBill::update(const Vector2 &marioPos)
@@ -34,12 +34,12 @@ void BulletBill::update(const Vector2 &marioPos)
         {
             // Activate BulletBill
             this->direction = (marioPos.x < bulletPos.x) ? LEFT : RIGHT;
-            this->changeState(new EnemyFlyState(this));
+            this->changeState(new MovingObjectFlyState(this));
             this->isActivated = true;
         }
     }
 
-    Enemy::update(marioPos);
+    MovingObject::update(marioPos);
 }
 
 void BulletBill::updateCollision(GameObject *other, int type)
@@ -50,7 +50,7 @@ void BulletBill::updateCollision(GameObject *other, int type)
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
-        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
         {
             return;
         }
@@ -59,7 +59,7 @@ void BulletBill::updateCollision(GameObject *other, int type)
         if (type == TOP)
         {   
             mario->jumpFromEnemy();
-            this->changeState(new EnemyDeadState(this));
+            this->changeState(new MovingObjectDeadState(this));
             return;
         }
         else {
@@ -70,19 +70,19 @@ void BulletBill::updateCollision(GameObject *other, int type)
     // BulletBill destroys other enemies on contact (only when activated)
     if (isActivated)
     {
-        Enemy *otherEnemy = dynamic_cast<Enemy *>(other);
+        MovingObject *otherEnemy = dynamic_cast<MovingObject *>(other);
         if (otherEnemy && otherEnemy != this)
         {
-            if (!dynamic_cast<EnemyDeadState *>(otherEnemy->currentState))
+            if (!dynamic_cast<MovingObjectDeadState *>(otherEnemy->currentState))
             {
-                otherEnemy->changeState(new EnemyDeadState(otherEnemy));
+                otherEnemy->changeState(new MovingObjectDeadState(otherEnemy));
             }
         }
         // BulletBill dies when hitting blocks
         Block *block = dynamic_cast<Block *>(other);
         if (block && (type == LEFTSIDE || type == RIGHTSIDE))
         {
-            this->changeState(new EnemyDeadState(this));
+            this->changeState(new MovingObjectDeadState(this));
         }
     }
     

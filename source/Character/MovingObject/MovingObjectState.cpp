@@ -1,50 +1,50 @@
-#include "EnemyState.hpp"
-#include "Enemy.hpp"
+#include "MovingObjectState.hpp"
+#include "MovingObject.hpp"
 #include "Character.hpp"
 #include "Game.hpp"
 #include "Score.hpp"
 #include "SoundController.hpp"
-EnemyState::EnemyState(int type, Character *_character, int _delay)
+MovingObjectState::MovingObjectState(int type, Character *_character, int _delay)
     : State(type, _character, _delay), character(_character) {}
 
-EnemyIdleState::EnemyIdleState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::IDLE, _character, _delay)
+MovingObjectIdleState::MovingObjectIdleState(Character *_character, int _delay)
+    : MovingObjectState((int)movingObjectStateType::IDLE, _character, _delay)
 {
 }
 
-void EnemyIdleState::handleInput()
+void MovingObjectIdleState::handleInput()
 {
     b2Vec2 vel = character->getBody()->GetLinearVelocity();
     vel.x = 0.0f;
     character->getBody()->SetLinearVelocity(vel);
 }
 
-EnemyWalkState::EnemyWalkState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::WALK, _character, _delay)
+MovingObjectWalkState::MovingObjectWalkState(Character *_character, int _delay)
+    : MovingObjectState((int)movingObjectStateType::WALK, _character, _delay)
 {
     character->direction = RIGHT;
 }
 
-void EnemyWalkState::handleInput()
+void MovingObjectWalkState::handleInput()
 {
     b2Vec2 vel = character->getBody()->GetLinearVelocity();
     vel.x = -character->direction * fabs(20 / PPM); // Ensure correct direction
     character->getBody()->SetLinearVelocity(vel);
 }
 
-EnemyRunState::EnemyRunState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::RUN, _character, _delay)
+MovingObjectRunState::MovingObjectRunState(Character *_character, int _delay)
+    : MovingObjectState((int)movingObjectStateType::RUN, _character, _delay)
 {
 }
 
-void EnemyRunState::handleInput()
+void MovingObjectRunState::handleInput()
 {
     b2Vec2 vel = character->getBody()->GetLinearVelocity();
     vel.x = -character->direction * fabs(200 / PPM); // Ensure correct direction
     character->getBody()->SetLinearVelocity(vel);
 }
 FireBallMoveState::FireBallMoveState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::FB_MOVE, _character, _delay)
+    : MovingObjectState((int)movingObjectStateType::FB_MOVE, _character, _delay)
 {
 }
 
@@ -62,7 +62,7 @@ void FireBallMoveState::handleInput()
     }
 }
 StarMoveState::StarMoveState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::STAR_MOVE, _character, _delay)
+    : MovingObjectState((int)movingObjectStateType::STAR_MOVE, _character, _delay)
 {
 }
 
@@ -83,12 +83,12 @@ void StarMoveState::handleInput()
     }
 }
 
-EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::DEAD, _character, _delay)
+MovingObjectDeadState::MovingObjectDeadState(Character *_character, int _delay)
+    : MovingObjectState((int)movingObjectStateType::DEAD, _character, _delay)
 {
-    // make a sound when an enemy dies
+    // make a sound when an MovingObject dies
     SoundController::getInstance().playMarioStateSFX(marioStateType::SQUISH_ENEMY);
-    Score::getInstance()->addScore(100); // Add score for defeating enemy
+    Score::getInstance()->addScore(100); // Add score for defeating MovingObject
     character->isGrounded = false;
     character->body->SetLinearVelocity({0, -250.f / PPM});
     b2Body *body = character->getBody();
@@ -103,30 +103,30 @@ EnemyDeadState::EnemyDeadState(Character *_character, int _delay)
     }
 }
 
-void EnemyDeadState::updateState()
+void MovingObjectDeadState::updateState()
 {
     State::updateState();
     delayCounter -= GetFrameTime();
     if (delayCounter <= 0)
     {
-        Enemy *enemy = dynamic_cast<Enemy *>(character);
-        if (enemy)
+        MovingObject *movingObject = dynamic_cast<MovingObject*>(character);
+        if (movingObject)
         {
-            // delete body of enemy
-            enemy->beCleared = true;
+            // delete body of MovingObject
+            movingObject->beCleared = true;
             cout << "REMOVED\n";
-            enemy->needDeletion = true;
+            movingObject->needDeletion = true;
         }
     }
 }
-void EnemyDeadState::handleInput()
+void MovingObjectDeadState::handleInput()
 {
     b2Vec2 vel = character->getBody()->GetLinearVelocity();
     vel.x = 0.0f; // Ensure no horizontal movement
     character->getBody()->SetLinearVelocity(vel);
 }
-EnemyStopState::EnemyStopState(Character *_character, int _delay)
-    : EnemyState((int)enemyStateType::STOP, _character, _delay)
+MovingObjectStopState::MovingObjectStopState(Character *_character, int _delay)
+    : MovingObjectState((int)movingObjectStateType::STOP, _character, _delay)
 {
     character->isGrounded = true;
     b2Body *body = character->getBody();
@@ -142,32 +142,32 @@ EnemyStopState::EnemyStopState(Character *_character, int _delay)
     }
 }
 
-void EnemyStopState::updateState()
+void MovingObjectStopState::updateState()
 {
     State::updateState();
     delayCounter -= GetFrameTime();
     if (frameIndex == numFrames - 1)
     {
-        Enemy *enemy = dynamic_cast<Enemy *>(character);
-        if (enemy)
+        MovingObject *movingObject = dynamic_cast<MovingObject *>(character);
+        if (movingObject)
         {
-            // delete body of enemy
-            enemy->beCleared = true;
+            // delete body of MovingObject
+            movingObject->beCleared = true;
             cout << "REMOVED\n";
-            enemy->needDeletion = true;
+            movingObject->needDeletion = true;
         }
     }
 }
 
-void EnemyStopState::handleInput()
+void MovingObjectStopState::handleInput()
 {
     character->getBody()->SetLinearVelocity({0, 0});
 }
 
 // --- FLY STATE IMPLEMENTATION ---
 
-EnemyFlyState::EnemyFlyState(Character *_character)
-    : EnemyState((int)enemyStateType::FLY, _character, 5)
+MovingObjectFlyState::MovingObjectFlyState(Character *_character)
+    : MovingObjectState((int)movingObjectStateType::FLY, _character, 5)
 {
     // On entering this state, ensure gravity is disabled.
     if (character && character->getBody())
@@ -176,7 +176,7 @@ EnemyFlyState::EnemyFlyState(Character *_character)
     }
 }
 
-EnemyFlyState::~EnemyFlyState()
+MovingObjectFlyState::~MovingObjectFlyState()
 {
     // Optional: Restore gravity if the character can stop flying.
     if (character && character->getBody())
@@ -185,35 +185,35 @@ EnemyFlyState::~EnemyFlyState()
     }
 }
 
-void EnemyFlyState::handleInput()
+void MovingObjectFlyState::handleInput()
 {
 }
 
 // --- JUMP STATE IMPLEMENTATION ---
 
-EnemyJumpState::EnemyJumpState(Character *_character, int delay)
-    : EnemyState((int)enemyStateType::JUMP, _character, delay)
+MovingObjectJumpState::MovingObjectJumpState(Character *_character, int delay)
+    : MovingObjectState((int)movingObjectStateType::JUMP, _character, delay)
 {
     if (character && character->getBody())
         character->getBody()->SetGravityScale(0.0f);
     initSineJump();
 }
 
-EnemyJumpState::~EnemyJumpState()
+MovingObjectJumpState::~MovingObjectJumpState()
 {
     // restore normal gravity when (if) we ever exit this state
     if (character && character->getBody())
         character->getBody()->SetGravityScale(1.0f);
 }
 
-void EnemyJumpState::initSineJump()
+void MovingObjectJumpState::initSineJump()
 {
     elapsed = 0.0f;
     if (character && character->getBody())
         baselineY = character->getBody()->GetPosition().y;
 }
 
-void EnemyJumpState::handleInput()
+void MovingObjectJumpState::handleInput()
 {
     if (!character || !character->getBody())
         return;
@@ -224,7 +224,7 @@ void EnemyJumpState::handleInput()
     character->getBody()->SetLinearVelocity(v);
 }
 
-void EnemyJumpState::updateState()
+void MovingObjectJumpState::updateState()
 {
     State::updateState();
 
@@ -247,14 +247,14 @@ void EnemyJumpState::updateState()
 
 // --- THROW STATE IMPLEMENTATION ---
 
-EnemyThrowState::EnemyThrowState(Character *character, int delay)
-    : EnemyState((int)enemyStateType::THROW, character, delay)
+MovingObjectThrowState::MovingObjectThrowState(Character *character, int delay)
+    : MovingObjectState((int)movingObjectStateType::THROW, character, delay)
 {
     throwTimer = 0.0f;
     hasThrown = false;
 }
 
-void EnemyThrowState::handleInput()
+void MovingObjectThrowState::handleInput()
 {
     // Slow down or stop horizontal movement during throw
     b2Vec2 vel = character->getBody()->GetLinearVelocity();
@@ -262,7 +262,7 @@ void EnemyThrowState::handleInput()
     character->getBody()->SetLinearVelocity(vel);
 }
 
-void EnemyThrowState::updateState()
+void MovingObjectThrowState::updateState()
 {
     State::updateState();
     
@@ -278,7 +278,7 @@ void EnemyThrowState::updateState()
     // Return to previous state after throw duration
     if (throwTimer >= throwDuration)
     {
-        // Return to flying state (or appropriate state for the enemy)
-        character->changeState(new EnemyFlyState(character));
+        // Return to flying state (or appropriate state for the MovingObject)
+        character->changeState(new MovingObjectFlyState(character));
     }
 }

@@ -1,6 +1,6 @@
 #include "Mario.hpp"
-#include "Enemy.hpp" // Needed for dynamic_cast to Enemy
-#include "EnemyState.hpp"
+#include "MovingObject.hpp" // Needed for dynamic_cast to Enemy
+#include "MovingObjectState.hpp"
 #include "Structs.hpp"
 #include "Game.hpp"
 #include "SoundController.hpp"
@@ -97,10 +97,10 @@ void Mario::updateCollision(GameObject *other, int type)
         return;
     }
     Character::updateCollision(other, type);
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
     if (enemy && starMode)
     {
-        enemy->changeState(new EnemyDeadState(enemy));
+        enemy->changeState(new MovingObjectDeadState(enemy));
         return;
     }
 }

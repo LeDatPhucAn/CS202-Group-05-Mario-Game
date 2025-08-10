@@ -2,8 +2,8 @@
 #include "FireBall.hpp"
 FireBall::FireBall()
 {
-    setFrame(enemyStateType::FB_MOVE, 0, 3);
-    setFrame(enemyStateType::STOP, 4, 7);
+    setFrame(movingObjectStateType::FB_MOVE, 0, 3);
+    setFrame(movingObjectStateType::STOP, 4, 7);
     setTexture("Projectiles2D");
 
     changeState(new FireBallMoveState(this));
@@ -26,19 +26,19 @@ void FireBall::updateCollision(GameObject *other, int type)
                 break;
             case LEFTSIDE:
             { // Handle left side collision with solid block
-                changeState(new EnemyStopState(this));
+                changeState(new MovingObjectStopState(this));
                 break;
             }
             case RIGHTSIDE:
-                changeState(new EnemyStopState(this));
+                changeState(new MovingObjectStopState(this));
                 break;
             }
         }
     }
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
     if (enemy)
     {
-        enemy->changeState(new EnemyDeadState(enemy));
-        changeState(new EnemyStopState(this));
+        enemy->changeState(new MovingObjectDeadState(enemy));
+        changeState(new MovingObjectStopState(this));
     }
 }

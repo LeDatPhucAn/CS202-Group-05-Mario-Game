@@ -1,6 +1,6 @@
 #include "Lakitu.hpp"
 #include "Spiny.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Mario.hpp"
 #include "Game.hpp"
 #include "UI.hpp"
@@ -8,7 +8,7 @@
 
 // LakituThrowState Implementation
 LakituThrowState::LakituThrowState(Lakitu* character)
-    : EnemyThrowState(character, 5), lakitu(character)
+    : MovingObjectThrowState(character, 5), lakitu(character)
 {
 }
 
@@ -18,28 +18,28 @@ void LakituThrowState::executeThrow()
     {
         Spiny *newSpiny = new Spiny();
         newSpiny->setPosition(lakitu->getPosition());
-        newSpiny->changeState(new EnemyWalkState(newSpiny));
+        newSpiny->changeState(new MovingObjectWalkState(newSpiny));
         Game::addGameObject(newSpiny);
     }
 }
 
-Lakitu::Lakitu(): Enemy()
+Lakitu::Lakitu(): MovingObject()
 {
-    setFrame(enemyStateType::IDLE, 0, 0);
-    setFrame(enemyStateType::FLY, 0, 0);
-    setFrame(enemyStateType::THROW, 1, 5);
-    setFrame(enemyStateType::DEAD, 6, 6);
+    setFrame(movingObjectStateType::IDLE, 0, 0);
+    setFrame(movingObjectStateType::FLY, 0, 0);
+    setFrame(movingObjectStateType::THROW, 1, 5);
+    setFrame(movingObjectStateType::DEAD, 6, 6);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Lakitu"]);
     this->sprite.texture = UI::textureMap["Lakitu"];
 
     this->throwTimer = 0.0f;
-    this->changeState(new EnemyFlyState(this));
+    this->changeState(new MovingObjectFlyState(this));
 }
 
 void Lakitu::update(const Vector2 &marioPos)
 {
     Character::update();
-    if (dynamic_cast<EnemyDeadState *>(this->currentState))
+    if (dynamic_cast<MovingObjectDeadState *>(this->currentState))
         return;
 
     // --- Movement Logic ---
@@ -72,7 +72,7 @@ void Lakitu::update(const Vector2 &marioPos)
     
 
     // --- Throwing Logic ---
-    if (!dynamic_cast<EnemyThrowState*>(this->currentState))
+    if (!dynamic_cast<MovingObjectThrowState*>(this->currentState))
     {
         throwTimer += GetFrameTime();
         if (throwTimer > throwCooldown)
@@ -88,18 +88,18 @@ void Lakitu::updateCollision(GameObject *other, int type)
     // Mario *mario = dynamic_cast<Mario *>(other);
     // if (mario)
     // {
-    //     if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+    //     if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
     //     {
     //         return;
     //     }
 
     //     if (type == TOP)
     //     {
-    //         this->changeState(new EnemyDeadState(this));
+    //         this->changeState(new MovingObjectDeadState(this));
     //     }
     //     else 
     //     {
-    //         mario->hitByEnemy();
+    //         mario->hitByMovingObject();
     //     }
     // }
 }

@@ -1,7 +1,7 @@
 #pragma once
-#include "Enemy.hpp"
+#include "MovingObject.hpp"
 
-class Koopa : public Enemy
+class Koopa : public MovingObject
 {
 public:
     Koopa();

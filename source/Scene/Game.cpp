@@ -310,7 +310,7 @@ void Game::updateCharacters()
     {
         if (gameObjects[i])
         {
-            Enemy *enemy = dynamic_cast<Enemy *>(gameObjects[i]);
+            MovingObject *enemy = dynamic_cast<MovingObject *>(gameObjects[i]);
             if (enemy)
             {
                 enemy->update(mario->getPosition());

@@ -2,21 +2,21 @@
 #include "Character.hpp"
 #include "UI.hpp"
 #include "MarioState.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Structs.hpp"
 class State;
 
-class Enemy : public Character
+class MovingObject: public Character
 {
 public:
     bool beCleared = false;
 
-    void setFrame(enemyStateType type, int start, int end)
+    void setFrame(movingObjectStateType type, int start, int end)
     {
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
-    Enemy();
-    Enemy(const Enemy &other);
+    MovingObject();
+    MovingObject(const MovingObject &other);
     virtual void update(const Vector2& marioPos);
     virtual void updateCollision(GameObject *other, int type) = 0;
 };

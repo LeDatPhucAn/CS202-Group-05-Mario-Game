@@ -1,6 +1,6 @@
 #pragma once
-#include "Enemy.hpp"
-class Mushroom : public Enemy
+#include "MovingObject.hpp"
+class Mushroom : public MovingObject
 {
 public:
     Mushroom();

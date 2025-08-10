@@ -44,7 +44,7 @@ enum class marioStateType
     THROWFB,
     STAR
 };
-enum class enemyStateType
+enum class movingObjectStateType
 {
     IDLE,
     WALK,

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <raylib.h>
 #include <unordered_map>
-#include "Enemy.hpp"
+#include "MovingObject.hpp"
 
 #include "Game.hpp"
 using namespace std;

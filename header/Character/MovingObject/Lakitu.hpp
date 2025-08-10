@@ -1,8 +1,8 @@
 #pragma once
-#include "Enemy.hpp"
-#include "EnemyState.hpp"
+#include "MovingObject.hpp"
+#include "MovingObjectState.hpp"
 
-class Lakitu : public Enemy
+class Lakitu : public MovingObject
 {
 private:
     float throwTimer;
@@ -15,7 +15,7 @@ public:
     
     friend class LakituThrowState; // Allow throw state to access Lakitu's members
 };
-class LakituThrowState : public EnemyThrowState
+class LakituThrowState : public MovingObjectThrowState
 {
 private:
     Lakitu* lakitu;

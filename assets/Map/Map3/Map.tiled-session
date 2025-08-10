@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "pipes.json",
+    "activeFile": "Map3.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -30,10 +30,10 @@
         },
         "Map3.json": {
             "scale": 1.5,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 130,
-                "y": 52.66666666666666
+                "x": 295.33333333333326,
+                "y": 218.99999999999997
             }
         },
         "collided_animation.json": {
@@ -115,9 +115,9 @@
         "collided_animation.json",
         "new_items_powerups.json",
         "Enemies2D.json",
-        "Map3.json",
-        "new_intro_mushroom.json",
         "pipes.json",
+        "new_intro_mushroom.json",
+        "Map3.json",
         "Map1.1.json",
         "muilti_tileset.json",
         "question.tsj"

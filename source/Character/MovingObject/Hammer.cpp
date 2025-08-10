@@ -1,15 +1,15 @@
 #include "Hammer.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Block.hpp"
 #include "Mario.hpp"
 
-Hammer::Hammer() : Enemy()
+Hammer::Hammer() : MovingObject()
 {
     // Spin while RUN, inert when DEAD (same layout as FireBall)
-    setFrame(enemyStateType::RUN, 11, 11);
-    setFrame(enemyStateType::DEAD, 11, 11);
+    setFrame(movingObjectStateType::RUN, 11, 11);
+    setFrame(movingObjectStateType::DEAD, 11, 11);
     setTexture("HammerBro"); // change to "Hammer" if you have a dedicated atlas
-    changeState(new EnemyRunState(this));
+    changeState(new MovingObjectRunState(this));
 }
 
 void Hammer::update(const Vector2 &marioPos)
@@ -19,7 +19,7 @@ void Hammer::update(const Vector2 &marioPos)
     vel.x = this->direction * fabsf(90.f / PPM); // tweak speed as needed
     this->body->SetLinearVelocity(vel);
 
-    Enemy::update(marioPos);
+    MovingObject::update(marioPos);
 }
 
 void Hammer::updateCollision(GameObject *other, int type)
@@ -34,7 +34,7 @@ void Hammer::updateCollision(GameObject *other, int type)
             case BOTTOM:
             case LEFTSIDE:
             case RIGHTSIDE:
-                changeState(new EnemyDeadState(this));
+                changeState(new MovingObjectDeadState(this));
                 break;
             default:
                 break;
@@ -42,20 +42,20 @@ void Hammer::updateCollision(GameObject *other, int type)
         }
     }
 
-    if (auto *enemy = dynamic_cast<Enemy *>(other))
+    if (auto *enemy = dynamic_cast<MovingObject *>(other))
     {
-        if (enemy != this && !dynamic_cast<EnemyDeadState *>(enemy->currentState))
+        if (enemy != this && !dynamic_cast<MovingObjectDeadState *>(enemy->currentState))
         {
-            enemy->changeState(new EnemyDeadState(enemy));
+            enemy->changeState(new MovingObjectDeadState(enemy));
         }
-        changeState(new EnemyDeadState(this));
+        changeState(new MovingObjectDeadState(this));
     }
 
     if (auto *mario = dynamic_cast<Mario *>(other))
     {
         if (type == TOP)
         {
-            changeState(new EnemyDeadState(this));
+            changeState(new MovingObjectDeadState(this));
             mario->jumpFromEnemy();
         }
     }

@@ -1,6 +1,6 @@
 #pragma once
-#include "Enemy.hpp"
-class Star : public Enemy
+#include "MovingObject.hpp"
+class Star : public MovingObject
 {
 public:
     Star();

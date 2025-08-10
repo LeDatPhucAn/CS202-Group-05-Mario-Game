@@ -11,11 +11,11 @@ class Character : public GameObject
 private:
     // Generic friend classes for states
     friend class State;
-    friend class EnemyIdleState;
-    friend class EnemyWalkState;
-    friend class EnemyDeadState;
-    friend class EnemyRunState;
-    friend class Enemy;
+    friend class MovingObjectIdleState;
+    friend class MovingObjectWalkState;
+    friend class MovingObjectDeadState;
+    friend class MovingObjectRunState;
+    friend class MovingObject;
     friend class Goomba;
     friend class Koopa;
     friend class Lakitu;

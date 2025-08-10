@@ -1,7 +1,7 @@
 #pragma once
-#include "Enemy.hpp"
+#include "MovingObject.hpp"
 
-class PiranhaPlant : public Enemy {
+class PiranhaPlant : public MovingObject {
 private:
     Vector2 emergedPos;
     Vector2 hiddenPos;  

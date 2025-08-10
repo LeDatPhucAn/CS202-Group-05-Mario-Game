@@ -121,7 +121,7 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     }
     if (MatchPair<FireBall, Mario>(objA, objB))
         return true;
-    if (MatchPair<PlayerMario, Enemy>(objA, objB))
+    if (MatchPair<PlayerMario, MovingObject>(objA, objB))
     {
         PlayerMario *marioA = dynamic_cast<PlayerMario *>(objA);
         PlayerMario *marioB = dynamic_cast<PlayerMario *>(objB);
@@ -134,7 +134,7 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
             return marioB->getInvincibility() || marioB->getStarMode();
         }
     }
-    if (MatchPair<PlayerLuigi, Enemy>(objA, objB))
+    if (MatchPair<PlayerLuigi, MovingObject>(objA, objB))
     {
         PlayerLuigi *marioA = dynamic_cast<PlayerLuigi *>(objA);
         PlayerLuigi *marioB = dynamic_cast<PlayerLuigi *>(objB);

@@ -1,23 +1,23 @@
 #include "Goomba.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Mario.hpp"
 
 Goomba::Goomba()
-    : Enemy()
+    : MovingObject()
 {
-    setFrame(enemyStateType::IDLE, 2, 2);
-    setFrame(enemyStateType::WALK, 2, 10);
-    setFrame(enemyStateType::DEAD, 12, 12);
+    setFrame(movingObjectStateType::IDLE, 2, 2);
+    setFrame(movingObjectStateType::WALK, 2, 10);
+    setFrame(movingObjectStateType::DEAD, 12, 12);
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba"]);
     this->sprite.texture = UI::textureMap["Goomba"];
-    this->changeState(new EnemyWalkState(this));
+    this->changeState(new MovingObjectWalkState(this));
 }
 
 void Goomba::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
     Block *block = dynamic_cast<Block *>(other);
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
     if (block || enemy)
     {
         if (type == LEFTSIDE)
@@ -33,7 +33,7 @@ void Goomba::updateCollision(GameObject *other, int type)
     Mario *mario = dynamic_cast<Mario *>(other);
     if (mario)
     {
-        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<EnemyDeadState *>(this->currentState))
+        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
         {
             return;
         }
@@ -48,7 +48,7 @@ void Goomba::updateCollision(GameObject *other, int type)
 
         if (type == TOP)
         {
-            this->changeState(new EnemyDeadState(this));
+            this->changeState(new MovingObjectDeadState(this));
             mario->jumpFromEnemy();
         }
         else

@@ -1,22 +1,21 @@
-
 #include "Mushroom.hpp"
-#include "EnemyState.hpp"
+#include "MovingObjectState.hpp"
 #include "Mario.hpp"
 #include "Score.hpp"
 
 Mushroom::Mushroom()
 {
-    setFrame(enemyStateType::WALK, 0, 0);
+    setFrame(movingObjectStateType::WALK, 0, 0);
     setTexture("Items");
 
-    changeState(new EnemyWalkState(this));
+    changeState(new MovingObjectWalkState(this));
 }
 
 void Mushroom::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
     Block *block = dynamic_cast<Block *>(other);
-    Enemy *enemy = dynamic_cast<Enemy *>(other);
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
     if (block || enemy)
     {
         if (type == LEFTSIDE)
@@ -35,6 +34,6 @@ void Mushroom::updateCollision(GameObject *other, int type)
         Score::getInstance()->addScore(100);
         if (mario->getForm() != FIRE)
             mario->changeState(new GrowState(mario));
-        changeState(new EnemyStopState(this));
+        changeState(new MovingObjectStopState(this));
     }
 }

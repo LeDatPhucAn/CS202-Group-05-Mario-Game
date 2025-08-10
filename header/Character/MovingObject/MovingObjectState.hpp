@@ -5,44 +5,44 @@
 
 class Character;
 
-class EnemyState : public State
+class MovingObjectState : public State
 {
 protected:
     Character *character;
 
 public:
-    EnemyState(int type, Character *character, int delay = 5);
+    MovingObjectState(int type, Character *character, int delay = 5);
     virtual void handleInput() = 0;
 };
 
-class EnemyIdleState : public EnemyState
+class MovingObjectIdleState : public MovingObjectState
 {
 public:
-    EnemyIdleState(Character *character, int delay = 10);
+    MovingObjectIdleState(Character *character, int delay = 10);
     void handleInput() override;
 };
-class EnemyWalkState : public EnemyState
+class MovingObjectWalkState : public MovingObjectState
 {
 public:
-    EnemyWalkState(Character *character, int delay = 15);
+    MovingObjectWalkState(Character *character, int delay = 15);
     void handleInput() override;
 };
 
-class EnemyRunState : public EnemyState
+class MovingObjectRunState : public MovingObjectState
 {
 private:
 public:
-    EnemyRunState(Character *character, int delay = 5);
+    MovingObjectRunState(Character *character, int delay = 5);
     void handleInput() override;
 };
-class FireBallMoveState : public EnemyState
+class FireBallMoveState : public MovingObjectState
 {
 private:
 public:
     FireBallMoveState(Character *character, int delay = 5);
     void handleInput() override;
 };
-class StarMoveState : public EnemyState
+class StarMoveState : public MovingObjectState
 {
 private:
 public:
@@ -50,41 +50,41 @@ public:
     void handleInput() override;
 };
 
-class EnemyDeadState : public EnemyState
+class MovingObjectDeadState : public MovingObjectState
 {
 private:
     float delayCounter = 1.0f;
 
 public:
-    EnemyDeadState(Character *character, int delay = 5);
+    MovingObjectDeadState(Character *character, int delay = 5);
     void handleInput() override;
     void updateState() override;
 };
-class EnemyStopState : public EnemyState
+class MovingObjectStopState : public MovingObjectState
 {
 private:
     float delayCounter = 0.2f;
 
 public:
-    EnemyStopState(Character *character, int delay = 5);
+    MovingObjectStopState(Character *character, int delay = 5);
     void handleInput() override;
     void updateState() override;
 };
-class EnemyFlyState : public EnemyState
+class MovingObjectFlyState : public MovingObjectState
 {
 public:
-    EnemyFlyState(Character *character);
-    ~EnemyFlyState();
+    MovingObjectFlyState(Character *character);
+    ~MovingObjectFlyState();
 
     void handleInput() override;
     // This state is continuous and doesn't need an updateState to transition
 };
 
-class EnemyJumpState : public EnemyState
+class MovingObjectJumpState : public MovingObjectState
 {
 public:
-    EnemyJumpState(Character *_character, int delay = 0);
-    ~EnemyJumpState();
+    MovingObjectJumpState(Character *_character, int delay = 0);
+    ~MovingObjectJumpState();
 
     void handleInput() override;
     void updateState() override;
@@ -101,7 +101,7 @@ private:
     void initSineJump();
 };
 
-class EnemyThrowState : public EnemyState
+class MovingObjectThrowState : public MovingObjectState
 {
 private:
     float throwDuration = 0.5f; // Duration of throw animation
@@ -109,7 +109,7 @@ private:
     bool hasThrown = false;
 
 public:
-    EnemyThrowState(Character *character, int delay = 5);
+    MovingObjectThrowState(Character *character, int delay = 5);
     void handleInput() override;
     void updateState() override;
     
