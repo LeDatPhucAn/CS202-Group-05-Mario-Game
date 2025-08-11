@@ -33,6 +33,18 @@ private:
     float gameTime = 0.0f;
     float maxTime = 300.0f;
     friend class Controls;
+
+
+    //tạo hiệu ứng chuyển cảnh khi bắt đầu game
+    RenderTexture2D transitionTexture;
+    bool isTransitioning = true;
+    float transitionTimer = 0.0f;
+    float transitionDuration = 1.5f;
+    float circleRadius = 0.0f;
+    Vector2 circleCenter;
+    
+    void updateTransition();
+    void drawTransition();
 protected:
 
     PlayerMario *mario = nullptr;

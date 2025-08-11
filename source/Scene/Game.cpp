@@ -21,6 +21,11 @@ Game::Game(SceneManager *_mag)
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
 
+    init();
+}
+
+void Game::init()
+{   
     HUDLives = LoadTexture("assets/Backgrounds/HUD/lives.png");
     if (HUDLives.id == 0)
     {
@@ -44,11 +49,14 @@ Game::Game(SceneManager *_mag)
     {
         TraceLog(LOG_WARNING, "Failed to load HUD Score texture");
     }
-    init();
-}
 
-void Game::init()
-{
+    transitionTexture = LoadRenderTexture(UI::screenWidth, UI::screenHeight);
+    isTransitioning = true;
+    transitionTimer = 0.0f;
+    circleRadius = 0.0f;
+    circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
+
+
     // Get game settings
     GameInfo* gameInfo = GameInfo::getInstance();
     
@@ -148,10 +156,19 @@ Game::~Game()
         UnloadTexture(HUDScore);
         HUDScore.id = 0;
     }
+
+    UnloadRenderTexture(transitionTexture);
 }
 
 void Game::restartGame()
-{
+{   
+    //same effect when starting game
+    isTransitioning = true;
+    transitionTimer = 0.0f;
+    circleRadius = 0.0f;
+    circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
+
+
     // Clear existing game objects (except Player will be recreated)
     for (auto &obj : gameObjects)
     {
@@ -233,6 +250,8 @@ void Game::removeGameObject()
 
 void Game::updateScene()
 {
+    // Update transition first
+    updateTransition();
 
     //Update key bindings after pause
     static bool needsKeyUpdated = false;
@@ -367,6 +386,37 @@ void Game::updateMap()
         x.update();
 }
 
+void Game::updateTransition()
+{
+    if (isTransitioning)
+    {
+        transitionTimer += GetFrameTime();
+        
+        // Calculate progress (0.0 to 1.0)
+        float progress = transitionTimer / transitionDuration;
+        
+        if (progress >= 1.0f)
+        {
+            // Transition complete
+            isTransitioning = false;
+            circleRadius = 0.0f;
+        }
+        else
+        {
+            // Smooth easing function (ease-out cubic)
+            float easedProgress = 1.0f - powf(1.0f - progress, 3.0f);
+            
+            // Calculate the maximum radius needed to cover the entire screen
+            float maxRadius = sqrtf(powf(UI::screenWidth / 2.0f, 2) + powf(UI::screenHeight / 2.0f, 2)) + 50.0f;
+            
+            // Expand the circle radius
+            circleRadius = easedProgress * maxRadius;
+        }
+    }
+}
+
+
+
 void Game::displayScene()
 {
     for (auto *b : curMap.imageBlocks)
@@ -389,6 +439,56 @@ void Game::displayScene()
     if (showDebugDraw)
         drawDebug->DrawWorld(world);
     drawHUD();
+
+    // Draw transition effect on top
+    drawTransition();
+}
+
+#include "rlgl.h"
+
+void Game::drawTransition()
+{   
+
+    if (isTransitioning)
+    {
+        // Step 1: Render the entire game scene to a texture
+        RenderTexture2D sceneTexture = LoadRenderTexture(UI::screenWidth, UI::screenHeight);
+        BeginTextureMode(sceneTexture);
+        ClearBackground(BLANK);
+
+        BeginMode2D(cam);
+
+        // draw your scene elements again here:
+        for (auto *b : curMap.imageBlocks) b->display();
+        for (auto *obj : gameObjects) if (obj) obj->display();
+        for (auto *b : curMap.tileBlocks) b->display();
+        drawHUD();
+        EndMode2D();
+        for (auto &p : particles) p.display(GetFrameTime());
+
+        EndTextureMode();
+
+        // Step 2: Draw black screen
+        DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, BLACK);
+
+        // Step 3: Draw only the circle portion of the scene
+        BeginScissorMode(
+            circleCenter.x - circleRadius,
+            circleCenter.y - circleRadius,
+            circleRadius * 2,
+            circleRadius * 2
+        );
+        DrawTextureRec(
+            sceneTexture.texture,
+            { 0, 0, (float)sceneTexture.texture.width, -(float)sceneTexture.texture.height },
+            { 0, 0 },
+            WHITE
+        );
+        EndScissorMode();
+
+        // Step 4: Unload scene texture
+        UnloadRenderTexture(sceneTexture);
+    }
 }
 
 void Game::drawHUD()
@@ -433,7 +533,7 @@ void Game::drawHUD()
     if (remainingTime == 0)
     {
         if (mario) mario->changeState(new DeadState(mario));
-    if (luigi) luigi->changeState(new DeadState(luigi));
+        if (luigi) luigi->changeState(new DeadState(luigi));
     }
 
     // Draw coin

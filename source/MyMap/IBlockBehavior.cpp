@@ -43,7 +43,7 @@ void IBlockBehavior::makeBlockBounce(float dt)
             if(this->block->contain == "Mushroom")
                 throwMushroom(this->direction);
             else if(this->block->contain == "Coin")
-                GameInfo::getInstance()->addScore(200);
+                GameInfo::getInstance()->addScore(100);
             else if(this->block->contain == "Star")
                 throwStar(this->direction);
         }
