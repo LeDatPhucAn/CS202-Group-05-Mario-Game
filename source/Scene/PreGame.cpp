@@ -10,18 +10,44 @@ PreGame::PreGame(SceneManager* _manager) : Scene(_manager)
 {
     // Load textures
     backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
-    logoTexture = LoadTexture("assets/Backgrounds/Title.png");
-    
+    marioTexture = LoadTexture("assets/Backgrounds/Mario.png");
+    luigiTexture = LoadTexture("assets/Backgrounds/Luigi.png");
+    dualTexture = LoadTexture("assets/Backgrounds/Dual.png");
+
     if (backgroundTexture.id == 0)
     {
         TraceLog(LOG_WARNING, "Failed to load PreGame background texture");
     }
-    if (logoTexture.id == 0)
+    if (marioTexture.id == 0)
     {
-        TraceLog(LOG_WARNING, "Failed to load PreGame logo texture");
+        TraceLog(LOG_WARNING, "Failed to load PreGame Mario texture");
+    }
+    if (luigiTexture.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load PreGame Luigi texture");
+    }
+    if (dualTexture.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load PreGame Dual texture");
+    }
+
+    initializeDifficultyButtons();
+    
+    // Set initial selections based on GameInfo defaults
+    GameInfo* gameInfo = GameInfo::getInstance();
+    if (gameInfo->getMode() == Mode::DUAL) {
+        selectedModeIndex = 2;
+    } else if (gameInfo->isMario()) {
+        selectedModeIndex = 0;
+    } else {
+        selectedModeIndex = 1;
     }
     
-    initializeButtons();
+    switch(gameInfo->getDifficulty()) {
+        case Difficulty::EASY: selectedDifficultyIndex = 0; break;
+        case Difficulty::HARD: selectedDifficultyIndex = 1; break;
+        case Difficulty::HARDCORE: selectedDifficultyIndex = 2; break;
+    }
     
     // Play menu music
     SoundController::getInstance().playSceneMusicFromStart(sceneType::MENU);
@@ -34,281 +60,259 @@ PreGame::~PreGame()
         UnloadTexture(backgroundTexture);
         backgroundTexture.id = 0;
     }
-    if (logoTexture.id > 0)
+    if (marioTexture.id > 0)
     {
-        UnloadTexture(logoTexture);
-        logoTexture.id = 0;
+        UnloadTexture(marioTexture);
+        marioTexture.id = 0;
     }
-    
-    for (auto button : buttons)
+    if (luigiTexture.id > 0)
+    {
+        UnloadTexture(luigiTexture);
+        luigiTexture.id = 0;
+    }
+    if (dualTexture.id > 0)
+    {
+        UnloadTexture(dualTexture);
+        dualTexture.id = 0;
+    }
+
+    for (auto button : difficultyButtons)
     {
         delete button;
     }
-    buttons.clear();
+    difficultyButtons.clear();
 }
 
-void PreGame::initializeButtons()
+void PreGame::initializeDifficultyButtons()
 {
-    float buttonWidth = 450;  // Made smaller to fit 3 in a row
-    float buttonHeight = 60;
-    float startY = UI::screenHeight / 2 + 80;
-    float horizontalSpacing = 650;  // Increased spacing between buttons horizontally
-    float verticalSpacing = 80;     // Space between rows
+    float buttonWidth = 200;
+    float buttonHeight = 50;
+    float startY = UI::screenHeight / 2 + 50;
+    float horizontalSpacing = 220;
     
-    // First row: Game Mode buttons (0, 1, 2)
-    float firstRowY = startY;
-    float centerX = UI::screenWidth / 2;
+    float centerX = UI::screenWidth / 2 ;
     
-    // Single Player Mario (Button 0) - Left
-    TextBox* singleMarioButton = new TextBox(
-        "SINGLE PLAYER (MARIO)",
-        centerX - horizontalSpacing,
-        firstRowY,
-        WHITE,
-        Color{70, 130, 180, 255}, // Steel blue
-        DARKGRAY
-    );
-    buttons.push_back(singleMarioButton);
-    
-    // Single Player Luigi (Button 1) - Center
-    TextBox* singleLuigiButton = new TextBox(
-        "SINGLE PLAYER (LUIGI)",
-        centerX - buttonWidth / 2,
-        firstRowY,
-        WHITE,
-        Color{70, 130, 180, 255}, // Steel blue
-        DARKGRAY
-    );
-    buttons.push_back(singleLuigiButton);
-    
-    // Two Player (Button 2) - Right
-    TextBox* twoPlayerButton = new TextBox(
-        "TWO PLAYER",
-        centerX + horizontalSpacing - buttonWidth,
-        firstRowY,
-        WHITE,
-        Color{70, 130, 180, 255}, // Steel blue
-        DARKGRAY
-    );
-    buttons.push_back(twoPlayerButton);
-    
-    // Second row: Difficulty buttons (3, 4, 5)
-    float secondRowY = firstRowY + verticalSpacing;
-    
-    // Difficulty Easy (Button 3) - Left
+    // Difficulty Easy (Button 0)
     TextBox* easyButton = new TextBox(
-        "DIFFICULTY: EASY",
+        "EASY",
         centerX - horizontalSpacing,
-        secondRowY,
+        startY,
         WHITE,
         Color{70, 130, 180, 255}, // Steel blue
         DARKGRAY
     );
-    buttons.push_back(easyButton);
+    difficultyButtons.push_back(easyButton);
     
-    // Difficulty Hard (Button 4) - Center
+    // Difficulty Hard (Button 1)
     TextBox* hardButton = new TextBox(
-        "DIFFICULTY: HARD",
+        "HARD",
         centerX - buttonWidth / 2,
-        secondRowY,
+        startY,
         WHITE,
         Color{70, 130, 180, 255}, // Steel blue
         DARKGRAY
     );
-    buttons.push_back(hardButton);
+    difficultyButtons.push_back(hardButton);
     
-    // Difficulty Hardcore (Button 5) - Right
+    // Difficulty Hardcore (Button 2)
     TextBox* hardcoreButton = new TextBox(
-        "DIFFICULTY: HARDCORE",
+        "HARDCORE",
         centerX + horizontalSpacing - buttonWidth,
-        secondRowY,
+        startY,
         WHITE,
         Color{70, 130, 180, 255}, // Steel blue
         DARKGRAY
     );
-    buttons.push_back(hardcoreButton);
+    difficultyButtons.push_back(hardcoreButton);
     
-    // Third row: Play and Back buttons (6, 7)
-    float thirdRowY = secondRowY + verticalSpacing;
-    float playBackSpacing = 180;  // Space between Play and Back buttons
-    
-    // Play button (Button 6) - Left of center
+    // Play button
     TextBox* playButton = new TextBox(
         "PLAY",
-        centerX - playBackSpacing / 2 - buttonWidth,
-        thirdRowY,
+        centerX - 140,
+        startY + 80,
         WHITE,
-        Color{0, 150, 0, 255},  // Keep green for PLAY button (special)
+        Color{0, 150, 0, 255}, // Green
         DARKGRAY
     );
-    buttons.push_back(playButton);
+    difficultyButtons.push_back(playButton);
     
-    // Back button (Button 7) - Right of center
+    // Back button
     TextBox* backButton = new TextBox(
         "BACK",
-        centerX + playBackSpacing / 2,
-        thirdRowY,
+        centerX,
+        startY + 80,
         WHITE,
         Color{70, 130, 180, 255}, // Steel blue
         DARKGRAY
     );
-    buttons.push_back(backButton);
+    difficultyButtons.push_back(backButton);
 }
 
 void PreGame::handleInput()
 {
-    // 2D Grid navigation
-    // Row 0: buttons 0, 1, 2 (Game modes)
-    // Row 1: buttons 3, 4, 5 (Difficulties)
-    // Row 2: buttons 6, 7 (Play, Back)
-    
-    int oldSelection = selectedButton;
-    
-    // Keyboard navigation with 2D grid logic
-    if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
-    {
-        if (selectedButton >= 0 && selectedButton <= 2) {
-            // From first row, wrap to third row
-            selectedButton = (selectedButton <= 1) ? 6 : 7;  // Left/center -> Play, right -> Back
-        } else if (selectedButton >= 3 && selectedButton <= 5) {
-            // From second row to first row (same column)
-            selectedButton = selectedButton - 3;
-        } else if (selectedButton == 6 || selectedButton == 7) {
-            // From third row to second row
-            selectedButton = (selectedButton == 6) ? 3 : 5;  // Play -> Easy, Back -> Hardcore
-        }
-    }
-    if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
-    {
-        if (selectedButton >= 0 && selectedButton <= 2) {
-            // From first row to second row (same column)
-            selectedButton = selectedButton + 3;
-        } else if (selectedButton >= 3 && selectedButton <= 5) {
-            // From second row to third row
-            selectedButton = (selectedButton <= 4) ? 6 : 7;  // Easy/Hard -> Play, Hardcore -> Back
-        } else if (selectedButton == 6 || selectedButton == 7) {
-            // From third row to first row
-            selectedButton = (selectedButton == 6) ? 0 : 2;  // Play -> Mario, Back -> Two Player
-        }
-    }
-    if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A))
-    {
-        if (selectedButton >= 0 && selectedButton <= 2) {
-            // Navigate within first row
-            selectedButton = (selectedButton == 0) ? 2 : selectedButton - 1;
-        } else if (selectedButton >= 3 && selectedButton <= 5) {
-            // Navigate within second row
-            selectedButton = (selectedButton == 3) ? 5 : selectedButton - 1;
-        } else if (selectedButton >= 6 && selectedButton <= 7) {
-            // Navigate within third row
-            selectedButton = (selectedButton == 6) ? 7 : 6;
-        }
-    }
+    // Navigate through mode images (0-2) and difficulty buttons (0-4)
     if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D))
     {
-        if (selectedButton >= 0 && selectedButton <= 2) {
-            // Navigate within first row
-            selectedButton = (selectedButton == 2) ? 0 : selectedButton + 1;
-        } else if (selectedButton >= 3 && selectedButton <= 5) {
-            // Navigate within second row
-            selectedButton = (selectedButton == 5) ? 3 : selectedButton + 1;
-        } else if (selectedButton >= 6 && selectedButton <= 7) {
-            // Navigate within third row
-            selectedButton = (selectedButton == 7) ? 6 : 7;
+        if (isSelectingMode && selectedModeIndex < 2) // Mode images (0, 1, 2)
+        {
+            selectedModeIndex++;
+        }
+        else if (!isSelectingMode && selectedDifficultyIndex < 4) // Difficulty buttons (0-4)
+        {
+            selectedDifficultyIndex++;
         }
     }
     
+    if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A))
+    {
+        if (isSelectingMode && selectedModeIndex > 0) // Mode images (0, 1, 2)
+        {
+            selectedModeIndex--;
+        }
+        else if (!isSelectingMode && selectedDifficultyIndex > 0) // Difficulty buttons (0-4)
+        {
+            selectedDifficultyIndex--;
+        }
+    }
     
-    // Selection
+    if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
+    {
+        // Switch focus from mode images to difficulty buttons
+        isSelectingMode = false;
+    }
+    
+    if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
+    {
+        // Switch focus from difficulty buttons to mode images
+        isSelectingMode = true;
+    }
+    
+    // Handle Enter key press
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
     {
-        switch (selectedButton)
+        if (isSelectingMode) // Mode selection
         {
-            case 0: // Single Player Mario
+            if (selectedModeIndex == 0) // Single Player Mario
+            {
                 GameInfo::getInstance()->setMode(Mode::SINGLE);
                 GameInfo::getInstance()->setCharacter(true);
-                // Don't start game immediately, just set the mode
-                break;
-            case 1: // Single Player Luigi
+            }
+            else if (selectedModeIndex == 1) // Single Player Luigi
+            {
                 GameInfo::getInstance()->setMode(Mode::SINGLE);
                 GameInfo::getInstance()->setCharacter(false);
-                // Don't start game immediately, just set the mode
-                break;
-            case 2: // Two Player
+            }
+            else if (selectedModeIndex == 2) // Two Player
+            {
                 GameInfo::getInstance()->setMode(Mode::DUAL);
-                // Don't start game immediately, just set the mode
-                break;
-            case 3: // Difficulty Easy
+            }
+        }
+        else // Difficulty/action button selection
+        {
+            if (selectedDifficultyIndex == 0) // Easy
+            {
                 GameInfo::getInstance()->setDifficulty(Difficulty::EASY);
-                break;
-            case 4: // Difficulty Hard
+            }
+            else if (selectedDifficultyIndex == 1) // Hard
+            {
                 GameInfo::getInstance()->setDifficulty(Difficulty::HARD);
-                break;
-            case 5: // Difficulty Hardcore
+            }
+            else if (selectedDifficultyIndex == 2) // Hardcore
+            {
                 GameInfo::getInstance()->setDifficulty(Difficulty::HARDCORE);
-                break;
-            case 6: // Play - Start the game
+            }
+            else if (selectedDifficultyIndex == 3) // Play button
+            {
+                // Start the game with selected mode and difficulty
                 manager->changeScene(sceneType::GAME);
-                break;
-            case 7: // Back
+            }
+            else if (selectedDifficultyIndex == 4) // Back button
+            {
                 manager->changeScene(sceneType::MENU);
-                break;
+            }
         }
     }
     
-    // Mouse interaction
+    // Mouse interaction with difficulty buttons only
     Vector2 mousePos = GetMousePosition();
     bool mouseClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
     
-    for (int i = 0; i < buttons.size(); i++)
+    for (int i = 0; i < difficultyButtons.size(); i++)
     {
         Rectangle buttonRect = {
-            buttons[i]->rect.x,
-            buttons[i]->rect.y,
-            buttons[i]->rect.width,
-            buttons[i]->rect.height
+            difficultyButtons[i]->rect.x,
+            difficultyButtons[i]->rect.y,
+            difficultyButtons[i]->rect.width,
+            difficultyButtons[i]->rect.height
         };
         
         if (CheckCollisionPointRec(mousePos, buttonRect))
         {
-            if (selectedButton != i)
-            {
-                selectedButton = i;
-            }
+            isSelectingMode = false; // Switch to difficulty selection
+            selectedDifficultyIndex = i;
             
             if (mouseClicked)
             {
-                switch (i)
+                if (i == 0) // Easy
                 {
-                    case 0: // Single Player Mario
-                        GameInfo::getInstance()->setMode(Mode::SINGLE);
-                        GameInfo::getInstance()->setCharacter(true);
-                        // Don't start game immediately, just set the mode
-                        break;
-                    case 1: // Single Player Luigi
-                        GameInfo::getInstance()->setMode(Mode::SINGLE);
-                        GameInfo::getInstance()->setCharacter(false);
-                        // Don't start game immediately, just set the mode
-                        break;
-                    case 2: // Two Player
-                        GameInfo::getInstance()->setMode(Mode::DUAL);
-                        // Don't start game immediately, just set the mode
-                        break;
-                    case 3: // Difficulty Easy
-                        GameInfo::getInstance()->setDifficulty(Difficulty::EASY);
-                        break;
-                    case 4: // Difficulty Hard
-                        GameInfo::getInstance()->setDifficulty(Difficulty::HARD);
-                        break;
-                    case 5: // Difficulty Hardcore
-                        GameInfo::getInstance()->setDifficulty(Difficulty::HARDCORE);
-                        break;
-                    case 6: // Play - Start the game
-                        manager->changeScene(sceneType::CHOOSE_LEVEL);
-                        break;
-                    case 7: // Back
-                        manager->changeScene(sceneType::MENU);
-                        break;
+                    GameInfo::getInstance()->setDifficulty(Difficulty::EASY);
+                }
+                else if (i == 1) // Hard
+                {
+                    GameInfo::getInstance()->setDifficulty(Difficulty::HARD);
+                }
+                else if (i == 2) // Hardcore
+                {
+                    GameInfo::getInstance()->setDifficulty(Difficulty::HARDCORE);
+                }
+                else if (i == 3) // Play button
+                {
+                    manager->changeScene(sceneType::GAME);
+                }
+                else if (i == 4) // Back button
+                {
+                    manager->changeScene(sceneType::MENU);
+                }
+            }
+        }
+    }
+    
+    // Mouse interaction with mode images
+    float modeImageWidth = 150;
+    float modeImageHeight = 200;
+    float modeStartX = UI::screenWidth / 2 - 350;
+    float modeImageY = 150.0f;
+    float modeSpacing = 250;
+    
+    for (int i = 0; i < 3; i++)
+    {
+        Rectangle imageRect = {
+            modeStartX + i * modeSpacing,
+            modeImageY,
+            modeImageWidth,
+            modeImageHeight
+        };
+        
+        if (CheckCollisionPointRec(mousePos, imageRect))
+        {
+            isSelectingMode = true; // Switch to mode selection
+            selectedModeIndex = i;
+            
+            if (mouseClicked)
+            {
+                if (i == 0) // Single Player Mario
+                {
+                    GameInfo::getInstance()->setMode(Mode::SINGLE);
+                    GameInfo::getInstance()->setCharacter(true);
+                }
+                else if (i == 1) // Single Player Luigi
+                {
+                    GameInfo::getInstance()->setMode(Mode::SINGLE);
+                    GameInfo::getInstance()->setCharacter(false);
+                }
+                else if (i == 2) // Two Player
+                {
+                    GameInfo::getInstance()->setMode(Mode::DUAL);
                 }
             }
         }
@@ -325,18 +329,7 @@ void PreGame::updateAnimations()
 {
     animationTimer += GetFrameTime();
     
-    // Logo pulsing animation
-    logoScale += logoScaleDirection * GetFrameTime() * 0.5f;
-    if (logoScale >= 0.35)
-    {
-        logoScale = 0.35f;
-        logoScaleDirection = -1.0f;
-    }
-    else if (logoScale <= 0.25f)
-    {
-        logoScale = 0.25f;
-        logoScaleDirection = 1.0f;
-    }
+    // No logo animation needed anymore
 }
 
 void PreGame::updateScene()
@@ -344,10 +337,28 @@ void PreGame::updateScene()
     handleInput();
     updateAnimations();
     
-    // Update button states
-    for (int i = 0; i < buttons.size(); i++)
+    // Update difficulty button hover states
+    for (int i = 0; i < difficultyButtons.size(); i++)
     {
-        buttons[i]->isHovered = (i == selectedButton);
+        difficultyButtons[i]->isHovered = (!isSelectingMode && i == selectedDifficultyIndex);
+        
+        // Update button colors based on hover/selected state
+        if (!isSelectingMode && i == selectedDifficultyIndex)
+        {
+            difficultyButtons[i]->FillColor = Color{255, 165, 0, 255}; // Orange when selected
+        }
+        else
+        {
+            // Different colors for different buttons
+            if (i == 3) // Play button
+            {
+                difficultyButtons[i]->FillColor = Color{0, 150, 0, 255}; // Green
+            }
+            else
+            {
+                difficultyButtons[i]->FillColor = Color{70, 130, 180, 255}; // Blue
+            }
+        }
     }
 }
 
@@ -365,31 +376,12 @@ void PreGame::displayScene()
         DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{30, 30, 60, 255});
     }
     
-    // Draw logo
-    if (logoTexture.id > 0)
-    {
-        // Scale so it never exceeds 30% of screen width
-        float maxW = UI::screenWidth * 0.25f;
-        float scale = maxW / logoTexture.width;
-        float drawW = logoTexture.width * scale;
-        float drawH = logoTexture.height * scale;
-        // apply your bounce offset to Y
-        float drawX = (UI::screenWidth - drawW) / 2.0f;
-        float drawY = 80 + sinf(logoBounce) * 10.0f;
-        DrawTexturePro(
-            logoTexture,
-            {0, 0, (float)logoTexture.width, (float)logoTexture.height},
-            {drawX, drawY, drawW, drawH},
-            {0, 0}, 0.0f, WHITE);
-    }
-    
     // Draw title text
     std::string titleText = "SELECT GAME MODE & DIFFICULTY";
     float titleFontSize = 32.0f;
     float titleSpacing = 3.0f;
-    Vector2 titleSize = MeasureTextEx(UI::boldFont, titleText.c_str(), titleFontSize, titleSpacing);
-    float titleX = (UI::screenWidth - titleSize.x) / 2.0f;
-    float titleY = UI::screenHeight / 2.0f - 50;
+    float titleX = UI::screenWidth / 2.0f - 300;
+    float titleY = 100.0f;
     
     // Title shadow
     DrawTextEx(UI::boldFont, titleText.c_str(),
@@ -398,61 +390,120 @@ void PreGame::displayScene()
     DrawTextEx(UI::boldFont, titleText.c_str(),
                {titleX, titleY}, titleFontSize, titleSpacing, Color{255, 255, 255, 255});
     
-    // Draw buttons
-    GameInfo* gameInfo = GameInfo::getInstance();
+    // Draw mode selection images
+    float modeImageWidth = 150;
+    float modeImageHeight = 200;
+    float modeStartX = UI::screenWidth / 2 - 350;
+    float modeImageY = 150.0f;
+    float modeSpacing = 250;
     
-    for (int i = 0; i < buttons.size(); i++)
+    // Game mode images
+    Texture2D modeTextures[3] = {marioTexture, luigiTexture, dualTexture};
+    std::string modeLabels[3] = {"MARIO", "LUIGI", "DUAL PLAYER"};
+    
+    for (int i = 0; i < 3; i++)
     {
-        // Check if this button represents the current selection
-        bool isChosen = false;
+        float imageX = modeStartX + i * modeSpacing;
+        float imageY = modeImageY;
         
-        // Check if this button represents the current game mode
-        if (i == 0 && gameInfo->getMode() == Mode::SINGLE && gameInfo->isMario()) {
-            isChosen = true; // Single Player Mario
-        } 
-        if (i == 1 && gameInfo->getMode() == Mode::SINGLE && !gameInfo->isMario()) {
-            isChosen = true; // Single Player Luigi
-        } 
-        if (i == 2 && gameInfo->getMode() == Mode::DUAL) {
-            isChosen = true; // Two Player
+        // Calculate scale and zoom effect for selected mode
+        float scale = 1.0f;
+        if (isSelectingMode && i == selectedModeIndex)
+        {
+            scale = 1.2f; 
         }
         
-        // Check if this button represents the current difficulty (separate checks)
-        if (i == 3 && gameInfo->getDifficulty() == Difficulty::EASY) {
-            isChosen = true; // Easy difficulty
-        } 
-        if (i == 4 && gameInfo->getDifficulty() == Difficulty::HARD) {
-            isChosen = true; // Hard difficulty
-        } 
-        if (i == 5 && gameInfo->getDifficulty() == Difficulty::HARDCORE) {
-            isChosen = true; // Hardcore difficulty
+        float scaledWidth = modeImageWidth * scale;
+        float scaledHeight = modeImageHeight * scale;
+        float adjustedX = imageX - (scaledWidth - modeImageWidth) / 2.0f;
+        float adjustedY = imageY - (scaledHeight - modeImageHeight) / 2.0f;
+        
+        // Draw mode image
+        if (modeTextures[i].id > 0)
+        {
+            Rectangle srcRect = {0, 0, (float)modeTextures[i].width, (float)modeTextures[i].height};
+            Rectangle destRect = {adjustedX, adjustedY, scaledWidth, scaledHeight};
+            DrawTexturePro(modeTextures[i], srcRect, destRect, {0, 0}, 0.0f, WHITE);
+        }
+        
+        // Draw mode label with color based on selection
+        Color textColor = BLACK;
+        GameInfo* gameInfo = GameInfo::getInstance();
+        
+        // Check if this mode is currently selected in GameInfo
+        bool isCurrentMode = false;
+        if (i == 0 && gameInfo->getMode() == Mode::SINGLE && gameInfo->isMario()) {
+            isCurrentMode = true;
+        } else if (i == 1 && gameInfo->getMode() == Mode::SINGLE && !gameInfo->isMario()) {
+            isCurrentMode = true;
+        } else if (i == 2 && gameInfo->getMode() == Mode::DUAL) {
+            isCurrentMode = true;
+        }
+        
+        if (isSelectingMode && i == selectedModeIndex)
+        {
+            textColor = Color{255, 255, 0, 255}; // Yellow for currently navigated
+        }
+        else if (isCurrentMode)
+        {
+            textColor = Color{255, 165, 0, 255}; // Orange for selected mode
+        }
+        
+        float labelFontSize = 24.0f;
+        Vector2 labelSize = MeasureTextEx(UI::font, modeLabels[i].c_str(), labelFontSize, 1);
+        float labelX = imageX + (modeImageWidth - labelSize.x) / 2.0f;
+        float labelY = imageY + modeImageHeight + 30;
+        
+        // Label shadow
+        DrawTextEx(UI::font, modeLabels[i].c_str(),
+                   {labelX + 1, labelY + 1}, labelFontSize, 1, Color{0, 0, 0, 150});
+        // Label text
+        DrawTextEx(UI::font, modeLabels[i].c_str(),
+                   {labelX, labelY}, labelFontSize, 1, textColor);
+    }
+    
+    // Draw difficulty buttons
+    for (int i = 0; i < difficultyButtons.size(); i++)
+    {
+        // Check if this button represents the current difficulty
+        bool isCurrentDifficulty = false;
+        GameInfo* gameInfo = GameInfo::getInstance();
+        
+        if (i == 0 && gameInfo->getDifficulty() == Difficulty::EASY) {
+            isCurrentDifficulty = true;
+        } else if (i == 1 && gameInfo->getDifficulty() == Difficulty::HARD) {
+            isCurrentDifficulty = true;
+        } else if (i == 2 && gameInfo->getDifficulty() == Difficulty::HARDCORE) {
+            isCurrentDifficulty = true;
         }
         
         // Set button colors based on state
         Color fillColor;
-        if (isChosen) {
-            fillColor = Color{255, 165, 0, 255}; // Orange for chosen options
+        if (isCurrentDifficulty) {
+            fillColor = Color{255, 165, 0, 255}; // Orange for chosen difficulty
+        } else if (i == 3) { // Play button
+            fillColor = Color{0, 150, 0, 255}; // Green for play button
         } else {
             fillColor = Color{70, 130, 180, 255}; // Steel blue for default
         }
         
         // Override the button's fill color temporarily
-        Color originalFillColor = buttons[i]->FillColor;
-        buttons[i]->FillColor = fillColor;
+        Color originalFillColor = difficultyButtons[i]->FillColor;
+        difficultyButtons[i]->FillColor = fillColor;
         
-        buttons[i]->draw();
+        difficultyButtons[i]->draw();
         
         // Restore original color
-        buttons[i]->FillColor = originalFillColor;
+        difficultyButtons[i]->FillColor = originalFillColor;
         
         // Add selection highlight for currently navigated button (yellow border)
-        if (i == selectedButton)
+        if (!isSelectingMode && i == selectedDifficultyIndex)
         {
             Rectangle buttonRect = {
-                buttons[i]->rect.x - 5,
-                buttons[i]->rect.y - 5,
-                buttons[i]->rect.width + 10,
-                buttons[i]->rect.height + 10
+                difficultyButtons[i]->rect.x - 5,
+                difficultyButtons[i]->rect.y - 5,
+                difficultyButtons[i]->rect.width + 10,
+                difficultyButtons[i]->rect.height + 10
             };
             DrawRectangleRoundedLines(buttonRect, 0.1f, 8, Color{255, 255, 0, 200});
         }

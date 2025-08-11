@@ -7,17 +7,19 @@ class PreGame : public Scene
 {
 private:
     Texture2D backgroundTexture;
-    Texture2D logoTexture;
-    
-    std::vector<TextBox*> buttons;
-    int selectedButton = 0;
+    Texture2D marioTexture;
+    Texture2D luigiTexture;
+    Texture2D dualTexture;
+
+    std::vector<TextBox*> difficultyButtons;  // Only for difficulty buttons now
+    int selectedModeIndex = 0;  // 0=Mario, 1=Luigi, 2=Dual
+    int selectedDifficultyIndex = 0;  // 0=Easy, 1=Hard, 2=Hardcore, 3=Play, 4=Back
+    bool isSelectingMode = true;  // true=selecting mode images, false=selecting difficulty buttons
     
     // Animation variables
-    float logoScale = 1.0f;
-    float logoScaleDirection = 1.0f;
     float animationTimer = 0.0f;
     
-    void initializeButtons();
+    void initializeDifficultyButtons();
     void handleInput();
     void updateAnimations();
 
