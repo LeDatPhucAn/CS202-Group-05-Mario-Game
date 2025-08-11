@@ -4,7 +4,7 @@
 #include "UI.hpp"
 #include "KeyBindingManager.hpp"
 
-class Tutorial : public Scene
+class Controls : public Scene
 {
 private:
     Texture2D backgroundTexture;
@@ -35,8 +35,8 @@ private:
     int getCurrentKeyForAction(Action action, int player);
 
 public:
-    Tutorial(SceneManager* _manager);
-    ~Tutorial();
+    Controls(SceneManager* _manager);
+    ~Controls();
     
     void updateScene() override;
     void displayScene() override;

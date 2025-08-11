@@ -138,7 +138,7 @@ void Menu::updateScene()
             "START GAME",
             "CHOOSE LEVEL",
             "SETTINGS",
-            "TUTORIAL",
+            "CONTROLS",
             "EXIT GAME"};
 
         // init buttons(color not important)
@@ -176,7 +176,7 @@ void Menu::updateScene()
             nextScene = sceneType::SETTING;
             break;
         case 3:
-            nextScene = sceneType::TUTORIAL;
+            nextScene = sceneType::CONTROLS;
             break;
         case 4:
             CloseWindow();
@@ -230,7 +230,7 @@ void Menu::updateScene()
                     nextScene = sceneType::SETTING;
                     break;
                 case 3:
-                    nextScene = sceneType::TUTORIAL;
+                    nextScene = sceneType::CONTROLS;
                     break;
                 case 4:
                     CloseWindow();

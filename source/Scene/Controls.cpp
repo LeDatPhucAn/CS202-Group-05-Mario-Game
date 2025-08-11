@@ -1,11 +1,11 @@
-#include "Tutorial.hpp"
+#include "Controls.hpp"
 #include "raylib.h"
 #include <cmath>
 #include <vector>
 #include <string>
 #include "SoundController.hpp"
 
-Tutorial::Tutorial(SceneManager* _manager) : Scene(_manager)
+Controls::Controls(SceneManager* _manager) : Scene(_manager)
 {
     // Load textures (reuse from other scenes)
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
@@ -29,7 +29,7 @@ Tutorial::Tutorial(SceneManager* _manager) : Scene(_manager)
     initializeActionList();
 }
 
-Tutorial::~Tutorial()
+Controls::~Controls()
 {
     if (buttonTexture.id > 0)
     {
@@ -52,7 +52,7 @@ Tutorial::~Tutorial()
     
 }
 
-void Tutorial::initializeActionList()
+void Controls::initializeActionList()
 {
     actionList = {
         {Action::BUTTON_LEFT, "Move Left"},
@@ -64,7 +64,7 @@ void Tutorial::initializeActionList()
     };
 }
 
-void Tutorial::updateScene()
+void Controls::updateScene()
 {
     // Update swap message timer
     if (showSwapMessage)
@@ -232,7 +232,7 @@ void Tutorial::updateScene()
     }
 }
 
-void Tutorial::displayScene()
+void Controls::displayScene()
 {
     // Draw semi-transparent background
     DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 80});
@@ -346,7 +346,7 @@ void Tutorial::displayScene()
 }
 
 
-void Tutorial::drawKeyBindingTable()
+void Controls::drawKeyBindingTable()
 {
     float boardWidth = 800;
     float boardX = UI::screenWidth / 2 - boardWidth / 2;
@@ -423,7 +423,7 @@ void Tutorial::drawKeyBindingTable()
     }
 }
 
-void Tutorial::drawInstructions()
+void Controls::drawInstructions()
 {
     std::string instructions;
     if (isEditing)
@@ -444,7 +444,7 @@ void Tutorial::drawInstructions()
                {instrX, instrY}, 16, 1, WHITE);
 }
 
-void Tutorial::updateKeyBinding(int actionIndex, int player, int newKey)
+void Controls::updateKeyBinding(int actionIndex, int player, int newKey)
 {
     if (actionIndex < 0 || actionIndex >= actionList.size()) return;
     
@@ -486,7 +486,7 @@ void Tutorial::updateKeyBinding(int actionIndex, int player, int newKey)
 }
 
 
-int Tutorial::getCurrentKeyForAction(Action action, int player)
+int Controls::getCurrentKeyForAction(Action action, int player)
 {
     if (player == 0) // Mario
     {
@@ -498,7 +498,7 @@ int Tutorial::getCurrentKeyForAction(Action action, int player)
     }
 }
 
-std::string Tutorial::getKeyName(int keyCode)
+std::string Controls::getKeyName(int keyCode)
 {
     switch (keyCode)
     {

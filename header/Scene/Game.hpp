@@ -32,7 +32,7 @@ private:
 
     float gameTime = 0.0f;
     float maxTime = 300.0f;
-    friend class Tutorial;
+    friend class Controls;
 protected:
 
     PlayerMario *mario = nullptr;

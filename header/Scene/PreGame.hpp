@@ -1,17 +1,30 @@
-
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
-#include "Structs.hpp"
-class PreGame : public Scene {
+#include "UI.hpp"
+
+class PreGame : public Scene
+{
 private:
-	Mode mode = Mode::DUAL;        // single or dual
-	bool chooseMario = true;       // if single: true -> Mario, false -> Luigi
-	Difficulty difficulty = Difficulty::EASY;
-	int selectionIndex = 0;        // which row is highlighted
-	bool launching = false;        // trigger start
+    Texture2D backgroundTexture;
+    Texture2D logoTexture;
+    
+    std::vector<TextBox*> buttons;
+    int selectedButton = 0;
+    
+    // Animation variables
+    float logoScale = 1.0f;
+    float logoScaleDirection = 1.0f;
+    float animationTimer = 0.0f;
+    
+    void initializeButtons();
+    void handleInput();
+    void updateAnimations();
+
 public:
-	PreGame(SceneManager* m);
-	void updateScene() override;
-	void displayScene() override;
+    PreGame(SceneManager* _manager);
+    ~PreGame();
+    
+    void updateScene() override;
+    void displayScene() override;
 };

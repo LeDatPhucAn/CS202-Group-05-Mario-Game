@@ -80,7 +80,7 @@ void Pause::updateScene()
             manager->goBack();
             return;
         case 1: // Save
-                manager->changeScene(sceneType::TUTORIAL);
+                manager->changeScene(sceneType::CONTROLS);
                 return;
         case 2: // Settings
             manager->changeScene(sceneType::SETTING);
@@ -144,7 +144,7 @@ void Pause::updateScene()
             manager->goBack();
             return;
             case 1: // Controls
-                manager->changeScene(sceneType::TUTORIAL);
+                manager->changeScene(sceneType::CONTROLS);
                 return;
             case 2: // Settings
                 manager->changeScene(sceneType::SETTING);
