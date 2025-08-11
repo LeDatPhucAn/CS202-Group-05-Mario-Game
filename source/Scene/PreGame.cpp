@@ -71,16 +71,15 @@ void PreGame::displayScene() {
     Rectangle gradientRect = {0, 0, (float)UI::screenWidth, (float)UI::screenHeight};
     DrawRectangleGradientV(0, 0, UI::screenWidth, UI::screenHeight, 
                            Color{25,25,40,255}, Color{15,15,30,255});
-                
-	std::string title = "GAME SETUP";
+    string title = "GAME SETUP";
 	Vector2 tSize = MeasureTextEx(UI::boldFont, title.c_str(), 46, 4);
 	DrawTextEx(UI::boldFont, title.c_str(), {(float)(UI::screenWidth - tSize.x)/2, 70}, 46, 4, WHITE);
 
 	int baseY = 170;
 	int rowH = 55;
 	int idx=0;
-	auto drawRow=[&](const std::string& label,const std::string& value,int row){
-		std::string line = label + (value.empty()?"":" : ") + value;
+	auto drawRow=[&](const  string& label,const   string& value,int row){
+	    string line = label + (value.empty()?"":" : ") + value;
 		Color col = (selectionIndex==row)?YELLOW:WHITE;
 		Vector2 sz = MeasureTextEx(UI::font, line.c_str(), 26, 2);
 		DrawTextEx(UI::font, line.c_str(), {(float)UI::screenWidth/2 - sz.x/2, (float)baseY + row*rowH}, 26, 2, col);
@@ -89,7 +88,7 @@ void PreGame::displayScene() {
 	drawRow("MODE", (mode==Mode::SINGLE?"SINGLE":"DUAL"), idx++);
 	if(mode==Mode::SINGLE) drawRow("CHARACTER", chooseMario?"MARIO":"LUIGI", idx++);
 
-	std::string difficultyText;
+    string difficultyText;
     if(difficulty==Difficulty::EASY) difficultyText = "EASY (5 Lives)";
     else if(difficulty==Difficulty::HARD) difficultyText = "HARD (3 Lives)";
     else difficultyText = "HARDCORE (1 Life)";
@@ -98,7 +97,7 @@ void PreGame::displayScene() {
 	drawRow("START", "", idx++);
 	drawRow("BACK", "", idx++);
 
-	std::string hint = "UP/DOWN select, LEFT/RIGHT toggle, ENTER confirm, ESC back";
+    string hint = "UP/DOWN select, LEFT/RIGHT toggle, ENTER confirm, ESC back";
 	Vector2 hSz = MeasureTextEx(UI::font, hint.c_str(), 18, 2);
 	DrawTextEx(UI::font, hint.c_str(), {(float)(UI::screenWidth - hSz.x)/2, (float)UI::screenHeight - 70}, 18, 2, GRAY);
 }

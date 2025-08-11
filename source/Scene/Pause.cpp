@@ -80,8 +80,8 @@ void Pause::updateScene()
             manager->goBack();
             return;
         case 1: // Save
-            // Add save functionality here
-            break;
+                manager->changeScene(sceneType::TUTORIAL);
+                return;
         case 2: // Settings
             manager->changeScene(sceneType::SETTING);
             return;
@@ -143,9 +143,9 @@ void Pause::updateScene()
             case 0: // Resume
             manager->goBack();
             return;
-            case 1: // Save
-                // Add save functionality here
-                break;
+            case 1: // Controls
+                manager->changeScene(sceneType::TUTORIAL);
+                return;
             case 2: // Settings
                 manager->changeScene(sceneType::SETTING);
                 return;
@@ -166,7 +166,7 @@ void Pause::displayScene()
     std::string titleText = "PAUSED";
     std::vector<std::string> buttonTexts = {
         "RESUME",
-        "SAVE",
+        "CONTROLS",
         "SETTINGS",
         "EXIT"};
 
