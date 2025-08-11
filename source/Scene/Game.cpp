@@ -233,6 +233,17 @@ void Game::removeGameObject()
 
 void Game::updateScene()
 {
+
+    //Update key bindings after pause
+    static bool needsKeyUpdated = false;
+
+    if (needsKeyUpdated)
+    {
+        if (mario) mario->updateKeyBindings();
+        if (luigi) luigi->updateKeyBindings();
+        needsKeyUpdated = false;
+    }
+
     // Handle death state
     static float deathTimer = 3.0f;
     static bool inDeathAnimation = false;
@@ -291,6 +302,7 @@ void Game::updateScene()
 
     if (IsKeyPressed(KEY_P))
     {
+        needsKeyUpdated = true;
         manager->changeScene(sceneType::PAUSE);
     }
     if (IsKeyPressed(KEY_Q))

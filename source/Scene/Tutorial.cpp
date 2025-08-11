@@ -220,6 +220,7 @@ void Tutorial::updateScene()
         selectedButton = 1;
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
+
             manager->goBack();
         }
     }
@@ -257,7 +258,7 @@ void Tutorial::displayScene()
     }
     
     // Draw title
-    std::string titleText = "CONTROLS TUTORIAL";
+    std::string titleText = "CONTROLS";
     float titleSpacing = 5.0f;
     float titleFontSize = 36.0f;
     Vector2 titleSize = MeasureTextEx(UI::boldFont, titleText.c_str(), titleFontSize, titleSpacing);
@@ -271,7 +272,7 @@ void Tutorial::displayScene()
     
     // Draw subtitle
     std::string subtitleText = "Mario & Luigi Key Bindings (Click to edit)";
-    float subtitleFontSize = 20.0f;
+    float subtitleFontSize = 18.0f;
     Vector2 subtitleSize = MeasureTextEx(UI::font, subtitleText.c_str(), subtitleFontSize, 2);
     float subtitleX = (UI::screenWidth - subtitleSize.x) / 2.0f;
     float subtitleY = boardY + 70;

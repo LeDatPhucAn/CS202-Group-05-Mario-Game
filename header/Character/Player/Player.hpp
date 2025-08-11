@@ -103,6 +103,10 @@ public:
         // Load key bindings from KeyBindingManager
         keyBindings = KeyBindingManager::getPlayerBindings("Mario");
     }
+    void updateKeyBindings()
+    {
+        keyBindings = KeyBindingManager::getPlayerBindings("Mario");
+    }
 };
 
 class PlayerLuigi : public Player
@@ -114,6 +118,10 @@ public:
         changeState(new IdleState(this));
 
         // Load key bindings from KeyBindingManager
+        keyBindings = KeyBindingManager::getPlayerBindings("Luigi");
+    }
+    void updateKeyBindings()
+    {
         keyBindings = KeyBindingManager::getPlayerBindings("Luigi");
     }
 };
