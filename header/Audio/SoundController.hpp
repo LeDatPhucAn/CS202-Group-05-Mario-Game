@@ -33,7 +33,8 @@ private:
     const unordered_map<blockStateType, string> blockStatePaths = {
         {blockStateType::BOUNCE, "bounce_block.wav"},
         {blockStateType::BREAK, "break_block.wav"},
-        {blockStateType::SPAWNITEM, "spawn_item.wav"}};
+        {blockStateType::SPAWNITEM, "spawn_item.wav"},
+        {blockStateType::GETCOIN, "coin_get.wav"}};
 
     const unordered_map<marioVoice, string> marioVoiceMap = {
         {marioVoice::LETSGO, "here_we_go.wav"},

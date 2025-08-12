@@ -7,4 +7,3 @@ public:
     Spiny();
     void updateCollision(GameObject *other, int type) override;
 };
-

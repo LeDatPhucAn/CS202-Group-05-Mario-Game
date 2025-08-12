@@ -5,6 +5,8 @@
 #include "Game.hpp"
 #include "SoundController.hpp"
 #include "FireBall.hpp"
+#include "Mushroom.hpp"
+#include "Star.hpp"
 Player::Player()
     : Character()
 {
@@ -14,7 +16,7 @@ Player::Player()
         KeyBindingManager::loadFromFile();
         initialized = true;
     }
-    
+
     changeForm(SMALL);
 }
 void Player::EatStar()
@@ -103,7 +105,7 @@ void Player::updateCollision(GameObject *other, int type)
     }
     Character::updateCollision(other, type);
     MovingObject *enemy = dynamic_cast<MovingObject *>(other);
-    if (enemy && starMode)
+    if (enemy && starMode && !dynamic_cast<Star *>(enemy) && !dynamic_cast<Mushroom *>(enemy))
     {
         enemy->changeState(new MovingObjectDeadState(enemy));
         return;
@@ -337,7 +339,7 @@ void Player::createBody(b2World *world)
         head1Fixture.isSensor = true;
         head1Fixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
         head1Fixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR ;
+        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR;
         body->CreateFixture(&head1Fixture);
     }
     else
