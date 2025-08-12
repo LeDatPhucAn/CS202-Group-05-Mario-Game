@@ -102,17 +102,7 @@
                  "tileid":17
                 }],
          "id":14,
-         "properties":[
-                {
-                 "name":"isInvisible",
-                 "type":"bool",
-                 "value":false
-                }, 
-                {
-                 "name":"isUsed",
-                 "type":"bool",
-                 "value":false
-                }]
+         "type":"Coin"
         }, 
         {
          "id":25,

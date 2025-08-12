@@ -30,10 +30,10 @@
         },
         "Map3.json": {
             "scale": 1.5,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 295.33333333333326,
-                "y": 218.99999999999997
+                "x": 586.6666666666666,
+                "y": 135.99999999999997
             }
         },
         "collided_animation.json": {
@@ -44,6 +44,14 @@
             "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "jungle-ground.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "jungle-tileset.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
         },
         "muilti_tileset.json": {
             "scaleInDock": 1,
@@ -89,7 +97,7 @@
         }
     },
     "frame.defaultDuration": 150,
-    "last.imagePath": "D:/Tuan/Project/My Game/assets/Map/image",
+    "last.imagePath": "D:/Tuan/Project/Super Mario Game/assets/Map/Map3/image",
     "map.height": 14,
     "map.lastUsedFormat": "json",
     "map.tileHeight": 16,
@@ -98,7 +106,7 @@
     "openFiles": [
         "new_blocks1_blocks.json",
         "new_blocks2_items.json",
-        "ground_tileset.json",
+        "jungle-tileset.json",
         "collided_animation.json",
         "new_items_powerups.json",
         "Enemies2D.json",
@@ -111,25 +119,25 @@
     "recentFiles": [
         "new_blocks1_blocks.json",
         "new_blocks2_items.json",
-        "ground_tileset.json",
+        "jungle-tileset.json",
         "collided_animation.json",
         "new_items_powerups.json",
         "Enemies2D.json",
         "pipes.json",
         "new_intro_mushroom.json",
         "Map3.json",
-        "Map1.1.json",
-        "muilti_tileset.json",
-        "question.tsj"
+        "ground_tileset.json",
+        "jungle-ground.tsj",
+        "Map1.1.json"
     ],
     "resizeMap.removeObjects": true,
     "tileset.lastUsedFormat": "json",
     "tileset.margin": 0,
-    "tileset.spacing": 2,
+    "tileset.spacing": 1,
     "tileset.tileSize": {
-        "height": 48,
-        "width": 32
+        "height": 16,
+        "width": 16
     },
     "tileset.transparentColor": "#0000ff",
-    "tileset.useTransparentColor": true
+    "tileset.useTransparentColor": false
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Player.hpp"
 #include "BlockState.hpp"
+#include "IBlockBehavior.hpp"
 #include <string>
 using namespace std;
 
@@ -102,7 +103,11 @@ void Block::updateCollision(GameObject *other, int type)
     Player *player = dynamic_cast<Player *>(other);
     if (!player)
         return;
+
+//    cout << "Block hit by Player!" << endl;
     behavior->reactToCollision(player, type);
+    if(CoinBehavior* tmp = dynamic_cast<CoinBehavior*>(behavior.get()))
+        cout << "Coin Block hit by Player!" << endl;
 
     if (isUsed)
     {
@@ -139,18 +144,18 @@ void Block::createBody(b2World *world)
     if (!isSolid)
     {
         fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = CATEGORY_NOTSOLID;
-        fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body
+    //     fixtureDef.filter.categoryBits = CATEGORY_NOTSOLID;
+    //     fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body
     }
-    else
-    {
+    // else
+    // {
         fixtureDef.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
         fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
-    }
+    // }
     b2Fixture *fixtureMain = body->CreateFixture(&fixtureDef);
 
-    if (isSolid)
-    {
+    // if (isSolid)
+    // {
         // 1. Top sensor
         b2PolygonShape topSensorShape;
         topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
@@ -174,7 +179,7 @@ void Block::createBody(b2World *world)
         bottomFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
         bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
         body->CreateFixture(&bottomFixture);
-    }
+    // }
 
     // // 3. Left side sensor
     // b2PolygonShape leftSensorShape;

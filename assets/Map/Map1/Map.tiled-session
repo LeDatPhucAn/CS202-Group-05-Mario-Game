@@ -21,10 +21,10 @@
         },
         "Map1.1.json": {
             "scale": 2,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 435.5,
-                "y": -16.25
+                "x": 641,
+                "y": 181.5
             }
         },
         "collided_animation.json": {
@@ -79,7 +79,7 @@
         "Enemies2D.json"
     ],
     "project": "Map.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
         "Enemies2D.json",
         "new_items_powerups.json",

@@ -73,9 +73,15 @@
                 {
                  "height":32,
                  "id":19,
-                 "name":"FinishingZone",
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"nextMap",
+                         "type":"string",
+                         "value":"Map2"
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"FinishingZone",
                  "visible":true,
                  "width":32,
                  "x":800,

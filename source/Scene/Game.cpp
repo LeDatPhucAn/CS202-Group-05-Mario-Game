@@ -87,7 +87,7 @@ void Game::init()
     curMap.choose(UI::mapPaths[current_Map]);
 
     drawDebug = new DrawDebug();
-    // Prepare map blocks
+    // Prepare map blocks (add blocks to Box2D world)
     for (auto &block : curMap.tileBlocks)
     {
         block->changeState(new BlockIdleState(block));

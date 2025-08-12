@@ -1,0 +1,14 @@
+{ "columns":63,
+ "image":"image\/jungle-ground.webp",
+ "imageheight":480,
+ "imagewidth":1080,
+ "margin":0,
+ "name":"jungle-ground",
+ "spacing":1,
+ "tilecount":1764,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

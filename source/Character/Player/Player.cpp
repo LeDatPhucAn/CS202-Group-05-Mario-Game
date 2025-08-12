@@ -305,7 +305,7 @@ void Player::createBody(b2World *world)
     legsFixture.density = 1.0f;
     legsFixture.friction = 0.1f; // May adjust if sliding on slopes
     legsFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
-    legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+    legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
     body->CreateFixture(&legsFixture);
 
@@ -319,7 +319,7 @@ void Player::createBody(b2World *world)
     footFixture.isSensor = true;
     footFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
     footFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-    footFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    footFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_NOTSOLID;
     body->CreateFixture(&footFixture);
 
     // 4. Head sensor
@@ -337,7 +337,7 @@ void Player::createBody(b2World *world)
         head1Fixture.isSensor = true;
         head1Fixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
         head1Fixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR ;
         body->CreateFixture(&head1Fixture);
     }
     else
@@ -353,7 +353,7 @@ void Player::createBody(b2World *world)
         head1Fixture.isSensor = true;
         head1Fixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
         head1Fixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+        head1Fixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR;
         body->CreateFixture(&head1Fixture);
     }
 
@@ -366,7 +366,7 @@ void Player::createBody(b2World *world)
     leftWallFixture.isSensor = true;
     leftWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::LEFTSIDE);
     leftWallFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-    leftWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    leftWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR;
     body->CreateFixture(&leftWallFixture);
 
     // 6. Right wall sensor
@@ -377,7 +377,7 @@ void Player::createBody(b2World *world)
     rightWallFixture.shape = &rightWallShape;
     rightWallFixture.isSensor = true;
     rightWallFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
-    rightWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    rightWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR;
     rightWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
     body->CreateFixture(&rightWallFixture);
 

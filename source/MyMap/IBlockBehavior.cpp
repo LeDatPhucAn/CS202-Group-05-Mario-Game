@@ -159,3 +159,15 @@ void BrickBehavior::onDraw(float dt)
 void GroundBehavior::reactToCollision(GameObject *p, int type)
 {
 }
+
+void CoinBehavior::reactToCollision(GameObject *p, int type)
+{
+    Player *mario = dynamic_cast<Player *>(p);
+    if (!mario)
+        return;
+    this->block->needDeletion = true;
+    GameInfo::getInstance()->addScore(100);
+    
+    SoundController::getInstance().playBlockStateSFX(blockStateType::SPAWNITEM);
+}
+

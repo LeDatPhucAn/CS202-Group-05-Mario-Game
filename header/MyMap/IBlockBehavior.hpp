@@ -29,10 +29,6 @@ struct IBlockBehavior
     virtual void updateFrame(float dt) {}
     virtual void onDraw(float dt) {};
 
-    virtual void printType() const
-    {
-    }
-
     Block *block = nullptr; // Reference to the Block instance
 };
 
@@ -41,9 +37,6 @@ class BrickBehavior : public IBlockBehavior
 public:
     BrickBehavior(Block *block) : IBlockBehavior(block) {}
 
-    void printType() const override
-    {
-    }
     void reactToCollision(GameObject *p, int type) override;
     void updateFrame(float dt) override;
     void onDraw(float dt) override;
@@ -56,9 +49,6 @@ class QuestionBehavior : public IBlockBehavior
 private:
 public:
     QuestionBehavior(Block *block) : IBlockBehavior(block) {}
-    void printType() const override
-    {
-    }
     void reactToCollision(GameObject *p, int type) override;
     void updateFrame(float dt) override;
     // void onDraw(float dt) override;
@@ -67,13 +57,19 @@ class GroundBehavior : public IBlockBehavior
 {
 public:
     GroundBehavior(Block *block) : IBlockBehavior(block) {}
-    void printType() const override
-    {
-    }
     void reactToCollision(GameObject *p, int type) override;
     // void updateFrame(float dt) override;
     // void onDraw(float dt) override;
 };
+
+class CoinBehavior : public IBlockBehavior
+{
+public:
+    CoinBehavior(Block *block) : IBlockBehavior(block) {}
+    void reactToCollision(GameObject *p, int type) override;
+
+};
+
 
 struct FactoryIBlockBehavior
 {
@@ -85,6 +81,9 @@ struct FactoryIBlockBehavior
             return new QuestionBehavior(block);
         if (type == "GroundBlock")
             return new GroundBehavior(block);
+        if (type == "Coin")
+            return new CoinBehavior(block);
+            
         // Add more behaviors as needed
         return new IBlockBehavior(block); // Default behavior
     }
