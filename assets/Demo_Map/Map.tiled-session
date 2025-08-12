@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Map1.1.json",
+    "activeFile": "pipes.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -20,11 +20,11 @@
             "scaleInEditor": 3
         },
         "Map1.1.json": {
-            "scale": 0.125,
+            "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1816,
-                "y": -300
+                "x": 2321.6666666666665,
+                "y": 215
             }
         },
         "collided_animation.json": {
@@ -44,14 +44,30 @@
             "scaleInDock": 1,
             "scaleInEditor": 8
         },
+        "new_blocks1_doors.json": {
+            "scaleInDock": 4
+        },
         "new_blocks2_items.json": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 3,
             "scaleInEditor": 5.5
         },
+        "new_intro_largebush.json": {
+            "scaleInDock": 1
+        },
+        "new_intro_mushroom.json": {
+            "scaleInDock": 1
+        },
+        "new_intro_smallbush.json": {
+            "scaleInDock": 1
+        },
         "new_items_powerups.json": {
-            "scaleInDock": 1,
+            "scaleInDock": 2,
             "scaleInEditor": 8
+        },
+        "pipes.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "question.tsj": {
             "scaleInDock": 1,
@@ -76,7 +92,8 @@
         "collided_animation.json",
         "Map1.1.json",
         "new_items_powerups.json",
-        "Enemies2D.json"
+        "Enemies2D.json",
+        "pipes.json"
     ],
     "project": "Map.tiled-project",
     "property.type": "string",
@@ -85,9 +102,10 @@
         "new_blocks2_items.json",
         "ground_tileset.json",
         "collided_animation.json",
-        "Enemies2D.json",
-        "new_items_powerups.json",
         "Map1.1.json",
+        "new_items_powerups.json",
+        "Enemies2D.json",
+        "pipes.json",
         "muilti_tileset.json",
         "question.tsj",
         "8415.tsj",
