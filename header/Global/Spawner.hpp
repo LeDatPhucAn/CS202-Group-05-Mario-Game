@@ -2,8 +2,13 @@
 #include <iostream>
 #include <raylib.h>
 #include <unordered_map>
-#include "MovingObject.hpp"
-
+#include "Goomba.hpp"
+#include "Koopa.hpp"
+#include "PiranhaPlant.hpp"
+#include "Lakitu.hpp"
+#include "Spiny.hpp"
+#include "BulletBill.hpp"
+#include "HammerBro.hpp"
 #include "Game.hpp"
 using namespace std;
 

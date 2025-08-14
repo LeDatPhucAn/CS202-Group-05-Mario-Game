@@ -144,18 +144,11 @@ void Block::createBody(b2World *world)
     if (!isSolid)
     {
         fixtureDef.isSensor = true;
-    //     fixtureDef.filter.categoryBits = CATEGORY_NOTSOLID;
-    //     fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body
     }
-    // else
-    // {
-        fixtureDef.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
-        fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
-    // }
+    fixtureDef.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
+    fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
     b2Fixture *fixtureMain = body->CreateFixture(&fixtureDef);
 
-    // if (isSolid)
-    // {
         // 1. Top sensor
         b2PolygonShape topSensorShape;
         topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
@@ -179,25 +172,4 @@ void Block::createBody(b2World *world)
         bottomFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
         bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
         body->CreateFixture(&bottomFixture);
-    // }
-
-    // // 3. Left side sensor
-    // b2PolygonShape leftSensorShape;
-    // leftSensorShape.SetAsBox(2.0f / PPM, halfHeight * 0.9f, b2Vec2(-halfWidth, 0), 0);
-
-    // b2FixtureDef leftFixture;
-    // leftFixture.shape = &leftSensorShape;
-    // leftFixture.isSensor = true;
-    // leftFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::LEFTSIDE);
-    // body->CreateFixture(&leftFixture);
-
-    // // 4. Right side sensor
-    // b2PolygonShape rightSensorShape;
-    // rightSensorShape.SetAsBox(2.0f / PPM, halfHeight * 0.9f, b2Vec2(halfWidth, 0), 0);
-
-    // b2FixtureDef rightFixture;
-    // rightFixture.shape = &rightSensorShape;
-    // rightFixture.isSensor = true;
-    // rightFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
-    // body->CreateFixture(&rightFixture);
 }

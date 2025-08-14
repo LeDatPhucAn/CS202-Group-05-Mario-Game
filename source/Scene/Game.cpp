@@ -8,6 +8,15 @@
 #include "Spawner.hpp"
 #include "DrawDebug.hpp"
 #include "GameInfo.hpp"
+#include "MovingObject.hpp"
+#include "MovingObjectState.hpp"
+#include "Goomba.hpp"
+#include "Koopa.hpp"
+#include "PiranhaPlant.hpp"
+#include "Lakitu.hpp"
+#include "Spiny.hpp"
+#include "BulletBill.hpp"
+#include "HammerBro.hpp"
 
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
@@ -337,6 +346,14 @@ void Game::updateScene()
     updateCharacters();
     updateMap();
 
+    //When Mario's in EndZone
+    if(mario && CheckCollisionRecs(mario->getBounds(), curMap.EndZone) 
+    || luigi && CheckCollisionRecs(luigi->getBounds(), curMap.EndZone))
+    {
+        manager->goBack();
+        manager->curMap = curMap.nextMap;
+    }
+
     removeGameObject();
 
     // Camera
@@ -350,6 +367,7 @@ void Game::updateScene()
 
         prePosX = activePlayer->getPosition().x;
     }
+
 }
 
 void Game::updateCharacters()

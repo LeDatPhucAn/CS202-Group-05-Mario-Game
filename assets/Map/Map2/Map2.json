@@ -316,9 +316,9 @@
                 {
                  "height":45.3333333333333,
                  "id":73,
-                 "name":"FinishingZone",
+                 "name":"",
                  "rotation":0,
-                 "type":"",
+                 "type":"EndZone",
                  "visible":true,
                  "width":30,
                  "x":3729.33333333333,

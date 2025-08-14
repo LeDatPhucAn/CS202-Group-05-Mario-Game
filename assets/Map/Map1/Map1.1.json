@@ -81,7 +81,7 @@
                          "value":"Map2"
                         }],
                  "rotation":0,
-                 "type":"FinishingZone",
+                 "type":"EndZone",
                  "visible":true,
                  "width":32,
                  "x":800,

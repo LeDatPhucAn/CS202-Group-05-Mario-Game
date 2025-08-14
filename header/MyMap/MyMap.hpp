@@ -60,4 +60,6 @@ private:
     vector<Block *> tileBlocks;
     vector<Block *> objectBlocks;
     Spawner* spawner;
+    Rectangle EndZone = {0,0,0,0};
+    string nextMap = "";
 };
