@@ -75,10 +75,12 @@ void GameOver::updateScene()
         {
         case 0: // Play Again
             GameInfo::getInstance()->reset();
+            SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
             manager->goBack();
             return;
         case 1: // Back to Menu
             GameInfo::getInstance()->reset();
+            SoundController::getInstance().playSceneMusicFromStart(sceneType::MENU);
             manager->goBackOfBaseScene();
             return;
         }
@@ -134,12 +136,14 @@ void GameOver::updateScene()
             {
             case 0: // Play Again
                 GameInfo::getInstance()->reset();
+                SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
                 manager->goBack();
                 flashActive = true;
                 flashTimer = 0.0f;
                 return;
             case 1: // Back to Menu
                 GameInfo::getInstance()->reset();
+                SoundController::getInstance().playSceneMusicFromStart(sceneType::MENU);
                 manager->goBackOfBaseScene();
                 flashActive = true;
                 flashTimer = 0.0f;
