@@ -357,17 +357,13 @@ void Game::updateScene()
         manager->goBack();
         manager->curMap = curMap.nextMap;
     }
-
     removeGameObject();
-
     updateMyCamera();
 
 }
 void Game::updateMyCamera() {
     Player* aheadPlayer = nullptr;
     Player* behindPlayer = nullptr;
-
-    // Xác định ahead / behind
     if (mario && luigi) {
         if (mario->getPosition().x >= luigi->getPosition().x) {
             aheadPlayer = mario;
@@ -384,12 +380,9 @@ void Game::updateMyCamera() {
         aheadPlayer = behindPlayer = luigi;
     }
 
-    if (!aheadPlayer) return; // Không có người nào
+    if (!aheadPlayer) return; 
 
-    // Giới hạn trái map
     float leftLimit = prePosXcam; 
-
-    // Camera follow
     float deltaX = behindPlayer->getPosition().x - prePosX;
     float followPoint = cam.target.x + 0.5f * UI::screenWidth;
 
@@ -399,7 +392,6 @@ void Game::updateMyCamera() {
         prePosXcam += (delta > 0.5) ? delta : 0; 
     prePosX = behindPlayer->getPosition().x;
 
-    // Nếu player lùi lại quá giới hạn trái -> giữ lại
     auto clampLeft = [&](Player* p) {
         if (!p) return;
         if (p->getPosition().x < leftLimit) {
@@ -411,19 +403,11 @@ void Game::updateMyCamera() {
     clampLeft(aheadPlayer);
     clampLeft(behindPlayer);
 
-    // Nếu có 2 người và người sau tụt quá gần mép trái màn hình
     float minGap = 16.0f; // khoảng cách tối thiểu tính theo world unit
     if (behindPlayer != aheadPlayer) 
     {
-        // Tính nửa màn hình theo world pixel
-
-        // Mép phải màn hình hiện tại (world pixel)
         float screenRightWorld = cam.target.x +  (UI::screenWidth / cam.zoom);
-
-        // Khoảng cách an toàn bên phải
         float marginRight = 8.0f;
-
-        // Nếu aheadPlayer tới gần biên phải màn hình
         float maxAheadX = screenRightWorld - marginRight;
         if (aheadPlayer->getPosition().x > maxAheadX) {
             aheadPlayer->setPosition({maxAheadX, aheadPlayer->getPosition().y});
@@ -431,14 +415,11 @@ void Game::updateMyCamera() {
                 b2Vec2(maxAheadX / PPM, aheadPlayer->getPosition().y / PPM), 0);
         }
     }
-
-
 }
 
 
 void Game::updateCharacters()
 {
-
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
