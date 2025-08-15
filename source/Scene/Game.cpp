@@ -74,7 +74,7 @@ void Game::init()
             luigi = nullptr;
         } else {
             luigi = new PlayerLuigi();
-            luigi->setPosition({80, 50}); // Luigi takes Mario's default position in single mode
+            luigi->setPosition({60, 50}); // Luigi takes Mario's default position in single mode
             mario = nullptr;
         }
     }
@@ -162,14 +162,12 @@ Game::~Game()
 
 void Game::restartGame()
 {   
-    //same effect when starting game
     isTransitioning = true;
     transitionTimer = 0.0f;
     circleRadius = 0.0f;
     circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
 
 
-    // Clear existing game objects (except Player will be recreated)
     for (auto &obj : gameObjects)
     {
         if (obj && obj != mario && obj != luigi)

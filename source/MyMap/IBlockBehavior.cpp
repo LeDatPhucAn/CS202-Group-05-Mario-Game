@@ -167,6 +167,7 @@ void CoinBehavior::reactToCollision(GameObject *p, int type)
         return;
     this->block->needDeletion = true;
     GameInfo::getInstance()->addScore(100);
+    GameInfo::getInstance()->addCoin();
     
     SoundController::getInstance().playBlockStateSFX(blockStateType::SPAWNITEM);
 }

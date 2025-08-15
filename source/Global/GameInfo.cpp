@@ -52,8 +52,6 @@ void GameInfo::reset(){
 }
 
 void GameInfo::resetGameOnly(){
-    coins=0;
-    // Keep PreGame settings intact during game reset
 }
 
 void GameInfo::destroyInstance(){
