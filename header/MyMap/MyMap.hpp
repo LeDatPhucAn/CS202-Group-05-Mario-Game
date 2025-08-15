@@ -59,6 +59,7 @@ private:
     vector<Block *> imageBlocks;
     vector<Block *> tileBlocks;
     vector<Block *> objectBlocks;
+    Vector2 StartingPoint;
     Spawner* spawner;
     Rectangle EndZone = {0,0,0,0};
     string nextMap = "";

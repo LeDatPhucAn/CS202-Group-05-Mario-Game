@@ -48,8 +48,8 @@ protected:
     // for box2d integration
     ContactListener *contactListener = nullptr;
     float prePosX = 0;
+    float prePosXcam = 0;
 
-private:
 public:
     static vector<GameObject *> gameObjects;
     static b2World *world;
@@ -64,6 +64,7 @@ public:
     void removeGameObject();
     // update
     void updateScene();
+    void updateMyCamera();
 
     // display
     void displayScene();

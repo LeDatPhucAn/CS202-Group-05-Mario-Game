@@ -76,7 +76,7 @@ public:
     void turnInvincible() { isInvincible = true; }
 
     // reset game
-    void reset();
+    void reset(Vector2 pos);
     // getter
     PlayerForm getForm() const { return form; }
     void changeForm(PlayerForm _form);

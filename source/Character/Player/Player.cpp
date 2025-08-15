@@ -239,7 +239,7 @@ void Player::display()
     }
 }
 
-void Player::reset()
+void Player::reset(Vector2 pos)
 {
     // Reset mario
     if (body)
@@ -251,7 +251,7 @@ void Player::reset()
     starMode = false;
     throwingFireBall = false;
     // Reset Player's position and recreate physics body
-    setPosition({200, 50});
+    setPosition(pos);
     changeForm(SMALL);
     createBody(Game::world); // Recreate the physics body
     changeState(new IdleState(this));

@@ -224,6 +224,9 @@ void MyMap::handleObjectLayer(tson::Layer &layer)
             EndZone.height = obj.getSize().y;
             nextMap = obj.get<string>("nextMap");
         }
+        if (obj.getClassType() == "StartingPoint") {
+            StartingPoint = {(float) obj.getPosition().x,(float) obj.getPosition().y};
+        }
     }
 }
 

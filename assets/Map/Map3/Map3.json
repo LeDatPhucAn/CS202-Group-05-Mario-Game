@@ -61,10 +61,10 @@
                 {
                  "height":0,
                  "id":11,
-                 "name":"StartingPoint",
+                 "name":"",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"StartingPoint",
                  "visible":true,
                  "width":0,
                  "x":52,
@@ -74,6 +74,12 @@
                  "height":48.6666666666666,
                  "id":19,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"nextMap",
+                         "type":"string",
+                         "value":"Map1"
+                        }],
                  "rotation":0,
                  "type":"EndZone",
                  "visible":true,
