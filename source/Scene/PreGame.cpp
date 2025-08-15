@@ -50,7 +50,7 @@ PreGame::PreGame(SceneManager* _manager) : Scene(_manager)
     }
     
     // Play menu music
-    SoundController::getInstance().playSceneMusicFromStart(sceneType::MENU);
+    SoundController::getInstance().playSceneMusic(sceneType::MENU);
 }
 
 PreGame::~PreGame()

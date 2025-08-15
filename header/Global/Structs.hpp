@@ -77,7 +77,8 @@ enum class blockStateType
     BOUNCE,
     BREAK,
     SPAWNITEM,
-    USED
+    USED,
+    GETCOIN
 };
 enum class itemStateType
 {

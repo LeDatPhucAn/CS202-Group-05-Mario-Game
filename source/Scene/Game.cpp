@@ -8,6 +8,15 @@
 #include "Spawner.hpp"
 #include "DrawDebug.hpp"
 #include "GameInfo.hpp"
+#include "MovingObject.hpp"
+#include "MovingObjectState.hpp"
+#include "Goomba.hpp"
+#include "Koopa.hpp"
+#include "PiranhaPlant.hpp"
+#include "Lakitu.hpp"
+#include "Spiny.hpp"
+#include "BulletBill.hpp"
+#include "HammerBro.hpp"
 
 vector<Particle> Game::particles = {};
 b2World *Game::world = nullptr;
@@ -64,21 +73,20 @@ void Game::init()
     if(gameInfo->isDualMode()) {
         mario = new PlayerMario();
         luigi = new PlayerLuigi();
-        mario->setPosition({80, 50});
-        luigi->setPosition({60, 50});
+        mario->setPosition(curMap.StartingPoint);
+        luigi->setPosition({curMap.StartingPoint.x + 32, curMap.StartingPoint.y});
     } else {
         // Single player mode - spawn only chosen character
         if(gameInfo->isMario()) {
             mario = new PlayerMario();
-            mario->setPosition({80, 50});
+            mario->setPosition(curMap.StartingPoint);
             luigi = nullptr;
         } else {
             luigi = new PlayerLuigi();
-            luigi->setPosition({60, 50}); // Luigi takes Mario's default position in single mode
+            luigi->setPosition(curMap.StartingPoint); // Luigi takes Mario's default position in single mode
             mario = nullptr;
         }
     }
-
 
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
@@ -101,8 +109,10 @@ void Game::init()
     // Initialize camera
     cam.offset = {0, 0};
     cam.target = {0, 0};
-    cam.zoom = static_cast<float>(UI::screenHeight) / WorldHeight;
+    cam.zoom = static_cast<float>(UI::screenHeight) / (WorldHeight-16);
     cam.rotation = 0;
+    prePosX = (mario) ? mario->getPosition().x : ((luigi) ? luigi->getPosition().x : 100);
+    prePosXcam = GetScreenToWorld2D({0,0}, cam).x + 8;
 
     gameTime = 0.0f;
     GameInfo::getInstance()->reset();
@@ -178,11 +188,13 @@ void Game::restartGame()
 
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
     // Reset mario
-    if (mario) mario->reset();
-    if (luigi) luigi->reset();
+    if (mario) mario->reset(curMap.StartingPoint);
+    if (luigi) luigi->reset({curMap.StartingPoint.x+10, curMap.StartingPoint.y});
     // reset camera
     cam.target = {0, 0};
-    prePosX = 100;
+
+    prePosX = (mario) ? mario->getPosition().x : ((luigi) ? luigi->getPosition().x : 100);
+    prePosXcam = GetScreenToWorld2D({0,0}, cam).x;
     // Reset game time
     gameTime = 0.0f;
 
@@ -335,24 +347,77 @@ void Game::updateScene()
     updateCharacters();
     updateMap();
 
+    //When Mario's in EndZone
+    if(mario && CheckCollisionRecs(mario->getBounds(), curMap.EndZone) 
+    || luigi && CheckCollisionRecs(luigi->getBounds(), curMap.EndZone))
+    {
+        //Thêm Win Scene
+        manager->goBack();
+        manager->curMap = curMap.nextMap;
+    }
     removeGameObject();
+    updateMyCamera();
 
-    // Camera
-    Player* activePlayer = mario ? static_cast<Player*>(mario) : static_cast<Player*>(luigi);
-    if (activePlayer) {
-        float delta = (float)activePlayer->getPosition().x - prePosX;
-        if (GetWorldToScreen2D(activePlayer->getPosition(), cam).x > 0.5 * UI::screenWidth)
-            cam.target.x += (delta > 0.5) ? delta : 0;
-        if (GetWorldToScreen2D(activePlayer->getPosition(), cam).x < 0.2 * UI::screenWidth)
-            cam.target.x += (delta < -0.5) ? delta : 0;
+}
+void Game::updateMyCamera() {
+    Player* aheadPlayer = nullptr;
+    Player* behindPlayer = nullptr;
+    if (mario && luigi) {
+        if (mario->getPosition().x >= luigi->getPosition().x) {
+            aheadPlayer = mario;
+            behindPlayer = luigi;
+        } else {
+            aheadPlayer = luigi;
+            behindPlayer = mario;
+        }
+    } 
+    else if (mario) {
+        aheadPlayer = behindPlayer = mario;
+    } 
+    else if (luigi) {
+        aheadPlayer = behindPlayer = luigi;
+    }
 
-        prePosX = activePlayer->getPosition().x;
+    if (!aheadPlayer) return; 
+
+    float leftLimit = prePosXcam; 
+    float deltaX = behindPlayer->getPosition().x - prePosX;
+    float followPoint = cam.target.x + 0.5f * UI::screenWidth;
+
+    float delta = (float)behindPlayer->getPosition().x - prePosX; 
+    if (behindPlayer && GetWorldToScreen2D(behindPlayer->getPosition(), cam).x > 0.5 * UI::screenWidth ) 
+        cam.target.x += (delta > 0.5) ? delta : 0, 
+        prePosXcam += (delta > 0.5) ? delta : 0; 
+    prePosX = behindPlayer->getPosition().x;
+
+    auto clampLeft = [&](Player* p) {
+        if (!p) return;
+        if (p->getPosition().x < leftLimit) {
+            p->setPosition({leftLimit, p->getPosition().y});
+            p->getBody()->SetTransform(
+                b2Vec2(leftLimit / PPM, p->getPosition().y / PPM), 0);
+        }
+    };
+    clampLeft(aheadPlayer);
+    clampLeft(behindPlayer);
+
+    float minGap = 16.0f; // khoảng cách tối thiểu tính theo world unit
+    if (behindPlayer != aheadPlayer) 
+    {
+        float screenRightWorld = cam.target.x +  (UI::screenWidth / cam.zoom);
+        float marginRight = 8.0f;
+        float maxAheadX = screenRightWorld - marginRight;
+        if (aheadPlayer->getPosition().x > maxAheadX) {
+            aheadPlayer->setPosition({maxAheadX, aheadPlayer->getPosition().y});
+            aheadPlayer->getBody()->SetTransform(
+                b2Vec2(maxAheadX / PPM, aheadPlayer->getPosition().y / PPM), 0);
+        }
     }
 }
 
+
 void Game::updateCharacters()
 {
-
     for (int i = 0; i < gameObjects.size(); i++)
     {
         if (gameObjects[i])
@@ -375,6 +440,8 @@ void Game::updateCharacters()
             }
         }
     }
+
+    
 }
 void Game::updateMap()
 {

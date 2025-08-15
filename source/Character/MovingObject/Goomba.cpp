@@ -1,6 +1,7 @@
 #include "Goomba.hpp"
 #include "MovingObjectState.hpp"
 #include "Player.hpp"
+#include <raymath.h>
 
 Goomba::Goomba()
     : MovingObject()
@@ -11,6 +12,31 @@ Goomba::Goomba()
     this->sprite.frameRecs = UI::JsonToRectangleVector(UI::jsonMap["Goomba"]);
     this->sprite.texture = UI::textureMap["Goomba"];
     this->changeState(new MovingObjectWalkState(this));
+}
+
+void Goomba::update(const Vector2 &marioPos)
+{
+    if (!isActivated)
+    {
+        Vector2 pos = this->getPosition();
+        float distance = Vector2Distance(marioPos, pos);
+        if (distance <= activationDistance)
+        {
+            isActivated = true;
+        }
+    }
+    if (isActivated)
+    {
+        MovingObject::update(marioPos);
+    }
+}
+
+void Goomba::display()
+{
+    if (isActivated)
+    {
+        MovingObject::display();
+    }
 }
 
 void Goomba::updateCollision(GameObject *other, int type)

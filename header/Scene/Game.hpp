@@ -4,15 +4,6 @@
 #include "MyMap.hpp"
 #include "Scene.hpp"
 #include "raylib-tileson.h"
-#include "MovingObject.hpp"
-#include "MovingObjectState.hpp"
-#include "Goomba.hpp"
-#include "Koopa.hpp"
-#include "PiranhaPlant.hpp"
-#include "Lakitu.hpp"
-#include "Spiny.hpp"
-#include "BulletBill.hpp"
-#include "HammerBro.hpp"
 #include "ContactListener.hpp"
 #include "Particle.hpp"
 #include <unordered_set>
@@ -57,8 +48,8 @@ protected:
     // for box2d integration
     ContactListener *contactListener = nullptr;
     float prePosX = 0;
+    float prePosXcam = 0;
 
-private:
 public:
     static vector<GameObject *> gameObjects;
     static b2World *world;
@@ -73,6 +64,7 @@ public:
     void removeGameObject();
     // update
     void updateScene();
+    void updateMyCamera();
 
     // display
     void displayScene();

@@ -213,20 +213,19 @@ void MyMap::handleObjectLayer(tson::Layer &layer)
 {
     for (auto &obj : layer.getObjects())
     {
-        // int gid = obj.getGid();
-        // if   (gid == 0)
-        //     continue;
-        // const TSInfo *info = selectTSInfo(gid);
-        // if (!info)
-        //     continue;
-        // Rectangle src = calcSrcRect(*info, gid);
-        // Vector2 pos{obj.getPosition().x, obj.getPosition().y - info->tileSize.y};
-        // objectBlocks.push_back(new Block(obj, pos, info->tileSize,        //
-        // tilesetCache[info->firstgid], src));
-
         if (obj.getClassType() == "Enemy")
         {
             spawner->InfoSpawn["Enemy"][obj.getName()].push_back({(float)obj.getPosition().x, (float)obj.getPosition().y});
+        }
+        if (obj.getClassType() == "EndZone") {
+            EndZone.x = obj.getPosition().x;
+            EndZone.y = obj.getPosition().y;
+            EndZone.width = obj.getSize().x;
+            EndZone.height = obj.getSize().y;
+            nextMap = obj.get<string>("nextMap");
+        }
+        if (obj.getClassType() == "StartingPoint") {
+            StartingPoint = {(float) obj.getPosition().x,(float) obj.getPosition().y};
         }
     }
 }

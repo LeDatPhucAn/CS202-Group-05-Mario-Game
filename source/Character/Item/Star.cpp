@@ -7,6 +7,7 @@
 Star::Star()
 {
     setFrame(movingObjectStateType::STAR_MOVE, 3, 3);
+    setFrame(movingObjectStateType::STOP, 3, 3);
     setTexture("Items");
 
     changeState(new StarMoveState(this));

@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "UI.hpp"
 #include "raylib.h"
+#include <raymath.h>
 
 // LakituThrowState Implementation
 LakituThrowState::LakituThrowState(Lakitu* character)
@@ -38,6 +39,17 @@ Lakitu::Lakitu(): MovingObject()
 
 void Lakitu::update(const Vector2 &marioPos)
 {
+    if (!isActivated)
+    {
+        Vector2 pos = this->getPosition();
+        float distance = Vector2Distance(marioPos, pos);
+        if (distance <= activationDistance)
+        {
+            isActivated = true;
+        }
+    }
+    if (!isActivated) return;
+
     Character::update();
     if (dynamic_cast<MovingObjectDeadState *>(this->currentState))
         return;
@@ -69,7 +81,6 @@ void Lakitu::update(const Vector2 &marioPos)
     vel.y = dy * 10.0f; // Adjust multiplier for faster/slower Y correction
 
     body->SetLinearVelocity(vel);
-    
 
     // --- Throwing Logic ---
     if (!dynamic_cast<MovingObjectThrowState*>(this->currentState))
@@ -102,4 +113,12 @@ void Lakitu::updateCollision(GameObject *other, int type)
     //         mario->hitByMovingObject();
     //     }
     // }
+}
+
+void Lakitu::display()
+{
+    if (isActivated)
+    {
+        MovingObject::display();
+    }
 }

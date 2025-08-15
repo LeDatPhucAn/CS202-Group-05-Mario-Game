@@ -36,6 +36,32 @@ Koopa::Koopa(bool isFlying)
         this->changeState(new MovingObjectWalkState(this));
 }
 
+void Koopa::update(const Vector2 &marioPos)
+{
+    if (!isActivated)
+    {
+        Vector2 pos = this->getPosition();
+        float distance = Vector2Distance(marioPos, pos);
+        if (distance <= activationDistance)
+        {
+            isActivated = true;
+        }
+    }
+    if (isActivated)
+    {
+        MovingObject::update(marioPos);
+    }
+}
+
+void Koopa::display()
+{
+    if (isActivated)
+    {
+        MovingObject::display();
+    }
+}
+
+
 void Koopa::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);

@@ -61,14 +61,14 @@
                 {
                  "height":0,
                  "id":11,
-                 "name":"StartingPoint",
+                 "name":"",
                  "point":true,
                  "rotation":0,
-                 "type":"",
+                 "type":"StartingPoint",
                  "visible":true,
                  "width":0,
-                 "x":62,
-                 "y":123
+                 "x":63,
+                 "y":123.5
                 }, 
                 {
                  "height":32,
@@ -81,7 +81,7 @@
                          "value":"Map2"
                         }],
                  "rotation":0,
-                 "type":"FinishingZone",
+                 "type":"EndZone",
                  "visible":true,
                  "width":32,
                  "x":800,
@@ -96,8 +96,8 @@
                  "type":"Enemy",
                  "visible":true,
                  "width":16,
-                 "x":122,
-                 "y":159
+                 "x":240.5,
+                 "y":64.5
                 }, 
                 {
                  "gid":587,

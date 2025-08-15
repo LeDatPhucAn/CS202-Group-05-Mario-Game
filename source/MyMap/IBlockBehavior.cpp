@@ -37,14 +37,15 @@ void IBlockBehavior::makeBlockBounce(float dt)
     if (timeSinceHit > 0.3f)
     {
         block->isJumping = false;
-        if(block->isQuestion) {
-            block->isUsed = true;    
+        if (block->isQuestion)
+        {
+            block->isUsed = true;
             this->block->changeState(new BlockUsedState(this->block));
-            if(this->block->contain == "Mushroom")
+            if (this->block->contain == "Mushroom")
                 throwMushroom(this->direction);
-            else if(this->block->contain == "Coin")
+            else if (this->block->contain == "Coin")
                 GameInfo::getInstance()->addScore(100);
-            else if(this->block->contain == "Star")
+            else if (this->block->contain == "Star")
                 throwStar(this->direction);
         }
 
@@ -68,8 +69,8 @@ void IBlockBehavior::setNoBounce()
 
 void IBlockBehavior::throwStar(int direction)
 {
-    //SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
-    Star* star = new Star();
+    // SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
+    Star *star = new Star();
 
     if (direction == LEFT)
     {
@@ -78,15 +79,16 @@ void IBlockBehavior::throwStar(int direction)
     else
         star->setDirection(LEFT);
     // star->setDirection(this->getDirection());
+    SoundController::getInstance().playBlockStateSFX(blockStateType::SPAWNITEM);
     Vector2 pos = this->block->getPositionAdapter().toPixels();
     pos.x += -star->getDirection() * block->getSize().x;
-    pos.y -= block->getSize().y *2; 
+    pos.y -= block->getSize().y * 2;
     star->setPosition(pos);
     Game::addGameObject(star);
 }
 void IBlockBehavior::throwMushroom(int direction)
 {
-    //SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
+    // SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
     Mushroom *mushroom = new Mushroom();
 
     if (direction == LEFT)
@@ -96,9 +98,9 @@ void IBlockBehavior::throwMushroom(int direction)
     else
         mushroom->setDirection(LEFT);
     // mushroom->setDirection(this->getDirection());
+    SoundController::getInstance().playBlockStateSFX(blockStateType::SPAWNITEM);
     Vector2 pos = this->block->getPositionAdapter().toPixels();
-    pos.x += -mushroom->getDirection() * block->getSize().x;
-    pos.y -= block->getSize().y *2; 
+    pos.y -= block->getSize().y * 2;
     mushroom->setPosition(pos);
     Game::addGameObject(mushroom);
 }
@@ -171,4 +173,3 @@ void CoinBehavior::reactToCollision(GameObject *p, int type)
     
     SoundController::getInstance().playBlockStateSFX(blockStateType::SPAWNITEM);
 }
-
