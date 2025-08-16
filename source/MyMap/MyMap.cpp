@@ -195,17 +195,38 @@ void MyMap::handleTileLayer(const tson::Layer &layer,
                                    info->tileSize.y});
             }
         }
-
+        
         if (it != tileMap.end())
         {
-            tileBlocks.push_back(new Block(it->second, pos, {float(tileW), float(tileH)},
-                                           tilesetCache[info->firstgid], src, info, saved, fullRec));
+            auto tile = it->second;
+            bool isBush = tile->get<bool>("isBush");
+
+            if (isBush)
+            {
+                // Đưa sang image layer
+                imageBlocks.push_back(
+                    new Block(
+                        gid,                       // gid
+                        pos,                       // vị trí
+                        {float(tileW), float(tileH)}, // size
+                        tilesetCache[info->firstgid], // texture
+                        src                        // srcRec
+                    ));
+            }
+            else
+            {
+                // Bình thường push vào tileBlocks
+                tileBlocks.push_back(new Block(tile, pos, {float(tileW), float(tileH)},
+                                            tilesetCache[info->firstgid], src, info, saved, fullRec));
+            }
         }
         else
         {
+            // Tile không có trong tileMap thì cứ render bình thường
             tileBlocks.push_back(new Block(gid, pos, {float(tileW), float(tileH)},
-                                           tilesetCache[info->firstgid], src));
+                                        tilesetCache[info->firstgid], src));
         }
+
     }
 }
 

@@ -486,15 +486,23 @@ void Game::displayScene()
 {
     for (auto *b : curMap.imageBlocks)
         b->display();
+    
+    
+
     for (int i = 0; i < gameObjects.size(); i++)
     {
-        if (gameObjects[i])
+        if (gameObjects[i] && !dynamic_cast<Player*>(gameObjects[i]))
         {
             gameObjects[i]->display();
         }
     }
+
+
     for (auto *b : curMap.tileBlocks)
         b->display();
+
+    if(mario) mario->display();
+    if(luigi) luigi->display();
 
     float dt = GetFrameTime();
     for (auto &x : particles)

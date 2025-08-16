@@ -8,6 +8,16 @@
  "tilecount":1,
  "tiledversion":"1.11.2",
  "tileheight":20,
+ "tiles":[
+        {
+         "id":0,
+         "properties":[
+                {
+                 "name":"isBush",
+                 "type":"bool",
+                 "value":true
+                }]
+        }],
  "tilewidth":32,
  "type":"tileset",
  "version":"1.10"

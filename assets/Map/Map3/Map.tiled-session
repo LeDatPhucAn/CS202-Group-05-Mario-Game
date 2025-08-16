@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Map3.json",
+    "activeFile": "new_intro_smallbush.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -32,8 +32,8 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3318.6666666666665,
-                "y": 135.99999999999997
+                "x": 230,
+                "y": 203.33333333333331
             }
         },
         "collided_animation.json": {
@@ -70,14 +70,16 @@
             "scaleInEditor": 5.5
         },
         "new_intro_largebush.json": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "new_intro_mushroom.json": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "new_intro_smallbush.json": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "new_items_powerups.json": {
             "scaleInDock": 1,
@@ -112,10 +114,12 @@
         "Enemies2D.json",
         "Map3.json",
         "new_intro_mushroom.json",
-        "pipes.json"
+        "pipes.json",
+        "new_intro_largebush.json",
+        "new_intro_smallbush.json"
     ],
     "project": "Map.tiled-project",
-    "property.type": "string",
+    "property.type": "bool",
     "recentFiles": [
         "new_blocks1_blocks.json",
         "new_blocks2_items.json",
@@ -123,12 +127,12 @@
         "collided_animation.json",
         "new_items_powerups.json",
         "Enemies2D.json",
-        "pipes.json",
-        "new_intro_mushroom.json",
         "Map3.json",
-        "ground_tileset.json",
-        "jungle-ground.tsj",
-        "Map1.1.json"
+        "new_intro_mushroom.json",
+        "pipes.json",
+        "new_intro_largebush.json",
+        "new_intro_smallbush.json",
+        "ground_tileset.json"
     ],
     "resizeMap.removeObjects": true,
     "tileset.lastUsedFormat": "json",
