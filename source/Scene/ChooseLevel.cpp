@@ -13,20 +13,20 @@ ChooseLevel::ChooseLevel(SceneManager *_manager)
 
     // Create Player
     mario = new PlayerMario();
-    mario->setPosition({100, 350});
+    mario->setPosition({200, 350});
     mario->createBody(world);
     mario->isGrounded = true;
 
     // Load textures
-    backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
+    backgroundTexture = LoadTexture("assets/Backgrounds/PregameBackground.png");
     if (backgroundTexture.id == 0)
     {
         TraceLog(LOG_WARNING, "Failed to load background texture");
     }
 
-    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Lv1.png"));
-    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Lv2.png"));
-    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Lv3.png"));
+    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Map1.png"));
+    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Map2.png"));
+    LevelTextures.push_back(LoadTexture("assets/Backgrounds/Levels/Map3.png"));
     if (LevelTextures[0].id == 0 || LevelTextures[1].id == 0 || LevelTextures[2].id == 0)
     {
         TraceLog(LOG_WARNING, "Failed to load level textures");
@@ -95,15 +95,15 @@ void ChooseLevel::updateScene()
         }
     }
 
-    if (mario->getPosition().x < 50)
+    if (mario->getPosition().x < 150)
     {
-        mario->setPosition({50, mario->getPosition().y});
-        mario->body->SetTransform(b2Vec2(50 / PPM, mario->getPosition().y / PPM), 0);
+        mario->setPosition({150, mario->getPosition().y});
+        mario->body->SetTransform(b2Vec2(150 / PPM, mario->getPosition().y / PPM), 0);
     }
-    if (mario->getPosition().x > 800)
+    if (mario->getPosition().x > 700)
     {
-        mario->setPosition({800, mario->getPosition().y});
-        mario->body->SetTransform(b2Vec2(800 / PPM, mario->getPosition().y / PPM), 0);
+        mario->setPosition({700, mario->getPosition().y});
+        mario->body->SetTransform(b2Vec2(700 / PPM, mario->getPosition().y / PPM), 0);
     }
 
     // Camera logic exactly like Game.cpp
@@ -111,7 +111,7 @@ void ChooseLevel::updateScene()
     Vector2 screenPos = GetWorldToScreen2D(mario->getPosition(), cam);
 
     // Always keep Player roughly centered
-    if (screenPos.x > 0.6 * UI::screenWidth || screenPos.x < 0.4 * UI::screenWidth)
+    if (screenPos.x > 0.8 * UI::screenWidth || screenPos.x < 0.2 * UI::screenWidth)
         cam.target.x += delta;
 
     prePosX = mario->getPosition().x;
@@ -165,23 +165,23 @@ void ChooseLevel::initializePortals()
     LevelPortal level1;
     level1.position = {300, 325}; // World coordinates like Game.cpp
     level1.levelNumber = 1;
-    level1.bounds = {level1.position.x - 50, level1.position.y - 60, 100, 60};
+    level1.bounds = {level1.position.x - 50, level1.position.y - 60, 100, 50};
     level1.levelName = "World 1-1";
     levelPortals.push_back(level1);
 
     // Level 1-2
     LevelPortal level2;
-    level2.position = {500, 325};
+    level2.position = {450, 325};
     level2.levelNumber = 2;
-    level2.bounds = {level2.position.x - 50, level2.position.y - 60, 100, 60};
+    level2.bounds = {level2.position.x - 50, level2.position.y - 60, 100, 50};
     level2.levelName = "World 1-2";
     levelPortals.push_back(level2);
 
     // Level 1-3
     LevelPortal level3;
-    level3.position = {700, 325};
+    level3.position = {600, 325};
     level3.levelNumber = 3;
-    level3.bounds = {level3.position.x - 50, level3.position.y - 60, 100, 60};
+    level3.bounds = {level3.position.x - 50, level3.position.y - 60, 100, 50};
     level3.levelName = "World 1-3";
     levelPortals.push_back(level3);
 }
@@ -214,29 +214,16 @@ void ChooseLevel::displayScene()
     BeginMode2D(cam);
 
     // Draw tiled background using GetScreenToWorld2D
-    if (backgroundTexture.id > 0)
+     if (backgroundTexture.id > 0)
     {
-        // Get world coordinates of screen corners
-        Vector2 topLeft = GetScreenToWorld2D({0, 0}, cam);
-        Vector2 bottomRight = GetScreenToWorld2D({(float)UI::screenWidth, (float)UI::screenHeight}, cam);
-
-        // Calculate how many tiles we need
-        int startTileX = (int)floor(topLeft.x / backgroundTexture.width);
-        int endTileX = (int)ceil(bottomRight.x / backgroundTexture.width);
-        int startTileY = (int)floor(topLeft.y / backgroundTexture.height);
-        int endTileY = (int)ceil(bottomRight.y / backgroundTexture.height);
-
-        // Draw tiles to cover the visible area
-        for (int x = startTileX; x <= endTileX; x++)
-        {
-            for (int y = startTileY; y <= endTileY; y++)
-            {
-                DrawTexture(backgroundTexture,
-                            x * backgroundTexture.width,
-                            y * backgroundTexture.height,
-                            WHITE);
-            }
-        }
+        float scale = 2.0f; // Make background 2x larger
+        float scaledWidth = backgroundTexture.width * scale;
+        float scaledHeight = backgroundTexture.height * scale;
+        
+        Rectangle source = {0, 0, (float)backgroundTexture.width, (float)backgroundTexture.height};
+        Rectangle dest = {-50, 0, scaledWidth, scaledHeight};
+        
+        DrawTexturePro(backgroundTexture, source, dest, {0, 0}, 0.0f, WHITE);
     }
     else
     {

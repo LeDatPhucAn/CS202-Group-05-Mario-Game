@@ -1,11 +1,11 @@
 { "columns":7,
  "image":"image\/new_blocks2_items.png",
- "imageheight":67,
+ "imageheight":153,
  "imagewidth":118,
  "margin":0,
  "name":"new_blocks2_items",
  "spacing":1,
- "tilecount":28,
+ "tilecount":63,
  "tiledversion":"1.11.2",
  "tileheight":16,
  "tiles":[
@@ -29,6 +29,11 @@
                 }],
          "id":0,
          "properties":[
+                {
+                 "name":"Contain",
+                 "type":"string",
+                 "value":""
+                }, 
                 {
                  "name":"isBreakable",
                  "type":"bool",
@@ -97,17 +102,7 @@
                  "tileid":17
                 }],
          "id":14,
-         "properties":[
-                {
-                 "name":"isInvisible",
-                 "type":"bool",
-                 "value":false
-                }, 
-                {
-                 "name":"isUsed",
-                 "type":"bool",
-                 "value":false
-                }]
+         "type":"Coin"
         }, 
         {
          "id":25,
@@ -117,6 +112,216 @@
                  "type":"bool",
                  "value":true
                 }]
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":35
+                }, 
+                {
+                 "duration":150,
+                 "tileid":36
+                }, 
+                {
+                 "duration":150,
+                 "tileid":37
+                }, 
+                {
+                 "duration":150,
+                 "tileid":38
+                }],
+         "id":28,
+         "properties":[
+                {
+                 "name":"Contain",
+                 "type":"string",
+                 "value":"Mushroom"
+                }, 
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isQuestion",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"QuestionBlock"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":35
+                }, 
+                {
+                 "duration":150,
+                 "tileid":36
+                }, 
+                {
+                 "duration":150,
+                 "tileid":37
+                }, 
+                {
+                 "duration":150,
+                 "tileid":38
+                }],
+         "id":35,
+         "properties":[
+                {
+                 "name":"Contain",
+                 "type":"string",
+                 "value":"Coin"
+                }, 
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isQuestion",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"QuestionBlock"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":42
+                }, 
+                {
+                 "duration":150,
+                 "tileid":43
+                }, 
+                {
+                 "duration":150,
+                 "tileid":44
+                }, 
+                {
+                 "duration":150,
+                 "tileid":45
+                }],
+         "id":42,
+         "properties":[
+                {
+                 "name":"Contain",
+                 "type":"string",
+                 "value":"Star"
+                }, 
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isQuestion",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"QuestionBlock"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":49
+                }, 
+                {
+                 "duration":150,
+                 "tileid":50
+                }, 
+                {
+                 "duration":150,
+                 "tileid":51
+                }, 
+                {
+                 "duration":150,
+                 "tileid":52
+                }],
+         "id":49,
+         "properties":[
+                {
+                 "name":"Contain",
+                 "type":"string",
+                 "value":"Flower"
+                }, 
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isQuestion",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"QuestionBlock"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":56
+                }, 
+                {
+                 "duration":150,
+                 "tileid":57
+                }, 
+                {
+                 "duration":150,
+                 "tileid":58
+                }, 
+                {
+                 "duration":150,
+                 "tileid":59
+                }],
+         "id":56,
+         "properties":[
+                {
+                 "name":"Contain",
+                 "type":"string",
+                 "value":""
+                }, 
+                {
+                 "name":"isBreakable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isQuestion",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "type":"QuestionBlock"
         }],
  "tilewidth":16,
  "type":"tileset",
