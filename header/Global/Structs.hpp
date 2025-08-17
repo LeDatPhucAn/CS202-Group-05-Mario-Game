@@ -123,7 +123,8 @@ enum class sceneType
     SETTING,
     GAMEOVER,
     CONTROLS,
-    STAR
+    STAR,
+    WIN_LEVEL
 };
 
 enum class Action

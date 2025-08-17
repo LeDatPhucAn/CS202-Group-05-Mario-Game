@@ -35,6 +35,7 @@ public:
 	vector<Scene *> scenes;
 	Program *pro;
 	int needBack = 0;
+	bool shouldReloadGame = false;
 	string curMap = "Map1";
 
 	void changeScene(sceneType _nextScene);

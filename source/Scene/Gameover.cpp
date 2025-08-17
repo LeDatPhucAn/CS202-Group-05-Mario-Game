@@ -77,6 +77,7 @@ void GameOver::updateScene()
             GameInfo::getInstance()->reset();
             SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
             manager->goBack();
+            manager->curMap="Map1";
             return;
         case 1: // Back to Menu
             GameInfo::getInstance()->reset();
@@ -87,7 +88,7 @@ void GameOver::updateScene()
     }
 
     // ESC to go back to menu
-    if (IsKeyPressed(KEY_ESCAPE))
+    if (IsKeyPressed(KEY_P))
     {
         GameInfo::getInstance()->reset();
         manager->goBackOfBaseScene();
@@ -137,6 +138,8 @@ void GameOver::updateScene()
             case 0: // Play Again
                 GameInfo::getInstance()->reset();
                 SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
+                manager->curMap="Map1";
+                manager->shouldReloadGame = true;
                 manager->goBack();
                 flashActive = true;
                 flashTimer = 0.0f;

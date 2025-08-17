@@ -7,6 +7,7 @@
 #include "GameOver.hpp"
 #include "ChooseLevel.hpp"
 #include "Controls.hpp"
+#include "WinLevel.hpp"
 #include <iostream>
 #include <stack>
 using namespace std;
@@ -29,7 +30,7 @@ void SceneManager::changeScene(sceneType _nextScene)
 {
     if (_nextScene != sceneType::NONE)
     {
-        if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING || _nextScene == sceneType::GAMEOVER || _nextScene == sceneType::CHOOSE_LEVEL || _nextScene == sceneType::CONTROLS || _nextScene == sceneType::PRE_GAME)
+        if (_nextScene == sceneType::PAUSE || _nextScene == sceneType::SETTING || _nextScene == sceneType::GAMEOVER || _nextScene == sceneType::CHOOSE_LEVEL || _nextScene == sceneType::CONTROLS || _nextScene == sceneType::PRE_GAME || _nextScene == sceneType::WIN_LEVEL)
             numBackToBaseScene++;
         scenes.push_back(SceneFactory::create(_nextScene, this));
     }
@@ -107,10 +108,10 @@ Scene *SceneFactory::create(sceneType newScene, SceneManager *mag)
         return new ChooseLevel(mag);
     if (newScene == sceneType::CONTROLS)
         return new Controls(mag);
-
     if (newScene == sceneType::GAME)
         return new Game(mag);
-
+    if (newScene == sceneType::WIN_LEVEL)
+        return new WinLevel(mag);
     return nullptr;
 }
 

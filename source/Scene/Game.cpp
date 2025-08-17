@@ -8,6 +8,7 @@
 #include "Spawner.hpp"
 #include "DrawDebug.hpp"
 #include "GameInfo.hpp"
+#include "WinLevel.hpp"
 #include "MovingObject.hpp"
 #include "MovingObjectState.hpp"
 #include "Goomba.hpp"
@@ -64,7 +65,7 @@ void Game::init()
     transitionTimer = 0.0f;
     circleRadius = 0.0f;
     circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
-
+    removeGameObject();
 
     // Get game settings
     GameInfo* gameInfo = GameInfo::getInstance();
@@ -177,12 +178,64 @@ void Game::restartGame()
     circleRadius = 0.0f;
     circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
 
-
+    // Immediately remove all enemies and objects (except Mario and Luigi)
+    vector<GameObject*> objectsToKeep;
     for (auto &obj : gameObjects)
     {
-        if (obj && obj != mario && obj != luigi)
+        if (obj && (obj == mario || obj == luigi))
         {
-            obj->needDeletion = true;
+            objectsToKeep.push_back(obj);
+        }
+        else if (obj)
+        {
+            // Immediately destroy physics body and delete object
+            if (obj->getBody()) {
+                world->DestroyBody(obj->getBody());
+                obj->attachBody(nullptr);
+            }
+            delete obj;
+        }
+    }
+    gameObjects = objectsToKeep;  // Keep only Mario and Luigi
+    deleteLater.clear();  // Clear the deletion queue
+
+    // Check if we need to load a new map
+    if (current_Map != manager->curMap) {
+        // Clear existing map blocks
+        for (auto &block : curMap.tileBlocks) {
+            if (block->getBody()) {
+                world->DestroyBody(block->getBody());
+                block->attachBody(nullptr);
+            }
+            delete block;
+        }
+        curMap.tileBlocks.clear();
+        // Clear image blocks too
+        for (auto &ib : curMap.imageBlocks) {
+            delete ib;
+        }
+        curMap.imageBlocks.clear();
+
+        // Clear spawner stored spawn info from previous map
+        if (spawner) {
+            spawner->InfoSpawn.clear();
+        }
+
+        // Load new map
+        current_Map = manager->curMap;
+        curMap.choose(UI::mapPaths[current_Map]);
+
+        // Prepare new map blocks
+        for (auto &block : curMap.tileBlocks) {
+            block->changeState(new BlockIdleState(block));
+            block->createBody(world);
+        }
+    } else {
+        // Even if same map, ensure spawner info matches current map
+        if (spawner && spawner->InfoSpawn["Enemy"].empty()) {
+            // Rebuild spawn info by re-choosing map without changing current_Map
+            spawner->InfoSpawn.clear();
+            curMap.choose(UI::mapPaths[current_Map]);
         }
     }
 
@@ -201,7 +254,7 @@ void Game::restartGame()
     // Reset lives and coins but keep score
     GameInfo::getInstance()->resetGameOnly();
 
-    // Respawn enemies
+    // Respawn enemies for the new level
     spawner->spawnEnemy();
 }
 
@@ -259,7 +312,14 @@ void Game::removeGameObject()
 }
 
 void Game::updateScene()
-{
+{   
+    // Check if we need to reload the game with new map
+    if (manager->shouldReloadGame) {
+        manager->shouldReloadGame = false;
+        restartGame();  // Use your existing restart method but load new map
+        return;
+    }
+    
     // Update transition first
     updateTransition();
 
@@ -351,9 +411,17 @@ void Game::updateScene()
     if(mario && CheckCollisionRecs(mario->getBounds(), curMap.EndZone) 
     || luigi && CheckCollisionRecs(luigi->getBounds(), curMap.EndZone))
     {
-        //Thêm Win Scene
-        manager->goBack();
-        manager->curMap = curMap.nextMap;
+        // Debug output
+        cout << "Player reached EndZone! Current map: " << manager->curMap << endl;
+        
+        // Show WinLevel scene
+        try {
+            manager->changeScene(sceneType::WIN_LEVEL);
+            cout << "Successfully created WinLevel scene" << endl;
+        } catch (const std::exception& e) {
+            cout << "Error creating WinLevel scene: " << e.what() << endl;
+        }
+        return;
     }
     removeGameObject();
     updateMyCamera();

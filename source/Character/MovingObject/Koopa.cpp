@@ -5,6 +5,7 @@
 #include "SoundController.hpp"
 #include "Mushroom.hpp"
 #include "Star.hpp"
+#include "GameInfo.hpp"
 Koopa::Koopa()
     : MovingObject()
 {
@@ -90,6 +91,7 @@ void Koopa::updateCollision(GameObject *other, int type)
                 // First hit: loses wings and becomes a walking Koopa
                 SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
                 this->changeState(new MovingObjectWalkState(this));
+                GameInfo::getInstance()->addScore(50); 
                 return;
             }
             // Second hit: becomes a shell
@@ -98,6 +100,7 @@ void Koopa::updateCollision(GameObject *other, int type)
                 SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
                 this->toNewBody();
                 this->changeState(new MovingObjectIdleState(this));
+                GameInfo::getInstance()->addScore(50); 
                 return;
             }
             // Third hit: kills the shell if it's running
