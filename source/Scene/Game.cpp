@@ -110,7 +110,7 @@ void Game::init()
     // Initialize camera
     cam.offset = {0, 0};
     cam.target = {0, 0};
-    cam.zoom = static_cast<float>(UI::screenHeight) / (WorldHeight-16);
+    cam.zoom = static_cast<float>(UI::screenHeight) / (WorldHeight-8);
     cam.rotation = 0;
     prePosX = (mario) ? mario->getPosition().x : ((luigi) ? luigi->getPosition().x : 100);
     prePosXcam = GetScreenToWorld2D({0,0}, cam).x + 8;

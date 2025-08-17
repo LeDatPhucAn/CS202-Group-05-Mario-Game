@@ -12,6 +12,15 @@
         {
          "id":0,
          "type":"debris"
+        }, 
+        {
+         "id":11,
+         "properties":[
+                {
+                 "name":"isSolid",
+                 "type":"bool",
+                 "value":true
+                }]
         }],
  "tilewidth":16,
  "type":"tileset",

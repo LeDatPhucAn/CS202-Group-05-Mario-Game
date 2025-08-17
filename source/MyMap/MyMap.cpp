@@ -132,7 +132,7 @@ void MyMap::handleImageLayer(const tson::Layer &layer)
 
     for (int i = 0; i < 13; ++i)
     {
-        Vector2 p = {basePos.x + i * w - 200.f, basePos.y};
+        Vector2 p = {basePos.x + i * w , basePos.y};
         imageBlocks.push_back(
             new Block(
                 0,      // gid

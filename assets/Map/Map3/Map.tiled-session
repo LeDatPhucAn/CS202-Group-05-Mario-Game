@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "new_intro_smallbush.json",
+    "activeFile": "Map3.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -32,8 +32,8 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 230,
-                "y": 203.33333333333331
+                "x": 3086.6666666666665,
+                "y": 135.99999999999997
             }
         },
         "collided_animation.json": {
@@ -127,11 +127,11 @@
         "collided_animation.json",
         "new_items_powerups.json",
         "Enemies2D.json",
-        "Map3.json",
-        "new_intro_mushroom.json",
-        "pipes.json",
-        "new_intro_largebush.json",
         "new_intro_smallbush.json",
+        "new_intro_largebush.json",
+        "pipes.json",
+        "new_intro_mushroom.json",
+        "Map3.json",
         "ground_tileset.json"
     ],
     "resizeMap.removeObjects": true,

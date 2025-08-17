@@ -15,16 +15,28 @@
             "scaleInDock": 1,
             "scaleInEditor": 2
         },
+        "D:/Tuan/Project/Super Mario Game/assets/Map/Map3/new_intro_largebush.json": {
+            "scaleInDock": 1
+        },
+        "D:/Tuan/Project/Super Mario Game/assets/Map/Map3/new_intro_mushroom.json": {
+            "scaleInDock": 1
+        },
+        "D:/Tuan/Project/Super Mario Game/assets/Map/Map3/new_intro_smallbush.json": {
+            "scaleInDock": 1
+        },
+        "D:/Tuan/Project/Super Mario Game/assets/Map/Map3/pipes.json": {
+            "scaleInDock": 1
+        },
         "Enemies2D.json": {
             "scaleInDock": 1,
             "scaleInEditor": 3
         },
         "Map1.1.json": {
-            "scale": 2,
-            "selectedLayer": 2,
+            "scale": 1.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 148,
-                "y": 82.5
+                "x": 4006,
+                "y": 32.66666666666666
             }
         },
         "collided_animation.json": {
@@ -46,7 +58,7 @@
         },
         "new_blocks2_items.json": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 4
         },
         "new_items_powerups.json": {
@@ -63,6 +75,7 @@
         }
     },
     "frame.defaultDuration": 150,
+    "last.externalTilesetPath": "D:/Tuan/Project/Super Mario Game/assets/Map/Map3",
     "last.imagePath": "D:/Tuan/Project/My Game/assets/Map/image",
     "map.height": 14,
     "map.lastUsedFormat": "json",
@@ -79,7 +92,7 @@
         "Enemies2D.json"
     ],
     "project": "Map.tiled-project",
-    "property.type": "string",
+    "property.type": "bool",
     "recentFiles": [
         "Enemies2D.json",
         "new_items_powerups.json",
@@ -93,6 +106,7 @@
         "8415.tsj",
         "tileset.json"
     ],
+    "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)",
     "tileset.lastUsedFormat": "json",
     "tileset.margin": 0,
     "tileset.spacing": 1,
