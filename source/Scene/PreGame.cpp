@@ -508,6 +508,4 @@ void PreGame::displayScene()
             DrawRectangleRoundedLines(buttonRect, 0.1f, 8, Color{255, 255, 0, 200});
         }
     }
-    
-
 }

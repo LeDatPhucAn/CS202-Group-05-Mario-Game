@@ -748,6 +748,7 @@ void Game::drawHUD()
     DrawTexturePro(HUDScore, srcRecScore, destRecScore, {0, 0}, 0.0f, WHITE);
 
     string scoreText = to_string(GameInfo::getInstance()->getScore());
-    Vector2 scoreTextPos = {worldTopLeft.x + 220, worldTopLeft.y + 7};
-    DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
+    Vector2 scoreTextPos = {worldTopLeft.x + 220, worldTopLeft.y + 8};
+    DrawTextEx(UI::boldFont, scoreText.c_str(), {scoreTextPos.x-0.5f, scoreTextPos.y-0.5f}, 12, 2, ORANGE);
+    DrawTextEx(UI::boldFont, scoreText.c_str(), scoreTextPos, 12, 2, YELLOW);
 }

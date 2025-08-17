@@ -14,9 +14,14 @@ GameOver::GameOver(SceneManager *_manager) : Scene(_manager)
 
 
     // Load button textures
+    backgroundTexture = LoadTexture("assets/Backgrounds/GameOverBackground.png");
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
     buttonHoverTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButtonHovered.png");
 
+    if (backgroundTexture.id == 0)
+    {
+        TraceLog(LOG_WARNING, "Failed to load background texture");
+    }
     if (buttonTexture.id == 0)
     {
         TraceLog(LOG_WARNING, "Failed to load button texture");
@@ -43,6 +48,11 @@ GameOver::~GameOver()
     {
         UnloadTexture(buttonTexture);
         buttonTexture.id = 0;
+    }
+    if (backgroundTexture.id != 0)
+    {
+        UnloadTexture(backgroundTexture);
+        backgroundTexture.id = 0;
     }
 }
 
@@ -101,14 +111,15 @@ void GameOver::updateScene()
 
     // Mouse interaction
     Vector2 mousePos = GetMousePosition();
-    float panelWidth = 350;
-    float panelHeight = 400;
-    float panelX = UI::screenWidth / 2 - panelWidth / 2;
-    float panelY = UI::screenHeight / 2 - panelHeight / 2;
+    // Panel variables removed; derive layout directly from screen center
+    float centerY = UI::screenHeight / 2.0f;
     float buttonWidth = 200;
     float buttonHeight = 50;
-    float buttonX = panelX + (panelWidth - buttonWidth) / 2;
-    float startY = panelY + 400;
+    // Left aligned layout
+    float leftMargin = 60.0f;
+    float buttonX = leftMargin + 70.0f;
+
+    float startY = centerY;
     float spacing = 70;
 
     for (int i = 0; i < 2; ++i)
@@ -155,7 +166,21 @@ void GameOver::updateScene()
 }
 
 void GameOver::displayScene()
-{
+{   
+
+    // Load background textures
+    if (backgroundTexture.id > 0)
+    {
+        DrawTexturePro(backgroundTexture,
+                       {0, 0, (float)backgroundTexture.width, (float)backgroundTexture.height},
+                       {0, 0, (float)UI::screenWidth, (float)UI::screenHeight},
+                       {0, 0}, 0.0f, WHITE);
+    }
+    else
+    {
+        ClearBackground(BLACK);
+    }
+
     std::string titleText = "GAME OVER";
     std::vector<std::string> buttonTexts = {
         "PLAY AGAIN",
@@ -165,48 +190,74 @@ void GameOver::displayScene()
     DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 30});
 
     // Calculate game over panel dimensions and position
-    float panelWidth = 350;
-    float panelHeight = 400;
-    float panelX = UI::screenWidth / 2 - panelWidth / 2;
-    float panelY = UI::screenHeight / 2 - panelHeight / 2;
-    Rectangle panelRect = {panelX, panelY, panelWidth, panelHeight};
+    // Panel removed; compute positions relative to screen center
+    float centerY = UI::screenHeight / 2.0f;
+    float leftMargin = 60.0f; // uniform left margin for left-aligned text
 
-    // Draw title
+    // Text metrics
     float titleSpacing = 3.0f;
-    float titleFontSize = 36.0f;
+    float titleFontSize = 60.0f;
     Vector2 titleSize = MeasureTextEx(UI::boldFont, titleText.c_str(), titleFontSize, titleSpacing);
-    float titleX = (UI::screenWidth - titleSize.x) / 2.0f;
-    float titleY = panelY + 20;
+    float titleX = leftMargin;
+    float titleY = centerY - 240.0f;
 
-    // Title with shadow (red color for game over)
-    DrawTextEx(UI::boldFont, titleText.c_str(),
-               {titleX + 2, titleY + 2}, titleFontSize, titleSpacing, BLACK);
-    DrawTextEx(UI::boldFont, titleText.c_str(),
-               {titleX, titleY}, titleFontSize, titleSpacing, WHITE);
-
-    // Draw final score and high score
     std::string scoreText = "Final Score: " + std::to_string(GameInfo::getInstance()->getScore());
-    Vector2 scoreSize = MeasureTextEx(UI::font, scoreText.c_str(), 24, 2);
+    Vector2 scoreSize = MeasureTextEx(UI::font, scoreText.c_str(), 36, 2);
     std::string highScoreText = "High Score: " + std::to_string(GameInfo::getInstance()->getHighScore());
-    Vector2 highScoreSize = MeasureTextEx(UI::font, highScoreText.c_str(), 24, 2);
+    Vector2 highScoreSize = MeasureTextEx(UI::font, highScoreText.c_str(), 36, 2);
 
-    float scoreX = (UI::screenWidth - scoreSize.x) / 2.0f;
-    float highScoreX = (UI::screenWidth - highScoreSize.x) / 2.0f;  
-    float statsY = panelY + 120;
+    float scoreX = leftMargin + 35.0f;
+    float highScoreX = leftMargin + 35.0f;
+    float statsY = centerY - 150.0f;
+
+    // Button layout (defined early so backdrop can include them)
+    const int buttonCount = 2;
+    float buttonWidth = 200.0f;
+    float buttonHeight = 50.0f;
+    float buttonX = leftMargin + 70.0f;
+    float spacing = 70.0f;
+    float startY = centerY; // top of first button
+    float buttonsBottom = startY + (buttonCount - 1) * spacing + buttonHeight;
+
+    // Compute a single transparent background rectangle behind the text + buttons
+    float padX = 20.0f;
+    float padYTop = 15.0f;
+    float padYBottom = 25.0f;
+    float blockLeft = leftMargin - padX;
+    float blockTop = titleY - padYTop;
+    float blockBottom = buttonsBottom + padYBottom; // extend through buttons
+    float blockHeight = blockBottom - blockTop;
+    // Determine max width among title, score, high score, and button area
+    float maxWidth = titleSize.x;
+    if (scoreSize.x > maxWidth) maxWidth = scoreSize.x;
+    if (highScoreSize.x > maxWidth) maxWidth = highScoreSize.x;
+    if (buttonWidth > maxWidth) maxWidth = buttonWidth;
+    float blockWidth = maxWidth + padX * 2.0f;
+
+    // Draw translucent backdrop (black with alpha)
+    DrawRectangleRounded({blockLeft, blockTop, blockWidth, blockHeight}, 0.08f, 6, Color{0,0,0,120});
+    DrawRectangleRoundedLines({blockLeft, blockTop, blockWidth, blockHeight}, 0.08f, 6, Color{255,255,255,40});
+
+    // Title with shadow
+    DrawTextEx(UI::boldFont, titleText.c_str(), {titleX + 2, titleY + 2}, titleFontSize, titleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, titleText.c_str(), {titleX + 1, titleY + 2}, titleFontSize, titleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, titleText.c_str(), {titleX + 2, titleY + 1}, titleFontSize, titleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, titleText.c_str(), {titleX + 2, titleY + 1}, titleFontSize, titleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, titleText.c_str(), {titleX, titleY}, titleFontSize, titleSpacing, WHITE);
 
     // Score text with shadow
-    DrawTextEx(UI::font, scoreText.c_str(), {scoreX + 1, statsY + 1}, 24, 2, BLACK);
-    DrawTextEx(UI::font, scoreText.c_str(), {scoreX, statsY}, 24, 2, WHITE);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX + 1, statsY + 1}, 36, 2, BLACK);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX + 1, statsY + 2}, 36, 2, BLACK);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX + 2, statsY + 1}, 36, 2, BLACK);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX + 2, statsY + 2}, 36, 2, BLACK);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX, statsY}, 36, 2, WHITE);
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX + 1, statsY + 30 + 1}, 36, 2, BLACK);
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX + 2, statsY + 30 + 1}, 36, 2, BLACK);
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX + 1, statsY + 30 + 2}, 36, 2, BLACK);
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX + 2, statsY + 30 + 2}, 36, 2, BLACK);
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX, statsY + 30}, 36, 2, WHITE);
 
-    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX + 1, statsY + 30 + 1}, 24, 2, BLACK);
-    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX, statsY + 30}, 24, 2, WHITE);
-
-    // Draw buttons
-    float buttonWidth = 200;
-    float buttonHeight = 50;
-    float buttonX = panelX + (panelWidth - buttonWidth) / 2;
-    float startY = panelY + 400;
-    float spacing = 70;
+    // Draw buttons (variables already declared above)
 
     for (int i = 0; i < 2; i++)
     {
@@ -254,15 +305,21 @@ void GameOver::displayScene()
 
         // Button text (centered)
         float buttonTextSpacing = 2.0f;
-        Vector2 textSize = MeasureTextEx(UI::font, buttonTexts[i].c_str(), 20, buttonTextSpacing);
-        float textX = buttonRect.x + (buttonRect.width - textSize.x) / 2;
+        Vector2 textSize = MeasureTextEx(UI::font, buttonTexts[i].c_str(), 24, buttonTextSpacing);
+        float textX = buttonRect.x + 30.0f; // left aligned within button with padding
         float textY = buttonRect.y + (buttonRect.height - textSize.y) / 2;
 
         // Text with shadow
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX + 1, textY + 1}, 20, buttonTextSpacing, BLACK);
+                   {textX + 1, textY + 1}, 24, buttonTextSpacing, BLACK);
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX, textY}, 20, buttonTextSpacing, WHITE);
+                   {textX + 1, textY + 2}, 24, buttonTextSpacing, BLACK);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(),
+                   {textX + 2, textY + 1}, 24, buttonTextSpacing, BLACK);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(),
+                   {textX + 2, textY + 2}, 24, buttonTextSpacing, BLACK);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(),
+                   {textX, textY}, 24, buttonTextSpacing, WHITE);
 
         // Flash effect for selected button
         if (flashActive && i == selectedButton)
@@ -272,5 +329,4 @@ void GameOver::displayScene()
             DrawTextEx(UI::font, buttonTexts[i].c_str(), {textX, textY}, 20, 2, col);
         }
     }
-
 }
