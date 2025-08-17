@@ -37,28 +37,13 @@ Game::Game(SceneManager *_mag)
 void Game::init()
 {   
     HUDLives = LoadTexture("assets/Backgrounds/HUD/lives.png");
-    if (HUDLives.id == 0)
-    {
-        TraceLog(LOG_WARNING, "Failed to load HUD Lives texture");
-    }
-
+    if (HUDLives.id == 0) { TraceLog(LOG_WARNING, "Failed to load HUD Lives texture"); }
     HUDTime = LoadTexture("assets/Backgrounds/HUD/time.png");
-    if (HUDTime.id == 0)
-    {
-        TraceLog(LOG_WARNING, "Failed to load HUD Time texture");
-    }
-
+    if (HUDTime.id == 0) { TraceLog(LOG_WARNING, "Failed to load HUD Time texture"); }
     HUDCoin = LoadTexture("assets/Backgrounds/HUD/coin.png");
-    if (HUDCoin.id == 0)
-    {
-        TraceLog(LOG_WARNING, "Failed to load HUD Coin texture");
-    }
-
+    if (HUDCoin.id == 0) { TraceLog(LOG_WARNING, "Failed to load HUD Coin texture"); }
     HUDScore = LoadTexture("assets/Backgrounds/HUD/score.png");
-    if (HUDScore.id == 0)
-    {
-        TraceLog(LOG_WARNING, "Failed to load HUD Score texture");
-    }
+    if (HUDScore.id == 0) { TraceLog(LOG_WARNING, "Failed to load HUD Score texture"); }
 
     transitionTexture = LoadRenderTexture(UI::screenWidth, UI::screenHeight);
     isTransitioning = true;
@@ -67,47 +52,48 @@ void Game::init()
     circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
     removeGameObject();
 
-    // Get game settings
     GameInfo* gameInfo = GameInfo::getInstance();
-    
-    // Instantiate main characters based on mode
-    if(gameInfo->isDualMode()) {
-        mario = new PlayerMario();
-        luigi = new PlayerLuigi();
-        mario->setPosition(curMap.StartingPoint);
-        luigi->setPosition({curMap.StartingPoint.x + 32, curMap.StartingPoint.y});
-    } else {
-        // Single player mode - spawn only chosen character
-        if(gameInfo->isMario()) {
-            mario = new PlayerMario();
-            mario->setPosition(curMap.StartingPoint);
-            luigi = nullptr;
-        } else {
-            luigi = new PlayerLuigi();
-            luigi->setPosition(curMap.StartingPoint); // Luigi takes Mario's default position in single mode
-            mario = nullptr;
-        }
-    }
 
+    // 1. Create spawner and load map BEFORE creating players
     spawner = new Spawner(this);
     curMap.setSpawner(spawner);
-    // Load map
     current_Map = manager->curMap;
     curMap.choose(UI::mapPaths[current_Map]);
 
-    drawDebug = new DrawDebug();
-    // Prepare map blocks (add blocks to Box2D world)
-    for (auto &block : curMap.tileBlocks)
-    {
+    // 2. Prepare map blocks
+    for (auto &block : curMap.tileBlocks) {
         block->changeState(new BlockIdleState(block));
         block->createBody(world);
     }
 
-    // Add enemies to game
+    // 3. Create players AFTER map so StartingPoint is valid
+    mario = nullptr;
+    luigi = nullptr;
+    if (gameInfo->isDualMode()) {
+        mario = new PlayerMario();
+        luigi = new PlayerLuigi();
+        mario->setPosition(curMap.StartingPoint);
+        luigi->setPosition({curMap.StartingPoint.x + 20, curMap.StartingPoint.y});
+    } else {
+        if (gameInfo->isMario()) {
+            mario = new PlayerMario();
+            mario->setPosition(curMap.StartingPoint);
+        } else {
+            luigi = new PlayerLuigi();
+            luigi->setPosition(curMap.StartingPoint);
+        }
+    }
+
+    // 4. Spawn enemies
     spawner->spawnEnemy();
-    if(luigi) addGameObject(luigi);
-    if(mario) addGameObject(mario);
-    // Initialize camera
+
+    // 5. Add players to gameObjects AFTER enemies (or before if you prefer draw order)
+    if (luigi) addGameObject(luigi);
+    if (mario) addGameObject(mario);
+
+    drawDebug = new DrawDebug();
+
+    // 6. Camera setup
     cam.offset = {0, 0};
     cam.target = {0, 0};
     cam.zoom = static_cast<float>(UI::screenHeight) / (WorldHeight-8);
@@ -116,7 +102,8 @@ void Game::init()
     prePosXcam = GetScreenToWorld2D({0,0}, cam).x + 8;
 
     gameTime = 0.0f;
-    GameInfo::getInstance()->reset();
+
+
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
 }
 
@@ -242,7 +229,7 @@ void Game::restartGame()
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
     // Reset mario
     if (mario) mario->reset(curMap.StartingPoint);
-    if (luigi) luigi->reset({curMap.StartingPoint.x+10, curMap.StartingPoint.y});
+    if (luigi) luigi->reset({curMap.StartingPoint.x+20, curMap.StartingPoint.y});
     // reset camera
     cam.target = {0, 0};
 
@@ -251,11 +238,78 @@ void Game::restartGame()
     // Reset game time
     gameTime = 0.0f;
 
-    // Reset lives and coins but keep score
-    GameInfo::getInstance()->resetGameOnly();
-
     // Respawn enemies for the new level
     spawner->spawnEnemy();
+}
+
+void Game::hardRestartGame()
+//restart cả block 
+{
+    // Force full map reload even if same map name
+    // 1. Delete ALL non-player game objects
+    vector<GameObject*> keepPlayers;
+    for (auto *obj : gameObjects) {
+        if (obj == mario || obj == luigi) {
+            keepPlayers.push_back(obj);
+        } else if (obj) {
+            if (obj->getBody()) {
+                world->DestroyBody(obj->getBody());
+                obj->attachBody(nullptr);
+            }
+            delete obj;
+        }
+    }
+    gameObjects.swap(keepPlayers);
+    deleteLater.clear();
+
+    // 2. Destroy existing map blocks & image blocks
+    for (auto &block : curMap.tileBlocks) {
+        if (block->getBody()) {
+            world->DestroyBody(block->getBody());
+            block->attachBody(nullptr);
+        }
+        delete block;
+    }
+    curMap.tileBlocks.clear();
+    for (auto &ib : curMap.imageBlocks) {
+        delete ib;
+    }
+    curMap.imageBlocks.clear();
+
+    // 3. Clear spawner info then reload current map definition
+    if (spawner) spawner->InfoSpawn.clear();
+    current_Map = manager->curMap; // keep same map name
+    curMap.choose(UI::mapPaths[current_Map]);
+
+    // 4. Recreate blocks
+    for (auto &block : curMap.tileBlocks) {
+        block->changeState(new BlockIdleState(block));
+        block->createBody(world);
+    }
+
+    // 5. Reset players to starting point
+    if (mario) {
+        mario->reset(curMap.StartingPoint);
+        if (mario->getBody()) { mario->getBody()->SetLinearVelocity({0,0}); }
+    }
+    if (luigi) {
+        luigi->reset({curMap.StartingPoint.x + 10, curMap.StartingPoint.y});
+        if (luigi->getBody()) { luigi->getBody()->SetLinearVelocity({0,0}); }
+    }
+
+    // 6. Camera & timers
+    cam.target = {0,0};
+    prePosX = (mario)? mario->getPosition().x : ((luigi)? luigi->getPosition().x : 0);
+    prePosXcam = GetScreenToWorld2D({0,0}, cam).x;
+    gameTime = 0.0f;
+    isTransitioning = true;
+    transitionTimer = 0.0f;
+    circleRadius = 0.0f;
+    circleCenter = {UI::screenWidth / 2.0f, UI::screenHeight / 2.0f};
+
+    // 7. Respawn enemies fresh
+    if (spawner) spawner->spawnEnemy();
+    SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
 }
 
 void Game::addGameObject(GameObject *gameObject)
@@ -373,7 +427,7 @@ void Game::updateScene()
             }
             else
             {
-                restartGame();
+                hardRestartGame();
                 manager->changeScene(sceneType::GAMEOVER);
             }
 
@@ -694,6 +748,7 @@ void Game::drawHUD()
     DrawTexturePro(HUDScore, srcRecScore, destRecScore, {0, 0}, 0.0f, WHITE);
 
     string scoreText = to_string(GameInfo::getInstance()->getScore());
-    Vector2 scoreTextPos = {worldTopLeft.x + 220, worldTopLeft.y + 7};
-    DrawTextEx(UI::font, scoreText.c_str(), scoreTextPos, 14, 2, YELLOW);
+    Vector2 scoreTextPos = {worldTopLeft.x + 220, worldTopLeft.y + 8};
+    DrawTextEx(UI::boldFont, scoreText.c_str(), {scoreTextPos.x-0.5f, scoreTextPos.y-0.5f}, 12, 2, ORANGE);
+    DrawTextEx(UI::boldFont, scoreText.c_str(), scoreTextPos, 12, 2, YELLOW);
 }

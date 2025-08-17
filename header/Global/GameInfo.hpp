@@ -9,13 +9,15 @@ private:
     int score;
     int coins;
     int lives;
+    int highScore;
     
     // PreGame settings
     Mode mode;
     bool chooseMario; // for single mode: true=Mario, false=Luigi
     Difficulty difficulty;
 
-    GameInfo() : score(0), coins(0), lives(5), mode(Mode::DUAL), chooseMario(true), difficulty(Difficulty::EASY) {}
+    GameInfo() : score(0), coins(0), lives(5), highScore(0), mode(Mode::DUAL), chooseMario(true), difficulty(Difficulty::EASY) {}
+    
     
 public:
     GameInfo(const GameInfo&) = delete;
@@ -30,6 +32,8 @@ public:
     int getScore();
     int getCoins();
     int getLives();
+    int getHighScore() const { return highScore; }
+    void updateHighScore();
     void reset();
     void resetGameOnly();
     
@@ -51,4 +55,7 @@ public:
     bool isDualMode() const { return mode == Mode::DUAL; }
     
     static void destroyInstance();
+    // High score persistence helpers
+    void loadHighScoreFromFile();
+    void saveHighScoreToFile();
 };

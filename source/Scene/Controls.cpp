@@ -425,23 +425,23 @@ void Controls::drawKeyBindingTable()
 
 void Controls::drawInstructions()
 {
-    std::string instructions;
-    if (isEditing)
-    {
-        instructions = "Press the key you want to assign (backspace to cancel)";
-    }
-    else
-    {
-        instructions = "ARROWS: Navigate . ENTER: Edit key . TAB: Finish . BACKSPACE: Cancel";
-    }
+    // std::string instructions;
+    // if (isEditing)
+    // {
+    //     instructions = "Press the key you want to assign (backspace to cancel)";
+    // }
+    // else
+    // {
+    //     instructions = "ARROWS: Navigate . ENTER: Edit key . TAB: Finish . BACKSPACE: Cancel";
+    // }
     
-    float instrX = UI::screenWidth / 2 - 350;
-    float instrY = UI::screenHeight - 50;
+    // float instrX = UI::screenWidth / 2 - 350;
+    // float instrY = UI::screenHeight - 50;
     
-    DrawTextEx(UI::font, instructions.c_str(),
-               {instrX + 1, instrY + 1}, 16, 1, DARKGRAY);
-    DrawTextEx(UI::font, instructions.c_str(),
-               {instrX, instrY}, 16, 1, WHITE);
+    // DrawTextEx(UI::font, instructions.c_str(),
+    //            {instrX + 1, instrY + 1}, 16, 1, DARKGRAY);
+    // DrawTextEx(UI::font, instructions.c_str(),
+    //            {instrX, instrY}, 16, 1, WHITE);
 }
 
 void Controls::updateKeyBinding(int actionIndex, int player, int newKey)

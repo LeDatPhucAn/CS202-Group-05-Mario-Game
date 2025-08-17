@@ -1,4 +1,7 @@
 #include "GameInfo.hpp"
+#include <fstream>
+#include <filesystem>
+using namespace std;
 
 GameInfo* GameInfo::getInstance() {
     if (instance == nullptr) {
@@ -9,10 +12,11 @@ GameInfo* GameInfo::getInstance() {
 
 void GameInfo::addScore(int points) {
     score += points;
+    updateHighScore();
 }
 
 void GameInfo::addCoin() {
-    coins++;
+    coins += 1;
 }
 
 void GameInfo::setLives(int newLives) {
@@ -60,5 +64,31 @@ void GameInfo::destroyInstance(){
 }
 
 GameInfo* GameInfo::instance = nullptr;
+
+void GameInfo::loadHighScoreFromFile() {
+    const char* path = "assets/highscore.txt";
+    ifstream in(path);
+    if (in.is_open()) {
+        int hs = 0;
+        if (in >> hs) {
+            highScore = hs;
+        }
+    }
+}
+
+void GameInfo::saveHighScoreToFile() {
+    const char* path = "assets/highscore.txt";
+    ofstream out(path, ios::trunc);
+    if (out.is_open()) {
+        out << highScore;
+    }
+}
+
+void GameInfo::updateHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        saveHighScoreToFile();
+    }
+}
 
 

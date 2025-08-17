@@ -10,4 +10,5 @@ public:
     void displayScene() override;
 private:
     bool anyKeyPressed;
+    string mapName;
 };

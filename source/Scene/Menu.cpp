@@ -434,8 +434,4 @@ void Menu::displayScene()
     float instrX = UI::screenWidth - 350;
     float instrY = UI::screenHeight - 200;
 
-    DrawTextEx(UI::font, instructionsText.c_str(),
-               {instrX + 1, instrY + 1}, 20, 2, DARKGRAY);
-    DrawTextEx(UI::font, instructionsText.c_str(),
-               {instrX, instrY}, 20, 2, WHITE);
 }
