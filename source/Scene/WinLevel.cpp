@@ -7,6 +7,8 @@
 WinLevel::WinLevel(SceneManager* manager)
     : Scene(manager), anyKeyPressed(false) {
         mapName = manager->curMap; 
+        SoundController::getInstance().playSceneSFX(sceneType::WIN_LEVEL);
+        SoundController::getInstance().playSceneMusicFromStart(sceneType::CREDITS);
     }
 
 WinLevel::~WinLevel() {}

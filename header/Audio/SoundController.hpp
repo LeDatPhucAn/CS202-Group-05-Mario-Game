@@ -48,10 +48,12 @@ private:
         {sceneType::GAME, {"level_1(3).mp3", true}},
         {sceneType::GAMEOVER, {"GameOver.mp3", true}},
         {sceneType::CHOOSE_LEVEL, {"ChooseLevel.mp3", true}},
-        {sceneType::STAR, {"star_man.mp3", false}}};
+        {sceneType::STAR, {"star_man.mp3", false}},
+        {sceneType::CREDITS, {"Credits.mp3", true}}};
 
     const unordered_map<sceneType, string> sceneSFXMap = {
-        {sceneType::PAUSE, "Pause.wav"}};
+        {sceneType::PAUSE, "Pause.wav"},
+        {sceneType::WIN_LEVEL, "level_clear.mp3"}};
     // same for marioVoice and sceneMusic
     unordered_set<playerStateType> loadedPlayerStates;
     unordered_set<blockStateType> loadedBlockStates;

@@ -57,7 +57,17 @@ void ContactListener::checkGrounded(b2Contact *contact, bool began)
 {
     b2Fixture *a = contact->GetFixtureA();
     b2Fixture *b = contact->GetFixtureB();
-
+    GameObject *objA = reinterpret_cast<GameObject *>(a->GetBody()->GetUserData().pointer);
+    GameObject *objB = reinterpret_cast<GameObject *>(b->GetBody()->GetUserData().pointer);
+    if (MatchPair<Block, MovingObject>(objA, objB))
+    {
+        Block *blockA = dynamic_cast<Block *>(objA);
+        Block *blockB = dynamic_cast<Block *>(objB);
+        if ((blockA && !blockA->isSolid) || (blockB && !blockB->isSolid))
+        {
+            return;
+        }
+    }
     // Check both fixtures for a BOTTOM sensor
     for (int i = 0; i < 2; i++)
     {

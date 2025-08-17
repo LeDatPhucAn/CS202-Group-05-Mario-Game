@@ -124,7 +124,8 @@ enum class sceneType
     GAMEOVER,
     CONTROLS,
     STAR,
-    WIN_LEVEL
+    WIN_LEVEL,
+    CREDITS
 };
 
 enum class Action
