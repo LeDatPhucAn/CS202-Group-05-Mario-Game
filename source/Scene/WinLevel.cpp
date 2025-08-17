@@ -5,7 +5,9 @@
 #include <raylib.h>
 
 WinLevel::WinLevel(SceneManager* manager)
-    : Scene(manager), anyKeyPressed(false) {}
+    : Scene(manager), anyKeyPressed(false) {
+        mapName = manager->curMap; 
+    }
 
 WinLevel::~WinLevel() {}
 
@@ -13,13 +15,13 @@ void WinLevel::updateScene() {
 
     if (!anyKeyPressed && GetKeyPressed()!=0) {
         anyKeyPressed = true;
-        if (manager->curMap == "Map1" || manager->curMap == "Map2") {
+        if (mapName == "Map1" || mapName == "Map2") {
             // Move to next level
             if (manager->curMap == "Map1") manager->curMap = "Map2";
             else if (manager->curMap == "Map2") manager->curMap = "Map3";
             manager->shouldReloadGame = true;
             manager->goBack();
-        } else if (manager->curMap == "Map3") {
+        } else if (mapName == "Map3") {
             manager->goBackOfBaseScene(); // This should go to main menu
         }
     }
@@ -33,13 +35,13 @@ void WinLevel::displayScene() {
     const char* subtitle = "";
     const char* prompt = "";
     static string titleStr = "";
-    
-    if (manager->curMap == "Map1" || manager->curMap == "Map2") {
-        titleStr = (manager->curMap == "Map1") ? "Level 1 Completed" : "Level 2 Completed";
+
+    if (mapName == "Map1" || mapName == "Map2") {
+        titleStr = (mapName == "Map1") ? "Level 1 Completed" : "Level 2 Completed";
         title = titleStr.c_str();
         subtitle = "You almost saved the princess, keep going";
         prompt = "Press any key to move to next level";
-    } else if (manager->curMap == "Map3") {
+    } else if (mapName == "Map3") {
         title = "Victory";
         subtitle = "You have saved the princess";
         prompt = "Press any key to back to the menu";
