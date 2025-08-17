@@ -305,7 +305,7 @@ void Player::createBody(b2World *world)
     b2FixtureDef legsFixture;
     legsFixture.shape = &legsShape;
     legsFixture.density = 1.0f;
-    legsFixture.friction = 0.1f; // May adjust if sliding on slopes
+    legsFixture.friction = 0.05f; // May adjust if sliding on slopes
     legsFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
     legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
     legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);

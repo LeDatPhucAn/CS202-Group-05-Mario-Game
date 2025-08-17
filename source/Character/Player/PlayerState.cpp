@@ -385,6 +385,7 @@ GrowState::GrowState(Player *_mario, int _delay)
     : PlayerState((int)playerStateType::GROW, _mario, _delay)
 {
     posBeforeY = mario->getPosition().y;
+    mario->turnInvincible();
 }
 
 void GrowState::handleInput()

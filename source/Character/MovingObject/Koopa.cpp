@@ -62,7 +62,6 @@ void Koopa::display()
     }
 }
 
-
 void Koopa::updateCollision(GameObject *other, int type)
 {
     Character::updateCollision(other, type);
@@ -91,7 +90,7 @@ void Koopa::updateCollision(GameObject *other, int type)
                 // First hit: loses wings and becomes a walking Koopa
                 SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
                 this->changeState(new MovingObjectWalkState(this));
-                GameInfo::getInstance()->addScore(50); 
+                GameInfo::getInstance()->addScore(50);
                 return;
             }
             // Second hit: becomes a shell
@@ -100,7 +99,7 @@ void Koopa::updateCollision(GameObject *other, int type)
                 SoundController::getInstance().playPlayerStateSFX(playerStateType::KICK_SHELL);
                 this->toNewBody();
                 this->changeState(new MovingObjectIdleState(this));
-                GameInfo::getInstance()->addScore(50); 
+                GameInfo::getInstance()->addScore(50);
                 return;
             }
             // Third hit: kills the shell if it's running
@@ -128,15 +127,15 @@ void Koopa::updateCollision(GameObject *other, int type)
     }
 
     Block *block = dynamic_cast<Block *>(other);
-    MovingObject* enemy = dynamic_cast<MovingObject *>(other);
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
     // If a running shell hits another enemy, the other enemy is defeated
     if (dynamic_cast<MovingObjectRunState *>(this->currentState) && enemy && !dynamic_cast<MovingObjectDeadState *>(enemy->currentState))
     {
-        if(dynamic_cast<Mushroom*>(enemy) || dynamic_cast<Star*> (enemy))
+        if (dynamic_cast<Mushroom *>(enemy) || dynamic_cast<Star *>(enemy))
             return; // Don't defeat mushrooms
         enemy->changeState(new MovingObjectDeadState(enemy));
     }
-    else if (block || enemy)
+    else if ((block && block->isSolid) || enemy)
     {
         // Standard wall collision logic
         if (type == LEFTSIDE)

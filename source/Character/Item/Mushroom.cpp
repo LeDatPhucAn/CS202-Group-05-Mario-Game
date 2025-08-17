@@ -16,7 +16,7 @@ void Mushroom::updateCollision(GameObject *other, int type)
     Character::updateCollision(other, type);
     Block *block = dynamic_cast<Block *>(other);
     MovingObject *enemy = dynamic_cast<MovingObject *>(other);
-    if (block || enemy)
+    if ((block && block->isSolid) || enemy)
     {
         if (type == LEFTSIDE)
         {

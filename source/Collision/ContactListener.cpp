@@ -115,6 +115,19 @@ void ContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold
 bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
 {
     // Implement your custom logic to determine if two objects should not collide
+    if (MatchPair<Block, MovingObject>(objA, objB))
+    {
+        Block *blockA = dynamic_cast<Block *>(objA);
+        Block *blockB = dynamic_cast<Block *>(objB);
+        if (blockA)
+        {
+            return !blockA->isSolid;
+        }
+        else if (blockB)
+        {
+            return !blockB->isSolid;
+        }
+    }
     if (MatchPair<Spiny, Lakitu>(objA, objB))
     {
         return true; // Prevent collision between Spiny and Lakitu/Spiny

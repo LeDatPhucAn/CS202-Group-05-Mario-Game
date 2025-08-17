@@ -171,5 +171,5 @@ void CoinBehavior::reactToCollision(GameObject *p, int type)
     GameInfo::getInstance()->addScore(100);
     GameInfo::getInstance()->addCoin();
     
-    SoundController::getInstance().playBlockStateSFX(blockStateType::SPAWNITEM);
+    SoundController::getInstance().playBlockStateSFX(blockStateType::GETCOIN);
 }

@@ -94,7 +94,7 @@ void BulletBill::updateCollision(GameObject *other, int type)
         }
         // BulletBill dies when hitting blocks
         Block *block = dynamic_cast<Block *>(other);
-        if (block && (type == LEFTSIDE || type == RIGHTSIDE))
+        if (block && block->isSolid && (type == LEFTSIDE || type == RIGHTSIDE))
         {
             this->changeState(new MovingObjectDeadState(this));
         }
