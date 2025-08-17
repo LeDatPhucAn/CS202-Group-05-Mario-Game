@@ -509,33 +509,5 @@ void PreGame::displayScene()
         }
     }
     
-    // Draw instructions
-    std::string instruction = "Use ARROW KEYS or WASD to navigate (UP/DOWN between rows, LEFT/RIGHT within rows)";
-    std::string instruction2 = "ENTER to select, ESC to go back";
-    std::string instruction3 = "Select mode & difficulty, then press PLAY to start!";
-    float instructionFontSize = 14.0f;
-    Vector2 instructionSize = MeasureTextEx(UI::font, instruction.c_str(), instructionFontSize, 1);
-    Vector2 instructionSize2 = MeasureTextEx(UI::font, instruction2.c_str(), instructionFontSize, 1);
-    Vector2 instructionSize3 = MeasureTextEx(UI::font, instruction3.c_str(), instructionFontSize, 1);
-    float instructionX = (UI::screenWidth - instructionSize.x) / 2.0f;
-    float instructionX2 = (UI::screenWidth - instructionSize2.x) / 2.0f;
-    float instructionX3 = (UI::screenWidth - instructionSize3.x) / 2.0f;
-    float instructionY = UI::screenHeight - 90;
-    float instructionY2 = UI::screenHeight - 70;
-    float instructionY3 = UI::screenHeight - 50;
-    
-    DrawTextEx(UI::font, instruction.c_str(),
-               {instructionX + 1, instructionY + 1}, instructionFontSize, 1, Color{0, 0, 0, 150});
-    DrawTextEx(UI::font, instruction.c_str(),
-               {instructionX, instructionY}, instructionFontSize, 1, Color{200, 200, 200, 255});
-               
-    DrawTextEx(UI::font, instruction2.c_str(),
-               {instructionX2 + 1, instructionY2 + 1}, instructionFontSize, 1, Color{0, 0, 0, 150});
-    DrawTextEx(UI::font, instruction2.c_str(),
-               {instructionX2, instructionY2}, instructionFontSize, 1, Color{200, 200, 200, 255});
-               
-    DrawTextEx(UI::font, instruction3.c_str(),
-               {instructionX3 + 1, instructionY3 + 1}, instructionFontSize, 1, Color{0, 0, 0, 150});
-    DrawTextEx(UI::font, instruction3.c_str(),
-               {instructionX3, instructionY3}, instructionFontSize, 1, Color{0, 255, 0, 255});
+
 }

@@ -6,7 +6,6 @@ class GameOver: public Scene {
     private:
         std::vector<TextBox *> buttons;
         int selectedButton = 0;
-        Texture2D gameOverPanel;
         Texture2D buttonTexture;
         Texture2D buttonHoverTexture;
 

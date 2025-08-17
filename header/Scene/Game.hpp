@@ -30,7 +30,7 @@ private:
     RenderTexture2D transitionTexture;
     bool isTransitioning = true;
     float transitionTimer = 0.0f;
-    float transitionDuration = 1.5f;
+    float transitionDuration = 1.0f;
     float circleRadius = 0.0f;
     Vector2 circleCenter;
     
@@ -61,6 +61,8 @@ public:
     void init();
     static void addGameObject(GameObject *gameObject);
     void restartGame();
+    // Hard restart used after GAMEOVER: fully reload blocks/map state for current map
+    void hardRestartGame();
     void removeGameObject();
     // update
     void updateScene();

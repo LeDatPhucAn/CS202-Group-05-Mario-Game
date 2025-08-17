@@ -11,13 +11,7 @@ static const float flashDuration = 0.6f;
 
 GameOver::GameOver(SceneManager *_manager) : Scene(_manager)
 {
-    // Load game over panel texture
-    gameOverPanel = LoadTexture("assets/Backgrounds/SettingsBoard.png");
 
-    if (gameOverPanel.id == 0)
-    {
-        TraceLog(LOG_WARNING, "Failed to load game over panel texture");
-    }
 
     // Load button textures
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
@@ -33,14 +27,22 @@ GameOver::GameOver(SceneManager *_manager) : Scene(_manager)
     }
 
     selectedButton = 0;
+    GameInfo::getInstance()->loadHighScoreFromFile();
+    GameInfo::getInstance()->updateHighScore();
     SoundController::getInstance().playSceneMusicFromStart(sceneType::GAMEOVER);
 }
 
 GameOver::~GameOver()
 {
-    if (gameOverPanel.id > 0)
+    if (buttonHoverTexture.id!=0)
     {
-        UnloadTexture(gameOverPanel);
+        UnloadTexture(buttonHoverTexture);
+        buttonHoverTexture.id = 0;
+    }
+    if (buttonTexture.id!=0)
+    {
+        UnloadTexture(buttonTexture);
+        buttonTexture.id = 0;
     }
 }
 
@@ -106,7 +108,7 @@ void GameOver::updateScene()
     float buttonWidth = 200;
     float buttonHeight = 50;
     float buttonX = panelX + (panelWidth - buttonWidth) / 2;
-    float startY = panelY + 200;
+    float startY = panelY + 400;
     float spacing = 70;
 
     for (int i = 0; i < 2; ++i)
@@ -141,15 +143,11 @@ void GameOver::updateScene()
                 manager->curMap="Map1";
                 manager->shouldReloadGame = true;
                 manager->goBack();
-                flashActive = true;
-                flashTimer = 0.0f;
                 return;
             case 1: // Back to Menu
                 GameInfo::getInstance()->reset();
                 SoundController::getInstance().playSceneMusicFromStart(sceneType::MENU);
                 manager->goBackOfBaseScene();
-                flashActive = true;
-                flashTimer = 0.0f;
                 return;
             }
         }
@@ -173,21 +171,6 @@ void GameOver::displayScene()
     float panelY = UI::screenHeight / 2 - panelHeight / 2;
     Rectangle panelRect = {panelX, panelY, panelWidth, panelHeight};
 
-    // Draw the game over panel
-    if (gameOverPanel.id > 0)
-    {
-        DrawTexturePro(gameOverPanel,
-                       {0, 0, (float)gameOverPanel.width, (float)gameOverPanel.height},
-                       panelRect,
-                       {0, 0}, 0.0f, WHITE);
-    }
-    else
-    {
-        // Fallback panel background
-        DrawRectangleRounded(panelRect, 0.1f, 10, Color{139, 69, 19, 220});
-        DrawRectangleRoundedLines(panelRect, 0.1f, 10, Color{101, 67, 33, 255});
-    }
-
     // Draw title
     float titleSpacing = 3.0f;
     float titleFontSize = 36.0f;
@@ -199,27 +182,30 @@ void GameOver::displayScene()
     DrawTextEx(UI::boldFont, titleText.c_str(),
                {titleX + 2, titleY + 2}, titleFontSize, titleSpacing, BLACK);
     DrawTextEx(UI::boldFont, titleText.c_str(),
-               {titleX, titleY}, titleFontSize, titleSpacing, RED);
+               {titleX, titleY}, titleFontSize, titleSpacing, WHITE);
 
-    // Draw final score and lives
+    // Draw final score and high score
     std::string scoreText = "Final Score: " + std::to_string(GameInfo::getInstance()->getScore());
-
     Vector2 scoreSize = MeasureTextEx(UI::font, scoreText.c_str(), 24, 2);
+    std::string highScoreText = "High Score: " + std::to_string(GameInfo::getInstance()->getHighScore());
+    Vector2 highScoreSize = MeasureTextEx(UI::font, highScoreText.c_str(), 24, 2);
 
     float scoreX = (UI::screenWidth - scoreSize.x) / 2.0f;
+    float highScoreX = (UI::screenWidth - highScoreSize.x) / 2.0f;  
     float statsY = panelY + 120;
 
     // Score text with shadow
-    DrawTextEx(UI::font, scoreText.c_str(),
-               {scoreX + 1, statsY + 1}, 24, 2, BLACK);
-    DrawTextEx(UI::font, scoreText.c_str(),
-               {scoreX, statsY}, 24, 2, WHITE);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX + 1, statsY + 1}, 24, 2, BLACK);
+    DrawTextEx(UI::font, scoreText.c_str(), {scoreX, statsY}, 24, 2, WHITE);
+
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX + 1, statsY + 30 + 1}, 24, 2, BLACK);
+    DrawTextEx(UI::font, highScoreText.c_str(), {highScoreX, statsY + 30}, 24, 2, WHITE);
 
     // Draw buttons
     float buttonWidth = 200;
     float buttonHeight = 50;
     float buttonX = panelX + (panelWidth - buttonWidth) / 2;
-    float startY = panelY + 200;
+    float startY = panelY + 400;
     float spacing = 70;
 
     for (int i = 0; i < 2; i++)
@@ -287,14 +273,4 @@ void GameOver::displayScene()
         }
     }
 
-    // Draw instructions
-    std::string instructions = "Use ARROW KEYS to navigate - ENTER to select - ESC for menu";
-    Vector2 instrSize = MeasureTextEx(UI::font, instructions.c_str(), 16, 2);
-    float instrX = (UI::screenWidth - instrSize.x) / 2;
-    float instrY = panelY + panelHeight + 20;
-
-    DrawTextEx(UI::font, instructions.c_str(),
-               {instrX + 1, instrY + 1}, 16, 2, BLACK);
-    DrawTextEx(UI::font, instructions.c_str(),
-               {instrX, instrY}, 16, 2, WHITE);
 }

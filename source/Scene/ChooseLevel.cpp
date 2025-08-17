@@ -340,13 +340,4 @@ void ChooseLevel::drawUI()
                    {infoPanel.x + 10, infoPanel.y + 45}, 18, 2, GREEN);
     }
 
-    // Draw instructions at bottom (screen coordinates)
-    Vector2 instrSize = MeasureTextEx(UI::font, instructionText.c_str(), 16, 2);
-    float instrX = (UI::screenWidth - instrSize.x) / 2;
-    float instrY = UI::screenHeight - 30;
-
-    DrawTextEx(UI::font, instructionText.c_str(),
-               {instrX + 1, instrY + 1}, 16, 2, BLACK);
-    DrawTextEx(UI::font, instructionText.c_str(),
-               {instrX, instrY}, 16, 2, WHITE);
 }

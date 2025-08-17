@@ -393,14 +393,4 @@ void Settings::displayScene()
             break;
         }
     }
-
-    // Draw instructions
-    std::string instructions = "Use ARROW KEYS to navigate and adjust settings\nENTER to select - ESC to go back";
-    float instrX = UI::screenWidth - 550;
-    float instrY = UI::screenHeight - 150;
-
-    DrawTextEx(UI::font, instructions.c_str(),
-               {instrX + 1, instrY + 1}, 20, 2, DARKGRAY);
-    DrawTextEx(UI::font, instructions.c_str(),
-               {instrX, instrY}, 20, 2, WHITE);
 }
