@@ -12,7 +12,6 @@ static const float flashDuration = 0.6f;
 GameOver::GameOver(SceneManager *_manager) : Scene(_manager)
 {
 
-
     // Load button textures
     backgroundTexture = LoadTexture("assets/Backgrounds/GameOverBackground.png");
     buttonTexture = LoadTexture("assets/Backgrounds/Buttons/MenuButton.png");
@@ -39,12 +38,12 @@ GameOver::GameOver(SceneManager *_manager) : Scene(_manager)
 
 GameOver::~GameOver()
 {
-    if (buttonHoverTexture.id!=0)
+    if (buttonHoverTexture.id != 0)
     {
         UnloadTexture(buttonHoverTexture);
         buttonHoverTexture.id = 0;
     }
-    if (buttonTexture.id!=0)
+    if (buttonTexture.id != 0)
     {
         UnloadTexture(buttonTexture);
         buttonTexture.id = 0;
@@ -89,7 +88,7 @@ void GameOver::updateScene()
             GameInfo::getInstance()->reset();
             SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
             manager->goBack();
-            manager->curMap="Map1";
+            manager->curMap = "Map1";
             return;
         case 1: // Back to Menu
             GameInfo::getInstance()->reset();
@@ -151,7 +150,7 @@ void GameOver::updateScene()
             case 0: // Play Again
                 GameInfo::getInstance()->reset();
                 SoundController::getInstance().playSceneMusicFromStart(sceneType::GAME);
-                manager->curMap="Map1";
+                manager->curMap = "Map1";
                 manager->shouldReloadGame = true;
                 manager->goBack();
                 return;
@@ -166,7 +165,7 @@ void GameOver::updateScene()
 }
 
 void GameOver::displayScene()
-{   
+{
 
     // Load background textures
     if (backgroundTexture.id > 0)
@@ -229,14 +228,17 @@ void GameOver::displayScene()
     float blockHeight = blockBottom - blockTop;
     // Determine max width among title, score, high score, and button area
     float maxWidth = titleSize.x;
-    if (scoreSize.x > maxWidth) maxWidth = scoreSize.x;
-    if (highScoreSize.x > maxWidth) maxWidth = highScoreSize.x;
-    if (buttonWidth > maxWidth) maxWidth = buttonWidth;
+    if (scoreSize.x > maxWidth)
+        maxWidth = scoreSize.x;
+    if (highScoreSize.x > maxWidth)
+        maxWidth = highScoreSize.x;
+    if (buttonWidth > maxWidth)
+        maxWidth = buttonWidth;
     float blockWidth = maxWidth + padX * 2.0f;
 
     // Draw translucent backdrop (black with alpha)
-    DrawRectangleRounded({blockLeft, blockTop, blockWidth, blockHeight}, 0.08f, 6, Color{0,0,0,120});
-    DrawRectangleRoundedLines({blockLeft, blockTop, blockWidth, blockHeight}, 0.08f, 6, Color{255,255,255,40});
+    DrawRectangleRounded({blockLeft, blockTop, blockWidth, blockHeight}, 0.08f, 6, Color{0, 0, 0, 120});
+    DrawRectangleRoundedLines({blockLeft, blockTop, blockWidth, blockHeight}, 0.08f, 6, Color{255, 255, 255, 40});
 
     // Title with shadow
     DrawTextEx(UI::boldFont, titleText.c_str(), {titleX + 2, titleY + 2}, titleFontSize, titleSpacing, BLACK);

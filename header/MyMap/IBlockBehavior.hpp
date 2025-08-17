@@ -42,6 +42,7 @@ public:
     void onDraw(float dt) override;
 
 private:
+    bool isBreaking = false;
 };
 
 class QuestionBehavior : public IBlockBehavior

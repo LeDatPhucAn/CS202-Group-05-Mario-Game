@@ -4,6 +4,9 @@
 #include "BlockState.hpp"
 #include "IBlockBehavior.hpp"
 #include <string>
+#include "MovingObject.hpp"
+#include "Mushroom.hpp"
+#include "Star.hpp"
 using namespace std;
 
 Block::Block(int _gid, Vector2 _pos, Vector2 _size,
@@ -100,13 +103,17 @@ void Block::display()
 
 void Block::updateCollision(GameObject *other, int type)
 {
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
+    if (enemy && !dynamic_cast<Mushroom *>(enemy) && !dynamic_cast<Star *>(enemy))
+        behavior->reactToCollision(enemy, type);
+
     Player *player = dynamic_cast<Player *>(other);
     if (!player)
         return;
 
-//    cout << "Block hit by Player!" << endl;
+    //    cout << "Block hit by Player!" << endl;
     behavior->reactToCollision(player, type);
-    if(CoinBehavior* tmp = dynamic_cast<CoinBehavior*>(behavior.get()))
+    if (CoinBehavior *tmp = dynamic_cast<CoinBehavior *>(behavior.get()))
         cout << "Coin Block hit by Player!" << endl;
 
     if (isUsed)
@@ -149,27 +156,27 @@ void Block::createBody(b2World *world)
     fixtureDef.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
     b2Fixture *fixtureMain = body->CreateFixture(&fixtureDef);
 
-        // 1. Top sensor
-        b2PolygonShape topSensorShape;
-        topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
+    // 1. Top sensor
+    b2PolygonShape topSensorShape;
+    topSensorShape.SetAsBox(halfWidth * 0.9f, 2.0f / PPM, b2Vec2(0, -halfHeight + 2 / PPM), 0);
 
-        b2FixtureDef topFixture;
-        topFixture.shape = &topSensorShape;
-        topFixture.isSensor = true;
-        topFixture.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
-        topFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
-        topFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
-        body->CreateFixture(&topFixture);
+    b2FixtureDef topFixture;
+    topFixture.shape = &topSensorShape;
+    topFixture.isSensor = true;
+    topFixture.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
+    topFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
+    topFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+    body->CreateFixture(&topFixture);
 
-        // 2. Bottom sensor
-        b2PolygonShape bottomSensorShape;
-        bottomSensorShape.SetAsBox(halfWidth * 0.825f, 2.0f / PPM, b2Vec2(0, halfHeight / 2), 0);
+    // 2. Bottom sensor
+    b2PolygonShape bottomSensorShape;
+    bottomSensorShape.SetAsBox(halfWidth * 0.825f, 2.0f / PPM, b2Vec2(0, halfHeight / 2), 0);
 
-        b2FixtureDef bottomFixture;
-        bottomFixture.shape = &bottomSensorShape;
-        bottomFixture.isSensor = true;
-        bottomFixture.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
-        bottomFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
-        bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
-        body->CreateFixture(&bottomFixture);
+    b2FixtureDef bottomFixture;
+    bottomFixture.shape = &bottomSensorShape;
+    bottomFixture.isSensor = true;
+    bottomFixture.filter.categoryBits = CATEGORY_SOLID;                                  // Solid block
+    bottomFixture.filter.maskBits = CATEGORY_CHARACTER_MAIN | CATEGORY_CHARACTER_SENSOR; // Detect the character's main body and sensors
+    bottomFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    body->CreateFixture(&bottomFixture);
 }

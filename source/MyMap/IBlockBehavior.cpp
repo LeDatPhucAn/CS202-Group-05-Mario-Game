@@ -107,6 +107,11 @@ void IBlockBehavior::throwMushroom(int direction)
 // type của Player đối với Block, Type = Bottom là MArio nhảy lên đụng block
 void QuestionBehavior::reactToCollision(GameObject *p, int type)
 {
+    MovingObject *enemy = dynamic_cast<MovingObject *>(p);
+    if (enemy && block->isJumping)
+    {
+        enemy->changeState(new MovingObjectDeadState(enemy));
+    }
     Player *mario = dynamic_cast<Player *>(p);
     if (!mario)
         return;
@@ -126,6 +131,12 @@ void QuestionBehavior::updateFrame(float dt)
 
 void BrickBehavior::reactToCollision(GameObject *p, int type)
 {
+    MovingObject *enemy = dynamic_cast<MovingObject *>(p);
+    if (enemy && this->block->isJumping)
+    {
+        enemy->changeState(new MovingObjectDeadState(enemy));
+    }
+
     // chỉ phản ứng khi va chạm với Player từ dưới lên
     Player *mario = dynamic_cast<Player *>(p);
     if (!mario)
@@ -170,6 +181,6 @@ void CoinBehavior::reactToCollision(GameObject *p, int type)
     this->block->needDeletion = true;
     GameInfo::getInstance()->addScore(100);
     GameInfo::getInstance()->addCoin();
-    
+
     SoundController::getInstance().playBlockStateSFX(blockStateType::GETCOIN);
 }
