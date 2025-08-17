@@ -40,6 +40,11 @@ public:
                     tmp->setPosition(pos);
                     game->addGameObject(tmp);
                 }
+                if (typeName == "FlyingKoopa"){
+                    Koopa* tmp = new Koopa(true);
+                    tmp->setPosition(pos);
+                    game->addGameObject(tmp);
+                }
                 if(typeName == "PiranhaPlant") {
                     PiranhaPlant* tmp = new PiranhaPlant();
                     tmp->setPosition(pos);

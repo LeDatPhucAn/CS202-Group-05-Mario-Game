@@ -11,4 +11,13 @@ public:
 private:
     bool anyKeyPressed;
     string mapName;
+
+    // GIF animation members
+    Image gifImage;
+    Texture2D gifTexture;
+    int frameCount;
+    int currentFrame;
+    float frameTime;
+    float frameDuration;
+    bool gifLoaded;
 };

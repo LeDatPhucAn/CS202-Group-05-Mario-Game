@@ -267,9 +267,9 @@ void Pause::displayScene()
 
         // Text with shadow
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX + 1, textY + 1}, 22, buttonTextSpacing, WHITE);
+                   {textX + 1, textY + 1}, 22, buttonTextSpacing, BLACK);
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX, textY}, 22, buttonTextSpacing, BLACK);
+                   {textX, textY}, 22, buttonTextSpacing, WHITE);
 
         // Flash effect for selected button
         if (flashActive && i == selectedButton)

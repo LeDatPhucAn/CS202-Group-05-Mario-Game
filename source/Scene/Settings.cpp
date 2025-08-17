@@ -53,10 +53,6 @@ Settings::~Settings()
 void Settings::updateScene()
 {
 
-    // Update switch animation continuously
-    float targetPos = fullscreen ? 1.0f : 0.0f;
-    float animSpeed = 8.0f;
-    switchAnimation += (targetPos - switchAnimation) * animSpeed * GetFrameTime();
 
     // Initialize buttons once
     if (!buttonsInitialized)
@@ -64,7 +60,6 @@ void Settings::updateScene()
         std::vector<std::string> buttonTexts = {
             "MUSIC",
             "SFX",
-            "FULLSCREEN",
             "BACK"};
 
         for (int i = 0; i < buttonTexts.size(); i++)
@@ -78,59 +73,35 @@ void Settings::updateScene()
     // Navigation
     if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
     {
-        selectedButton = (selectedButton - 1 + 4) % 4;
+    selectedButton = (selectedButton - 1 + 3) % 3;
     }
     if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
     {
-        selectedButton = (selectedButton + 1) % 4;
+    selectedButton = (selectedButton + 1) % 3;
     }
 
     // Adjust settings with left/right arrows
     if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A))
     {
-        switch (selectedButton)
-        {
-        case 0:
+        if (selectedButton == 0)
             musicVolume = fmaxf(0.0f, musicVolume - 0.1f);
-            break;
-        case 1:
+        else if (selectedButton == 1)
             sfxVolume = fmaxf(0.0f, sfxVolume - 0.1f);
-            break;
-        case 2:
-        {
-            fullscreen = false;
-            break;
-        }
-        }
     }
 
     if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D))
     {
-        switch (selectedButton)
-        {
-        case 0:
+        if (selectedButton == 0)
             musicVolume = fminf(1.0f, musicVolume + 0.1f);
-            break;
-        case 1:
+        else if (selectedButton == 1)
             sfxVolume = fminf(1.0f, sfxVolume + 0.1f);
-            break;
-        case 2:
-        {
-            fullscreen = true;
-            break;
-        }
-        }
     }
 
     // Activate button
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
     {
-        if (selectedButton == 2)
+        if (selectedButton == 2) // Back
         {
-            fullscreen = !fullscreen;
-        }
-        else if (selectedButton == 3)
-        { // Back to menu
             manager->goBack();
             return;
         }
@@ -145,10 +116,10 @@ void Settings::updateScene()
     float buttonWidth = 400;
     float buttonHeight = 80;
     float buttonX = boardX + (boardWidth - buttonWidth) / 2; // Center buttons in board
-    float startY = boardY + 100;                             // Start buttons below board title area
-    float spacing = 90;
+    float startY = boardY + 150;                             // Start buttons below board title area
+    float spacing = 120;
 
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         Rectangle btnRect = {
             (float)buttonX,
@@ -164,7 +135,7 @@ void Settings::updateScene()
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        if (selectedButton == 0 || selectedButton == 1)
+    if (selectedButton == 0 || selectedButton == 1)
         {
             // Match the slider position from displayScene()
             Rectangle buttonRect = {buttonX, startY + selectedButton * spacing, buttonWidth, buttonHeight};
@@ -188,24 +159,8 @@ void Settings::updateScene()
                 }
             }
         }
-        // Handle fullscreen toggle
-        else if (selectedButton == 2)
-        {
-            Rectangle btnRect = {
-                (float)buttonX,
-                (float)(startY + selectedButton * spacing),
-                (float)buttonWidth,
-                (float)buttonHeight};
-            if (CheckCollisionPointRec(mousePos, btnRect))
-            {
-                fullscreen = !fullscreen;
-                float targetPos = fullscreen ? 1.0f : 0.0f;
-                float animSpeed = 8.0f;
-                switchAnimation += (targetPos - switchAnimation) * animSpeed * GetFrameTime();
-            }
-        }
-        // Handle back to menu
-        else if (selectedButton == 3)
+    // Handle back to menu
+    else if (selectedButton == 2)
         {
             Rectangle btnRect = {
                 (float)buttonX,
@@ -232,7 +187,6 @@ void Settings::displayScene()
     std::vector<std::string> buttonTexts = {
         "MUSIC",
         "SFX",
-        "FULLSCREEN",
         "BACK"};
 
     // Draw background
@@ -275,10 +229,10 @@ void Settings::displayScene()
     float buttonWidth = 400;
     float buttonHeight = 80;
     float buttonX = boardX + (boardWidth - buttonWidth) / 2; // Center buttons in board
-    float startY = boardY + 100;                             // Start buttons below board title area
-    float spacing = 90;
+    float startY = boardY + 150;                             // Start buttons below board title area
+    float spacing = 120;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
         Rectangle buttonRect = {buttonX, startY + i * spacing, buttonWidth, buttonHeight};
 
@@ -296,7 +250,7 @@ void Settings::displayScene()
         float textY = buttonRect.y + (buttonRect.height - 24) / 2;
 
         // Special handling for "BACK TO MENU" button - center it and add outline
-        if (i == 3)
+    if (i == 2)
         {
 
             // Center the text for back to menu button
@@ -364,31 +318,7 @@ void Settings::displayScene()
                        {percentX, sliderY - 5}, 20, 2, Color{139, 69, 19, 255});
             break;
         }
-        case 2: // Fullscreen toggle
-        {
-            float valueX = buttonRect.x + buttonRect.width - 150;          // Moved left to accommodate larger size
-            Rectangle switchBg = {valueX, textY + 4, 80, 24};              // Increased from 50x16 to 80x24
-            Color bgColor = fullscreen ? ORANGE : Color{101, 67, 33, 255}; // Dark brown
-            DrawRectangleRounded(switchBg, 0.5f, 10, bgColor);
-
-            // Switch border (when selected)
-            if (i == selectedButton)
-            {
-                DrawRectangleRoundedLines(switchBg, 0.5f, 10, WHITE);
-            }
-
-            // Animated switch handle
-            float animatedX = valueX + 4 + (48.0f * switchAnimation);
-            Rectangle handle = {animatedX, textY + 8, 16, 16};
-            DrawRectangleRounded(handle, 0.5f, 10, WHITE);
-
-            // Switch label
-            std::string valueText = fullscreen ? "ON" : "OFF";
-            DrawTextEx(UI::font, valueText.c_str(),
-                       {valueX + 90, textY + 5}, 20, 2, Color{139, 69, 19, 255});
-            break;
-        }
-        case 3:
+    case 2:
             // No additional elements for back to menu
             break;
         }

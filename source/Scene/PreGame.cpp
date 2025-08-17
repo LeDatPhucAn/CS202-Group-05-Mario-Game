@@ -363,7 +363,7 @@ void PreGame::updateScene()
 }
 
 void PreGame::displayScene()
-{
+{   
     // Draw background
     if (backgroundTexture.id > 0)
     {
@@ -375,6 +375,7 @@ void PreGame::displayScene()
     {
         DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{30, 30, 60, 255});
     }
+    DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 50});
     
     // Draw title text
     std::string titleText = "SELECT GAME MODE & DIFFICULTY";
