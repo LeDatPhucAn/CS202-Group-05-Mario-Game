@@ -191,8 +191,8 @@ void Menu::updateScene()
     Vector2 mousePos = GetMousePosition();
     int buttonWidth = 250;
     int buttonHeight = 60;
-    int buttonX = UI::screenWidth / 2 - buttonWidth / 2;
-    int startY = UI::screenHeight / 2 - 100;
+    int buttonX = 100;
+    int startY = UI::screenHeight / 2 - 50;
     int spacing = 80;
 
     for (int i = 0; i < 5; ++i)
@@ -288,6 +288,23 @@ void Menu::displayScene()
         ClearBackground(BLACK);
     }
 
+    // No left margin - stick to left side
+    float leftMargin = 0.0f;
+    
+    // Calculate content area dimensions for background
+    float titleY = 80;
+    float buttonsStartY = UI::screenHeight / 2 - 50;
+    float buttonsEndY = buttonsStartY + (4 * 80) + 60; // 5 buttons with 80px spacing + button height
+    
+    float bgPadding = 20;
+    float bgX = 0;
+    float bgY = 0;
+    float bgWidth = 450; 
+    float bgHeight = UI::screenHeight;
+    
+    // Draw semi-transparent background only around content
+    DrawRectangle((int)bgX, (int)bgY, (int)bgWidth, (int)bgHeight, Color{255, 255, 255, 120});
+
     if (titleTexture.id > 0)
     {
         // Scale so it never exceeds 30% of screen width
@@ -295,8 +312,8 @@ void Menu::displayScene()
         float scale = maxW / titleTexture.width;
         float drawW = titleTexture.width * scale;
         float drawH = titleTexture.height * scale;
-        // apply your bounce offset to Y
-        float drawX = (UI::screenWidth - drawW) / 2.0f;
+        // apply your bounce offset to Y - left aligned
+        float drawX = 20;
         float drawY = 80 + sinf(titleBounce) * 10.0f;
         DrawTexturePro(
             titleTexture,
@@ -309,7 +326,7 @@ void Menu::displayScene()
         // fallback to original text‐drawing code
         float titleSpacing = 12.0f;
         float titleFontSize = 72.0f;
-        float titleX = (UI::screenWidth - 750) / 2.0f;
+        float titleX = 30;
         float titleY = 60 + sinf(titleBounce) * 10.0f;
 
         // Draw title with outline effect
@@ -322,21 +339,27 @@ void Menu::displayScene()
     float subtitleSpacing = 3.0f;
     float subtitleFontSize = 24.0f;
 
-    float subtitleX = (UI::screenWidth) / 2.0f;
-    float subtitleY = 265 + sinf(titleBounce) * 10.0f;
+    float subtitleX = 200;
+    float subtitleY = 270 + sinf(titleBounce) * 10.0f;
 
     // Draw title with outline effect
     // Draw subtitle with shadow
     DrawTextEx(UI::boldFont, subtitleText.c_str(),
-               {subtitleX + 1, subtitleY + 1}, subtitleFontSize, subtitleSpacing, ORANGE);
+               {subtitleX + 1, subtitleY + 1}, subtitleFontSize, subtitleSpacing, BLACK);
     DrawTextEx(UI::boldFont, subtitleText.c_str(),
-               {subtitleX, subtitleY}, subtitleFontSize, subtitleSpacing, RED);
+               {subtitleX + 1, subtitleY + 2}, subtitleFontSize, subtitleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, subtitleText.c_str(),
+               {subtitleX + 2, subtitleY + 1}, subtitleFontSize, subtitleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, subtitleText.c_str(),
+               {subtitleX + 2, subtitleY + 2}, subtitleFontSize, subtitleSpacing, BLACK);
+    DrawTextEx(UI::boldFont, subtitleText.c_str(),
+               {subtitleX, subtitleY}, subtitleFontSize, subtitleSpacing, ORANGE);
 
     // Position and draw custom textured buttons
     float buttonWidth = 250;
     float buttonHeight = 60;
-    float buttonX = UI::screenWidth / 2 - buttonWidth / 2;
-    float startY = UI::screenHeight / 2 - 100;
+    float buttonX = 100;
+    float startY = UI::screenHeight / 2 - 50;
     float spacing = 80;
 
     for (int i = 0; i < 5; i++)
@@ -369,9 +392,15 @@ void Menu::displayScene()
 
         // Text with shadow for better visibility
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX + 1, textY + 1}, 24, buttonTextSpacing, WHITE);
+                   {textX + 1, textY + 1}, 24, buttonTextSpacing, BLACK);
         DrawTextEx(UI::font, buttonTexts[i].c_str(),
-                   {textX, textY}, 24, buttonTextSpacing, BLACK);
+                   {textX + 1, textY + 2}, 24, buttonTextSpacing, BLACK);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(),
+                   {textX + 2, textY + 1}, 24, buttonTextSpacing, BLACK);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(),
+                   {textX + 2, textY + 2}, 24, buttonTextSpacing, BLACK);
+        DrawTextEx(UI::font, buttonTexts[i].c_str(),
+                   {textX, textY}, 24, buttonTextSpacing, WHITE);
 
         // Flash effect
         if (flashActive && i == selectedButton)

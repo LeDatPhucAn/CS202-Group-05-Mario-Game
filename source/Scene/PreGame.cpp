@@ -9,7 +9,7 @@ static float logoBounce = 0.0f;
 PreGame::PreGame(SceneManager* _manager) : Scene(_manager)
 {
     // Load textures
-    backgroundTexture = LoadTexture("assets/Backgrounds/MenuBackground.png");
+    backgroundTexture = LoadTexture("assets/Backgrounds/PregameBackground.png");
     marioTexture = LoadTexture("assets/Backgrounds/Mario.png");
     luigiTexture = LoadTexture("assets/Backgrounds/Luigi.png");
     dualTexture = LoadTexture("assets/Backgrounds/Dual.png");
@@ -363,7 +363,7 @@ void PreGame::updateScene()
 }
 
 void PreGame::displayScene()
-{
+{   
     // Draw background
     if (backgroundTexture.id > 0)
     {
@@ -375,6 +375,7 @@ void PreGame::displayScene()
     {
         DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{30, 30, 60, 255});
     }
+    DrawRectangle(0, 0, UI::screenWidth, UI::screenHeight, Color{0, 0, 0, 50});
     
     // Draw title text
     std::string titleText = "SELECT GAME MODE & DIFFICULTY";

@@ -29,11 +29,11 @@
             }
         },
         "Map3.json": {
-            "scale": 1.5,
+            "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3086.6666666666665,
-                "y": 135.99999999999997
+                "x": 1684.75,
+                "y": 274.25
             }
         },
         "collided_animation.json": {
@@ -116,7 +116,8 @@
         "new_intro_mushroom.json",
         "pipes.json",
         "new_intro_largebush.json",
-        "new_intro_smallbush.json"
+        "new_intro_smallbush.json",
+        "muilti_tileset.json"
     ],
     "project": "Map.tiled-project",
     "property.type": "bool",
@@ -127,12 +128,12 @@
         "collided_animation.json",
         "new_items_powerups.json",
         "Enemies2D.json",
+        "muilti_tileset.json",
         "new_intro_smallbush.json",
         "new_intro_largebush.json",
         "pipes.json",
         "new_intro_mushroom.json",
-        "Map3.json",
-        "ground_tileset.json"
+        "Map3.json"
     ],
     "resizeMap.removeObjects": true,
     "tileset.lastUsedFormat": "json",

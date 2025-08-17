@@ -278,9 +278,9 @@ void Controls::displayScene()
     float subtitleY = boardY + 70;
     
     DrawTextEx(UI::font, subtitleText.c_str(),
-               {subtitleX + 1, subtitleY + 1}, subtitleFontSize, 2, DARKGRAY);
+               {subtitleX + 1, subtitleY + 1}, subtitleFontSize, 2, BLACK);
     DrawTextEx(UI::font, subtitleText.c_str(),
-               {subtitleX, subtitleY}, subtitleFontSize, 2, LIGHTGRAY);
+               {subtitleX, subtitleY}, subtitleFontSize, 2, WHITE);
     
     // Draw key bindings table
     drawKeyBindingTable();
@@ -352,19 +352,35 @@ void Controls::drawKeyBindingTable()
     float boardX = UI::screenWidth / 2 - boardWidth / 2;
     float boardY = UI::screenHeight / 2 - 325;
     
-    float tableStartY = boardY + 120;
+    float tableStartY = boardY + 150;
     float rowHeight = 60;
     float col1X = boardX + 50;   // Action
     float col2X = boardX + 250;  // Mario Key
     float col3X = boardX + 500;  // Luigi Key
     
     // Draw table headers
-    DrawTextEx(UI::boldFont, "ACTION", {col1X, tableStartY}, 22, 2, YELLOW);
-    DrawTextEx(UI::boldFont, "MARIO", {col2X + 60, tableStartY}, 22, 2, Color{255, 100, 100, 255});
-    DrawTextEx(UI::boldFont, "LUIGI", {col3X + 60, tableStartY}, 22, 2, Color{100, 255, 100, 255});
     
+    DrawTextEx(UI::boldFont, "ACTION", {col1X + 11, tableStartY + 1}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "ACTION", {col1X + 12, tableStartY + 1}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "ACTION", {col1X + 11, tableStartY + 2}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "ACTION", {col1X + 12, tableStartY + 2}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "ACTION", {col1X + 10, tableStartY}, 22, 2, YELLOW);
+
+
+    DrawTextEx(UI::boldFont, "MARIO", {col2X + 61, tableStartY + 1}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "MARIO", {col2X + 62, tableStartY + 1}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "MARIO", {col2X + 61, tableStartY + 2}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "MARIO", {col2X + 62, tableStartY + 2}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "MARIO", {col2X + 60, tableStartY}, 22, 2, Color{255, 100, 100, 255});
+
+    DrawTextEx(UI::boldFont, "LUIGI", {col3X + 61, tableStartY + 1}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "LUIGI", {col3X + 62, tableStartY + 1}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "LUIGI", {col3X + 61, tableStartY + 2}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "LUIGI", {col3X + 62, tableStartY + 2}, 22, 2, BLACK);
+    DrawTextEx(UI::boldFont, "LUIGI", {col3X + 60, tableStartY}, 22, 2, Color{100, 255, 100, 255});
+
     // Draw separator line
-    DrawLineEx({boardX + 20, tableStartY + 30}, {boardX + boardWidth - 20, tableStartY + 30}, 3, YELLOW);
+    DrawLineEx({boardX + 40, tableStartY + 30}, {boardX + boardWidth - 40, tableStartY + 30}, 3, YELLOW);
     
     // Draw key bindings
     for (int i = 0; i < actionList.size(); i++)
@@ -385,7 +401,7 @@ void Controls::drawKeyBindingTable()
         }
         
         // Draw action name
-        DrawTextEx(UI::font, actionList[i].second.c_str(), {col1X, rowY + 10}, 18, 1, BLACK);
+        DrawTextEx(UI::font, actionList[i].second.c_str(), {col1X + 10, rowY + 10}, 18, 1, BLACK);
 
         // Draw Mario key
         int marioKeyCode = getCurrentKeyForAction(actionList[i].first, 0);

@@ -14,8 +14,7 @@ private:
     // Settings values
     float musicVolume = 0.5f;
     float sfxVolume = 0.5f;
-    float switchAnimation = 0.0f;
-    bool fullscreen = false;
+    // Removed fullscreen toggle
     
 public:
     Settings(SceneManager* _manager);
