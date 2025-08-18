@@ -1,0 +1,27 @@
+@startuml Audio
+class SFXGroup<EnumType> {
+    - stateSFX: unordered_map<EnumType, Sound>
+    - path: string
+    - volume: float
+    
+    + loadSingle(type: EnumType, filename: string): void
+    + load(sfxFileMap: unordered_map<EnumType, string>): void
+    + play(type: EnumType, minPitch: float, maxPitch: float): void
+    + clear(): void
+}
+
+struct MusicData {
+    + track: Music
+    + loop: bool
+    + elapsed: float
+    + paused: bool
+}
+
+class MusicGroup<EnumType> {
+    - volume: float
+	- bgmTracks: unordered_map<EnumType, MusicData>
+	
+}
+
+MusicData --* MusicGroup
+@enduml
