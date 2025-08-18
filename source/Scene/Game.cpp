@@ -507,7 +507,8 @@ void Game::updateMyCamera() {
     float followPoint = cam.target.x + 0.5f * UI::screenWidth;
 
     float delta = (float)behindPlayer->getPosition().x - prePosX; 
-    if (behindPlayer && GetWorldToScreen2D(behindPlayer->getPosition(), cam).x > 0.5 * UI::screenWidth ) 
+    float percent = (behindPlayer == aheadPlayer) ? 0.5f : 0.2f;
+    if (behindPlayer && GetWorldToScreen2D(behindPlayer->getPosition(), cam).x > percent * UI::screenWidth ) 
         cam.target.x += (delta > 0.5) ? delta : 0, 
         prePosXcam += (delta > 0.5) ? delta : 0; 
     prePosX = behindPlayer->getPosition().x;

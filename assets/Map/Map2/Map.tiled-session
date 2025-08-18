@@ -15,9 +15,6 @@
             "scaleInDock": 1,
             "scaleInEditor": 2
         },
-        "D:/Tuan/Project/Super Mario Game/assets/Map/Map3/pipes.json": {
-            "scaleInDock": 1
-        },
         "Enemies2D.json": {
             "scaleInDock": 1,
             "scaleInEditor": 3
@@ -34,7 +31,7 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 3130,
+                "x": 477.3333333333333,
                 "y": 129.33333333333331
             }
         },
