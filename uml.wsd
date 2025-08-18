@@ -20,8 +20,26 @@ struct MusicData {
 class MusicGroup<EnumType> {
     - volume: float
 	- bgmTracks: unordered_map<EnumType, MusicData>
-	
+	- path: string
+	- currentlyPlaying: optional<EnumType>
+	- previousMusic: optional<EnumType>
+
+	+ loadSingle(type: EnumType, filename: string, loop: bool): void
+	+ load(musicFileMap: unordered_map<EnumType, pair<string, bool>>): void
+	+ playFromStart(type: EnumType): void
+	+ play(type: EnumType): void
+	+ playTemporary(type: EnumType): void
+	+ stop(): void
+	+ pause(): void
+	+ pauseTrack(type: EnumType): void
+	+ resume(): void
+	+ resumeTrack(type: EnumType): void
+	+ update(): void
+	+ clear(): void
+	+ setVolume(newVolume: float): void
 }
 
 MusicData --* MusicGroup
+
+
 @enduml
