@@ -23,9 +23,15 @@ class MusicGroup<EnumType> {
 	- path: string
 	- currentlyPlaying: optional<EnumType>
 	- previousMusic: optional<EnumType>
-
+	__
+	+ update(): void
+	+ clear(): void
+	+ setVolume(newVolume: float): void
+	.. Music load ..
 	+ loadSingle(type: EnumType, filename: string, loop: bool): void
 	+ load(musicFileMap: unordered_map<EnumType, pair<string, bool>>): void
+
+	.. Audio manipulation ..
 	+ playFromStart(type: EnumType): void
 	+ play(type: EnumType): void
 	+ playTemporary(type: EnumType): void
@@ -34,12 +40,60 @@ class MusicGroup<EnumType> {
 	+ pauseTrack(type: EnumType): void
 	+ resume(): void
 	+ resumeTrack(type: EnumType): void
-	+ update(): void
-	+ clear(): void
-	+ setVolume(newVolume: float): void
 }
 
 MusicData --* MusicGroup
 
+class SoundController {
+	- generalPath: string
 
+	.. Audio objects ..
+	- playerStateSFX: SFXGroup<playerStateType>
+	- blockStateSFX: SFXGroup<blockStateType>
+	- marioVoiceSFX: SFXGroup<marioVoice>
+	- sceneSFX: SFXGroup<sceneType>
+	- sceneMusic: MusicGroup<sceneType>
+
+	.. Audio paths ..
+	- playerStatePaths: unordered_map<playerStateType, string>
+	- blockStatePaths: unordered_map<blockStateType, string>
+	- marioVoiceMap: unordered_map<marioVoice, string>
+	- sceneMusicMap: unordered_map<sceneType, pair<string, bool>>
+	- sceneSFXMap: unordered_map<sceneType, string>
+
+	.. Loaded audios ..
+	- loadedPlayerStates: unordered_set<playerStateType>
+	- loadedBlockStates: unordered_set<blockStateType>
+	- loadedPlayerVoices: unordered_set<marioVoice>
+	- loadedSceneSFX: unordered_set<sceneType>
+	- loadedSceneMusic: unordered_set<sceneType>
+
+	__
+	- clearAll(): void
+	+ {static} getInstance(): SoundController
+	
+	.. Sound effects ..
+	+ playPlayerStateSFX(type: playerStateType): void
+	+ playBlockStateSFX(type: blockStateType): void
+	+ playPlayerVoiceSFX(type: marioVoice): void
+	+ playSceneSFX(type: sceneType): void
+
+	.. Scene music ..
+	+ playSceneMusic(type: sceneType): void
+	+ playSceneMusicFromStart(type: sceneType): void
+	+ playTemporarySceneMusic(temp: sceneType): void
+
+	.. Scene music manipulation ..
+	+ updateSceneMusic(): void
+	+ pauseSceneMusic(): void
+	+ resumeSceneMusic(): void
+	+ stopSceneMusic(): void
+
+	.. Volume manipulation ..
+	+ setMasterSFXVolume(vol: float): void
+	+ setMasterMusicVolume(vol: float): void
+}
+
+SFXGroup -- SoundController
+MusicGroup -- SoundController
 @enduml
