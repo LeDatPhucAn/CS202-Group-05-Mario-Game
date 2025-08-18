@@ -12,7 +12,9 @@ private:
     bool anyKeyPressed;
     string mapName;
 
-    // GIF animation members
+    Texture2D backgroundTexture;
+
+    // GIF animation members for level completion
     Image gifImage;
     Texture2D gifTexture;
     int frameCount;
@@ -20,4 +22,12 @@ private:
     float frameTime;
     float frameDuration;
     bool gifLoaded;
+
+    // GIF animation members for final victory (Map 3)
+    Image victoryGifImage;
+    Texture2D victoryGifTexture;
+    int victoryFrameCount;
+    int victoryCurrentFrame;
+    float victoryFrameTime;
+    bool victoryGifLoaded;
 };
