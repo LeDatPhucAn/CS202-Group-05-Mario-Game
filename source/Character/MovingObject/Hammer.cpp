@@ -41,7 +41,7 @@ void Hammer::updateCollision(GameObject *other, int type)
             }
         }
     }
-
+    
     if (auto *enemy = dynamic_cast<MovingObject *>(other))
     {
         if (enemy != this && !dynamic_cast<MovingObjectDeadState *>(enemy->currentState))

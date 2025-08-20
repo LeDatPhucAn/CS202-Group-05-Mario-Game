@@ -181,7 +181,7 @@ void Player::DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position)
         tint                                                     // tint color
     );
 }
-void Player::throwFireBall()
+void PlayerMario::throwFireBall()
 {
     SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
     throwingFireBall = true;
@@ -384,4 +384,23 @@ void Player::createBody(b2World *world)
     body->CreateFixture(&rightWallFixture);
 
     body->SetBullet(true);
+}
+
+void PlayerLuigi::throwFireBall()
+{
+    SoundController::getInstance().playPlayerStateSFX(playerStateType::THROWFB);
+    throwingFireBall = true;
+    LuigiFireBall *fireball = new LuigiFireBall();
+
+    if (direction == LEFT)
+    {
+        fireball->setDirection(RIGHT);
+    }
+    else
+        fireball->setDirection(LEFT);
+    // fireball->setDirection(this->getDirection());
+    Vector2 pos = this->getPositionAdapter().toPixels();
+    pos.x += -fireball->getDirection() * getSize().x;
+    fireball->setPosition(pos);
+    Game::addGameObject(fireball);
 }

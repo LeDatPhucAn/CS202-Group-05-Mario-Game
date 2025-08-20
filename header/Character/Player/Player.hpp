@@ -34,7 +34,6 @@ private:
     float invincibleDrawTimer = 0.0f;
 
     // Fireball related
-    bool throwingFireBall = false;
     int throwDelay = 5;
     int currentDelayTime = 0;
     float secondsPerThrow = 1.5f;
@@ -44,11 +43,12 @@ private:
     bool starMode = false;
     float starTimer = 0.0f;     // seconds remaining
     float starColorTime = 0.0f; // for color cycling
-    
+protected:
+    bool throwingFireBall = false;
 
 public:
     unordered_map<Action, int> keyBindings;
-    
+
     void bindKey(Action action, int key)
     {
         keyBindings[action] = key;
@@ -65,7 +65,7 @@ public:
         this->sprite.StartEndFrames[(int)type] = {start, end};
     }
     // fireball
-    void throwFireBall();
+    virtual void throwFireBall() = 0;
 
     // Star
     void DrawLGBT(Texture2D texture, Rectangle srcRect, Vector2 position);
@@ -107,6 +107,7 @@ public:
     {
         keyBindings = KeyBindingManager::getPlayerBindings("Mario");
     }
+    void throwFireBall() override;
 };
 
 class PlayerLuigi : public Player
@@ -124,4 +125,5 @@ public:
     {
         keyBindings = KeyBindingManager::getPlayerBindings("Luigi");
     }
+    void throwFireBall() override;
 };

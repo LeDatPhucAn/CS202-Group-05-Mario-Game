@@ -61,6 +61,25 @@ void FireBallMoveState::handleInput()
         body->ApplyLinearImpulseToCenter(impulse, true);
     }
 }
+LuigiFireBallMoveState::LuigiFireBallMoveState(Character *_character, int _delay)
+    : MovingObjectState((int)movingObjectStateType::LUIGI_FB_MOVE, _character, _delay)
+{
+}
+
+void LuigiFireBallMoveState::handleInput()
+{
+    b2Body *body = character->getBody();
+    b2Vec2 vel = body->GetLinearVelocity();
+    vel.x = -character->getDirection() * fabs(200 / PPM);
+    body->SetLinearVelocity(vel);
+    if (!character->isGrounded)
+    {
+        float gravityAccel = (character->getBody()->GetLinearVelocity().y < 0 && (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)))
+                                 ? jumpGravity
+                                 : addedFallGravity;
+        character->getBody()->ApplyForceToCenter({0, -character->getBody()->GetMass() * gravityAccel}, true);
+    }
+}
 StarMoveState::StarMoveState(Character *_character, int _delay)
     : MovingObjectState((int)movingObjectStateType::STAR_MOVE, _character, _delay)
 {
@@ -109,7 +128,7 @@ void MovingObjectDeadState::updateState()
     delayCounter -= GetFrameTime();
     if (delayCounter <= 0)
     {
-        MovingObject *movingObject = dynamic_cast<MovingObject*>(character);
+        MovingObject *movingObject = dynamic_cast<MovingObject *>(character);
         if (movingObject)
         {
             // delete body of MovingObject
@@ -265,16 +284,16 @@ void MovingObjectThrowState::handleInput()
 void MovingObjectThrowState::updateState()
 {
     State::updateState();
-    
+
     throwTimer += GetFrameTime();
-    
+
     // Execute throw at mid-point of animation
     if (!hasThrown && throwTimer >= throwDuration * 0.5f)
     {
         executeThrow();
         hasThrown = true;
     }
-    
+
     // Return to previous state after throw duration
     if (throwTimer >= throwDuration)
     {
