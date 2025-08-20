@@ -1,5 +1,0 @@
-;/*FB_PKG_DELIM*/
-
-__d("LSDeleteThenInsertMessengerFtsThreadsQuerie",[],(function(a,b,c,d,e,f){function a(){var a=arguments,b=a[a.length-1],c=[];return b.sequence([function(c){return b.db.table(332).put({queryId:a[0],type_:a[1],hasNextPage:a[2],nextPageCursor:a[3],resultCount:a[4],sessionId:a[5]})},function(a){return b.resolve(c)}])}a.__sproc_name__="LSFTSThreadsDeleteThenInsertMessengerFtsThreadsQuerieStoredProcedure";a.__tables__=["messenger_fts_threads_queries"];e.exports=a}),null);
-__d("LSInsertMessengerFtsThread",[],(function(a,b,c,d,e,f){function a(){var a=arguments,b=a[a.length-1],c=[];return b.sequence([function(c){return b.db.table(331).add({threadId:a[0],timestamp:a[1],nextMessageTimestamp:a[2],status:a[3],threadType:a[4]})},function(a){return b.resolve(c)}])}a.__sproc_name__="LSFTSThreadsInsertMessengerFtsThreadStoredProcedure";a.__tables__=["messenger_fts_threads"];e.exports=a}),null);
-__d("LSProcessFetchedFtsThreads.nop",["Promise"],(function(a,b,c,d,e,f){"use strict";var g;a=function(a,c,d){return(g||(g=b("Promise"))).resolve([!0])};a.__nop_name__="LSProcessFetchedFtsThreads";f["default"]=a}),66);

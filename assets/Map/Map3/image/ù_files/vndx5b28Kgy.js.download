@@ -1,4 +1,0 @@
-;/*FB_PKG_DELIM*/
-
-__d("DeletedThreadsForLoggingCache",[],(function(a,b,c,d,e,f){"use strict";a=new Set();b=a;f["default"]=b}),66);
-__d("useCometConfirmationDialog",["FDSDialogLoadingState.react","react","react-compiler-runtime","requireDeferred","useCometDeferredDialog"],(function(a,b,c,d,e,f,g){"use strict";var h,i=h||(h=d("react"));h.useCallback;var j=c("requireDeferred")("FDSConfirmationDialogImpl.react").__setRef("useCometConfirmationDialog");function a(){var a=d("react-compiler-runtime").c(2),b=c("useCometDeferredDialog")(j,l),e;a[0]!==b?(e=function(a,c,d){var e=d===void 0?k:d;b(a,function(a){a?c():e()})},a[0]=b,a[1]=e):e=a[1];return e}function k(){}function l(){return i.jsx(c("FDSDialogLoadingState.react"),{})}l.displayName=l.name+" [from "+f.id+"]";g["default"]=a}),98);
