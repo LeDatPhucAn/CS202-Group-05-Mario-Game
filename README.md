@@ -32,7 +32,7 @@ A modern C++ implementation of the classic Super Mario Bros game with advanced g
 # Build and run release version
 setup.bat
 run.bat
-
+```
 
 ## 🏗️ Object-Oriented Architecture
 
