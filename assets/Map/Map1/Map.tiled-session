@@ -33,9 +33,9 @@
         },
         "Map1.1.json": {
             "scale": 1.5,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 4006,
+                "x": 3905.333333333333,
                 "y": 32.66666666666666
             }
         },
