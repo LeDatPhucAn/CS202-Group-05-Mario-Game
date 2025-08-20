@@ -63,7 +63,7 @@ void Lakitu::update(const Vector2 &marioPos)
     float targetY = 15.0f / PPM; // Fixed Y position
 
     // Horizontal movement
-    float desiredSpeed = 4.0f;
+    float desiredSpeed = 7.0f;
     float dx = targetX - currentPos.x;
     float epsilon = 0.1f;
 
@@ -96,23 +96,18 @@ void Lakitu::update(const Vector2 &marioPos)
 
 void Lakitu::updateCollision(GameObject *other, int type)
 {
-    // Player *mario = dynamic_cast<Player *>(other);
-    // if (mario)
-    // {
-    //     if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
-    //     {
-    //         return;
-    //     }
-
-    //     if (type == TOP)
-    //     {
-    //         this->changeState(new MovingObjectDeadState(this));
-    //     }
-    //     else 
-    //     {
-    //         mario->hitByMovingObject();
-    //     }
-    // }
+    Player *mario = dynamic_cast<Player *>(other);
+    if (mario)
+    {
+        if (dynamic_cast<DeadState *>(mario->currentState) || dynamic_cast<MovingObjectDeadState *>(this->currentState))
+        {
+            return;
+        }
+        else 
+        {
+            mario->hitByEnemy();
+        }
+    }
 }
 
 void Lakitu::display()
