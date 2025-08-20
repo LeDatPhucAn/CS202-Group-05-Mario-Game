@@ -1,6 +1,8 @@
 
 #include "FireBall.hpp"
 #include "Player.hpp"
+#include "Mushroom.hpp"
+#include "Star.hpp"
 FireBall::FireBall()
 {
     setFrame(movingObjectStateType::FB_MOVE, 0, 3);
@@ -38,7 +40,7 @@ void FireBall::updateCollision(GameObject *other, int type)
         }
     }
     MovingObject *enemy = dynamic_cast<MovingObject *>(other);
-    if (enemy)
+    if (enemy && !dynamic_cast<Mushroom *>(enemy) && !dynamic_cast<Star *>(enemy))
     {
         enemy->changeState(new MovingObjectDeadState(enemy));
         changeState(new MovingObjectStopState(this));
@@ -186,7 +188,7 @@ void LuigiFireBall::updateCollision(GameObject *other, int type)
         }
     }
     MovingObject *enemy = dynamic_cast<MovingObject *>(other);
-    if (enemy)
+    if (enemy && !dynamic_cast<Mushroom *>(enemy) && !dynamic_cast<Star *>(enemy))
     {
         enemy->changeState(new MovingObjectDeadState(enemy));
         changeState(new MovingObjectStopState(this));

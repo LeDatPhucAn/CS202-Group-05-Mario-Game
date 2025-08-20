@@ -6,6 +6,8 @@
 #include "Spiny.hpp"
 #include "FireBall.hpp"
 #include "Player.hpp"
+#include "Mushroom.hpp"
+#include "Star.hpp"
 void ContactListener::BeginContact(b2Contact *contact)
 {
     b2Fixture *fixtureA = contact->GetFixtureA();
@@ -145,6 +147,17 @@ bool ContactListener::ShouldNotCollide(GameObject *objA, GameObject *objB)
     if (MatchPair<Spiny, Lakitu>(objA, objB))
     {
         return true; // Prevent collision between Spiny and Lakitu/Spiny
+    }
+    if (MatchPair<Mushroom, FireBall>(objA, objB) 
+     || MatchPair<FireBall, Star>(objA, objB)
+     || MatchPair<LuigiFireBall, Star>(objA, objB)
+     || MatchPair<LuigiFireBall, Mushroom>(objA, objB))
+    {
+        return true; // Prevent collision between Lakitu and FireBall
+    }
+    if (MatchPair<FireBall, Star>(objA, objB))
+    {
+        return true; // Prevent collision between two fireballs
     }
     if (MatchPair<FireBall, Player>(objA, objB))
         return true;
