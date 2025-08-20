@@ -30,10 +30,10 @@
         },
         "Map3.json": {
             "scale": 2,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 1682,
-                "y": 126.75
+                "x": 947.5,
+                "y": 126.5
             }
         },
         "collided_animation.json": {
