@@ -9,6 +9,7 @@ class State
 private:
     friend class Player;
     friend class Character;
+    friend class LuigiFireBall;
 
 protected:
     int numFrames = 0;

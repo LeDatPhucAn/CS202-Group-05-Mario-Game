@@ -42,6 +42,13 @@ public:
     FireBallMoveState(Character *character, int delay = 5);
     void handleInput() override;
 };
+class LuigiFireBallMoveState : public MovingObjectState
+{
+private:
+public:
+    LuigiFireBallMoveState(Character *character, int delay = 5);
+    void handleInput() override;
+};
 class StarMoveState : public MovingObjectState
 {
 private:

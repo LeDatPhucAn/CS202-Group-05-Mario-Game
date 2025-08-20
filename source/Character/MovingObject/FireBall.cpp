@@ -1,5 +1,6 @@
 
 #include "FireBall.hpp"
+#include "Player.hpp"
 FireBall::FireBall()
 {
     setFrame(movingObjectStateType::FB_MOVE, 0, 3);
@@ -11,6 +12,155 @@ FireBall::FireBall()
 
 void FireBall::updateCollision(GameObject *other, int type)
 {
+
+    Block *block = dynamic_cast<Block *>(other);
+    if (block)
+    {
+        if (block->isSolid)
+        {
+            switch (type)
+            {
+            case TOP:
+                // Handle top collision with solid block
+                break;
+            case BOTTOM:
+                // Handle bottom collision with solid
+                break;
+            case LEFTSIDE:
+            { // Handle left side collision with solid block
+                changeState(new MovingObjectStopState(this));
+                break;
+            }
+            case RIGHTSIDE:
+                changeState(new MovingObjectStopState(this));
+                break;
+            }
+        }
+    }
+    MovingObject *enemy = dynamic_cast<MovingObject *>(other);
+    if (enemy)
+    {
+        enemy->changeState(new MovingObjectDeadState(enemy));
+        changeState(new MovingObjectStopState(this));
+    }
+}
+LuigiFireBall::LuigiFireBall()
+{
+    setFrame(movingObjectStateType::LUIGI_FB_MOVE, 8, 10);
+    setFrame(movingObjectStateType::STOP, 10, 10);
+    setTexture("Projectiles2D");
+    changeState(new LuigiFireBallMoveState(this));
+}
+void LuigiFireBall::createBody(b2World *world)
+{
+    StartEndFrame se = sprite.StartEndFrames[currentState->type];
+    Rectangle frameRec = (se.start <= se.end) ? sprite.frameRecs[se.start + currentState->frameIndex]
+                                              : sprite.frameRecs[se.start - currentState->frameIndex];
+
+    setSizeAdapter({frameRec.width, frameRec.height});
+    float posX = pos.toMeters().x;
+    float posY = pos.toMeters().y;
+    float halfWidth = size.getHalfWidth();
+    float halfHeight = size.getHalfHeight();
+
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(posX, posY);
+    bodyDef.fixedRotation = true;
+    bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
+    body = world->CreateBody(&bodyDef);
+
+    // 1. Torso fixture (rectangle) - slightly shorter
+    float radius = halfWidth * 0.75f;
+    float torsoWidth = halfWidth * 0.75f;
+    float torsoHeight = halfHeight - radius;
+    float wallWidth = 2.0f / PPM;
+    float headHeight = 2 / PPM;
+
+    float legOffsetY = halfHeight - radius;
+
+    b2PolygonShape torsoShape;
+    b2Vec2 torsoOffset(0.0f, -radius);
+    torsoShape.SetAsBox(torsoWidth, torsoHeight, torsoOffset, 0.0f);
+
+    b2FixtureDef torsoFixture;
+    torsoFixture.shape = &torsoShape;
+
+    torsoFixture.density = 1.0f;
+    torsoFixture.friction = 0.2f;
+    torsoFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+    torsoFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+
+    torsoFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&torsoFixture);
+
+    // 2.a Legs (circle) - real collision feet // 2.b Pelvis(rectangle) - to prevent getting stuck on blocks
+
+    b2CircleShape legsShape;
+    legsShape.m_radius = radius;
+    legsShape.m_p.Set(0, legOffsetY); // Bottom center of body
+    b2FixtureDef legsFixture;
+    legsFixture.shape = &legsShape;
+    legsFixture.density = 1.0f;
+    legsFixture.friction = 0.2f; // May adjust if sliding on slopes
+    legsFixture.filter.categoryBits = CATEGORY_CHARACTER_MAIN;
+    legsFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_NOTSOLID | CATEGORY_CHARACTER_SENSOR | CATEGORY_CHARACTER_MAIN;
+    legsFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::NONE);
+    body->CreateFixture(&legsFixture);
+
+    // 3. Foot sensor (same size as legs, but offset slightly lower)
+    b2CircleShape footSensor;
+    footSensor.m_radius = radius;
+    footSensor.m_p.Set(0, legOffsetY + 0.5f / PPM); // Slightly below legs
+
+    b2FixtureDef footFixture;
+    footFixture.shape = &footSensor;
+    footFixture.isSensor = true;
+    footFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::BOTTOM);
+    footFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    footFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    body->CreateFixture(&footFixture);
+
+    // 4. Head sensor
+    b2PolygonShape headShape;
+    headShape.SetAsBox(halfWidth * 0.75, headHeight, b2Vec2(0, -halfHeight), 0);
+
+    b2FixtureDef headFixture;
+    headFixture.shape = &headShape;
+    headFixture.isSensor = true;
+    headFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::TOP);
+    headFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    headFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    body->CreateFixture(&headFixture);
+
+    // 5. Left wall sensor
+    b2PolygonShape leftWallShape;
+    leftWallShape.SetAsBox(wallWidth, size.y() * 0.5f, b2Vec2(-torsoWidth, 0), 0);
+
+    b2FixtureDef leftWallFixture;
+    leftWallFixture.shape = &leftWallShape;
+    leftWallFixture.isSensor = true;
+    leftWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::LEFTSIDE);
+    leftWallFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    leftWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    body->CreateFixture(&leftWallFixture);
+
+    // 6. Right wall sensor
+    b2PolygonShape rightWallShape;
+    rightWallShape.SetAsBox(wallWidth, size.y() * 0.5f, b2Vec2(torsoWidth, 0), 0);
+
+    b2FixtureDef rightWallFixture;
+    rightWallFixture.shape = &rightWallShape;
+    rightWallFixture.isSensor = true;
+    rightWallFixture.filter.categoryBits = CATEGORY_CHARACTER_SENSOR;
+    rightWallFixture.filter.maskBits = CATEGORY_SOLID | CATEGORY_CHARACTER_SENSOR;
+    rightWallFixture.userData.pointer = static_cast<uintptr_t>(CollisionType::RIGHTSIDE);
+    body->CreateFixture(&rightWallFixture);
+    this->getBody()->SetGravityScale(0.0f); // Fireball should not be affected by gravity
+}
+void LuigiFireBall::updateCollision(GameObject *other, int type)
+{
+
     Block *block = dynamic_cast<Block *>(other);
     if (block)
     {

@@ -68,6 +68,10 @@ void ContactListener::checkGrounded(b2Contact *contact, bool began)
             return;
         }
     }
+    if (MatchPair<Player, FireBall>(objA, objB))
+    {
+        return; // Prevent collision between Spiny and Lakitu/Spiny
+    }
     // Check both fixtures for a BOTTOM sensor
     for (int i = 0; i < 2; i++)
     {

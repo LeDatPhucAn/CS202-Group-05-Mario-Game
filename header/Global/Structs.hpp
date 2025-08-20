@@ -18,17 +18,16 @@ struct Sprite
     Texture2D texture;
 };
 
-
-enum class Mode 
-{ 
-    SINGLE, 
-    DUAL 
+enum class Mode
+{
+    SINGLE,
+    DUAL
 };
-enum class Difficulty 
-{ 
-    EASY, 
-    HARD, 
-    HARDCORE 
+enum class Difficulty
+{
+    EASY,
+    HARD,
+    HARDCORE
 };
 enum PlayerForm
 {
@@ -68,7 +67,8 @@ enum class movingObjectStateType
     STOP,
     FB_MOVE,
     STAR_MOVE,
-    THROW
+    THROW,
+    LUIGI_FB_MOVE
 };
 enum class blockStateType
 {
