@@ -463,7 +463,8 @@ void Game::updateScene()
 
     //When Mario's in EndZone
     if(mario && CheckCollisionRecs(mario->getBounds(), curMap.EndZone) 
-    || luigi && CheckCollisionRecs(luigi->getBounds(), curMap.EndZone))
+    || luigi && CheckCollisionRecs(luigi->getBounds(), curMap.EndZone)
+    || (IsKeyDown(KEY_N) && IsKeyPressed(KEY_M)))
     {
         // Debug output
         cout << "Player reached EndZone! Current map: " << manager->curMap << endl;

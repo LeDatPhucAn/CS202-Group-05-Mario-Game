@@ -30,9 +30,9 @@
         },
         "Map3.json": {
             "scale": 2,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 947.5,
+                "x": 783.5,
                 "y": 126.5
             }
         },
